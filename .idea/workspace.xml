@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/ParamsConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/plugin/PluginStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/yarn/IYarnConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/Hadoop020RemoteJobTriggerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/Hadoop020RemoteJobTriggerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/YarnIndexBuilderTriggerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/YarnIndexBuilderTriggerFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/YarnTableDumpFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/../plugins/hive-flat-table-builder-plugin/src/main/java/com/dfire/tis/fullbuild/indexbuild/impl/YarnTableDumpFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/images/icon/cog.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/images/icon/nestable.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/images/icon/table.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/images/icon/tis-logo-small.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/images/icon/union.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/ng-tis/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/department.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-console/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-console/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/TIS.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/TIS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/component/GlobalComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/component/GlobalComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/extension/Descriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/extension/Descriptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/IK8sContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/IK8sContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/impl/DefaultK8sContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/impl/DefaultK8sContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/impl/K8sContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/k8s/impl/K8sContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/plugin/incr/IncrK8sConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/plugin/incr/IncrK8sConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/util/HeteroEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/util/HeteroEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/yarn/YarnConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/yarn/YarnConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/er/ERRules.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/er/ERRules.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/er/TableRelation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/er/TableRelation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/stream/generate/FlatTableRelation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/stream/generate/FlatTableRelation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/stream/generate/StreamComponentCodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-sql-parser/src/main/java/com/dfire/tis/sql/parser/stream/generate/StreamComponentCodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tsearcher-builder-api/src/main/java/com/dfire/tis/sql/parser/tuple/creator/EntityName.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tsearcher-builder-api/src/main/java/com/dfire/tis/sql/parser/tuple/creator/EntityName.java" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="tis-console-nodejs" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="ProjectId" id="1RHE6ETZhgMGO7efkeisNqteJXn" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/offline" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="settings.nodejs" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/offline" />
+      <recent name="$PROJECT_DIR$/src/common" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src/runtime" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="npm.ng:serve-jit">
+    <configuration name="build:aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:aot" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:watch" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:watch" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="ng:serve-aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve-aot" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="ng:serve-jit" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve-jit" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="ng:serve" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.ng:serve-jit" />
+        <item itemvalue="npm.ng:serve-aot" />
+        <item itemvalue="npm.ng:serve" />
+        <item itemvalue="npm.build:aot" />
+        <item itemvalue="npm.build:watch" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="" />
+      <created>1569315444172</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1569315444172</updated>
+      <workItem from="1569315446097" duration="2716000" />
+      <workItem from="1571276172110" duration="3536000" />
+      <workItem from="1571536865749" duration="155000" />
+      <workItem from="1574851987513" duration="5817000" />
+      <workItem from="1576461216545" duration="35718000" />
+      <workItem from="1577153632524" duration="163000" />
+      <workItem from="1577161853740" duration="6889000" />
+      <workItem from="1577238710191" duration="12937000" />
+      <workItem from="1578279002341" duration="38480000" />
+      <workItem from="1579069631232" duration="70165000" />
+      <workItem from="1579671696776" duration="94005000" />
+      <workItem from="1580531457163" duration="50617000" />
+      <workItem from="1580875817293" duration="62612000" />
+      <workItem from="1581330085272" duration="11850000" />
+      <workItem from="1581490754535" duration="1527000" />
+      <workItem from="1581511458016" duration="90852000" />
+      <workItem from="1583402998545" duration="28818000" />
+      <workItem from="1583890923850" duration="124123000" />
+      <workItem from="1585552948428" duration="21218000" />
+      <workItem from="1586050599761" duration="38908000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp-pojo.js.map" />
+        <option value="$PROJECT_DIR$/src/base/department.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/addapp.directive.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp-form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/global.params.component.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp-confirm.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/addapp-define-schema.component.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp-define-schema.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/applist.component.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp.directive.js.map" />
+        <option value="$PROJECT_DIR$/src/base/global.add.param.js" />
+        <option value="$PROJECT_DIR$/src/base/operation.log.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js" />
+        <option value="$PROJECT_DIR$/src/base/operation.log.component.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp-confirm.component.js" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/addapp-pojo.js" />
+        <option value="$PROJECT_DIR$/src/base/global.update.param.js" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.module.js" />
+        <option value="$PROJECT_DIR$/src/base/applist.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/addapp.step.flow.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/global.params.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/base.manage-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/base/global.add.param.js.map" />
+        <option value="$PROJECT_DIR$/src/base/base.manage-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/base/global.update.param.js.map" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.module.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/git.commits.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
+        <option value="$PROJECT_DIR$/src/offline/db.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.create.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/ds.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/ds.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/db.add.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/git.commit.diff.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step2.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.list.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/offline.module.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.git.commits.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.create.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/datasource.git.commits.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.git.commits.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/offline.module.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step2.component.js.map" />
+        <option value="$PROJECT_DIR$/src/environments/environment.prod.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/git.commit.diff.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/git.commits.component.js.map" />
+        <option value="$PROJECT_DIR$/src/environments/environment.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.detail.component.js" />
+        <option value="$PROJECT_DIR$/src/environments/environment.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/datasource.git.commits.component.js" />
+        <option value="$PROJECT_DIR$/src/environments/environment.prod.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.change.detail.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js.map" />
+        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
+        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
+        <option value="$PROJECT_DIR$/src/test.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
+        <option value="$PROJECT_DIR$/src/polyfills.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
+        <option value="$PROJECT_DIR$/src/test.js.map" />
+        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js.map" />
+        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
+        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js.map" />
+        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js" />
+        <option value="$PROJECT_DIR$/src/index/application.js" />
+        <option value="$PROJECT_DIR$/src/index/application.js.map" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
+        <option value="$PROJECT_DIR$/src/service/tis.service.js" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
+        <option value="$PROJECT_DIR$/src/service/tis.service.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.service.js" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js" />
+        <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
+        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/membership.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js.map" />
+        <option value="$PROJECT_DIR$/src/main-jit.js" />
+        <option value="$PROJECT_DIR$/src/main-jit.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step2.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step2.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step1.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step1.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js" />
+        <option value="$PROJECT_DIR$/src/main.js" />
+        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/app.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.component.js" />
+        <option value="$PROJECT_DIR$/src/common/msg.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js.map" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
+        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js" />
+        <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
+        <option value="$PROJECT_DIR$/src/common/msg.component.js" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
+        <option value="$PROJECT_DIR$/src/base/addapp.step.flow.component.js" />
+        <option value="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/addapp-form.component.js" />
+        <option value="$PROJECT_DIR$/src/base/department.list.component.js" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/pojo.component.ts</url>
+          <line>3</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/app.component.ts</url>
+          <line>2</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts</url>
+          <line>26</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts</url>
+          <line>18</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts</url>
+          <line>40</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/index.query.component.ts</url>
+          <line>355</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/root-welcome-component.ts</url>
+          <line>129</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/node_modules/@antv/g6/lib/plugins/grid/index.d.ts</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="javascript-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

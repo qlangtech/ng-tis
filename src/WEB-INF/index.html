@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <base href="/">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <title>TIS管理系统 </title>
+
+
+  <script>
+    var TIS = {daily: true}
+  </script>
+
+  <script src="/node_modules/core-js/client/shim.min.js"></script>
+  <script src="/node_modules/zone.js/dist/zone.js"></script>
+
+
+  <script src="/node_modules/systemjs/dist/system.src.js"></script>
+  <script src="/sysjs/systemjs.config.js"></script>
+  <script>
+    System.import('/main-jit.js')
+      .catch(function (err) {
+        console.error(err);
+      });
+  </script>
+
+</head>
+
+<body>
+<my-app>
+
+  <table style="width:100%;height:600px">
+    <tr>
+      <td align="center" valign="center"><h1>Loading...</h1></td>
+    </tr>
+  </table>
+
+</my-app>
+
+</body>
+</html>
+ 
+
