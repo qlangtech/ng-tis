@@ -27,7 +27,7 @@
       <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/tsconfig.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tis-console/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-console/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/taobao/terminator/coredefine/module/action/PluginAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/TIS.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/TIS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/component/GlobalComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/component/GlobalComponent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/extension/Descriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../tis-plugin/src/main/java/com/dfire/tis/extension/Descriptor.java" afterDir="false" />
@@ -60,7 +60,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
@@ -72,7 +72,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/offline" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
