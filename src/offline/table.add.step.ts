@@ -1,7 +1,3 @@
-/**
- * Created by Qinjiu on 5/3/2017.
- */
-
 import {EventEmitter, Input, Output} from '@angular/core';
 import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
