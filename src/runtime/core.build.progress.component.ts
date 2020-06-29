@@ -6,6 +6,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 import {NgTerminal} from "ng-terminal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd";
+import {Subject} from "rxjs";
 
 
 @Component({
@@ -73,13 +74,13 @@ export class ProgressTitleComponent {
       <button (click)="triggerFullBuild()">触发全量构建</button>
       back="../../full_build_history"
        -->
-      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumbRoot]="!this.tisService.currentApp" [showBreadcrumb]="true">
+      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumbRoot]="appNotAware" [showBreadcrumb]="true">
           <button nz-button (click)="openReltimeLog()">实时日志</button>
       </tis-page-header>
 
       <nz-spin [nzSpinning]="isSpinning" [nzDelay]="1000" nzSize="large">
           <nz-collapse [nzBordered]="false">
-              <nz-collapse-panel [nzHeader]="dumpTpl" [nzActive]="true">
+              <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
                       <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
                           <dt>{{t.name}}</dt>
@@ -91,7 +92,7 @@ export class ProgressTitleComponent {
                   <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
               </ng-template>
 
-              <nz-collapse-panel [nzHeader]="joinTpl" [nzActive]="true">
+              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.joinPhase">
                       <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
                           <dt>{{t.name}}</dt>
@@ -104,7 +105,7 @@ export class ProgressTitleComponent {
               </ng-template>
 
 
-              <nz-collapse-panel [nzHeader]="indexBuildTpl" [nzActive]="true">
+              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.buildPhase">
                       <li *ngFor="let t of liveExecLog.buildPhase.details;">
                           <dt>{{t.name}}</dt>
@@ -117,7 +118,7 @@ export class ProgressTitleComponent {
               </ng-template>
 
 
-              <nz-collapse-panel [nzHeader]="indexBackFlow" [nzActive]="true">
+              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">
                       <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.details;">
                           <dt>{{t.name}}</dt>
@@ -170,6 +171,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }>;
   breadcrumb: string[];
   @ViewChild('term', {static: true}) terminal: NgTerminal;
+  buildTask = new BuildTask();
+
+  private msgSubject: Subject<WSMessage>;
 
 // http://localhost:8080/coredefine/corenodemanage.ajax?action=core_action&emethod=get_view_data
 //   app: any;
@@ -180,7 +184,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   liveExecLog: any = {
     "buildPhase": {
       "processStatus": {
-        "details": [{waiting: true, "name": ""}],
+        "details": [],
         "processPercent": 0
       },
       "success": false,
@@ -188,7 +192,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     },
     "joinPhase": {
       "processStatus": {
-        "details": [{waiting: true, "name": ""}],
+        "details": [],
         "processPercent": 0
       },
       "success": false,
@@ -196,7 +200,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     },
     "dumpPhase": {
       "processStatus": {
-        "details": [{waiting: true, "name": ""}],
+        "details": [],
         "processPercent": 0
       },
       "success": false,
@@ -204,7 +208,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     },
     "indexBackFlowPhaseStatus": {
       "processStatus": {
-        "details": [{waiting: true, "name": ""}],
+        "details": [],
         "processPercent": 0
       },
       "success": false,
@@ -222,6 +226,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     // https://ng.ant.design/docs/introduce/zh
     this.cd.detach();
   }
+
 
   ngAfterViewInit(): void {
     // this.invalidate();
@@ -254,10 +259,11 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         let wfid = params['wfid'];
         if (wfid) {
           this.httpPost('/coredefine/full_build_history.ajax'
-            , `emethod=get_workflow&action=core_action&wfid=${wfid}`).then((r) => {
-            let wfname = r.bizresult.name;
-            if (!this.tisService.currentApp) {
-              this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`, '构建历史', `../`];
+            , `emethod=get_workflow&action=core_action&wfid=${wfid}&taskid=${taskid}`).then((r) => {
+            let wf = r.bizresult.workflow;
+            this.buildTask = Object.assign(new BuildTask(), r.bizresult.task);
+            if (this.appNotAware) {
+              this.breadcrumb = ['数据流', '/offline/wf', wf.name, `/offline/wf_update/${wf.name}`, '构建历史', `../`];
             } else {
               this.breadcrumb = ['构建历史', `../`];
             }
@@ -273,30 +279,24 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
   // 触发全量索引构建
   public receiveTriggerFullBuildLog(taskid: number): void {
-
-    // this.tisService.wsconnect('ws://' + window.location.host
-    //   + '/tjs/download/logfeedback?collection=' + this.currCollection.appName + "&logtype=incrdeploy-change")
-    //   .subscribe((response: MessageEvent): void => {
-    //     let msg = JSON.parse(response.data);
-    //     this.terminal.write(msg.data + "\r\n");
-    //   });
-
     // 服务端生成了taskid
-    this.tisService.wsconnect('ws://' + window.location.host
-      + '/tjs/download/tasklogfeedback?taskid=' + taskid)
-      .subscribe((response: MessageEvent): void => {
-        let status = JSON.parse(response.data);
-        // console.log(status);
-        // console.info(status.dumpPhase);
-        this.liveExecLog.dumpPhase = status.dumpPhase;
-        this.liveExecLog.joinPhase = status.joinPhase;
-        this.liveExecLog.buildPhase = status.buildPhase;
-        this.liveExecLog.indexBackFlowPhaseStatus
-          = status.indexBackFlowPhaseStatus;
-        if (this.isSpinning) {
-          this.isSpinning = false;
-        }
+    this.msgSubject = this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
+      .map((response: MessageEvent): WSMessage => {
+        return new WSMessage('build_status_metrics', response.data);
       });
+    this.msgSubject.subscribe((response: MessageEvent): void => {
+      let status = JSON.parse(response.data);
+      // console.log(status);
+      // console.info(status.dumpPhase);
+      this.liveExecLog.dumpPhase = status.dumpPhase;
+      this.liveExecLog.joinPhase = status.joinPhase;
+      this.liveExecLog.buildPhase = status.buildPhase;
+      this.liveExecLog.indexBackFlowPhaseStatus
+        = status.indexBackFlowPhaseStatus;
+      if (this.isSpinning) {
+        this.isSpinning = false;
+      }
+    });
   }
 
 
@@ -318,26 +318,30 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
   openReltimeLog() {
     this.termVisible = true;
-    // const drawerRef = this.drawerService.create({
-    //   nzTitle: '实时日志',
-    //   nzWidth: '70%',
-    //   nzContent: this.termTemplate,
-    //   nzContentParams: {
-    //     value: this.value
-    //   }
-    // });
-    //
-    // drawerRef.afterOpen.subscribe(() => {
-    //   console.log(drawerRef);
-    //   console.log('Drawer(Template) open');
-    // });
-    //
-    // drawerRef.afterClose.subscribe(() => {
-    //   console.log('Drawer(Template) close');
-    // });
+    this.msgSubject.next({data: {'logtype': 'full'}});
+    // this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=full`)
+    //   .subscribe((response: MessageEvent): void => {});
   }
 
   termClose() {
     this.termVisible = false;
+  }
+}
+
+class WSMessage {
+  constructor(public type: string, public data: any) {
+
+  }
+}
+
+class BuildTask {
+  id: number;
+  createTime: number;
+  startPhase: number;
+  endPhase: number;
+  triggerType: number;
+
+  inRange(phase: number): boolean {
+    return phase >= this.startPhase && phase <= this.endPhase;
   }
 }

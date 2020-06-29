@@ -13,8 +13,24 @@ import {
   TemplateRef,
   ViewContainerRef
 } from '@angular/core';
+import {TisResponseResult} from "../service/tis.service";
+import {ActivatedRoute, Router} from "@angular/router";
 
 export class Pager {
+
+  public static go(router: Router, route: ActivatedRoute, page: number): void {
+    router.navigate([], {
+      relativeTo: route,
+      queryParams: {page: page},
+      queryParamsHandling: "merge"
+    });
+  }
+
+  public static create(result: TisResponseResult): Pager {
+    let biz = result.bizresult;
+    return new Pager(biz.curPage, biz.totalPage, biz.totalCount, biz.pageSize);
+  }
+
   constructor(public page = 0, public allPage = 0, public totalCount = 0, public pageSize = 10) {
 
   }

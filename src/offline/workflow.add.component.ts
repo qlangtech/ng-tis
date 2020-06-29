@@ -54,6 +54,7 @@ import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 const TYPE_DUMP_TABLE = 'table';
 console.log(Draggable)
 console.log(G6);
+
 //
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -201,7 +202,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
   validateSaveTopologyDialogForm: FormGroup;
   private topologyName: string;
-  private workflow: Dataflow;
+  workflow: Dataflow;
   erNodes: ERRules;
   // g6graph
   private graph: any;

@@ -66,7 +66,7 @@ import {EditorConfiguration} from "codemirror";
               </div>
           </nz-content>
           <nz-sider [nzWidth]="400">
-              <nz-list [nzDataSource]="data" nzBordered [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex" [nzLoading]="loading">
+              <nz-list [nzDataSource]="data" nzBordered [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex">
                   <ng-template #item let-item>
                       <nz-list-item>
                           <nz-list-item-meta
@@ -146,9 +146,10 @@ import {EditorConfiguration} from "codemirror";
   ]
 })
 export class RootWelcomeComponent {
+  data: any[] = [];
 
 
-  constructor(private r: Router, private route: ActivatedRoute,) {
+  constructor(private r: Router, private route: ActivatedRoute) {
   }
 
   backgroupDbClick(event: MouseEvent) {
@@ -158,7 +159,7 @@ export class RootWelcomeComponent {
     this.routerTo('/base/applist');
   }
 
-  private routerTo(path: string) {
+   routerTo(path: string) {
     this.r.navigate([path]);
   }
 }

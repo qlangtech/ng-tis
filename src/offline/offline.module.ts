@@ -11,8 +11,6 @@ import {TableAddComponent} from "./table.add.component";
 import {TableAddStep1Component} from "./table.add.step1.component";
 import {TableAddStep2Component} from "./table.add.step2.component";
 import {GitCommitDiffComponent} from "./git.commit.diff.component";
-import {DatasourceGitCommitsComponent} from "./datasource.git.commits.component";
-import {WorkflowGitCommitsComponent} from "./workflow.git.commits.component";
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {NzStatisticModule} from 'ng-zorro-antd/statistic';
@@ -22,8 +20,7 @@ import {NzEmptyModule} from 'ng-zorro-antd/empty';
 
 // import {TreeModule} from "angular-tree-component";
 import {TisCommonModule} from "../common/common.module";
-import {WorkflowChangeListComponent} from "./workflow.change.list.component";
-import {WorkflowChangeCreateComponent} from "./workflow.change.create.component";
+// import {WorkflowChangeCreateComponent} from "./workflow.change.create.component";
 // import {SidebarModule} from 'ng-sidebar';
 
 import {NzButtonModule} from 'ng-zorro-antd/button';
@@ -72,7 +69,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     TisCommonModule, NzButtonModule, NzDrawerModule, NzCascaderModule
     , CommonModule, NzFormModule, NzSelectModule, NzModalModule, ReactiveFormsModule, NzNotificationModule
     , NzDividerModule, NzStatisticModule, NzGridModule, NzCheckboxModule
-    ],
+  ],
   providers: [
     {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     {provide: NZ_ICONS, useValue: icons}
@@ -80,15 +77,15 @@ const icons: IconDefinition[] = [DeleteOutline];
   declarations: [
     WorkflowComponent, SideBarToolBar, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
     , TableAddComponent, TableAddStep1Component, TableAddStep2Component,
-    DatasourceGitCommitsComponent, GitCommitDiffComponent, WorkflowGitCommitsComponent,
-    WorkflowAddComponent, WorkflowChangeListComponent, WorkflowChangeCreateComponent, // WorkflowChangeDetailComponent
+    GitCommitDiffComponent,
+    WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     // tslint:disable-next-line:whitespace
     , WorkflowAddNestComponent, WorkflowERComponent, WorkflowAddErCardinalityComponent
   ],
-  entryComponents: [WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, TableAddComponent, WorkflowAddErMetaComponent,
-    DatasourceGitCommitsComponent, GitCommitDiffComponent, WorkflowGitCommitsComponent, WorkflowAddComponent,
-    WorkflowChangeCreateComponent, WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
+  entryComponents: [WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, TableAddComponent, WorkflowAddErMetaComponent
+    , GitCommitDiffComponent, WorkflowAddComponent,
+     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     , WorkflowAddNestComponent, WorkflowAddErCardinalityComponent
   ],
   // providers: [TISService,ScriptService]

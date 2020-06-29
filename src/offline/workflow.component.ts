@@ -26,8 +26,6 @@ export class BasicWFComponent extends BasicFormComponent {
   }
 
   executeWorkflow(dataflow: Dataflow): void {
-    // console.log(id);
-    // this.formDisabled = true;
     let action = `event_submit_do_execute_workflow=y&action=offline_datasource_action&id=${dataflow.id}`;
     this.httpPost('/offline/datasource.ajax', action)
       .then(d => {
@@ -54,19 +52,13 @@ export class BasicWFComponent extends BasicFormComponent {
 @Component({
   // templateUrl: '/offline/workflowList.htm'
   template: `
-
-
       <tis-page-header title="数据流" [result]="result">
           <tis-header-tool>
-              <button type="button" class="btn btn-secondary btn-sm" (click)="addWorkflowBtnClick()">
-                  <i class="fa fa-bank" aria-hidden="true"></i>创建数据流
+              <button nz-button nzType="primary" (click)="addWorkflowBtnClick()">
+                  <i nz-icon nzType="plus" nzTheme="outline"></i>创建
               </button>
-              <a routerLink="/offline/workflowcommits" routerLinkActive="active">workflow变更历史</a>
-              <a routerLink="/offline/wf" routerLinkActive="active">状态</a>
           </tis-header-tool>
       </tis-page-header>
-      <button (click)="testmsg()">testmsg</button>
-      <button (click)="testTransaction()">testTransaction</button>
 
       <tis-page [rows]="workflows" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
           <tis-col title="名称" width="14">
@@ -106,7 +98,7 @@ export class BasicWFComponent extends BasicFormComponent {
 export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   workflows: Dataflow[];
-  pager: Pager = new Pager(1, 1,0);
+  pager: Pager = new Pager(1, 1, 0);
 
   // formDisabled: boolean = false;
 
@@ -117,14 +109,16 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   ngOnInit(): void {
     // 查询所有的工作流
-    this.formDisabled = true;
-    let action = 'event_submit_do_get_workflows=y&action=offline_datasource_action';
-    this.httpPost('/offline/datasource.ajax', action)
-      .then(result => {
-        console.log(result);
-        this.initWorkflows(result.bizresult);
-        this.formDisabled = false;
-      });
+    this.route.queryParams.subscribe((params) => {
+      let action = `event_submit_do_get_workflows=y&action=offline_datasource_action&page=${params['page']}`;
+      this.httpPost('/offline/datasource.ajax', action)
+        .then(result => {
+          // console.log(result);
+          this.initWorkflows(result.bizresult.rows);
+          this.pager = Pager.create(result);
+        });
+    })
+
   }
 
   testmsg(): void {
@@ -153,13 +147,13 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
       workflow1.opTime.setTime(workflow.opTime);
       workflow1.inChange = workflow.inChange;
 
-      if (workflow1.inChange === 0) {
-        workflow1.state = '已发布';
-      } else if (workflow1.inChange === 1) {
-        workflow1.state = '新建';
-      } else {
-        workflow1.state = '变更中';
-      }
+      // if (workflow1.inChange === 0) {
+      //   workflow1.state = '已发布';
+      // } else if (workflow1.inChange === 1) {
+      //   workflow1.state = '新建';
+      // } else {
+      //   workflow1.state = '变更中';
+      // }
       this.workflows.push(workflow1);
     }
     // console.log(this.workflows);
@@ -236,16 +230,17 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
   }
 
   gotoPage(page: number) {
+    Pager.go(this.router, this.route, page);
   }
 
-  testTransaction() {
-
-    let action = `event_submit_do_test_transaction=y&action=offline_datasource_action`;
-    this.httpPost('/offline/datasource.ajax', action)
-      .then(d => {
-      });
-
-  }
+  // testTransaction() {
+  //
+  //   let action = `event_submit_do_test_transaction=y&action=offline_datasource_action`;
+  //   this.httpPost('/offline/datasource.ajax', action)
+  //     .then(d => {
+  //     });
+  //
+  // }
 }
 
 

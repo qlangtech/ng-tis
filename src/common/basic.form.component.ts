@@ -34,7 +34,9 @@ export class BasicFormComponent {
     NProgress.done();
     return r;
   }
-
+  get appNotAware(): boolean {
+    return !this.tisService.currentApp;
+  }
   protected clearProcessResult(): void {
     this.result = {msg: [], errormsg: []};
   }
@@ -88,9 +90,9 @@ export class BasicFormComponent {
   // 发送http post请求
   protected httpPost(url: string, body: string): Promise<TisResponseResult> {
 
-    setTimeout(() => {
+    // setTimeout(() => {
       this.formDisabled = true;
-    });
+    // });
     NProgress.start();
     this.clearProcessResult();
     return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch((e) => {
