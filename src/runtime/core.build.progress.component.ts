@@ -6,7 +6,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 import {NgTerminal} from "ng-terminal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 
 @Component({
@@ -280,19 +280,29 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   // 触发全量索引构建
   public receiveTriggerFullBuildLog(taskid: number): void {
     // 服务端生成了taskid
-    this.msgSubject = this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
+    this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
       .map((response: MessageEvent): WSMessage => {
-        return new WSMessage('build_status_metrics', response.data);
+        return new WSMessage('build_status_metrics', JSON.parse(response.data));
       });
-    this.msgSubject.subscribe((response: MessageEvent): void => {
-      let status = JSON.parse(response.data);
-      // console.log(status);
-      // console.info(status.dumpPhase);
-      this.liveExecLog.dumpPhase = status.dumpPhase;
-      this.liveExecLog.joinPhase = status.joinPhase;
-      this.liveExecLog.buildPhase = status.buildPhase;
-      this.liveExecLog.indexBackFlowPhaseStatus
-        = status.indexBackFlowPhaseStatus;
+    this.msgSubject.subscribe((response: WSMessage): void => {
+
+      switch (response.logtype) {
+        case "build_status_metrics":
+          let status = response.data;
+          // console.log(status);
+          // console.info(status.dumpPhase);
+          this.liveExecLog.dumpPhase = status.dumpPhase;
+          this.liveExecLog.joinPhase = status.joinPhase;
+          this.liveExecLog.buildPhase = status.buildPhase;
+          this.liveExecLog.indexBackFlowPhaseStatus
+            = status.indexBackFlowPhaseStatus;
+          break;
+        case "full":
+          k
+          break;
+        default:
+          throw new Error(`logttype:${response.logtype} is illegal`);
+      }
       if (this.isSpinning) {
         this.isSpinning = false;
       }
@@ -318,7 +328,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
   openReltimeLog() {
     this.termVisible = true;
-    this.msgSubject.next({data: {'logtype': 'full'}});
+    this.msgSubject.next(new WSMessage("full"));
     // this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=full`)
     //   .subscribe((response: MessageEvent): void => {});
   }
@@ -329,7 +339,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 }
 
 class WSMessage {
-  constructor(public type: string, public data: any) {
+  constructor(public logtype: string, public data?: any) {
 
   }
 }
