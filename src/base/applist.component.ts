@@ -49,7 +49,6 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   pageList: any[];
 
   constructor(tisService: TISService, private router: Router, modalService: NgbModal
-              //
   ) {
     // this.tisService.setAppSelectable(true);
     super(tisService, modalService);

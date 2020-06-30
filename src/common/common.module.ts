@@ -53,6 +53,7 @@ import {
 import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
 import {NzAnchorModule} from 'ng-zorro-antd/anchor';
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
+import {NzAffixModule} from 'ng-zorro-antd/affix';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -64,7 +65,7 @@ import {NzSwitchModule} from 'ng-zorro-antd/switch';
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule,
     NgTerminalModule,
     NzLayoutModule,
-    NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule,
+    NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule],
   declarations: [
     ProgressTitleComponent, ProgressComponent,
@@ -75,7 +76,7 @@ import {NzSwitchModule} from 'ng-zorro-antd/switch';
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
   exports: [
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],

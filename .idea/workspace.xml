@@ -3,6 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/codemirror.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/codemirror.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pager.header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pager.header.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" afterDir="false" />
     </list>
@@ -158,201 +166,12 @@
       <workItem from="1593147449416" duration="2055000" />
       <workItem from="1593408448452" duration="195000" />
       <workItem from="1593411914282" duration="318000" />
-      <workItem from="1593412737251" duration="16113000" />
+      <workItem from="1593412737251" duration="24365000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/src/base/operation.log.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp-confirm.component.js" />
-        <option value="$PROJECT_DIR$/src/base/operation.log.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp.directive.js.map" />
-        <option value="$PROJECT_DIR$/src/base/global.add.param.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp-define-schema.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/applist.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp-confirm.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/addapp-define-schema.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp-form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/global.params.component.js" />
-        <option value="$PROJECT_DIR$/src/base/department.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/addapp.directive.js" />
-        <option value="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp-pojo.js.map" />
-        <option value="$PROJECT_DIR$/src/base/addapp-form.component.js" />
-        <option value="$PROJECT_DIR$/src/base/department.list.component.js" />
-        <option value="$PROJECT_DIR$/src/base/addapp.step.flow.component.js" />
-        <option value="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
-        <option value="$PROJECT_DIR$/src/common/msg.component.js" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
-        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js.map" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/common.module.js" />
-        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.component.js" />
-        <option value="$PROJECT_DIR$/src/common/msg.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/app.module.js" />
-        <option value="$PROJECT_DIR$/src/main.js" />
-        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step1.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step2.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step1.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step2.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js.map" />
-        <option value="$PROJECT_DIR$/src/main-jit.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js.map" />
-        <option value="$PROJECT_DIR$/src/main-jit.js" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/membership.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
-        <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
-        <option value="$PROJECT_DIR$/src/service/script.service.js" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js" />
-        <option value="$PROJECT_DIR$/src/service/tis.service.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
-        <option value="$PROJECT_DIR$/src/service/tis.service.js" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
-        <option value="$PROJECT_DIR$/src/index/application.js.map" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js" />
-        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js" />
-        <option value="$PROJECT_DIR$/src/index/application.js" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
-        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/test.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
-        <option value="$PROJECT_DIR$/src/polyfills.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
-        <option value="$PROJECT_DIR$/src/test.js" />
-        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.change.detail.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/environments/environment.prod.js" />
-        <option value="$PROJECT_DIR$/src/environments/environment.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js" />
-        <option value="$PROJECT_DIR$/src/environments/environment.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.change.detail.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/git.commit.diff.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/git.commits.component.js.map" />
-        <option value="$PROJECT_DIR$/src/environments/environment.prod.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step2.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline.module.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.change.create.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step2.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/db.add.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/git.commit.diff.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/ds.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/ds.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/db.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.change.create.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/git.commits.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
-        <option value="$PROJECT_DIR$/src/base/global.update.param.js.map" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.module.js.map" />
-        <option value="$PROJECT_DIR$/src/base/global.add.param.js.map" />
-        <option value="$PROJECT_DIR$/src/base/base.manage-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/base/global.params.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/base.manage-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/base/applist.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/addapp.step.flow.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/global.update.param.js" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.module.js" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/addapp-pojo.js" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">

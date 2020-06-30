@@ -53,6 +53,7 @@ export class TisHeaderTool {
               {{this.title}}
           </nz-breadcrumb-item>
       </nz-breadcrumb>
+      <nz-affix [nzOffsetTop]="10">
       <div class="tis-head">
           <tis-msg [result]="result"></tis-msg>
           <div [ngClass]="headTitleClass">
@@ -68,6 +69,7 @@ export class TisHeaderTool {
           </div>
           <div style="clear:both;"></div>
       </div>
+      </nz-affix>
   `,
 
   styles: [`

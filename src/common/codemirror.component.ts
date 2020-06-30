@@ -13,9 +13,6 @@ import "node_modules/codemirror/mode/xml/xml.js";
 import "node_modules/codemirror/mode/solr/solr.js";
 // ControlValueAccessor
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-// @ts-ignore
-// import * as $ from 'jquery';
-
 
 @Component({
   selector: 'tis-codemirror',

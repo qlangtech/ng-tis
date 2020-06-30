@@ -129,7 +129,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
   showSearch = false;
 
   ngOnInit(): void {
-    console.log(this.dto.coreNode.hosts);
+   // console.log(this.dto.coreNode.hosts);
     let url = '/runtime/addapp.ajax?action=add_app_action&emethod=get_selectable_node_list';
     this.jsonPost(url, {}).then((r) => {
       // console.log(r.bizresult);

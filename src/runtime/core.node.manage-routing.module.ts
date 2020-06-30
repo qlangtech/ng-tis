@@ -40,7 +40,7 @@ class CanActivateCollectionManage implements CanActivateChild {
         let canActive: boolean = r.bizresult;
         if (!canActive) {
           // this.router.navigate(["/base/appadd"], {queryParams: {step: 2}, relativeTo: this.route});
-          return this.router.parseUrl('/base/appadd?step=2');
+          return this.router.parseUrl(`/base/appadd?name=${collectionName}`);
         }
         return true;
       });
