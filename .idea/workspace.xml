@@ -3,19 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/datasource.git.commits.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.change.list.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.git.commits.component.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +40,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="settings.nodejs" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Confirmation" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
@@ -169,7 +158,7 @@
       <workItem from="1593147449416" duration="2055000" />
       <workItem from="1593408448452" duration="195000" />
       <workItem from="1593411914282" duration="318000" />
-      <workItem from="1593412737251" duration="9963000" />
+      <workItem from="1593412737251" duration="16113000" />
     </task>
     <servers />
   </component>

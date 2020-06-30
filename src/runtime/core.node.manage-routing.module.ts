@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 import {CorenodemanageComponent} from './corenodemanage.component';
 
-import {RouterModule, Routes} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, CanActivateChild, Router, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
 import {SnapshotsetComponent} from '../index/snapshotset.component';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {IndexQueryComponent} from './index.query.component';
@@ -13,6 +13,39 @@ import {IncrBuildComponent} from "./incr.build.component";
 import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {BuildProgressComponent} from "./core.build.progress.component";
+import {Observable} from "rxjs";
+import {TISService} from "../service/tis.service";
+import {CurrentCollection} from "../common/basic.form.component";
+
+@Injectable()
+class CanActivateCollectionManage implements CanActivateChild {
+  constructor(private tisService: TISService, private route: ActivatedRoute, private router: Router) {
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    // this.route.snapshot;
+    let collectionName = route.params["name"];
+    // console.log(`collection:${collectionName}`);
+    if (!collectionName) {
+      throw new Error("route param collectionName can not be null");
+    }
+    this.tisService.currentApp = new CurrentCollection(0, collectionName);
+    // return this.permissions.canActivate(this.currentUser, route.params.id);
+    return this.tisService.httpPost('/coredefine/coredefine.ajax'
+      , 'action=core_action&emethod=get_index_exist')
+      .then((r) => {
+        let canActive: boolean = r.bizresult;
+        if (!canActive) {
+          // this.router.navigate(["/base/appadd"], {queryParams: {step: 2}, relativeTo: this.route});
+          return this.router.parseUrl('/base/appadd?step=2');
+        }
+        return true;
+      });
+  }
+}
 
 const coreNodeRoutes: Routes = [
   {
@@ -20,6 +53,7 @@ const coreNodeRoutes: Routes = [
     children: [
       {
         path: '',
+        canActivateChild: [CanActivateCollectionManage],
         children: [
           {   // Schema 配置文件一览
             path: 'snapshotset',
@@ -82,11 +116,13 @@ const coreNodeRoutes: Routes = [
   ],
   declarations: [], exports: [
     RouterModule
-  ]
+  ],
+  providers: [CanActivateCollectionManage]
 })
 export class CoreNodeRoutingModule {
 
 }
+
 
 
 
