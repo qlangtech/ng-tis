@@ -134,7 +134,7 @@ export class AddAppConfirmComponent extends BasicFormComponent implements OnInit
   }
 
   ngOnInit(): void {
-    console.log(this.dto);
+   // console.log(this.dto);
     this.fields = this.dto.stupid.model.fields;
     this.appform = this.dto.appform;
     // this.dto.tplAppId = this.dto.stupid.model.tplAppId;

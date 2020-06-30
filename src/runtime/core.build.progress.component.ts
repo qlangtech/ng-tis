@@ -298,7 +298,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
             = status.indexBackFlowPhaseStatus;
           break;
         case "full":
-          k
+          console.log(response.data );
           break;
         default:
           throw new Error(`logttype:${response.logtype} is illegal`);

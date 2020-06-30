@@ -10,22 +10,28 @@ import {
   AfterContentInit, ViewContainerRef
 } from '@angular/core';
 import {AddAppConfirmComponent} from './addapp-confirm.component';
-import {AppDesc, ConfirmDTO, Option} from "./addapp-pojo";
+import {AppDesc, ConfirmDTO, Option, StupidModal} from "./addapp-pojo";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
+import {ActivatedRoute} from "@angular/router";
+import {BasicFormComponent} from "../common/basic.form.component";
+import {TISService} from "../service/tis.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   template: `
       <ng-template #container></ng-template>
   `
 })
-export class AddAppStepFlowComponent implements AfterContentInit, OnDestroy {
+export class AddAppStepFlowComponent extends BasicFormComponent implements AfterContentInit, OnDestroy {
 
   @ViewChild('container', {read: ViewContainerRef, static: true}) indexAddFlow: ViewContainerRef;
 
   private configFST: Map<any, { next: any, pre: any }>;
 
 
-  constructor(private _componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private _componentFactoryResolver: ComponentFactoryResolver
+    , private  route: ActivatedRoute, tisService: TISService, modalService: NgbModal) {
+    super(tisService, modalService);
   }
 
   public preStepClick(e: any): void {
@@ -46,20 +52,52 @@ export class AddAppStepFlowComponent implements AfterContentInit, OnDestroy {
     // TODO :将来还需要设置机器选择页面
     this.configFST.set(AddAppConfirmComponent, {next: null, pre: AddappSelectNodesComponent});
 
-    let dto = new ConfirmDTO();
-    dto.appform = new AppDesc();
-    dto.appform.name = "marss"
-    dto.appform.tisTpl = "lucene5.3";
-    dto.appform.workflow = "45:totalpay";
-    dto.appform.dptId = "356";
-    dto.appform.recept = "ddd";
-    let dpt = new Option();
-    dpt.name = "测试部门";
-    dpt.value = "356";
-    dto.appform.dpts = [dpt];
-    // this.loadComponent(AddAppFormComponent, null);
+    // let dto = new ConfirmDTO();
+    // dto.appform = new AppDesc();
+    // dto.appform.name = "marss"
+    // dto.appform.tisTpl = "lucene5.3";
+    // dto.appform.workflow = "45:totalpay";
+    // dto.appform.dptId = "356";
+    // dto.appform.recept = "ddd";
+    // let dpt = new Option();
+    // dpt.name = "测试部门";
+    // dpt.value = "356";
+    // dto.appform.dpts = [dpt];
 
-    this.loadComponent(AddappSelectNodesComponent, dto);
+    this.route.queryParams.subscribe((param) => {
+      let name = param["name"];
+      if (!!name) {
+        let url = "/runtime/addapp.ajax";
+        this.httpPost(url, `action=schema_action&emethod=get_app&name=${name}`)
+          .then((r) => {
+            let info = r.bizresult.app;
+            let dto = new ConfirmDTO();
+            dto.stupid = {model: StupidModal.deseriablize(r.bizresult.schema)};
+            dto.appform = new AppDesc();
+            dto.appform.name = info.projectName.substr(7);
+            dto.appform.tisTpl = info.tisTpl;
+            dto.appform.workflow = info.workflow;
+            dto.appform.dptId = info.dptId;
+            dto.appform.recept = info.recept;
+            if (info.selectableDepartment) {
+              dto.appform.dpts = [];
+              info.selectableDepartment.forEach((rr: { name: string, value: string }) => {
+                let o = new Option();
+                o.value = rr.value;
+                o.name = rr.name;
+                dto.appform.dpts.push(o);
+              });
+            }
+            // let dpt = new Option();
+            // dpt.name = "测试部门";
+            // dpt.value = "356";
+            // dto.appform.dpts = [dpt];
+            this.loadComponent(AddappSelectNodesComponent, dto);
+          });
+      } else {
+        this.loadComponent(AddAppFormComponent, null);
+      }
+    });
     // this.loadComponent(AddAppDefSchemaComponent, dto);
   }
 

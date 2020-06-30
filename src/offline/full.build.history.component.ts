@@ -27,7 +27,9 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
           </tis-col>
           <tis-col title="阶段描述" width="24">
               <ng-template let-rr='r'>
-                  {{rr.startPhase}}->{{rr.endPhase}}
+                  <nz-tag [nzColor]="'blue'">{{rr.startPhase}}</nz-tag>
+                  <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+                  <nz-tag [nzColor]="'blue'">{{rr.endPhase}}</nz-tag>
               </ng-template>
           </tis-col>
 
@@ -89,19 +91,20 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     });
 
     this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
+
+
   }
 
   public gotoPage(p: number) {
     this.httpPost('/coredefine/full_build_history.ajax'
       , `emethod=get_full_build_history&action=core_action&page=${p}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
-      if (r.success) {
-        if (!this.breadcrumb) {
-          let wfname = r.bizresult.payload[0];
-          this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
-        }
-        this.pager = new Pager(r.bizresult.curPage, r.bizresult.totalPage);
-        this.buildHistory = r.bizresult.rows;
+      if (!this.breadcrumb) {
+        let wfname = r.bizresult.payload[0];
+        this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
       }
+      this.pager = Pager.create(r);
+      this.buildHistory = r.bizresult.rows;
+
       this.cd.reattach();
     });
   }
