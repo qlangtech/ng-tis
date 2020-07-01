@@ -7,6 +7,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {NgTerminal} from "ng-terminal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd";
 import {Observable, Subject} from "rxjs";
+import {map} from 'rxjs/operators';
 
 
 @Component({
@@ -69,6 +70,7 @@ export class ProgressTitleComponent {
 
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
       <!--
       <button (click)="triggerFullBuild()">触发全量构建</button>
@@ -254,6 +256,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     // super.ngOnInit();
     this.route.params
       .subscribe((params: Params) => {
+        this.isSpinning = true;
         let taskid: number = parseInt(params['taskid'], 10);
 
         let wfid = params['wfid'];
@@ -281,9 +284,16 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   public receiveTriggerFullBuildLog(taskid: number): void {
     // 服务端生成了taskid
     this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
-      .map((response: MessageEvent): WSMessage => {
-        return new WSMessage('build_status_metrics', JSON.parse(response.data));
-      });
+      .pipe(map((response: MessageEvent) => {
+        let json = JSON.parse(response.data);
+        if (json.logType && json.logType === "FULL") {
+          return new WSMessage('full', json);
+        } else {
+          return new WSMessage('build_status_metrics', json);
+        }
+        // return new WSMessage('build_status_metrics', json);
+      }));
+
     this.msgSubject.subscribe((response: WSMessage): void => {
 
       switch (response.logtype) {
@@ -298,7 +308,8 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
             = status.indexBackFlowPhaseStatus;
           break;
         case "full":
-          console.log(response.data );
+          // console.log(response.data);
+          this.terminal.write(response.data.msg + "\r\n");
           break;
         default:
           throw new Error(`logttype:${response.logtype} is illegal`);

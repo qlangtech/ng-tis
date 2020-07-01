@@ -2,60 +2,60 @@ import {Component, OnInit} from '@angular/core';
 import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Pager} from "../common/pagination.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 // 查看操作日志
 @Component({
   template: `
-    <tis-page-header>操作日志</tis-page-header>
-    <div class="container">
-      <div class="row">
-        <div [class.col-8]="showDetail" [class.col-12]="!showDetail">
-          <tis-page [rows]="logs">
-            <tis-col title="用户名" width="14" field="usrName"></tis-col>
-            <tis-col title="操作对象" width="30" field="tabName"></tis-col>
-            <tis-col title="创建时间">
+
+      <tis-page-header title="操作日志">
+      </tis-page-header>
+
+      <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
+          <tis-col title="用户名" width="14" field="usrName"></tis-col>
+          <tis-col title="操作对象" width="30" field="tabName"></tis-col>
+          <tis-col title="创建时间">
               <ng-template let-l='r'>{{l.createTime | dateformat}}</ng-template>
-            </tis-col>
-            <tis-col title="操作">
+          </tis-col>
+          <tis-col title="操作">
               <ng-template let-l='r'>
-                <a href="javascript:void(0)" class="btn btn-secondary btn-sm" (click)="operationDetail(l.opId)">详细</a>
+                  <button nz-button [nzType]="'link'" (click)="operationDetail(l.opId)"><i nz-icon nzType="eye" nzTheme="outline"></i></button>
               </ng-template>
-            </tis-col>
-          </tis-page>
-        </div>
-        <div *ngIf="showDetail" class="col-4 alert alert-info" style="height:600px;overflow:auto;">
-          <button type="button" class="close" (click)="closeDetail()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-<pre>
-  {{detail}}
-</pre>
-        </div>
-      </div>
-    </div>
-
-    <div>
-    </div>
-
+          </tis-col>
+      </tis-page>
+      <nz-drawer
+              [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+              [nzMaskClosable]="true"
+              [nzWidth]="'40%'"
+              [nzVisible]="logVisible"
+              nzTitle="日志"
+              (nzOnClose)="logViewClose()"
+      >
+          <pre>{{detail}}</pre>
+      </nz-drawer>
   `
 })
 export class OperationLogComponent extends BasicFormComponent implements OnInit {
   logs: any[] = [];
   private detailLog: string;
+  pager: Pager = new Pager(1, 1);
+  logVisible: boolean;
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NgbModal, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
   }
 
 
   ngOnInit(): void {
-    this.httpPost('/runtime/operation_log.ajax'
-      , 'action=operation_log_action&emethod=get_init_data')
-      .then((r) => {
-        if (r.success) {
-          this.logs = r.bizresult;
-        }
-      });
+    this.route.queryParams.subscribe((param) => {
+      this.httpPost('/runtime/operation_log.ajax'
+        , `action=operation_log_action&emethod=get_init_data&page=${param['page']}`)
+        .then((r) => {
+          this.pager = Pager.create(r);
+          this.logs = r.bizresult.rows;
+        });
+    });
   }
 
   public get showDetail(): boolean {
@@ -67,15 +67,22 @@ export class OperationLogComponent extends BasicFormComponent implements OnInit 
   public operationDetail(opId: number): void {
     this.httpPost(
       '/runtime/operation_detail.ajax?action=operation_log_action&event_submit_do_get_detail=y&opid=' + opId, '')
-      .then(result => this.detailLog = result.msg[0]);
-  }
-
-  public closeDetail(): void {
-    this.detailLog = null;
+      .then(result => {
+        this.detailLog = result.bizresult.opDesc;
+        this.logVisible = true;
+      });
   }
 
   public get detail(): string {
     return this.detailLog;
   }
 
+  goPage(pageNum: number) {
+    Pager.go(this.router, this.route, pageNum);
+  }
+
+  logViewClose() {
+    this.logVisible = false;
+    this.detailLog = null;
+  }
 }

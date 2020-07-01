@@ -25,11 +25,17 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
                   {{rr.literalState}}
               </ng-template>
           </tis-col>
-          <tis-col title="阶段描述" width="24">
+          <tis-col title="阶段描述" width="12">
               <ng-template let-rr='r'>
                   <nz-tag [nzColor]="'blue'">{{rr.startPhase}}</nz-tag>
                   <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
                   <nz-tag [nzColor]="'blue'">{{rr.endPhase}}</nz-tag>
+              </ng-template>
+          </tis-col>
+
+          <tis-col title="开始时间" width="12">
+              <ng-template let-rr='r'>
+                  {{rr.createTime | dateformat}}
               </ng-template>
           </tis-col>
 
@@ -72,40 +78,60 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     this.route.params
       .subscribe((params: Params) => {
         this.wfid = parseInt(params['wfid'], 10);
-        this.gotoPage(1);
+
+        this.route.queryParams.subscribe((p) => {
+          this.httpPost('/coredefine/full_build_history.ajax'
+            , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
+            if (!this.breadcrumb) {
+              let wfname = r.bizresult.payload[0];
+              this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
+            }
+            this.pager = Pager.create(r);
+            this.buildHistory = r.bizresult.rows;
+
+            this.cd.reattach();
+          });
+        });
       });
   }
 
 // 刷新列表
-  public refesh():
-    void {
+  public refesh(): void {
     this.ngOnInit();
   }
 
   public triggerFullBuild(): void {
+    let processStrategy = {
+      url: "/coredefine/coredefine.ajax",
+      post: "action=core_action&emetho=trigger_fullbuild_task",
+      sucMsg: '全量索引构建已经触发'
+    };
 
-    let msg: any = [];
-    msg.push({
-      'content': '全量索引构建已经触发'
-      , 'link': {'content': '查看构建状态', 'href': '../buildprogress/' + 123}
-    });
-
-    this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
-
+    if (this.appNotAware) {
+      // 单纯数据流触发
+      processStrategy = {
+        url: "/offline/datasource.ajax",
+        post: `action=offline_datasource_action&emethod=execute_workflow&id=${this.wfid}`,
+        sucMsg: '数据流构建已经触发'
+      };
+    }
+    this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
+      let taskid = r.bizresult.taskid;
+      let msg: any = [];
+      msg.push({
+        'content': processStrategy.sucMsg
+        , 'link': {'content': `查看构建状态(${taskid})`, 'href': './' + taskid}
+      });
+      this.httpPost("/coredefine/coredefine.ajax", `action=core_action&emethod=get_workflow_build_history&taskid=${taskid}`)
+        .then((rr) => {
+          this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
+          this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
+        });
+    })
 
   }
 
   public gotoPage(p: number) {
-    this.httpPost('/coredefine/full_build_history.ajax'
-      , `emethod=get_full_build_history&action=core_action&page=${p}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
-      if (!this.breadcrumb) {
-        let wfname = r.bizresult.payload[0];
-        this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
-      }
-      this.pager = Pager.create(r);
-      this.buildHistory = r.bizresult.rows;
-
-      this.cd.reattach();
-    });
+    Pager.go(this.router, this.route, p);
   }
 }

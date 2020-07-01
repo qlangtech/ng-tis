@@ -63,7 +63,7 @@ export class BasicWFComponent extends BasicFormComponent {
       <tis-page [rows]="workflows" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
           <tis-col title="名称" width="14">
               <ng-template let-df='r'>
-                  <a [routerLink]="['/c',df.name]">{{df.name}}</a>
+                  <a [routerLink]="['/offline','wf_update',df.name]">{{df.name}}</a>
               </ng-template>
           </tis-col>
           <tis-col title="状态" width="14" [field]="'state'">

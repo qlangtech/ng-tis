@@ -269,7 +269,7 @@ export class WorkflowAddComponent extends BasicWFComponent
               private notification: NzNotificationService,
               private cdr: ChangeDetectorRef) {
     super(tisService, modalService, router, route);
-    this.formDisabled = true;
+    // this.formDisabled = true;
     // this.workflow = new Workflow();
     //  this.cdr.detach();
 //    console.log( Object.keys(graphlib));
@@ -658,9 +658,9 @@ export class WorkflowAddComponent extends BasicWFComponent
       this.topologyName = params['name'];
       if (this.topologyName !== undefined) {
         // this.isAdd = false;
-        setTimeout(() => {
+       // setTimeout(() => {
           this.isAdd = false;
-        });
+       // });
         let action = `emethod=get_workflow_topology&action=offline_datasource_action&topology=${this.topologyName}`;
         this.httpPost('/offline/datasource.ajax', action)
           .then(result => {
