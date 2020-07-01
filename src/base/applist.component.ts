@@ -1,6 +1,6 @@
 import {TISService} from '../service/tis.service';
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Pager} from '../common/pagination.component';
@@ -16,7 +16,7 @@ import {Pager} from '../common/pagination.component';
               </tis-header-tool>
           </tis-page-header>
           <tis-page [rows]="pageList" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
-              <tis-col title="索引名称" width="14">
+              <tis-col title="索引名称" width="14" (search)="filterByAppName($event)">
                   <ng-template let-app='r'>
                       <a [routerLink]="['/c',app.projectName]">{{app.projectName}}</a>
                   </ng-template>
@@ -48,26 +48,31 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   pager: Pager = new Pager(1, 1);
   pageList: any[];
 
-  constructor(tisService: TISService, private router: Router, modalService: NgbModal
+  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NgbModal
   ) {
-    // this.tisService.setAppSelectable(true);
     super(tisService, modalService);
   }
 
 
   ngOnInit(): void {
-    this.gotoPage(1);
+    this.route.queryParams.subscribe((param) => {
+
+      let nameQuery = '';
+      for (let key in param) {
+        nameQuery += ('&' + key + '=' + param[key]);
+      }
+      this.httpPost('/runtime/applist.ajax'
+        , 'emethod=get_apps&action=app_view_action' + nameQuery)
+        .then((r) => {
+          this.pager = Pager.create(r);
+          this.pageList = r.bizresult.rows;
+        });
+    })
   }
 
   public gotoPage(p: number) {
-    this.httpPost('/runtime/applist.ajax'
-      , 'emethod=get_apps&action=app_view_action&page=' + p)
-      .then((r) => {
-        if (r.success) {
-          this.pager = new Pager(r.bizresult.curPage, r.bizresult.totalPage, r.bizresult.totalCount, r.bizresult.pageSize);
-          this.pageList = r.bizresult.rows;
-        }
-      });
+
+    Pager.go(this.router, this.route, p);
   }
 
 
@@ -84,5 +89,14 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
 
   public gotAddIndex(): void {
     this.router.navigate(['/base/appadd']);
+  }
+
+  /**
+   * 使用索引名称来进行查询
+   * @param query
+   */
+  filterByAppName(data: { query: string, reset: boolean }) {
+    // console.log(query);
+    Pager.go(this.router, this.route, 1, {name: data.reset ? null : data.query});
   }
 }

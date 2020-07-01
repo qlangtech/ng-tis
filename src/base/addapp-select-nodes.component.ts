@@ -10,7 +10,7 @@ import {TransferDirection, TransferItem} from "ng-zorro-antd";
   // templateUrl: '/runtime/addapp_confirm.htm'
   template: `
       <tis-steps [type]="'createIndex'" step="2"></tis-steps>
-
+{{dto|json}}
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
           <tis-page-header [showBreadcrumb]="false" [result]="result">
               <button nz-button nzType="default" (click)="gotoPreStep()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>

@@ -18,12 +18,22 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 export class Pager {
 
-  public static go(router: Router, route: ActivatedRoute, page: number): void {
+  public static goTo(router: Router, route: ActivatedRoute, page: number, reset: boolean, extraParam?: any): void {
+    let params = {page: page};
+    if (extraParam) {
+      for (let key in extraParam) {
+        params[key] = extraParam[key];
+      }
+    }
     router.navigate([], {
       relativeTo: route,
-      queryParams: {page: page},
-      queryParamsHandling: "merge"
+      queryParams: params,
+      queryParamsHandling: reset ? null : 'merge'
     });
+  }
+
+  public static go(router: Router, route: ActivatedRoute, page: number, extraParam?: any): void {
+    Pager.goTo(router, route, page, false, extraParam);
   }
 
   public static create(result: TisResponseResult): Pager {
@@ -84,7 +94,24 @@ export class TisColumn implements AfterContentInit, AfterViewInit {
   @Input('width') width = -1;
   @ContentChild(TemplateRef, {static: false}) contentTempate: TemplateRef<any>;
 
+  // @Input('searchable') searchable = false;
+  searcherData = '';
+  @Output() search = new EventEmitter<{ query: string, reset: boolean }>();
+
+  get searchable(): boolean {
+    return this.search.observers.length > 0;
+  }
+
   constructor(private viewContainerRef: ViewContainerRef) {
+  }
+
+  public startSearch(): void {
+    this.search.emit({query: this.searcherData, reset: false});
+  }
+
+  public resetSearch(): void {
+    this.searcherData = '';
+    this.search.emit({query: '', reset: true});
   }
 
   ngAfterContentInit(): void {
@@ -139,14 +166,36 @@ export class TdContentDirective implements OnInit {
   selector: 'tis-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-
-
       <nz-table #tabrows [nzData]="rows" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                 (nzPageIndexChange)="searchData()"
                 [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
           <thead>
           <tr>
-              <th *ngFor="let k of cls" tis-th [key-meta]='k'>{{k.title}}</th>
+              <th *ngFor="let k of cls" tis-th [key-meta]='k' [nzCustomFilter]="k.searchable">{{k.title}}
+                  <i *ngIf="k.searchable"
+                     nz-th-extra
+                     class="ant-table-filter-icon"
+                     nz-icon
+                     nz-dropdown
+                     #dropdown="nzDropdown"
+                     nzType="search"
+                     [nzDropdownMenu]="menu"
+                     [class.ant-table-filter-open]="dropdown.nzVisible"
+                     nzTrigger="click"
+                     nzPlacement="bottomRight"
+                     [nzClickHide]="false"
+                     nzTableFilter
+                  ></i>
+                  <nz-dropdown-menu nzPlacement="bottomRight" nzTableFilter #menu="nzDropdownMenu">
+                      <div class="search-box">
+                          <input type="text" nz-input [placeholder]="k.title" [(ngModel)]="k.searcherData"/>
+                          <button nz-button nzSize="small" nzType="primary" (click)="k.startSearch()" class="search-button">
+                              查询
+                          </button>
+                          <button nz-button nzSize="small" (click)="k.resetSearch()">重置</button>
+                      </div>
+                  </nz-dropdown-menu>
+              </th>
           </tr>
           </thead>
           <tbody>
@@ -162,6 +211,17 @@ export class TdContentDirective implements OnInit {
           </tr>
           </tbody>
       </nz-table>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+          <div class="ant-table-filter-dropdown">
+              <div class="search-box">
+                  <input type="text" nz-input placeholder="Search name"/>
+                  <button nz-button nzSize="small" nzType="primary" class="search-button">
+                      Search
+                  </button>
+                  <button nz-button nzSize="small">Reset</button>
+              </div>
+          </div>
+      </nz-dropdown-menu>
       <!--
       <nav *ngIf="pager && pager.allPage>1" aria-label="翻页导航">
           <ul class="pagination pagination-sm ">
@@ -183,6 +243,24 @@ export class TdContentDirective implements OnInit {
       color: #999;
       padding: 5px;
       font-family: \\5b8b\\4f53, arial, san-serif;
+  }
+
+  .search-box {
+      padding: 8px;
+  }
+
+  .search-box input {
+      width: 188px;
+      margin-bottom: 8px;
+      display: block;
+  }
+
+  .search-box button {
+      width: 90px;
+  }
+
+  .search-button {
+      margin-right: 8px;
   }
 
   .curr-page {
@@ -226,6 +304,9 @@ export class PaginationComponent implements AfterContentInit, OnInit {
   searchData() {
     // console.log(this.pager);
     this.getPage(this.pager.page);
+  }
+
+  search() {
   }
 }
 

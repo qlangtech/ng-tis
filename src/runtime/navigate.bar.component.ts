@@ -76,7 +76,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
             <div class="dropdown-menu" aria-labelledby="navbarManage">
 
               <a class="dropdown-item" routerLink="/base/departmentlist">业务线</a>
-                <a class="dropdown-item" routerLink="/base/basecfg">配置</a>
+                <a class="dropdown-item" routerLink="/base/basecfg">插件配置</a>
               <a class="dropdown-item" routerLink="/base/globalparams">全局参数</a>
 
               <a class="dropdown-item" routerLink="/base/operationlog">操作日志</a>
@@ -88,8 +88,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                aria-haspopup="true" aria-expanded="false">离线数据</a>
             <div class="dropdown-menu" aria-labelledby="navbarDatasource">
               <a class="dropdown-item" routerLink="/offline/ds">数据源管理</a>
-              <a class="dropdown-item" routerLink="/offline/wf">WF管理</a>
-              <a class="dropdown-item" routerLink="/offline/wf_change_list">变更管理</a>
+              <a class="dropdown-item" routerLink="/offline/wf">DF管理</a>
             </div>
           </li>
 

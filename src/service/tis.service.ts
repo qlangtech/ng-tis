@@ -163,7 +163,7 @@ export class TISService {
       let errContent = '<ul class="list-ul-msg">' + errs.map((r) => `<li>${r}</li>`).join('') + '</ul>';
       this.notification.create('error', '错误'
         , errContent, {nzDuration: 0});
-      return result;
+      // return result;
     }
   }
 
