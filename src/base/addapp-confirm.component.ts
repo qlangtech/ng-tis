@@ -22,35 +22,35 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
                       <button nz-button nzType="primary" (click)="createIndex()"><i class="fa fa-rocket" aria-hidden="true"></i>创建索引</button>
                   </tis-header-tool>
               </tis-page-header>
-<!--
-              <h4>基本信息</h4>
-              <table class="table table-bordered">
-                  <tr>
-                      <td align="right" width="15%">索引名称</td>
-                      <td width="35%">search4{{appform.name}}</td>
-                      <td></td>
-                      <td width="35%"></td>
-                  </tr>
-                  <tr>
-                      <td align="right">数据流</td>
-                      <td>{{appform.workflow}}</td>
-                      <td align="right">所属部门</td>
-                      <td>{{appform.checkedDptName}}</td>
-                  </tr>
-                  <tr>
-                      <td align="right">接口人</td>
-                      <td>{{appform.recept}}</td>
-                      <td align="right">配置模板</td>
-                      <td>{{appform.tisTpl}}</td>
-                  </tr>
-                  <tr>
-                      <td align="right"><i class="fa fa-server" aria-hidden="true"></i>服务器节点</td>
-                      <td colspan="3">
-                          {{coreNodeCandidate.hostName}}(已部署{{coreNodeCandidate.solrCoreCount}}个Core节点)
-                      </td>
-                  </tr>
-              </table>
--->
+              <!--
+                            <h4>基本信息</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td align="right" width="15%">索引名称</td>
+                                    <td width="35%">search4{{appform.name}}</td>
+                                    <td></td>
+                                    <td width="35%"></td>
+                                </tr>
+                                <tr>
+                                    <td align="right">数据流</td>
+                                    <td>{{appform.workflow}}</td>
+                                    <td align="right">所属部门</td>
+                                    <td>{{appform.checkedDptName}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right">接口人</td>
+                                    <td>{{appform.recept}}</td>
+                                    <td align="right">配置模板</td>
+                                    <td>{{appform.tisTpl}}</td>
+                                </tr>
+                                <tr>
+                                    <td align="right"><i class="fa fa-server" aria-hidden="true"></i>服务器节点</td>
+                                    <td colspan="3">
+                                        {{coreNodeCandidate.hostName}}(已部署{{coreNodeCandidate.solrCoreCount}}个Core节点)
+                                    </td>
+                                </tr>
+                            </table>
+              -->
               <nz-descriptions nzTitle="基本信息" nzBordered>
                   <nz-descriptions-item nzTitle="索引名称">search4{{appform.name}}</nz-descriptions-item>
                   <nz-descriptions-item nzTitle="数据流">{{appform.workflow}}</nz-descriptions-item>
@@ -61,7 +61,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
                   </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="拓扑结构">
                       Shard:{{coreNodeCandidate.shardCount}}组,Replica:{{coreNodeCandidate.replicaCount}}副本 <br>
-                      节点<nz-tag *ngFor="let t of coreNodeCandidate.hosts">{{t.hostName}}</nz-tag>
+                      节点
+                      <nz-tag *ngFor="let t of coreNodeCandidate.hosts">{{t.hostName}}</nz-tag>
                   </nz-descriptions-item>
               </nz-descriptions>
               <br/>
@@ -134,16 +135,15 @@ export class AddAppConfirmComponent extends BasicFormComponent implements OnInit
   }
 
   ngOnInit(): void {
-   // console.log(this.dto);
+    // console.log(this.dto);
     this.fields = this.dto.stupid.model.fields;
     this.appform = this.dto.appform;
-    // this.dto.tplAppId = this.dto.stupid.model.tplAppId;
   }
 
   // 执行索引创建
   public createIndex(): void {
     this.jPost(
-      '/runtime/addapp.ajax?action=add_app_action&emethod=advance_add_app'
+      `/runtime/addapp.ajax?action=add_app_action&emethod=${this.dto.recreate ? "create_collection" : "advance_add_app"}`
       , this.dto).then((r) => {
       this.processResult(r);
       if (r.success) {

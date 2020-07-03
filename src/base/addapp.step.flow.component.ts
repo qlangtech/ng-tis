@@ -72,6 +72,7 @@ export class AddAppStepFlowComponent extends BasicFormComponent implements After
           .then((r) => {
             let info = r.bizresult.app;
             let dto = new ConfirmDTO();
+            dto.recreate = true;
             dto.stupid = {model: StupidModal.deseriablize(r.bizresult.schema)};
             dto.appform = new AppDesc();
             dto.appform.name = info.projectName.substr(7);

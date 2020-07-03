@@ -51,9 +51,9 @@ import {ERRules, LinkRule, WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 
 
-const TYPE_DUMP_TABLE = 'table';
-console.log(Draggable)
-console.log(G6);
+export const TYPE_DUMP_TABLE = 'table';
+// console.log(Draggable)
+// console.log(G6);
 
 //
 @Component({
@@ -92,11 +92,11 @@ console.log(G6);
                                   </div>
                               </div>
                           </div>
-
                       </nz-tab>
-                      <nz-tab nzTitle="ER" (nzSelect)="erTabSelect()">
+                      <nz-tab nzTitle="ER">
                           <ng-template nz-tab>
-                              <offline-er #erComponent [dumpNodes]="erNodes" (edgeClick)="erNodesEdgeClick($event)" (nodeClick)="erNodesNodeClick($event)"></offline-er>
+                              <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)" [topologyName]="topologyName"
+                                          [_nodeTypes]="_nodeTypes" (nodeClick)="erNodesNodeClick($event)"></offline-er>
                           </ng-template>
                       </nz-tab>
                   </nz-tabset>
@@ -188,9 +188,14 @@ console.log(G6);
     `]
 })
 export class WorkflowAddComponent extends BasicWFComponent
-  implements IDataFlowMainComponent, OnInit, AfterContentInit, AfterViewInit, AfterViewChecked {
-
-
+  implements IDataFlowMainComponent, OnInit, AfterContentInit, AfterViewInit {
+  private _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
+  public _nodeTypesAry: NodeMeta[] = [
+    new NodeMeta(TYPE_DUMP_TABLE, 'table.svg', [40, 40], '数据表', WorkflowAddDbtableSetterComponent)
+    , new NodeMeta('join', 'cog.svg', [40, 40], 'JOIN', WorkflowAddJoinComponent)
+    , new NodeMeta('union', 'union.svg', [40, 40], "UNION", WorkflowAddUnionComponent)
+    , new NodeMeta('nest', 'nestable.svg', [35, 35], 'NEST', WorkflowAddNestComponent)
+  ];
   // tables: Table[];
   parent: WorkflowComponent;
   // workflow: any;
@@ -203,21 +208,11 @@ export class WorkflowAddComponent extends BasicWFComponent
   validateSaveTopologyDialogForm: FormGroup;
   private topologyName: string;
   workflow: Dataflow;
-  erNodes: ERRules;
+  // erNodes: ERRules;
   // g6graph
   private graph: any;
 
   @ViewChild(AddAppFlowDirective, {static: true}) sidebarComponent: AddAppFlowDirective;
-
-
-  private _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
-  public _nodeTypesAry: NodeMeta[] = [
-    new NodeMeta(TYPE_DUMP_TABLE, 'table.svg', [40, 40], '数据表', WorkflowAddDbtableSetterComponent)
-    , new NodeMeta('join', 'cog.svg', [40, 40], 'JOIN', WorkflowAddJoinComponent)
-    , new NodeMeta('union', 'union.svg', [40, 40], "UNION", WorkflowAddUnionComponent)
-    , new NodeMeta('nest', 'nestable.svg', [35, 35], 'NEST', WorkflowAddNestComponent)
-  ];
-
   dumpTabs: Map<string, DumpTable> = new Map();
   joinNodeMap: Map<string /*id*/, JoinNode> = new Map();
 
@@ -229,6 +224,22 @@ export class WorkflowAddComponent extends BasicWFComponent
 
   @ViewChild('erComponent', {static: false}) erRuleComponent: WorkflowERComponent;
 
+  public static addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
+
+    let model = {
+      id: id,
+      'x': x,
+      'y': y,
+      shape: 'image',
+      img: meta.imgPath,
+      size: [meta.width, meta.height],
+      style: {
+        'cursor': 'pointer'
+      },
+      'nodeMeta': nmeta
+    };
+    return model;
+  }
 
   get pageTitle(): string {
     return (this.isAdd ? "添加数据流" : (this.topologyName));
@@ -277,72 +288,6 @@ export class WorkflowAddComponent extends BasicWFComponent
     this._nodeTypesAry.forEach((n) => {
       this._nodeTypes.set(n.type, n);
     });
-  }
-
-
-  erTabSelect() {
-    // this.cdr.detach();
-    this.httpPost(`/offline/datasource.ajax?emethod=get_er_rule&action=offline_datasource_action`, 'topology=' + this.topologyName)
-      .then(result => {
-        if (result.success) {
-          let tmpNodes: { x: number, y: number, nodeMeta: DumpTable, extraMeta?: ERMetaNode }[] = [];
-          let linkList: LinkRule[] = [];
-          // this.erNodes = [];
-          let dumpNodes: any[] = null;
-          if (result.bizresult && (dumpNodes = result.bizresult.dumpNodes)) {
-            let rlist: any[] = result.bizresult.relationList;
-            rlist.forEach((r) => {
-              linkList.push(r);
-              // linkList.push(lr);
-            });
-            let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
-            // console.log(nodeMeta);
-            dumpNodes.forEach((r) => {
-              let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.tabid, r.name);
-              let m = this.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
-              m.label = r.name;
-
-              if (r.extraMeta) {
-                let rem = r.extraMeta;
-                let em = new ERMetaNode(n, this.topologyName);
-                em.monitorTrigger = rem.monitorTrigger;
-                em.timeVerColName = rem.timeVerColName;
-                if (rem.primaryIndexColumnNames) {
-                  em.primaryIndexColumnNames = [];
-                  rem.primaryIndexColumnNames.forEach((pkName: { name: string, pk: boolean }) => {
-                    em.primaryIndexColumnNames.push(new PrimaryIndexColumnName(pkName.name, pkName.pk));
-                  });
-                }
-                em.primaryIndexTab = rem.primaryIndexTab;
-                rem.colTransfers.forEach((rr: ColumnTransfer) => {
-                  // public colKey: string, public transfer: string, public param: string
-                  let t = new ColumnTransfer(rr.colKey, rr.transfer, rr.param);
-                  em.columnTransferList.push(t);
-                });
-                // console.log(em);
-                m.extraMeta = em;
-              }
-
-              tmpNodes.push(m);
-            });
-          } else {
-            let j = this.graph.save();
-            let tNodes: any[] = j.nodes;
-            tNodes.forEach((n) => {
-              if (n.nodeMeta instanceof DumpTable) {
-                tmpNodes.push(n);
-              }
-            });
-          }
-          let erNodes: ERRules = Object.apply({});
-          erNodes.dumpNodes = tmpNodes;
-          erNodes.linkList = linkList;
-          this.erNodes = erNodes; // {'dumpNodes': tmpNodes, 'linkList': linkList};
-        }
-        // this.cdr.reattach();
-      });
-
-
   }
 
   // 保存图形
@@ -471,7 +416,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     let tabNodeMeta = this.getNodeMeta(TYPE_DUMP_TABLE);
     dumpNodes.forEach((d) => {
       let tabNode = new DumpTable(tabNodeMeta, d.id, d.extraSql, d.dbid, d.tabid, d.name);
-      dumpMode = this.addItem2UI(d.id, d.position.x, d.position.y, tabNodeMeta, tabNode);
+      dumpMode = WorkflowAddComponent.addItem2UI(d.id, d.position.x, d.position.y, tabNodeMeta, tabNode);
       dumpMode.label = d.name;
 
       dumpMode.nodeMeta = tabNode;
@@ -489,7 +434,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     for (let i = 0; i < nmetas.length; i++) {
       n = nmetas[i];
       meta = this.getNodeMeta(n.type);
-      processNodeMode = this.addItem2UI(n.id, n.position.x, n.position.y, meta, new JoinNode(meta, n.id));
+      processNodeMode = WorkflowAddComponent.addItem2UI(n.id, n.position.x, n.position.y, meta, new JoinNode(meta, n.id));
       processNodeMode.label = n.exportName;
 
       //  nodeMeta: NodeMeta, public exportName?: string, public id?: string, public position?: Pos, public sql?: string
@@ -652,32 +597,31 @@ export class WorkflowAddComponent extends BasicWFComponent
     //   }]
     // });
     // graph.render();
+    let params = this.route.snapshot.params;
+    // 有参数即为更新模式
+    this.topologyName = params['name'];
+    if (this.topologyName !== undefined) {
+      // this.isAdd = false;
+      // setTimeout(() => {
+      this.isAdd = false;
 
-    this.route.params.subscribe((params: Params) => {
-      // 有参数即为更新模式
-      this.topologyName = params['name'];
-      if (this.topologyName !== undefined) {
-        // this.isAdd = false;
-       // setTimeout(() => {
-          this.isAdd = false;
-       // });
-        let action = `emethod=get_workflow_topology&action=offline_datasource_action&topology=${this.topologyName}`;
-        this.httpPost('/offline/datasource.ajax', action)
-          .then(result => {
-            if (result.success) {
-              // 执行逻辑表
-              let nmetas: NodeMetaConfig[] = result.bizresult.nodeMetas;
-              // 数据库源表
-              let dumpNode: NodeMetaDependency[] = result.bizresult.dumpNodes;
+      // });
+      let action = `emethod=get_workflow_topology&action=offline_datasource_action&topology=${this.topologyName}`;
+      this.httpPost('/offline/datasource.ajax', action)
+        .then(result => {
+          if (result.success) {
+            // 执行逻辑表
+            let nmetas: NodeMetaConfig[] = result.bizresult.nodeMetas;
+            // 数据库源表
+            let dumpNode: NodeMetaDependency[] = result.bizresult.dumpNodes;
 
-              this.workflow = new Dataflow();
-              this.workflow.id = result.bizresult.dataflowId;
-              this.workflow.name = result.bizresult.name;
-              this.drawNodes(this.graph, nmetas, dumpNode);
-            }
-          });
-      }
-    });
+            this.workflow = new Dataflow();
+            this.workflow.id = result.bizresult.dataflowId;
+            this.workflow.name = result.bizresult.name;
+            this.drawNodes(this.graph, nmetas, dumpNode);
+          }
+        });
+    }
 
 
 // jQuery.select("");
@@ -729,7 +673,7 @@ export class WorkflowAddComponent extends BasicWFComponent
           throw new Error(`invalid type ${clientPos.nodemeta.type}`);
       }
 
-      this.graph.addItem('node', this.addItem2UI(nodeid, clientPos.x, clientPos.y, clientPos.nodemeta, sidebarDTO));
+      this.graph.addItem('node', WorkflowAddComponent.addItem2UI(nodeid, clientPos.x, clientPos.y, clientPos.nodemeta, sidebarDTO));
       this.openSideBar(this.graph, nodeid, clientPos.nodemeta.compRef, sidebarDTO);
       this._opened = true;
     });
@@ -739,35 +683,11 @@ export class WorkflowAddComponent extends BasicWFComponent
       let nodeinfo = evt.item._cfg;
 
       let nmeta: BasicSidebarDTO = nodeinfo.model.nodeMeta;
-
-      // console.log(nmeta);
-      // if (clientPos.nodemeta === undefined) {
       clientPos.nodemeta = this.getNodeMeta(nmeta.nodeMeta.type);
-      // }
       this.openSideBar(this.graph, nodeinfo.id, clientPos.nodemeta.compRef, nmeta);
       this._opened = true;
     });
-  }
-
-  ngAfterViewChecked(): void {
-
-  }
-
-  private addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
-
-    let model = {
-      id: id,
-      'x': x,
-      'y': y,
-      shape: 'image',
-      img: meta.imgPath,
-      size: [meta.width, meta.height],
-      style: {
-        'cursor': 'pointer'
-      },
-      'nodeMeta': nmeta
-    };
-    return model;
+    this.cdr.detectChanges();
   }
 
   // selectNode 用于在update流程下传输selectNode对象

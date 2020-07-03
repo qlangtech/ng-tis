@@ -88,7 +88,7 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
 
   public doSaveContent(): void {
 
-    this.model.filename = 'schema';
+    this.model.filename = this.pageTitle;
     this.model.snapshotid = this.snid;
 
     this.nzmodalService.confirm({
