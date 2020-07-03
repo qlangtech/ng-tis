@@ -1,6 +1,6 @@
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
-  BasicFormComponent, DumpTable, ERMetaNode, LinkKey,
+  BasicFormComponent, ColumnTransfer, DumpTable, ERMetaNode, LinkKey, NodeMeta, PrimaryIndexColumnName,
   // tslint:disable-next-line:no-unused-variable
 } from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
@@ -12,7 +12,7 @@ import {Grid} from "@antv/g6/build/plugins.js";
 
 import * as G6 from '@antv/g6';
 // import Grid from '@antv/g6';
-import {WorkflowAddComponent} from "./workflow.add.component";
+import {TYPE_DUMP_TABLE, WorkflowAddComponent} from "./workflow.add.component";
 import {consoleTestResultHandler} from "tslint/lib/test";
 // import {EdgeConfig} from "@antv/g6/lib/types";
 //  @ts-ignore
@@ -135,7 +135,7 @@ G6.registerBehavior('click-add-edge', {
         // @ts-ignore
         target: point,
         // @ts-ignore
-       // label: ["test", "label"],
+        // label: ["test", "label"],
         style: edgeViewStyle
       };
       this.edge = graph.addItem('edge', edgeCfg);
@@ -203,6 +203,11 @@ export class WorkflowERComponent
   private graph: any;
   private _editMode: "dragnode" | 'default' = MODE_DRAG;
   // dumpNodes: { x: number, y: number, nodeMeta: DumpTable }[] = [];
+  @Input()
+  _nodeTypes: Map<string /*type*/, NodeMeta>;
+
+  @Input()
+  topologyName: string;
 
   @Output() edgeClick = new EventEmitter<any>();
 
@@ -226,7 +231,66 @@ export class WorkflowERComponent
     return this._editMode;
   }
 
-  @Input()
+  erTabSelect() {
+    this.httpPost(`/offline/datasource.ajax?emethod=get_er_rule&action=offline_datasource_action`, 'topology=' + this.topologyName)
+      .then(result => {
+        let tmpNodes: { x: number, y: number, nodeMeta: DumpTable, extraMeta?: ERMetaNode }[] = [];
+        let linkList: LinkRule[] = [];
+        // this.erNodes = [];
+        let dumpNodes: any[] = null;
+        if (result.bizresult && (dumpNodes = result.bizresult.dumpNodes)) {
+          let rlist: any[] = result.bizresult.relationList;
+          rlist.forEach((r) => {
+            linkList.push(r);
+            // linkList.push(lr);
+          });
+          let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
+          // console.log(nodeMeta);
+          dumpNodes.forEach((r) => {
+            let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.tabid, r.name);
+            let m = WorkflowAddComponent.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
+            m.label = r.name;
+
+            if (r.extraMeta) {
+              let rem = r.extraMeta;
+              let em = new ERMetaNode(n, this.topologyName);
+              em.monitorTrigger = rem.monitorTrigger;
+              em.timeVerColName = rem.timeVerColName;
+              if (rem.primaryIndexColumnNames) {
+                em.primaryIndexColumnNames = [];
+                rem.primaryIndexColumnNames.forEach((pkName: { name: string, pk: boolean }) => {
+                  em.primaryIndexColumnNames.push(new PrimaryIndexColumnName(pkName.name, pkName.pk));
+                });
+              }
+              em.primaryIndexTab = rem.primaryIndexTab;
+              rem.colTransfers.forEach((rr: ColumnTransfer) => {
+                // public colKey: string, public transfer: string, public param: string
+                let t = new ColumnTransfer(rr.colKey, rr.transfer, rr.param);
+                em.columnTransferList.push(t);
+              });
+              // console.log(em);
+              m.extraMeta = em;
+            }
+
+            tmpNodes.push(m);
+          });
+        } else {
+          let j = this.graph.save();
+          let tNodes: any[] = j.nodes;
+          tNodes.forEach((n) => {
+            if (n.nodeMeta instanceof DumpTable) {
+              tmpNodes.push(n);
+            }
+          });
+        }
+        let erNodes: ERRules = Object.apply({});
+        erNodes.dumpNodes = tmpNodes;
+        erNodes.linkList = linkList;
+        this.dumpNodes = erNodes; // {'dumpNodes': tmpNodes, 'linkList': linkList};
+      });
+  }
+
+  // @Input()
   public set dumpNodes(vals: ERRules
                        // {
                        //   dumpNodes: { x: number, y: number, nodeMeta: DumpTable }[],
@@ -276,6 +340,7 @@ export class WorkflowERComponent
   }
 
   ngAfterContentInit(): void {
+    this.erTabSelect();
   }
 
   ngAfterViewInit(): void {

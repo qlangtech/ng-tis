@@ -84,6 +84,9 @@ export class ConfirmDTO {
   expert: { xml: string };
   stupid: { model: StupidModal };
 
+  // 当上一次索引已经创建，经过删除之后需要重新创建
+  recreate = false;
+
   // 日常环境中使用的候选服务器
   coreNode: CoreNodeCandidate = new CoreNodeCandidate();
 }

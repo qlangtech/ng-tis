@@ -103,7 +103,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   public triggerFullBuild(): void {
     let processStrategy = {
       url: "/coredefine/coredefine.ajax",
-      post: "action=core_action&emetho=trigger_fullbuild_task",
+      post: "action=core_action&emethod=trigger_fullbuild_task",
       sucMsg: '全量索引构建已经触发'
     };
 
