@@ -314,6 +314,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         default:
           throw new Error(`logttype:${response.logtype} is illegal`);
       }
+      this.cd.detectChanges();
       if (this.isSpinning) {
         this.isSpinning = false;
       }

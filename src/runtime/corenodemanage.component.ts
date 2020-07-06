@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, ElementRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {TriggerDumpComponent} from "./trigger_dump.component";
@@ -10,6 +10,10 @@ import {CopyOtherCoreComponent} from "./copy.other.core.component";
 import {SnapshotChangeLogComponent} from "./snapshot.change.log";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import * as dagreD3 from 'dagre-d3';
+import * as d3 from 'd3';
+
+console.log(dagreD3);
 
 // 这个类专门负责router
 @Component({
@@ -71,7 +75,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
                           </div>
                           当前版本<a routerLink="./snapshotset">更改</a>
                           <strong>Ver:</strong>{{config.publishSnapshotId}}<a href="#" title="{{config.snapshot.createUserName}}">
-                          <img src="/runtime/imgs/note.jpg" border="0"></a>
+                      </a>
 
                           <a href='javascript:void(0)'
                              (click)="openSchemaDialog(  config.publishSnapshotId  ,true)">[schema.xml]</a>&nbsp;
@@ -151,14 +155,43 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
                   </div>
               </div>
           </div>
+          <div class="row">
+              <svg id="svg-canvas" #svgblock width='1600' height=600></svg>
+          </div>
       </div>
-  `
+  `,
+  styles: [`
+      .clusters rect {
+          fill: #00ffd0;
+          stroke: #999;
+          stroke-width: 1.5px;
+      }
+
+      text {
+          font-weight: 300;
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+          font-size: 14px;
+      }
+
+      .node rect {
+          stroke: #999;
+          fill: #fff;
+          stroke-width: 1.5px;
+      }
+
+      .edgePath path {
+          stroke: #333;
+          stroke-width: 1.5px;
+      }
+  `]
 })
 export class CorenodemanageComponent extends AppFormComponent {
 // http://localhost:8080/coredefine/corenodemanage.ajax?action=core_action&emethod=get_view_data
   app: any;
   config: any;
   instanceDirDesc: any;
+
+  @ViewChild('svgblock', {static: false}) svgblock: ElementRef;
 
   constructor(tisService: TISService, modalService: NgbModal
     , route: ActivatedRoute, private router: Router) {
@@ -172,13 +205,70 @@ export class CorenodemanageComponent extends AppFormComponent {
           this.app = r.bizresult.app;
           this.config = r.bizresult.config;
           this.instanceDirDesc = r.bizresult.instanceDirDesc;
-          this.paintToplog(null, r.bizresult.topology);
+          this.paintToplog(app, this.createGraph(), r.bizresult.topology);
         }
       });
   }
 
-  private paintToplog(g: any, data: any): void {
+  private paintToplog(app: CurrentCollection, g: any, data: any): void {
+    console.log(data);
+    let appname = app.appName;
+    g.setNode(appname, {label: appname, style: 'fill: #a5e7b7;stroke-width: 1.5px;stroke: #999'});
 
+    data.shareds.forEach((shard) => {
+      g.setNode(shard.name, {label: shard.name, clusterLabelPos: 'top', style: 'fill: #d3d7e8;stroke-width: 1.5px;stroke: #999'});
+
+      shard.replics.forEach((r) => {
+        g.setNode(r.name, {label: r.name, shape: "ellipse", style: 'fill: white;cursor: pointer;'});
+        g.setParent(r.name, shard.name);
+        g.setEdge(r.name, appname, {style: 'stroke: #333;stroke-width: 1.5px'});
+      });
+    });
+    g.nodes().forEach(function (v) {
+      let node = g.node(v);
+      // console.log(node);
+      // node.elem.onclick = function () {
+      //   console.log("xxxxx");
+      // };
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
+    });
+    let render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+    let svg = d3.select(this.svgblock.nativeElement),
+      svgGroup = svg.append("g");
+// Run the renderer. This is what draws the final graph.
+    render(svg.select("g"), g);
+
+    svg.selectAll("g.node").on("click", function (d) {
+
+    });
+
+// Center the graph
+    let xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    // svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+    svgGroup.attr("transform", "translate(" + 100 + ", 20)");
+    // console.log(g.graph().height);
+    svg.attr("height", g.graph().height + 40);
+  }
+
+
+  private createGraph(): any {
+
+    // Create the input graph
+    let g = new dagreD3.graphlib.Graph({compound: true})
+      .setGraph({
+        nodesep: 10,
+        ranksep: 40,
+        rankdir: "LR",
+        marginx: 10,
+        marginy: 20
+      })
+      .setDefaultEdgeLabel(function () {
+        return {};
+      });
+    return g;
   }
 
   public jsonString(v: any): string {
