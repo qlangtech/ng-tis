@@ -113,7 +113,7 @@ export class AppDesc {
   // , dptId: form.dptId.value, recept: form.recept.value
 
   name: string;
-  tisTpl: string;
+  // tisTpl: string;
   workflow: string;
   dptId: string;
   recept: string;

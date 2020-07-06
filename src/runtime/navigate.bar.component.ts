@@ -160,7 +160,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
     const optionList$: Observable<string[]> = this.searchChange$
       .asObservable()
-      .pipe(debounceTime(1000))
+      .pipe(debounceTime(500))
       .pipe(switchMap(getIndeNameList));
 
     optionList$.subscribe(data => {

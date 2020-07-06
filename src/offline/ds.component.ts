@@ -51,7 +51,7 @@ import {NzFormatEmitEvent, NzTreeNodeOptions} from "ng-zorro-antd";
               <ng-template #suffixIcon>
                   <i nz-icon nzType="search"></i>
               </ng-template>
-              <nz-spin style="width:100%;min-height: 300px" [nzSize]="'large'" [nzSpinning]="treeLoad">
+              <nz-spin style="width:100%;min-height: 300px;" [nzSize]="'large'" [nzSpinning]="treeLoad">
                   <nz-tree [nzData]="nodes"
                            (nzClick)="nzDSTreeClickEvent($event)"
                            (nzExpandChange)="nzEvent($event)"

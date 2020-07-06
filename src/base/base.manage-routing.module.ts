@@ -1,4 +1,4 @@
-import {NgModule}       from '@angular/core';
+import {NgModule} from '@angular/core';
 
 // import {FormsModule} from '@angular/forms';
 import {BaseMangeIndexComponent} from './base.manage.index.component';
@@ -61,8 +61,7 @@ const basemanageRoutes: Routes = [
   imports: [
     RouterModule.forChild(basemanageRoutes)
   ],
-  declarations: [
-  ], exports: [
+  declarations: [], exports: [
     RouterModule
   ]
 })
