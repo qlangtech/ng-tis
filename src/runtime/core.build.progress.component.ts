@@ -109,7 +109,7 @@ export class ProgressTitleComponent {
 
               <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.buildPhase">
-                      <li *ngFor="let t of liveExecLog.buildPhase.details;">
+                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">
                           <dt>{{t.name}}</dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
@@ -122,7 +122,7 @@ export class ProgressTitleComponent {
 
               <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">
-                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.details;">
+                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">
                           <dt>{{t.name}}</dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>

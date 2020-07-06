@@ -12,9 +12,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
       <tis-steps type="createIndex" [step]="0"></tis-steps>
     <tis-page-header [showBreadcrumb]="false" [result]="result">
       <tis-header-tool>
-        <button nz-button nzType="primary" (click)="createIndexStep1Next(form)">下一步</button>
-          &nbsp;
-        <button nz-button nzType="default">直接创建</button>
+        <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>
       </tis-header-tool>
     </tis-page-header>
     <form #form method="post">
@@ -28,6 +26,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
             </nz-input-group>
           </div>
         </div>
+       <!--
         <div class="form-group row">
           <label for="inputtpl" class="col-2 col-form-label">配置模板</label>
           <div class="col-10">
@@ -37,6 +36,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
             </select>
           </div>
         </div>
+        -->
         <div class="form-group row">
           <label for="input_workflow" class="col-2 col-form-label">数据流</label>
           <div class="col-10">
@@ -104,16 +104,16 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
   }
 
   // 执行下一步
-  public createIndexStep1Next(form: { tisTpl: any, workflow: any, name: any, dptId: any, recept: any }): void {
+  public createIndexStep1Next(): void {
     let dto = new ConfirmDTO();
     dto.appform = this.model;
-    dto.appform.name = form.name.value;
-    dto.appform.tisTpl = form.tisTpl.value;
-    dto.appform.workflow = form.workflow.value;
-    dto.appform.dptId = form.dptId.value;
-    dto.appform.recept = form.recept.value;
+    // dto.appform.name = form.name.value;
+   // dto.appform.tisTpl = form.tisTpl.value;
+    // dto.appform.workflow = form.workflow.value;
+    // dto.appform.dptId = form.dptId.value;
+    // dto.appform.recept = form.recept.value;
     this.jsonPost('/runtime/addapp.ajax?action=add_app_action&emethod=validate_app_form'
-      , JSON.stringify(dto.appform))
+      , dto.appform)
       .then((r) => {
         if (r.success) {
           // console.log(dto);

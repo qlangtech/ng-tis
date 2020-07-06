@@ -6,7 +6,7 @@ import {PluginSaveResponse} from "../common/tis.plugin";
 
 @Component({
   template: `
-      <tis-page-header title="配置"></tis-page-header>
+      <tis-page-header title="插件配置"></tis-page-header>
       <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzTabBarExtraContent]="extraTemplate">
           <nz-tab nzTitle="全局" (nzDeselect)="configDeSelect($event)">
               <ng-template nz-tab>

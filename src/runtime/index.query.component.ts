@@ -7,11 +7,13 @@ import {HttpParams} from "@angular/common/http";
 //  @ts-ignore
 import * as $ from 'jquery';
 import {PojoComponent} from "./pojo.component";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {LocalStorageService} from "angular-2-local-storage";
+
+const LocalStoreTags = 'local_Store_Tags';
 
 @Component({
   template: `
-
       <div class="tool-bar">
           <button nz-button
                   nz-popover
@@ -43,7 +45,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
           </ng-template>
           <button nz-button nzType="link" (click)="openPOJOView()">POJO</button>
           <div style="float: right">
-              <nz-tag nzMode="closeable" (nzOnClose)="onCloseTag()"><a href="javascript:void(0)" (click)="onCloseTag()">dddd</a></nz-tag>
+              <nz-tag *ngFor="let tag of this.localStoreTags" nzMode="closeable" (nzOnClose)="deleteQueryFormTag(tag.tagName)">
+                  <a href="javascript:void(0)" (click)="queryFormTagClick(tag.tagName)">{{tag.tagName}}</a>
+              </nz-tag>
           </div>
       </div>
       <form method="post" id="queryForm" class="ant-advanced-search-form">
@@ -54,28 +58,59 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
                                         href="http://wiki.apache.org/solr/SolrQuerySyntax">Solr查询语法</a></span>
                   <br/>
                   <tis-codemirror name="q" [(ngModel)]="queryForm.q" [size]="{width:800,height:60}" [config]="codeMirrirOpts"></tis-codemirror>
-                  <span style="color:#666666;font-size:16px"> example:  *:*,id:478222</span>
               </div>
-              <table width="100%">
-                  <tr class="form-row">
-                      <td width="33%"><span class="title-label">sort:</span>
-                          <input type="text" name="sort" value="" size="40" placeholder="example:'create_time desc'"/>
-                      </td>
-                      <td width="33%">
-                          <span class="title-label">start/rows:</span>
-                          <input type="text" name="start" [(ngModel)]="queryForm.start" value="0" size="4"/> / <input type="text" name="shownum" [(ngModel)]="queryForm.shownum" size="4"/>
-                      </td>
-                      <td>
-                      </td>
-                  </tr>
 
-                  <tr class="form-row">
-                      <td width="33%">
-                          <span class="title-label">fq:</span>
-                          <input type="text" name="fq" placeholder="example:  'id:[1 TO 10]'"/>
-                      </td>
-                      <td>
-                          <div style="position:relative"><span class="title-label">column:</span>
+              <div nz-row [nzGutter]="24">
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6" [nzFor]="'field_sort'">Sort</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <input nz-input placeholder="create_time desc" id="field_sort" [(ngModel)]="queryForm.sort" name="sort"/>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="8" [nzFor]="'start_rows'">Start/Rows</nz-form-label>
+                          <nz-form-control [nzSpan]="16">
+                              <input nz-input name="start" style="width: 40%" [(ngModel)]="queryForm.start" value="0" size="4"/>/<input style="width: 40%" nz-input name="shownum" [(ngModel)]="queryForm.shownum" size="4"/>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+              </div>
+              <div nz-row [nzGutter]="24" *ngIf="queryForm.advanceQuery">
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6">Distrib</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <nz-switch name="distrib" [(ngModel)]="queryForm.distrib" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                              <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+                              <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6">Debug</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <nz-switch name="debug" [(ngModel)]="queryForm.debug" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
+                              <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
+                              <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6">Raw</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <input nz-input name="raw" [(ngModel)]="queryForm.rawParams"/>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6">Fl</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
                               <button nz-button nzType="link" nz-popover
                                       nzType="link"
                                       nzPopoverTitle="请选择"
@@ -90,20 +125,55 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
                                           <button nz-button nzSize="small" id="fieldunselectall" (click)="setSelectableCols(false)">全不选</button>
                                       </p>
                                       <ul class="cols-block">
-                                          <li *ngFor="let col of cols"><label nz-checkbox name="serverNode" [(ngModel)]="col.checked">{{col.name}}</label></li>
+                                          <li *ngFor="let col of this.queryForm.cols"><label nz-checkbox name="serverNode"
+                                                                                             [(ngModel)]="col.checked" [ngModelOptions]="{standalone: true}">{{col.name}}</label></li>
                                       </ul>
                                   </div>
                               </ng-template>
-                          </div>
-                      </td>
-                      <td>
-                      </td>
-                  </tr>
-              </table>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6"><label nz-checkbox name="serverNode" [(ngModel)]="queryForm.facet.facet" [ngModelOptions]="{standalone: true}">Facet</label></nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <div *ngIf="queryForm.facet.facet">
+                                  <input nz-input name="facetField" placeholder="facetField" [(ngModel)]="queryForm.facet.facetField"/>
+                                  <input nz-input name="facetPrefix" placeholder="facetPrefix" [(ngModel)]="queryForm.facet.facetPrefix"/>
+                                  <input nz-input name="facetQuery" placeholder="facetQuery" [(ngModel)]="queryForm.facet.facetQuery"/>
+                              </div>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div nz-col [nzSpan]="6">
+                      <nz-form-item class="search-query-item">
+                          <nz-form-label [nzSpan]="6">FQ</nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <div *ngFor="let fq of this.queryForm.fq; let i = index">
+                                  <input [(ngModel)]="fq.val" nz-input style="width:80%" name="fq" [ngModelOptions]="{standalone: true}"/>
+                                  <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeFqField(fq, $event)"></i>
+                              </div>
+                          </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item>
+                          <nz-form-label [nzSpan]="6" [nzNoColon]="true"></nz-form-label>
+                          <nz-form-control [nzSpan]="18">
+                              <button nz-button nzType="dashed" class="add-button" (click)="addFqField($event)">
+                                  <i nz-icon nzType="plus"></i>
+                                  Add
+                              </button>
+                          </nz-form-control>
+                      </nz-form-item>
+                  </div>
+              </div>
               <p style="margin-top:10px">
                   <nz-input-group nzCompact>
                       <button nz-button nzType="primary" (click)="startQuery()"><i nz-icon nzType="search" nzTheme="outline"></i>Query</button>
                       <button nz-button *ngIf="resultCount>0" (click)="addQueryTag()"><i nz-icon nzType="tags" nzTheme="outline"></i><span>命中:{{resultCount}}</span></button>
+                      <a class="collapse" (click)="toggleCollapse()">
+                          高级
+                          <i nz-icon [nzType]="!this.queryForm.advanceQuery ? 'down' : 'up'"></i>
+                      </a>
                   </nz-input-group>
               </p>
           </fieldset>
@@ -138,6 +208,19 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
       </nz-modal>
   `,
   styles: [`
+      .dynamic-delete-button {
+          cursor: pointer;
+          position: relative;
+          top: 4px;
+          font-size: 24px;
+          color: #999;
+          transition: all 0.3s;
+      }
+
+      .dynamic-delete-button:hover {
+          color: #777;
+      }
+
       .ant-advanced-search-form {
           padding: 10px;
           background: #fbfbfb;
@@ -145,6 +228,14 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
           border-radius: 6px;
           margin-bottom: 10px;
           clear: both;
+      }
+
+      .search-query-item {
+          margin-bottom: 1px;
+      }
+
+      [nz-form-label] {
+          overflow: visible;
       }
 
       .leader-node {
@@ -180,11 +271,12 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   queryResultList: { server: string, rowContent: string }[];
   queryForm = new IndexQueryForm();
   querySelectServerCandiate: Array<{ key: string, value: Array<{ checked: boolean, leader: boolean, ip: string, ipAddress: string }> }> = [];
-  cols: Array<{ checked: boolean, name: string }> = [];
+
   addTagDialogVisible = false;
   tagAddForm: FormGroup;
+  private _localStoreTags: Array<TagQueryForm>;
 
-  constructor(tisService: TISService, modalService: NgbModal, private fb: FormBuilder) {
+  constructor(tisService: TISService, modalService: NgbModal, private fb: FormBuilder, private _localStorageService: LocalStorageService) {
     super(tisService, modalService);
   }
 
@@ -207,7 +299,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
           this.querySelectServerCandiate.push({'key': key, 'value': groupNodes[key]});
           if (cols) {
             cols.forEach((c: string) => {
-              this.cols.push({name: c, checked: false});
+              this.queryForm.cols.push({name: c, checked: false});
             });
           }
         }
@@ -287,18 +379,57 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   setSelectableCols(checked: boolean) {
-    this.cols.forEach((c) => {
+    this.queryForm.cols.forEach((c) => {
       c.checked = checked;
     });
   }
 
-  onCloseTag() {
+  get localStoreTags(): Array<TagQueryForm> {
+    if (this._localStoreTags) {
+      return this._localStoreTags;
+    }
+    this._localStoreTags = this._localStorageService.get(LocalStoreTags);
+    if (this._localStoreTags && this._localStoreTags.length) {
+      return this._localStoreTags;
+    } else {
+      this._localStoreTags = [];
+      // this._localStorageService.set(LocalStoreTags, tags);
+      return this._localStoreTags;
+    }
+  }
 
+  refreshLocalStoreTags(): void {
+    this._localStoreTags = null;
+    let o = this.localStoreTags;
+  }
+
+  addQueryFormTag(tag: string, form: IndexQueryForm): void {
+    let tags = this.localStoreTags;
+    tags.push(new TagQueryForm(tag, form));
+    this._localStorageService.set(LocalStoreTags, tags);
+   // this.refreshLocalStoreTags();
+  }
+
+  deleteQueryFormTag(tagName: string) {
+    let tags = this.localStoreTags;
+
+    let index = tags.findIndex((t) => t.tagName === tagName);
+    // console.log(tagName + ",index:" + index);
+    if (index > -1) {
+      // tags =
+      tags.splice(index, 1);
+      // console.log(tags);
+      this._localStorageService.set(LocalStoreTags, tags);
+     // this.refreshLocalStoreTags();
+    }
   }
 
   addTagDialogOK() {
     this.addTagDialogVisible = !this.submitTagForm();
     // this.addTagDialogVisible = false;
+    let tagname: AbstractControl = this.tagAddForm.controls["tagName"];
+
+    this.addQueryFormTag(tagname.value, this.queryForm);
   }
 
   addTagDialogCancel() {
@@ -311,6 +442,45 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
       this.tagAddForm.controls[i].updateValueAndValidity();
     }
     return this.tagAddForm.valid;
+  }
+
+  addFqField(event: MouseEvent) {
+    this.queryForm.fq.push(new FilterQuery());
+  }
+
+  removeFqField(control: FilterQuery, event: MouseEvent) {
+    if (this.queryForm.fq.length > 1) {
+      let indexof = this.queryForm.fq.indexOf(control);
+      this.queryForm.fq.splice(indexof, 1);
+    } else {
+      control.val = undefined;
+    }
+  }
+
+  toggleCollapse() {
+    this.queryForm.advanceQuery = !this.queryForm.advanceQuery;
+  }
+
+  queryFormTagClick(tag: string) {
+    // let tagForm = this.localStoreTags.get(tag);
+
+    let tagForm = this.localStoreTags.find((t) => t.tagName === tag);
+    if (tagForm) {
+      this.queryForm = Object.assign(new IndexQueryForm(), tagForm.form);
+      let fq: FilterQuery[] = this.queryForm.fq;
+      if (fq && fq.length > 0) {
+        this.queryForm.fq = [];
+        fq.forEach((f) => {
+          this.queryForm.fq.push(Object.assign(new FilterQuery(), f));
+        });
+      }
+
+      let facet: FacetQuery = this.queryForm.facet;
+      if (facet) {
+        this.queryForm.facet = Object.assign(new FacetQuery(), facet);
+      }
+    }
+    console.log(this.queryForm);
   }
 }
 
@@ -331,16 +501,18 @@ export class QueryResultRowContentComponent {
 class IndexQueryForm {
   q = "*:*";
   sort: string;
-  fq: string[];
+  fq: FilterQuery[] = [new FilterQuery()];
   start = 0;
   shownum = 3;
   // pageNo: number;
-  sfields: string[];
+  // sfields: string[];
   debug: boolean;
-  mergeQuery: boolean;
   rawParams: string;
+  distrib: boolean;
+  advanceQuery = false;
+  cols: Array<{ checked: boolean, name: string }> = [];
 
-  facet: FacetQuery;
+  facet: FacetQuery = new FacetQuery();
 
   public toParams(): string {
     let params = this.parseParams(this, new HttpParams());
@@ -356,7 +528,7 @@ class IndexQueryForm {
     let value = null;
     let arrayVal: Array<any>;
     for (let x in targetObj) {
-      value = this[x];
+      value = targetObj[x];
       // console.log(`typeof key:${x} val:${value} ${typeof value === 'number'}`);
       if (value === undefined || value === null) {
         continue;
@@ -364,30 +536,58 @@ class IndexQueryForm {
       if (typeof value === 'function') {
         continue;
       }
-      if (typeof value === "string" || typeof value === "number") {
+      if (typeof value === "string" || typeof value === "number" || typeof value === 'boolean') {
         //   result += "&" + x + "=" +
         params = params.append(x, `${value}`);
-        console.log(params);
+        // console.log(params);
+      } else if (value instanceof Array && 'cols' === x) {
+        let val = null;
+        for (let e in value) {
+          val = value[e];
+          if (val === undefined) {
+            continue;
+          }
+          if (val.checked) {
+            params = params.append('sfields', `${val.name}`);
+          }
+        }
       } else if (value instanceof Array) {
         arrayVal = value;
+        let val = null;
         for (let e in arrayVal) {
-          // result += "&" + x + "=" + e;
-          params = params.append(x, `${e}`);
+          val = arrayVal[e].val;
+          if (val === undefined) {
+            continue;
+          }
+          params = params.append(x, `${val}`);
         }
       } else if (value instanceof FacetQuery) {
         params = this.parseParams(value, params);
       } else {
-        throw new Error(`value: ${value} is illegal`);
+        throw new Error(`key:${x},value: ${value} is illegal`);
       }
     }
     return params;
   }
+}
 
+class TagQueryForm {
+  tagName: string;
+  form: IndexQueryForm
+
+  constructor(tagName: string, form: IndexQueryForm) {
+    this.tagName = tagName;
+    this.form = form;
+  }
 }
 
 class FacetQuery {
-  facet = true;
+  facet = false;
   facetQuery: string;
   facetField: string;
   facetPrefix: string;
+}
+
+class FilterQuery {
+  val: string;
 }

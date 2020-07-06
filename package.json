@@ -71,6 +71,7 @@
     "canonical-path": "0.0.2",
     "codelyzer": "^5.0.0",
     "concurrently": "^3.2.0",
+    "dagre-d3": "^0.6.4",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",

@@ -54,6 +54,7 @@ import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
 import {NzAnchorModule} from 'ng-zorro-antd/anchor';
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
+import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -65,7 +66,7 @@ import {NzAffixModule} from 'ng-zorro-antd/affix';
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule,
     NgTerminalModule,
     NzLayoutModule,
-    NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule,
+    NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule],
   declarations: [
     ProgressTitleComponent, ProgressComponent,
@@ -76,7 +77,7 @@ import {NzAffixModule} from 'ng-zorro-antd/affix';
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
   exports: [
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule ,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],

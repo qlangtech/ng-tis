@@ -11,7 +11,7 @@ export class AttrDesc {
   descriptors: Map<string /*impl*/, Descriptor>;
   describable: boolean;
   type: number;
-  options: Array<string>;
+  options: Array<ValOption>;
   required: boolean;
 
   public addNewEmptyItemProp(): ItemPropVal {
@@ -144,7 +144,7 @@ export class DescribleVal
 export class ItemPropVal {
   key: string;
   type: number;
-  options: Array<string>;
+  options: Array<ValOption>;
   required: boolean;
   // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
   descVal: DescribleVal;
@@ -196,8 +196,6 @@ export class HeteroList {
   }
 
 
-
-
   public get addItemDisabled(): boolean {
     return (this.cardinality === '1' && this.items.length > 0);
   }
@@ -213,6 +211,11 @@ export interface IFieldError {
   name: string;
   content?: string;
   errorfields?: Array<Array<IFieldError>>
+}
+
+export class ValOption {
+  public impl: string;
+  public name: string;
 }
 
 

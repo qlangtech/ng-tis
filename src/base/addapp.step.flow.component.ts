@@ -51,19 +51,6 @@ export class AddAppStepFlowComponent extends BasicFormComponent implements After
     this.configFST.set(AddappSelectNodesComponent, {next: AddAppConfirmComponent, pre: AddAppDefSchemaComponent});
     // TODO :将来还需要设置机器选择页面
     this.configFST.set(AddAppConfirmComponent, {next: null, pre: AddappSelectNodesComponent});
-
-    // let dto = new ConfirmDTO();
-    // dto.appform = new AppDesc();
-    // dto.appform.name = "marss"
-    // dto.appform.tisTpl = "lucene5.3";
-    // dto.appform.workflow = "45:totalpay";
-    // dto.appform.dptId = "356";
-    // dto.appform.recept = "ddd";
-    // let dpt = new Option();
-    // dpt.name = "测试部门";
-    // dpt.value = "356";
-    // dto.appform.dpts = [dpt];
-
     this.route.queryParams.subscribe((param) => {
       let name = param["name"];
       if (!!name) {
@@ -76,7 +63,6 @@ export class AddAppStepFlowComponent extends BasicFormComponent implements After
             dto.stupid = {model: StupidModal.deseriablize(r.bizresult.schema)};
             dto.appform = new AppDesc();
             dto.appform.name = info.projectName.substr(7);
-            dto.appform.tisTpl = info.tisTpl;
             dto.appform.workflow = info.workflow;
             dto.appform.dptId = info.dptId;
             dto.appform.recept = info.recept;

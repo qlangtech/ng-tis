@@ -4,7 +4,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse} from "./tis.plugin";
+import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption} from "./tis.plugin";
 import {NzAnchorLinkComponent, NzNotificationService} from "ng-zorro-antd";
 import {Subscription} from "rxjs";
 
@@ -63,6 +63,7 @@ import {Subscription} from "rxjs";
           .extension-point {
               margin-bottom: 10px;
           }
+
           .item-block {
               border: 1px solid #9c9c9c;
               margin-bottom: 10px;
@@ -136,7 +137,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       throw new Error("plugin argument can not be null");
     }
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + this.plugins.join("&plugin=");
-    // 保存MQ消息
     this.jsonPost(url, {}).then((r) => {
       this._heteroList = [];
       if (r.success) {
@@ -189,6 +189,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         attr = Object.assign(new AttrDesc(), a);
         if (attr.describable) {
           attr.descriptors = this.wrapDescriptors(attr.descriptors);
+        }
+        if (attr.options) {
+          let opts: ValOption[] = [];
+          attr.options.forEach((opt) => {
+            opts.push(Object.assign(new ValOption(), opt));
+          });
+          attr.options = opts;
         }
         // console.log(attr);
         attrs.push(attr);
@@ -316,6 +323,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         return;
       }
       let pluginErrorFields = r.errorfields;
+      console.log(pluginErrorFields);
       let index = 0;
       this._heteroList.forEach((h) => {
         let items: Item[] = h.items;
@@ -389,12 +397,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   <span *ngSwitchCase="1">
                       <input *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"/>
                   </span>
+                  <span *ngSwitchCase="4">
+                       <nz-input-number *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary"  [name]="_pp.key" (input)="inputValChange(_pp,$event)"></nz-input-number>
+                  </span>
                   <span *ngSwitchCase="2">
                       <textarea rows="20" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"></textarea>
                   </span>
                   <span *ngSwitchCase="6">
                       <nz-select [(ngModel)]="_pp.primary" [name]="_pp.key" nzAllowClear>
-                           <nz-option *ngFor="let e of _pp.options" [nzLabel]="e" [nzValue]="e"></nz-option>
+                           <nz-option *ngFor="let e of _pp.options" [nzLabel]="e.name" [nzValue]="e.name"></nz-option>
                        </nz-select>
                   </span>
               </span>
