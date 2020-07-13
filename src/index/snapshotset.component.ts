@@ -239,10 +239,9 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
                   <textarea class='form-control' name="memo"></textarea>
               </form>
           </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-primary"
-                      (click)="doselectrevsion(changeVersionForm)">确定
-              </button>
+          <div class="modal-footer" >
+              <button nz-button  nzType="primary"   (click)="doselectrevsion(changeVersionForm)">切换&并推送到引擎</button>
+              <button nz-button (click)="doPushConfig2Engine()">推送到引擎</button>
           </div>
       </fieldset>
   `
@@ -255,6 +254,19 @@ export class SnapshotchangeDialogComponent extends BasicFormComponent {
     super(tisService, modalService);
   }
 
+  public doPushConfig2Engine(): void {
+
+
+    this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=update_schema_all_server&needReload=false')
+    .then(result => {
+      this.processResult(result);
+      if (result.success) {
+        setTimeout(() => {
+          this.activeModal.close(this.selectedSnapshotid);
+        }, 2000);
+      }
+    });
+  }
 
   // 提交form文档
   public doselectrevsion(form: any): void {

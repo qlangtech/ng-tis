@@ -616,8 +616,9 @@ export class WorkflowAddComponent extends BasicWFComponent
             let dumpNode: NodeMetaDependency[] = result.bizresult.dumpNodes;
 
             this.workflow = new Dataflow();
-            this.workflow.id = result.bizresult.dataflowId;
-            this.workflow.name = result.bizresult.name;
+            let profile = result.bizresult.profile;
+            this.workflow.id = profile.dataflowId;
+            this.workflow.name = profile.name;
             this.drawNodes(this.graph, nmetas, dumpNode);
           }
         });

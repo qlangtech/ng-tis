@@ -140,7 +140,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
 
       nodelist.forEach((node) => {
         this.list.push({
-          key: node.hostName,
+          key: node.nodeName,
           title: node.hostName,
           description: `已部署:${node.solrCoreCount}c`,
           direction: (this.dto.coreNode.hosts.findIndex((host) => host.hostName === node.hostName) > -1 ? 'right' : 'left'),
@@ -189,7 +189,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
     this.formDisabled = true;
 
     let selectedItems = this.list.filter((item) => item.direction === 'right').map((item) => {
-      return {hostName: item.title}
+      return {hostName: item.key}
     })
     // console.log(selectedItems);
 

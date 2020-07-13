@@ -128,7 +128,7 @@ export class PageHeaderComponent implements AfterContentInit {
   set breadcrumb(vals: Array<string>) {
 
     if (!vals || (vals.length % 2) !== 0) {
-      throw new Error(`length of param vals shall be even`);
+      throw new Error(`length of param vals shall be even,length:${vals.length}`);
     }
 
     for (let i = 0; i < vals.length; i += 2) {

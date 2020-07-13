@@ -21,8 +21,9 @@ export class BasicWFComponent extends BasicFormComponent {
 
 
   buildHistory(dataflow: Dataflow): void {
+    console.log(dataflow);
     this.router.navigate(
-      [`/offline/wf/build_history/`, dataflow.id], {relativeTo: this.route, state: {llll: "ddddd"}});
+      [`/offline/wf/build_history/`, dataflow.id], {relativeTo: this.route});
   }
 
   executeWorkflow(dataflow: Dataflow): void {
@@ -31,10 +32,11 @@ export class BasicWFComponent extends BasicFormComponent {
       .then(d => {
         if (d.success) {
           if (d.bizresult) {
+            let taskid = d.bizresult.taskid;
             let msg: any = [];
             msg.push({
-              'content': '宽表构建已经触发'
-              , 'link': {'content': '状态日志', 'href': './buildprogress/' + d.bizresult.taskid}
+              'content': '数据流构建已经触发'
+              , 'link': {'content': `查看构建状态(${taskid})`, 'href': `./build_history/${dataflow.id}/${taskid}`}
             });
 
             this.processResult({success: true, 'msg': msg});

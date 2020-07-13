@@ -13,7 +13,7 @@ import {TableAddStep2Component} from "./table.add.step2.component";
 import {GitCommitDiffComponent} from "./git.commit.diff.component";
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
-import {NzStatisticModule} from 'ng-zorro-antd/statistic';
+
 import {NzGridModule} from 'ng-zorro-antd/grid';
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzEmptyModule} from 'ng-zorro-antd/empty';
@@ -68,7 +68,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzDrawerModule, NzCascaderModule
     , CommonModule, NzFormModule, NzSelectModule, NzModalModule, ReactiveFormsModule, NzNotificationModule
-    , NzDividerModule, NzStatisticModule, NzGridModule, NzCheckboxModule
+    , NzDividerModule, NzGridModule, NzCheckboxModule
   ],
   providers: [
     {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色

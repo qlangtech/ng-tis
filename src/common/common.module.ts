@@ -55,6 +55,7 @@ import {NzAnchorModule} from 'ng-zorro-antd/anchor';
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
+import {NzStatisticModule} from 'ng-zorro-antd/statistic';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -76,8 +77,8 @@ import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule ,
+  exports: [NzStatisticModule,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],

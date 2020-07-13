@@ -33,7 +33,7 @@ export class TISService {
   // private appSelectable: boolean = false;
   // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
   // https://medium.com/@lwojciechowski/websockets-with-angular2-and-rxjs-8b6c5be02fac
-  private socket: Subject<MessageEvent>;
+ // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
 
   constructor(protected http: HttpClient
@@ -44,10 +44,10 @@ export class TISService {
 // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
   // 创建websocket
   public wsconnect(url: string): Subject<MessageEvent> {
-    if (!this.socket) {
-      this.socket = this.wscreate(url);
-    }
-    return this.socket;
+    // if (!this.socket) {
+    let   socket = this.wscreate(url);
+    // }
+    return socket;
   }
 
   private wscreate(url: string): Subject<MessageEvent> {
@@ -160,10 +160,14 @@ export class TISService {
       // faild
       let errs: string[] = result.errormsg;
 
+      if (!!result.action_error_page_show) {
+        return result;
+      }
+
       let errContent = '<ul class="list-ul-msg">' + errs.map((r) => `<li>${r}</li>`).join('') + '</ul>';
       this.notification.create('error', '错误'
-        , errContent, {nzDuration: 0});
-      if (result.errorfields) {
+        , errContent, {nzDuration: 6000});
+      if (result.errorfields && result.errorfields.length > 0) {
         return result;
       }
       // return result;
@@ -182,6 +186,7 @@ export interface TisResponseResult {
   bizresult: any;
   success: boolean;
   errormsg?: string[];
+  action_error_page_show?: boolean;
   msg?: Array<any>;
   errorfields?: Array<Array<Array<IFieldError>>>;
 }

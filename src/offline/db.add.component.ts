@@ -99,7 +99,7 @@ import * as $ from 'jquery';
   `
 })
 export class DbAddComponent extends BasicFormComponent implements OnInit {
-  switchType: string = 'single';
+  switchType = 'single';
   dbEnums: DbEnum[] = [];
   @Input()
   dbPojo: DbPojo = new DbPojo();

@@ -6,6 +6,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {BuildProgressComponent} from "../runtime/core.build.progress.component";
 import {FullBuildHistoryComponent} from "./full.build.history.component";
+
 const coreNodeRoutes: Routes = [
   {
     path: '', component: OffileIndexComponent,
@@ -23,19 +24,21 @@ const coreNodeRoutes: Routes = [
           },
           {
             path: 'wf/build_history/:wfid/:taskid',
-            component: BuildProgressComponent
+            component: BuildProgressComponent,
+            data: {showBreadcrumb: true}
           },
           {
             path: 'wf/build_history/:wfid',
-            component: FullBuildHistoryComponent
+            component: FullBuildHistoryComponent,
+            data: {showBreadcrumb: true}
           },
           {
-            path: 'wf_add' ,
-            component:  WorkflowAddComponent
+            path: 'wf_add',
+            component: WorkflowAddComponent
           },
           {
-            path: 'wf_update/:name' ,
-            component:  WorkflowAddComponent
+            path: 'wf_update/:name',
+            component: WorkflowAddComponent
           },
           {
             path: '',

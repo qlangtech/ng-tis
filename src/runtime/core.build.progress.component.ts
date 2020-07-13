@@ -1,6 +1,6 @@
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {ActivatedRoute, Params} from "@angular/router";
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef, ViewChild} from "@angular/core";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
@@ -76,7 +76,7 @@ export class ProgressTitleComponent {
       <button (click)="triggerFullBuild()">触发全量构建</button>
       back="../../full_build_history"
        -->
-      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumbRoot]="appNotAware" [showBreadcrumb]="true">
+      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb"  [showBreadcrumb]="showBreadcrumb">
           <button nz-button (click)="openReltimeLog()">实时日志</button>
       </tis-page-header>
 
@@ -165,16 +165,17 @@ export class ProgressTitleComponent {
     `
   ]
 })
-export class BuildProgressComponent extends AppFormComponent implements AfterViewInit {
+export class BuildProgressComponent extends AppFormComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('termTemplate', {static: false}) termTemplate: TemplateRef<{
     $implicit: { value: string };
     drawerRef: NzDrawerRef<string>;
   }>;
-  breadcrumb: string[];
+  breadcrumb: string[] = [];
   @ViewChild('term', {static: true}) terminal: NgTerminal;
   buildTask = new BuildTask();
-
+  private componentDestroy = false;
+  showBreadcrumb = false;
   private msgSubject: Subject<WSMessage>;
 
 // http://localhost:8080/coredefine/corenodemanage.ajax?action=core_action&emethod=get_view_data
@@ -229,6 +230,12 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     this.cd.detach();
   }
 
+  ngOnDestroy(): void {
+    this.componentDestroy = true;
+    if (this.msgSubject) {
+      this.msgSubject.unsubscribe()
+    }
+  }
 
   ngAfterViewInit(): void {
     // this.invalidate();
@@ -252,8 +259,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 
   ngOnInit(): void {
-    // this.isSpinning = true;
-    // super.ngOnInit();
+
+    let rdata = this.route.snapshot.data;
+    this.showBreadcrumb = !!rdata['showBreadcrumb'];
     this.route.params
       .subscribe((params: Params) => {
         this.isSpinning = true;
@@ -295,12 +303,12 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
       }));
 
     this.msgSubject.subscribe((response: WSMessage): void => {
-
+      if (this.componentDestroy) {
+        return;
+      }
       switch (response.logtype) {
         case "build_status_metrics":
           let status = response.data;
-          // console.log(status);
-          // console.info(status.dumpPhase);
           this.liveExecLog.dumpPhase = status.dumpPhase;
           this.liveExecLog.joinPhase = status.joinPhase;
           this.liveExecLog.buildPhase = status.buildPhase;
