@@ -44,7 +44,8 @@ const basemanageRoutes: Routes = [
           },
           {
             path: 'operationlog',
-            component: OperationLogComponent
+            component: OperationLogComponent,
+            data: {showBreadcrumb: true}
           },
           {
             path: '',

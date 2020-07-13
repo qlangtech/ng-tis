@@ -582,7 +582,7 @@ class TagQueryForm {
 }
 
 class FacetQuery {
-  facet = false;
+  facet = true;
   facetQuery: string;
   facetField: string;
   facetPrefix: string;

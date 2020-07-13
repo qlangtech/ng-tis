@@ -10,7 +10,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 @Component({
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
-      <tis-page-header title="构建历史" [showBreadcrumb]="appNotAware" [breadcrumb]="breadcrumb" [result]="result" [needRefesh]='true' (refesh)="refesh()">
+      <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" [needRefesh]='true' (refesh)="refesh()">
           <button (click)="triggerFullBuild()" nz-button nzType="primary">触发构建</button> &nbsp;
       </tis-page-header>
       <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
@@ -65,6 +65,8 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
   breadcrumb: string[];
 
+  showBreadcrumb = false;
+
   constructor(tisService: TISService, modalService: NgbModal
     , private router: Router, private route: ActivatedRoute
     , private cd: ChangeDetectorRef
@@ -75,6 +77,10 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
 
   ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+     let b = data['showBreadcrumb'];
+     this.showBreadcrumb = !!b;
+    });
     this.route.params
       .subscribe((params: Params) => {
         this.wfid = parseInt(params['wfid'], 10);

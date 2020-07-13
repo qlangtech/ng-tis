@@ -9,12 +9,16 @@ import {ActivatedRoute, Router} from "@angular/router";
 @Component({
   template: `
 
-      <tis-page-header title="操作日志">
+      <tis-page-header title="操作日志" [showBreadcrumb]="showBreadcrumb">
       </tis-page-header>
 
       <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
-          <tis-col title="用户名" width="14" field="usrName"></tis-col>
-          <tis-col title="操作对象" width="30" field="tabName"></tis-col>
+          <tis-col title="操作者" width="14" field="usrName"></tis-col>
+          <tis-col *ngIf="showBreadcrumb" title="应用" field="appName" >
+          </tis-col>
+          <tis-col title="操作对象" width="30">
+              <ng-template let-l='r'>{{l.tabName}}#{{l.opType}}</ng-template>
+          </tis-col>
           <tis-col title="创建时间">
               <ng-template let-l='r'>{{l.createTime | dateformat}}</ng-template>
           </tis-col>
@@ -32,7 +36,7 @@ import {ActivatedRoute, Router} from "@angular/router";
               nzTitle="日志"
               (nzOnClose)="logViewClose()"
       >
-          <pre>{{detail}}</pre>
+          <pre style="word-wrap:break-word;white-space: pre-wrap;">{{detail}}</pre>
       </nz-drawer>
   `
 })
@@ -41,6 +45,7 @@ export class OperationLogComponent extends BasicFormComponent implements OnInit 
   private detailLog: string;
   pager: Pager = new Pager(1, 1);
   logVisible: boolean;
+  showBreadcrumb: boolean;
 
   constructor(tisService: TISService, modalService: NgbModal, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
@@ -48,6 +53,9 @@ export class OperationLogComponent extends BasicFormComponent implements OnInit 
 
 
   ngOnInit(): void {
+    // showBreadcrumb
+    let sn = this.route.snapshot;
+    this.showBreadcrumb = sn.data["showBreadcrumb"];
     this.route.queryParams.subscribe((param) => {
       this.httpPost('/runtime/operation_log.ajax'
         , `action=operation_log_action&emethod=get_init_data&page=${param['page']}`)
