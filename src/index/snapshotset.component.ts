@@ -9,6 +9,7 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {Pager} from "../common/pagination.component";
 
 declare var jQuery: any;
 
@@ -25,7 +26,9 @@ declare var jQuery: any;
           <input type="hidden" name="groupid" value=""/>
           <input type="hidden" name="action" value="snapshot_revsion_action"/>
           <input type="hidden" name="event_submit_do_select_revsion" value="y"/>
-          <nz-table id="snapshottable" #dataList width="100%" [nzData]="snapshotList">
+          <nz-table id="snapshottable" #dataList width="100%" [nzData]="snapshotList" [(nzPageIndex)]="pager.page"
+                    (nzPageIndexChange)="searchData()"
+                    [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
               <thead>
               <tr>
                   <th width="100px">版本</th>
@@ -33,7 +36,6 @@ declare var jQuery: any;
                   <th width="100px">
                       区别比较
                   </th>
-                  
                   <th width="200px">日志</th>
                   <th>详细</th>
                   <th>parent</th>
@@ -49,7 +51,7 @@ declare var jQuery: any;
                               <i nz-icon nzType="select" nzTheme="outline"></i>切换版本
                           </button> &nbsp;
                           <button id="btnCompare" nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
-                          <button nz-button (click)="doPushConfig2Engine()" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled">推送到引擎</button>
+                          <button nz-button (click)="doPushConfig2Engine()" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
                       </div>
                   </td>
                   <td> {{s.createTime | dateformat}}</td>
@@ -94,7 +96,7 @@ declare var jQuery: any;
           top: 0px;
           left: 0px;
           display: inline-block;
-          width: 300px;
+          width: 400px;
           text-align: left;
       }
 
@@ -109,6 +111,7 @@ declare var jQuery: any;
 })
 // 索引配置文件
 export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
+  pager: Pager = new Pager(1, 1);
   showBreadcrumb: boolean;
   @ViewChild('snapshotListContainer', {static: false}) snapshotListContainer: ViewContainerRef;
   snapshotList: any[] = [];
@@ -127,15 +130,6 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
     super(tisService, modalService);
   }
 
-
-  // public set sSnapshotid(val: string) {
-  //   this.selSnapshotid = +(val);
-  // }
-  //
-  // public get sSnapshotid(): string {
-  //   return '' + this.selSnapshotid;
-  // }
-
   ngOnInit() {
     this.showBreadcrumb = this.showBreadCrumb(this.route);
 
@@ -145,9 +139,13 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
     } else {
       this.currentApp = new CurrentCollection(0, sn.params['name']);
     }
-    this.httpPost('/runtime/jarcontent/snapshotset.ajax'
-      , 'action=snapshot_revsion_action&event_submit_do_get_snapshot_list=y')
-      .then(result => this.processSnapshotList(result));
+
+    this.route.queryParams.subscribe((param) => {
+      let page = param["page"];
+      this.httpPost('/runtime/jarcontent/snapshotset.ajax'
+        , `action=snapshot_revsion_action&event_submit_do_get_snapshot_list=y&page=${page}`)
+        .then(result => this.processSnapshotList(result));
+    });
 
   }
 
@@ -228,11 +226,13 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
 
   private processSnapshotList(result: any) {
 
-    this.snapshotList = result.bizresult.snapshotList
+    this.pager = Pager.create(result);
+    this.snapshotList = result.bizresult.rows;
     // 这个Snapshotid 只有在执行了选择新Snapshot生效才会变化
-    this.publishSnapshotid = result.bizresult.snapshotid;
-
-
+    let payload = result.bizresult.payload;
+    if (payload && payload.length > 0) {
+      this.publishSnapshotid = payload[0];
+    }
     // console.info(this.snapshotList);
   }
 
@@ -292,65 +292,7 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
   }
 
 
+  searchData() {
+    Pager.go(this.router, this.route, this.pager.page);
+  }
 }
-
-//
-// @Component({
-//   // templateUrl: '/runtime/jarcontent/snapshotchange.htm'
-//   template: `
-//       <fieldset [disabled]='formDisabled'>
-//           <div class="modal-body">
-//               <tis-msg [result]="result"></tis-msg>
-//               <form #changeVersionForm>
-//                   <input type="hidden" name="appname" value=""/>
-//                   <input type="hidden" name="action" value="snapshot_revsion_action"/>
-//                   <input type="hidden" name="event_submit_do_select_revsion" value="y"/>
-//                   <input type="hidden" name="selectedSnapshotid" value="{{selectedSnapshotid}}"/>
-//                   <textarea class='form-control' name="memo"></textarea>
-//               </form>
-//           </div>
-//           <div class="modal-footer">
-//               <button nz-button nzType="primary" (click)="doselectrevsion(changeVersionForm)">切换&并推送到引擎</button>
-//               <button nz-button (click)="doPushConfig2Engine()">推送到引擎</button>
-//           </div>
-//       </fieldset>
-//   `
-// })
-// 切换版本对话框
-// export class SnapshotchangeDialogComponent extends BasicFormComponent {
-//   @Input() public selectedSnapshotid: number;
-//
-//   constructor(tisService: TISService, modalService: NzModalService) {
-//     super(tisService, modalService);
-//   }
-//
-//   public doPushConfig2Engine(): void {
-//
-//
-//     this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=update_schema_all_server&needReload=false')
-//       .then(result => {
-//         this.processResult(result);
-//         if (result.success) {
-//           setTimeout(() => {
-//             // this.activeModal.close(this.selectedSnapshotid);
-//           }, 2000);
-//         }
-//       });
-//   }
-//
-//   // 提交form文档
-//   public doselectrevsion(form: any): void {
-//
-//
-//     this.httpPost('/runtime/jarcontent/snapshotset.ajax'
-//       , jQuery(form).serialize()).then(result => {
-//       this.processResult(result);
-//       if (result.success) {
-//         setTimeout(() => {
-//           // this.activeModal.close(this.selectedSnapshotid);
-//         }, 2000);
-//       }
-//     });
-//   }
-//
-// }

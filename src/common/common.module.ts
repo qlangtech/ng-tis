@@ -57,14 +57,15 @@ import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzStatisticModule} from 'ng-zorro-antd/statistic';
-import { SnapshotsetComponent} from "../index/snapshotset.component";
+import {SnapshotsetComponent} from "../index/snapshotset.component";
 import {SnapshotLinkComponent} from "../corecfg/snapshot.link";
 import {SnapshotChangeLogComponent} from "../runtime/snapshot.change.log";
 import {SchemaXmlEditComponent, SchemaEditVisualizingModelComponent} from '../corecfg/schema-xml-edit.component';
 import {CompareEachOtherComponent, CompareResultComponent} from '../corecfg/compare.eachother.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
-import { NzEmptyModule } from 'ng-zorro-antd/empty';
-import { NzRadioModule } from 'ng-zorro-antd/radio';
+import {NzEmptyModule} from 'ng-zorro-antd/empty';
+import {NzRadioModule} from 'ng-zorro-antd/radio';
+import {NzBadgeModule} from 'ng-zorro-antd/badge';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -75,12 +76,12 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     }),
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
-    NzLayoutModule, NzStatisticModule, NzEmptyModule , NzRadioModule ,
+    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
   declarations: [
     ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
-    ,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     DateFormatPipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
     CompareEachOtherComponent, CompareResultComponent,
@@ -88,13 +89,13 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule ,
-    CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule ,
+  exports: [NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
+    CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],
-  entryComponents: [ CompareEachOtherComponent],
+  entryComponents: [CompareEachOtherComponent],
 })
 export class TisCommonModule {
   constructor() {
