@@ -11,7 +11,6 @@ import * as dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
 
-console.log(dagreD3);
 
 // 这个类专门负责router
 @Component({
@@ -34,16 +33,48 @@ console.log(dagreD3);
               </nz-card>
           </nz-col>
       </nz-row>
+      <br/>
       <nz-row [nzGutter]="16">
           <nz-col [nzSpan]="24">
-              <br/>
               <nz-card [nzTitle]="'节点拓扑'">
-                  <svg id="svg-canvas" #svgblock width='100%' height=600></svg>
+                  <nz-row [nzGutter]="16">
+                      <nz-col [nzSpan]="2">
+                          <ul id="tis-node-enum">
+                              <li style="background-color: #57A957" [ngStyle]="{'background-color': STATE_COLOR.COLOR_Active }">Active</li>
+                              <li style="background-color: #d5dd00">Recovering</li>
+                              <li style="background-color: #c48f00">Down</li>
+                              <li style="background-color: #C43C35">Recovery Failed</li>
+                              <li style="background-color: #e0e0e0">Gone</li>
+                          </ul>
+                      </nz-col>
+                      <nz-col [nzSpan]="22">
+                          <svg id="svg-canvas" #svgblock width='100%' height=600></svg>
+                      </nz-col>
+                  </nz-row>
               </nz-card>
           </nz-col>
       </nz-row>
   `,
   styles: [`
+      .tis-node-label tspan {
+          font-size: 10px;
+      }
+
+      #tis-node-enum {
+          margin: 0px;
+          padding-left: 4px;
+      }
+
+      #tis-node-enum li {
+          display: inline-block;
+          padding: 3px;
+          list-style: none;
+          margin-bottom: 4px;
+          border: 1px solid #d9d9d9;
+          border-radius: 6px;
+          width: 9em;
+      }
+
       .primary-card {
           height: 150px;
       }
@@ -78,6 +109,14 @@ export class CorenodemanageComponent extends AppFormComponent {
   config: any;
   instanceDirDesc: any = {allcount: 0};
 
+  STATE_COLOR = {
+    COLOR_Active: '#57A957',
+    COLOR_Recovering: '#d5dd00',
+    COLOR_Down: '#c48f00',
+    COLOR_Recovery_Failed: '#C43C35',
+    COLOR_Gone: '#e0e0e0',
+  }
+
   @ViewChild('svgblock', {static: false}) svgblock: ElementRef;
 
   constructor(tisService: TISService, modalService: NzModalService
@@ -98,7 +137,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   }
 
   private paintToplog(app: CurrentCollection, g: any, data: any): void {
-    console.log(data);
+    // console.log(data);
     let appname = app.appName;
     g.setNode(appname, {label: appname, style: 'fill: white;stroke-width: 1.5px;stroke: #999'});
 
@@ -106,7 +145,30 @@ export class CorenodemanageComponent extends AppFormComponent {
       g.setNode(shard.name, {label: shard.name, clusterLabelPos: 'top', style: 'fill: #d3d7e8;stroke-width: 1.5px;stroke: #999'});
 
       shard.replics.forEach((r) => {
-        g.setNode(r.name, {label: r.name, shape: "ellipse", style: 'fill: white;cursor: pointer;'});
+        let props = r.properties;
+        let fillColor = 'white';
+        switch (r.state) {
+          case 'ACTIVE':
+            fillColor = this.STATE_COLOR.COLOR_Active;
+            break;
+          case 'DOWN':
+            fillColor = this.STATE_COLOR.COLOR_Down;
+            break;
+          case 'RECOVERING':
+            fillColor = this.STATE_COLOR.COLOR_Recovering;
+            break;
+          case 'RECOVERY_FAILED':
+            fillColor = this.STATE_COLOR.COLOR_Recovery_Failed;
+            break;
+          default:
+            throw new Error(`illegal state:${props.state}`);
+        }
+        let stroke = '';
+        if (props.leader) {
+          stroke = 'stroke-width: 2px;stroke: black';
+        }
+
+        g.setNode(r.name, {label: r.name, class: 'tis-node-label', shape: "ellipse", style: `fill: ${fillColor};cursor: pointer;${stroke}`});
         g.setParent(r.name, shard.name);
         g.setEdge(r.name, appname, {style: 'stroke: #333;stroke-width: 1.5px;fill: none;'});
       });
@@ -299,3 +361,4 @@ export class CorenodemanageComponent extends AppFormComponent {
     this.router.navigate(["/offline/wf/build_history/45"]);
   }
 }
+
