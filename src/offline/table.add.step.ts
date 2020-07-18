@@ -4,6 +4,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 
 export class TableAddStep extends BasicFormComponent {
   @Input() isShow: boolean;
@@ -11,7 +12,7 @@ export class TableAddStep extends BasicFormComponent {
   @Output() nextStep: EventEmitter<any> = new EventEmitter();
 
   constructor(protected tisService: TISService, protected router: Router
-    , protected localtion: Location, modalService: NgbModal) {
+    , protected localtion: Location, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

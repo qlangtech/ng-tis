@@ -18,7 +18,7 @@ import {TISService} from "../service/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 
 @Injectable()
-class CanActivateCollectionManage implements CanActivateChild {
+export class CanActivateCollectionManage implements CanActivateChild {
   constructor(private tisService: TISService, private route: ActivatedRoute, private router: Router) {
   }
 

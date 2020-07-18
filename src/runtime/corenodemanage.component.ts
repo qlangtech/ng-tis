@@ -1,9 +1,6 @@
 import {Component, ElementRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {TriggerDumpComponent} from "./trigger_dump.component";
-// import {SolrCfgEditComponent} from "../corecfg/solrcfg.edit.component";
-import {SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {PojoComponent} from "./pojo.component";
 import {SyncConfigComponent} from "./sync.cfg.component";
 import {CopyOtherCoreComponent} from "./copy.other.core.component";
@@ -12,6 +9,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import * as dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
+import {NzModalRef, NzModalService} from "ng-zorro-antd";
 
 console.log(dagreD3);
 
@@ -82,7 +80,7 @@ export class CorenodemanageComponent extends AppFormComponent {
 
   @ViewChild('svgblock', {static: false}) svgblock: ElementRef;
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , route: ActivatedRoute, private router: Router) {
     super(tisService, route, modalService);
   }
@@ -230,13 +228,13 @@ export class CorenodemanageComponent extends AppFormComponent {
 
   }
 
-  // 打开Schema编辑页面
-  public openSchemaDialog(snapshotId: number, editable: boolean): void {
-    var modalRef: NgbModalRef =
-      this.openLargeDialog(SchemaXmlEditComponent);
-    modalRef.componentInstance.snapshotid = snapshotId;
-
-  }
+  // // 打开Schema编辑页面
+  // public openSchemaDialog(snapshotId: number, editable: boolean): void {
+  //   let modalRef: NzModalRef<SchemaXmlEditComponent> =
+  //     this.openLargeDialog(SchemaXmlEditComponent);
+  //   modalRef.getContentComponent().snapshotid = snapshotId;
+  //
+  // }
 
   // 打开Pojo编辑页面
   public openPojoDialog(): void {

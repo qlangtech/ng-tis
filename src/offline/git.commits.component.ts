@@ -4,6 +4,7 @@ import {TISService} from '../service/tis.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {GitCommitDiffComponent} from './git.commit.diff.component';
 import {Router} from '@angular/router';
+import {NzModalService} from "ng-zorro-antd";
 
 /**
  * Created by Qinjiu on 5/15/2017.
@@ -12,10 +13,10 @@ import {Router} from '@angular/router';
 export class GitCommitsComponent extends BasicFormComponent implements OnInit {
   protected directory: string;
   gitCommitLogs: GitCommitLog[];
-  private currCompareCheckedOrder: number = 1;
+  private currCompareCheckedOrder = 1;
   title: string;
 
-  constructor(public tisService: TISService, modalService: NgbModal, protected router: Router,) {
+  constructor(public tisService: TISService, modalService: NzModalService, protected router: Router) {
     super(tisService, modalService);
   }
 
@@ -68,10 +69,10 @@ export class GitCommitsComponent extends BasicFormComponent implements OnInit {
       + '&toVersion=' + toVersion + '&directory=' + this.directory;
     this.httpPost('/offline/datasource.ajax', action)
       .then(result => {
-        console.log(result);
+       // console.log(result);
         let ref = // this.modalService.open(GitCommitDiffComponent, {size: 'lg'});
           this.openLargeDialog(GitCommitDiffComponent);
-        ref.componentInstance.info = result.bizresult;
+        ref.getContentComponent().info = result.bizresult;
         // this.modalService.open(GitCommitsComponent, {size: 'lg'});
         // this.activeModal.close();
       });

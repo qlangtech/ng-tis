@@ -46,7 +46,7 @@ registerLocaleData(zh);
       },
       {  // 索引一览
         path: 'base',
-        loadChildren: "../base/base.manage.module#BasiManageModule" // baseModuleFactory
+        loadChildren: "../base/base.manage.module#BasiManageModule"
       },
       {  // 用户权限
         path: 'usr',
@@ -55,7 +55,6 @@ registerLocaleData(zh);
       {   // 离线模块
         path: 'offline',
         loadChildren: "../offline/offline.module#OfflineModule"
-        // loadChildren: () => import('../offline/offline.module').then(m => m.OfflineModule)
       },
       {   // 索引控制台
         path: 'c/:name',

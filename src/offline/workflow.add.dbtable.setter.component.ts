@@ -22,7 +22,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 */
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
-import {CascaderOption} from "ng-zorro-antd";
+import {CascaderOption, NzModalService} from "ng-zorro-antd";
 
 
 //
@@ -63,7 +63,7 @@ export class WorkflowAddDbtableSetterComponent
   sql = 'select * from usertable;';
 
   constructor(tisService: TISService, // public activeModal: NgbActiveModal,
-              modalService: NgbModal) {
+              modalService: NzModalService) {
     super(tisService, modalService);
   }
 

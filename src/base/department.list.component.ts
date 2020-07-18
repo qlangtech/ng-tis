@@ -3,6 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Pager} from "../common/pagination.component";
+import {NzModalService} from "ng-zorro-antd";
 
 
 // 部门管理
@@ -44,7 +45,7 @@ export class DepartmentListComponent extends BasicFormComponent implements OnIni
   bizline: any[] = [];
   // pager: Pager = new Pager();
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

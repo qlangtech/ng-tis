@@ -3,6 +3,7 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NzModalService} from "ng-zorro-antd";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -82,7 +83,7 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
   @Output() nextStep = new EventEmitter<any>();
   @Input() dto: ConfirmDTO;
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

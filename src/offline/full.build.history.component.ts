@@ -4,6 +4,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import {NzModalService} from "ng-zorro-antd";
 
 // const breadcrumbArry = ['数据流', '/offline/wf', 'totalpay', '/offline/wf_update/totalpay'];
 
@@ -67,7 +68,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
   showBreadcrumb = false;
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , private router: Router, private route: ActivatedRoute
     , private cd: ChangeDetectorRef
   ) {

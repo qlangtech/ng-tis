@@ -29,8 +29,7 @@ import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
   id: 'basemanage',
   imports: [CommonModule, FormsModule, NgbModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
-    GlobalParamsComponent, ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent
-    , DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
+    GlobalParamsComponent, ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent,  DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent
   ],

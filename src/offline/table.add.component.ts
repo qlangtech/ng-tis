@@ -5,6 +5,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   // templateUrl: '/offline/tableaddstep.htm'
@@ -43,7 +44,7 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
 
   @Input() processMode: { tableid?: number, 'title': string, isNew: boolean } = {'title': '添加数据表', isNew: true};
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , private activateRoute: ActivatedRoute
     , public activeModal: NgbActiveModal) {
     super(tisService, modalService);

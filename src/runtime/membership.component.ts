@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NzModalService} from "ng-zorro-antd";
 
 // 会员权限管理
 @Component({
@@ -11,7 +12,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
   `
 })
 export class MembershipComponent extends BasicFormComponent {
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

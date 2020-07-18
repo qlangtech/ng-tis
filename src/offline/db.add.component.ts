@@ -9,6 +9,7 @@ import {Location} from '@angular/common';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 //  @ts-ignore
 import * as $ from 'jquery';
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -117,7 +118,7 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   }
 
   constructor(tisService: TISService,
-              private location: Location, modalService: NgbModal
+              private location: Location, modalService: NzModalService
     , public activeModal: NgbActiveModal) {
     super(tisService, modalService);
   }

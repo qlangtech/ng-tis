@@ -4,6 +4,7 @@ import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -84,7 +85,7 @@ export class CorenodemanageIndexComponent extends BasicFormComponent implements 
   app: CurrentCollection = new CurrentCollection(0, '');
 
 
-  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

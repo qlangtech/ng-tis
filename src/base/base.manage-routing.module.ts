@@ -11,6 +11,8 @@ import {GlobalParamsComponent} from './global.params.component';
 // import {AddAppFormComponent} from './addapp-form.component';
 import {AddAppStepFlowComponent} from './addapp.step.flow.component';
 import {BaseConfigComponent} from "./base-config.component";
+import {SnapshotsetComponent} from "../index/snapshotset.component";
+import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 
 
 const basemanageRoutes: Routes = [
@@ -32,8 +34,22 @@ const basemanageRoutes: Routes = [
           {   // 添加索引
             path: 'appadd',
             component: AddAppStepFlowComponent
-          }
-          ,
+          },
+          {   // 配置模版一览
+            path: 'tpl/snapshotset',
+            component: SnapshotsetComponent,
+            data: {
+              showBreadcrumb: true,
+              template : true
+            }
+          },
+          {
+            path: 'tpl/xml_conf/:restype/:snapshotid',
+            component: SchemaXmlEditComponent},
+          {
+            path: 'tpl/schema_visual/:snapshotid',
+            component: SchemaEditVisualizingModelComponent
+          },
           {
             path: 'departmentlist',
             component: DepartmentListComponent

@@ -61,9 +61,9 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
   // @ContentChild(TemplateRef, {static: false})
   // contentTempate: TemplateRef<any>;
   constructor(private fb: FormBuilder,
-              tisService: TISService, modalService: NgbModal, private nzmodalService: NzModalService
+              tisService: TISService, modalService: NgbModal,  nzmodalService: NzModalService
     , private router: Router, route: ActivatedRoute, private notification: NzNotificationService) {
-    super(tisService, modalService, route);
+    super(tisService, nzmodalService, route);
   }
 
   ngOnInit(): void {
@@ -91,7 +91,7 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
     this.model.filename = this.pageTitle;
     this.model.snapshotid = this.snid;
 
-    this.nzmodalService.confirm({
+    this.modalService.confirm({
       nzTitle: '日志',
       nzContent: this.memoblock,
       nzOkText: '提交',
@@ -168,7 +168,7 @@ export class SchemaEditVisualizingModelComponent extends BasicEditComponent {
   resType: TisResType = 'schema.xml';
   stupidModal: StupidModal = new StupidModal();
 
-  constructor(tisService: TISService, modalService: NgbModal, route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
     super(tisService, modalService, route);
   }
 

@@ -3,19 +3,22 @@ import {CorenodemanageComponent} from './corenodemanage.component';
 // import {LocalStorageService} from 'angular-2-local-storage';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TriggerDumpComponent} from './trigger_dump.component';
-import {SchemaXmlEditComponent, SchemaEditVisualizingModelComponent} from '../corecfg/schema-xml-edit.component';
+
+
+
+
 // import {SolrCfgEditComponent} from '../corecfg/solrcfg.edit.component';
-import {CompareEachOtherComponent, CompareResultComponent} from '../corecfg/compare.eachother.component';
+
 import {CoreNodeRoutingModule} from './core.node.manage-routing.module';
-import {SnapshotchangeDialogComponent, SnapshotsetComponent} from '../index/snapshotset.component';
+
 import {CommonModule} from '@angular/common';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {IndexQueryComponent, QueryResultRowContentComponent} from './index.query.component';
 import {PojoComponent} from './pojo.component';
 import {CopyOtherCoreComponent} from './copy.other.core.component';
-import {SnapshotChangeLogComponent} from './snapshot.change.log';
-import {SnapshotLinkComponent} from '../corecfg/snapshot.link';
+// import {SnapshotChangeLogComponent} from './snapshot.change.log';
+// import {SnapshotLinkComponent} from '../corecfg/snapshot.link';
 import {SyncConfigComponent} from './sync.cfg.component';
 import {TISService} from '../service/tis.service';
 
@@ -27,7 +30,7 @@ import {CorePluginConfigComponent} from "./core.plugin.config.component";
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {IncrBuildComponent} from "./incr.build.component";
-import {NzEmptyModule} from 'ng-zorro-antd/empty';
+
 import {NzStepsModule} from 'ng-zorro-antd/steps';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
@@ -44,7 +47,7 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {ChartsModule} from 'ng2-charts';
-import {NzRadioModule} from 'ng-zorro-antd/radio';
+
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {IncrPodLogsStatusComponent} from "./incr.pod.logs.status.component";
 import {NzDividerModule} from 'ng-zorro-antd/divider';
@@ -53,7 +56,7 @@ import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
-import {NzModalModule} from 'ng-zorro-antd/modal';
+
 // import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
 // import { NzStepsModule } from 'ng-zorro-antd/steps';
 
@@ -65,16 +68,16 @@ import {NzModalModule} from 'ng-zorro-antd/modal';
 
 @NgModule({
   id: 'coremanage',
-  imports: [CommonModule, CoreNodeRoutingModule, FormsModule, NgbModule, TisCommonModule, NzLayoutModule, NzCollapseModule, NzEmptyModule
+  imports: [CommonModule, CoreNodeRoutingModule, FormsModule, NgbModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
-    , ChartsModule, NzRadioModule, NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule, NzModalModule
+    , ChartsModule,  NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
   ],
   declarations: [ // AddAppFlowDirective,
     TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent,
-    CompareEachOtherComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent, IndexQueryComponent, PojoComponent,
-    CorenodemanageComponent, SnapshotsetComponent, CorenodemanageIndexComponent,
-    CopyOtherCoreComponent, SnapshotChangeLogComponent, SnapshotLinkComponent
-    , CompareResultComponent, SnapshotchangeDialogComponent, SyncConfigComponent
+      IndexQueryComponent, PojoComponent,
+    CorenodemanageComponent,  CorenodemanageIndexComponent,
+    CopyOtherCoreComponent
+    ,  SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
     , IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent
     , IncrPodLogsStatusComponent
@@ -83,10 +86,9 @@ import {NzModalModule} from 'ng-zorro-antd/modal';
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}
   ],
-  entryComponents: [CompareEachOtherComponent
-    , TriggerDumpComponent, PojoComponent, CompareResultComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+  entryComponents: [ TriggerDumpComponent, PojoComponent,
     SyncConfigComponent,
-    CopyOtherCoreComponent, SnapshotChangeLogComponent, SnapshotLinkComponent, SnapshotchangeDialogComponent
+    CopyOtherCoreComponent
     , MonitorComponent, MembershipComponent, IncrBuildStep0Component, IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent]
 })
 export class CoreNodeManageModule implements OnInit {

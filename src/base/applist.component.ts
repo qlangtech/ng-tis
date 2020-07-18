@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Pager} from '../common/pagination.component';
+import {NzModalService} from "ng-zorro-antd";
 
 
 // 全局配置文件
@@ -48,7 +49,7 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   pager: Pager = new Pager(1, 1);
   pageList: any[];
 
-  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NgbModal
+  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService
   ) {
     super(tisService, modalService);
   }

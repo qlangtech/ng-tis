@@ -16,7 +16,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
 
 import {NzGridModule} from 'ng-zorro-antd/grid';
 import {NzTableModule} from 'ng-zorro-antd/table';
-import {NzEmptyModule} from 'ng-zorro-antd/empty';
+
 
 // import {TreeModule} from "angular-tree-component";
 import {TisCommonModule} from "../common/common.module";
@@ -27,7 +27,7 @@ import {NzButtonModule} from 'ng-zorro-antd/button';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import {NzFormModule} from 'ng-zorro-antd/form';
-import {NzModalModule} from 'ng-zorro-antd/modal';
+
 import {WorkflowAddDbtableSetterComponent} from "./workflow.add.dbtable.setter.component";
 import {BasiManageModule} from "../base/base.manage.module";
 import {NzSelectModule} from 'ng-zorro-antd/select';
@@ -42,7 +42,7 @@ import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {SideBarToolBar} from "../common/basic.form.component";
-import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS, NzIconModule} from 'ng-zorro-antd/icon';
+import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
 
 import {TISService} from "../service/tis.service";
 
@@ -52,7 +52,7 @@ import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.c
 import {IconDefinition} from "@ant-design/icons-angular";
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
-import {NzRadioModule} from 'ng-zorro-antd/radio';
+
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
 
@@ -62,12 +62,12 @@ const icons: IconDefinition[] = [DeleteOutline];
   id: 'offline',
   imports: [ // CommonModule,
     NzCollapseModule,
-    NzTabsModule, NzEmptyModule,
-    NzInputModule, NzDropDownModule, NzIconModule, NzTableModule, NzRadioModule, NzSwitchModule,
+    NzTabsModule,
+    NzInputModule, NzDropDownModule, NzTableModule,  NzSwitchModule,
     FormsModule, NgbModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzDrawerModule, NzCascaderModule
-    , CommonModule, NzFormModule, NzSelectModule, NzModalModule, ReactiveFormsModule, NzNotificationModule
+    , CommonModule, NzFormModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule
     , NzDividerModule, NzGridModule, NzCheckboxModule
   ],
   providers: [
@@ -87,8 +87,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     , GitCommitDiffComponent, WorkflowAddComponent,
      WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     , WorkflowAddNestComponent, WorkflowAddErCardinalityComponent
-  ],
-  // providers: [TISService,ScriptService]
+  ]
 })
 export class OfflineModule {
 }

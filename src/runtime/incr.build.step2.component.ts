@@ -5,6 +5,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {IndexIncrStatus} from "./incr.build.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -117,7 +118,7 @@ export class IncrBuildStep2Component extends AppFormComponent implements AfterCo
   @Input() dto: IndexIncrStatus;
   specForm: FormGroup;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal, private fb: FormBuilder) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private fb: FormBuilder) {
     super(tisService, route, modalService);
   }
 

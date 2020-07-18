@@ -13,6 +13,7 @@ import {IncrBuildStep3Component} from "./incr.build.step3.component";
 import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.component";
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -27,7 +28,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
   private multiViewDAG: MultiViewDAG;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver, private _iconService: NzIconService) {
     super(tisService, route, modalService);
     _iconService.addIcon(CloseSquareFill);

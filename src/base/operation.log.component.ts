@@ -4,6 +4,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NzModalService} from "ng-zorro-antd";
 
 // 查看操作日志
 @Component({
@@ -47,7 +48,7 @@ export class OperationLogComponent extends BasicFormComponent implements OnInit 
   logVisible: boolean;
   showBreadcrumb: boolean;
 
-  constructor(tisService: TISService, modalService: NgbModal, private router: Router, private route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
   }
 

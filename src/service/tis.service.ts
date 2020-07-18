@@ -15,6 +15,7 @@ import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {IFieldError} from "../common/tis.plugin";
+import {consoleTestResultHandler} from "tslint/lib/test";
 // import {IFieldError} from "../runtime/tis.plugin";
 // import {Observable} from "rxjs/Observable";
 //
@@ -33,7 +34,7 @@ export class TISService {
   // private appSelectable: boolean = false;
   // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
   // https://medium.com/@lwojciechowski/websockets-with-angular2-and-rxjs-8b6c5be02fac
- // private socket: Subject<MessageEvent>;
+  // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
 
   constructor(protected http: HttpClient
@@ -45,7 +46,7 @@ export class TISService {
   // 创建websocket
   public wsconnect(url: string): Subject<MessageEvent> {
     // if (!this.socket) {
-    let   socket = this.wscreate(url);
+    let socket = this.wscreate(url);
     // }
     return socket;
   }
@@ -113,7 +114,10 @@ export class TISService {
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts)
       .toPromise()
       .then(response => {
-        return this.processResult(response);
+        let result = this.processResult(response);
+        if (result) {
+          return result;
+        }
       }).catch(this.handleError);
   }
 
@@ -165,12 +169,10 @@ export class TISService {
       }
 
       let errContent = '<ul class="list-ul-msg">' + errs.map((r) => `<li>${r}</li>`).join('') + '</ul>';
-      this.notification.create('error', '错误'
-        , errContent, {nzDuration: 6000});
+      this.notification.create('error', '错误', errContent, {nzDuration: 6000});
       if (result.errorfields && result.errorfields.length > 0) {
         return result;
       }
-      // return result;
     }
   }
 

@@ -7,6 +7,7 @@ import {TISService} from '../service/tis.service';
 import {AppDesc, ConfirmDTO, CoreNodeCandidate, SchemaField} from './addapp-pojo';
 import {Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   // templateUrl: '/runtime/addapp_confirm.htm'
@@ -56,9 +57,6 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
                   <nz-descriptions-item nzTitle="数据流">{{appform.workflow}}</nz-descriptions-item>
                   <nz-descriptions-item nzTitle="所属部门">{{appform.checkedDptName}}</nz-descriptions-item>
                   <nz-descriptions-item nzTitle="接口人">{{appform.recept}}</nz-descriptions-item>
-                  <nz-descriptions-item nzTitle="配置模板">
-                      {{appform.tisTpl}}
-                  </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="拓扑结构">
                       Shard:{{coreNodeCandidate.shardCount}}组,Replica:{{coreNodeCandidate.replicaCount}}副本 <br>
                       节点
@@ -126,7 +124,7 @@ export class AddAppConfirmComponent extends BasicFormComponent implements OnInit
   fields: SchemaField[];
   appform: AppDesc;
 
-  constructor(tisService: TISService, private router: Router, modalService: NgbModal) {
+  constructor(tisService: TISService, private router: Router, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

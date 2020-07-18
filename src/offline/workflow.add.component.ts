@@ -49,6 +49,8 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
 import {ERRules, LinkRule, WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
+import {Observable} from "rxjs";
+import {NzModalService} from "ng-zorro-antd";
 
 
 export const TYPE_DUMP_TABLE = 'table';
@@ -75,7 +77,7 @@ export const TYPE_DUMP_TABLE = 'table';
       <div>
           <div id="processon_designer" class="processon-designer">
               <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-                  <nz-tabset [nzTabBarExtraContent]="extraTemplate">
+                  <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="tabSelectedIndex">
                       <nz-tab nzTitle="DF">
                           <div class="designer_body clear">
                               <div class="body_vtoolsbar">
@@ -189,7 +191,7 @@ export const TYPE_DUMP_TABLE = 'table';
 })
 export class WorkflowAddComponent extends BasicWFComponent
   implements IDataFlowMainComponent, OnInit, AfterContentInit, AfterViewInit {
-  private _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
+  _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
   public _nodeTypesAry: NodeMeta[] = [
     new NodeMeta(TYPE_DUMP_TABLE, 'table.svg', [40, 40], '数据表', WorkflowAddDbtableSetterComponent)
     , new NodeMeta('join', 'cog.svg', [40, 40], 'JOIN', WorkflowAddJoinComponent)
@@ -206,7 +208,7 @@ export class WorkflowAddComponent extends BasicWFComponent
   isSaveTopologyDialogVisible = false;
 
   validateSaveTopologyDialogForm: FormGroup;
-  private topologyName: string;
+  topologyName: string;
   workflow: Dataflow;
   // erNodes: ERRules;
   // g6graph
@@ -223,6 +225,7 @@ export class WorkflowAddComponent extends BasicWFComponent
   @ViewChild('draggableblock', {static: false}) draggableblock: ElementRef;
 
   @ViewChild('erComponent', {static: false}) erRuleComponent: WorkflowERComponent;
+  tabSelectedIndex = 0;
 
   public static addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
 
@@ -278,8 +281,9 @@ export class WorkflowAddComponent extends BasicWFComponent
               route: ActivatedRoute,
               private fb: FormBuilder,
               private notification: NzNotificationService,
-              private cdr: ChangeDetectorRef) {
-    super(tisService, modalService, router, route);
+              private cdr: ChangeDetectorRef,
+              private modal: NzModalService) {
+    super(tisService, modal, router, route);
     // this.formDisabled = true;
     // this.workflow = new Workflow();
     //  this.cdr.detach();
@@ -371,10 +375,40 @@ export class WorkflowAddComponent extends BasicWFComponent
     this.jsonPost(`/offline/datasource.ajax?emethod=${this.isAdd ? 'save' : 'update'}_topology&action=offline_datasource_action`, j)
       .then(result => {
         if (result.success) {
-          this.router.navigate(['/offline/wf']);
-          this.notification.create('success', '成功', result.msg[0]);
+          let biz = result.bizresult;
+          if (!biz.erExist) {
+            // 跳转到ER编辑Tab
+            this.modal.confirm({
+              nzTitle: '尚未定义ER关系，是否现在定义?',
+              nzOnOk: () => {
+                this.tabSelectedIndex = 1;
+              },
+              nzOnCancel: () => {
+                this.notifyAndRedirect(result);
+              }
+            });
+            return;
+          }
+          if (!biz.erPrimaryTabSet) {
+            this.modal.confirm({
+              nzTitle: '尚未定义DF的主表，是否现在定义主表?',
+              nzOnOk: () => {
+                this.tabSelectedIndex = 1;
+              },
+              nzOnCancel: () => {
+                this.notifyAndRedirect(result);
+              }
+            });
+            return;
+          }
+          this.notifyAndRedirect(result);
         }
       });
+  }
+
+  private notifyAndRedirect(result) {
+    this.router.navigate(['/offline/wf']);
+    this.notification.create('success', '成功', result.msg[0]);
   }
 
   ngOnInit(): void {
@@ -382,6 +416,11 @@ export class WorkflowAddComponent extends BasicWFComponent
     this.validateSaveTopologyDialogForm = this.fb.group({
       topologyName: [null, [Validators.required]]
     });
+
+    // let f: Observable<string> = this.route.fragment;
+    // f.subscribe((frag) => {
+    //   this.tabSelectedIndex = (frag === 'er') ? 1 : 0;
+    // })
 
   }
 

@@ -1,8 +1,9 @@
 import {NgModule} from "@angular/core";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 // import {HttpModule, JsonpModule} from "@angular/http";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {DateFormatPipe} from "../common/date.format.pipe";
+import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {PaginationComponent, TdContentDirective, ThDirective, TisColumn} from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
 import {NavigateBarComponent} from "../runtime/navigate.bar.component";
@@ -17,7 +18,7 @@ import {NzSelectModule} from 'ng-zorro-antd/select';
 import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {LocalStorageModule} from 'angular-2-local-storage';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
-import {NzIconModule} from 'ng-zorro-antd/icon';
+import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS, NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {ItemPropValComponent, PluginsComponent} from "./plugins.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
@@ -56,6 +57,14 @@ import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzStatisticModule} from 'ng-zorro-antd/statistic';
+import { SnapshotsetComponent} from "../index/snapshotset.component";
+import {SnapshotLinkComponent} from "../corecfg/snapshot.link";
+import {SnapshotChangeLogComponent} from "../runtime/snapshot.change.log";
+import {SchemaXmlEditComponent, SchemaEditVisualizingModelComponent} from '../corecfg/schema-xml-edit.component';
+import {CompareEachOtherComponent, CompareResultComponent} from '../corecfg/compare.eachother.component';
+import {NzModalModule} from 'ng-zorro-antd/modal';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -64,25 +73,28 @@ import {NzStatisticModule} from 'ng-zorro-antd/statistic';
       prefix: 'my-app',
       storageType: 'localStorage'
     }),
-    NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule,
+    NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
-    NzLayoutModule,
+    NzLayoutModule, NzStatisticModule, NzEmptyModule , NzRadioModule ,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
-    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule],
+    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
   declarations: [
-    ProgressTitleComponent, ProgressComponent,
-    DateFormatPipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent, BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
-    // pagination
+    ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
+    ,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    DateFormatPipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
+    CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent,
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzStatisticModule,
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule,
+  exports: [NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule ,
+    CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule ,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],
-  entryComponents: [],
+  entryComponents: [ CompareEachOtherComponent],
 })
 export class TisCommonModule {
   constructor() {

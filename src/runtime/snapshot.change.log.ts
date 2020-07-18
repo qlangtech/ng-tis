@@ -9,6 +9,7 @@ import {BasicEditComponent} from '../corecfg/basic.edit.component';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   // templateUrl: '/runtime/operation_log_special_app.htm'
@@ -45,7 +46,7 @@ import {ActivatedRoute} from '@angular/router';
 export class SnapshotChangeLogComponent extends AppFormComponent {
   logs: any[] = [];
 
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

@@ -17,6 +17,7 @@ import 'codemirror/mode/sql/sql.js';
 import 'codemirror/lib/codemirror.css';
 import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -106,7 +107,7 @@ export class WorkflowAddNestComponent
   listOfSelectedValue: any;
 
   constructor(tisService: TISService, // public activeModal: NgbActiveModal,
-              modalService: NgbModal) {
+              modalService: NzModalService) {
     super(tisService, modalService);
   }
 
