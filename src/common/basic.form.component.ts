@@ -7,7 +7,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
-import {NzModalService} from "ng-zorro-antd/modal";
+import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -15,6 +15,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
  */
 
 declare var jQuery: any;
+const KEY_show_Bread_crumb = "showBreadcrumb";
 
 // declare var NProgress: any;
 export class BasicFormComponent {
@@ -25,7 +26,11 @@ export class BasicFormComponent {
   // // 当前上下文中使用的索引
   // currIndex: CurrentCollection;
 
-  constructor(protected tisService: TISService, private modalService: NgbModal) {
+  public showBreadCrumb(route: ActivatedRoute): boolean {
+    return !!route.snapshot.data[KEY_show_Bread_crumb];
+  }
+
+  constructor(protected tisService: TISService, protected modalService?: NzModalService) {
   }
 
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
@@ -34,9 +39,11 @@ export class BasicFormComponent {
     NProgress.done();
     return r;
   }
+
   get appNotAware(): boolean {
     return !this.tisService.currentApp;
   }
+
   protected clearProcessResult(): void {
     this.result = {msg: [], errormsg: []};
   }
@@ -70,16 +77,34 @@ export class BasicFormComponent {
     });
   }
 
-  public openLargeDialog(component: any): NgbModalRef {
-    const modalRef: NgbModalRef = this.modalService.open(
-      component, {windowClass: 'schema-edit-modal', backdrop: 'static'});
-    return modalRef;
+  public openLargeDialog(component: any): NzModalRef<any> {
+
+    return this.modalService.create({
+      nzTitle: 'dddd',
+      nzContent: component
+    });
+
+    // const modalRef: NgbModalRef = this.modalService.open(
+    //   component, {windowClass: 'schema-edit-modal', backdrop: 'static'});
+    // return modalRef;
   }
 
-  public openNormalDialog(component: any): NgbModalRef {
-    const modalRef: NgbModalRef = this.modalService.open(component
-      , {size: 'xl', backdrop: 'static'});
-    return modalRef;
+  public openNormalDialog(component: any, title?: string): NzModalRef<any> {
+
+    let option: any = {
+      // nzTitle: title,
+      nzWidth: "80%",
+      nzContent: component,
+      nzFooter: null,
+    };
+    if (title) {
+      option.nzTitle = title
+    }
+
+    return this.modalService.create(option);
+    // const modalRef: NgbModalRef = this.modalService.open(component
+    //   , {size: 'xl', backdrop: 'static'});
+    // return modalRef;
   }
 
   // 设置当前上下文中的应用
@@ -91,7 +116,7 @@ export class BasicFormComponent {
   protected httpPost(url: string, body: string): Promise<TisResponseResult> {
 
     // setTimeout(() => {
-      this.formDisabled = true;
+    this.formDisabled = true;
     // });
     NProgress.start();
     this.clearProcessResult();
@@ -194,12 +219,12 @@ export class SideBarToolBar extends BasicFormComponent {
   @Output() delete = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NgbModal, private ngModalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NgbModal, ngModalService: NzModalService) {
+    super(tisService, ngModalService);
   }
 
   _deleteNode() {
-    this.ngModalService.confirm({
+    this.modalService.confirm({
       nzTitle: '<i>请确认是否要删除该节点?</i>',
       nzContent: '<b>删除之后不可恢复</b>',
       nzOnOk: () => {
@@ -225,7 +250,7 @@ export abstract class BasicSideBar extends BasicFormComponent {
   @Input() g6Graph: any;
   @Input() parentComponent: IDataFlowMainComponent; // WorkflowAddComponent;
 
-  protected constructor(tisService: TISService, modalService: NgbModal) {
+  protected constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 
@@ -250,7 +275,7 @@ export interface IDataFlowMainComponent {
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
   // private appTisService: AppTISService;
 
-  protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NgbModal) {
+  protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, modalService);
     // this.appTisService = tisService;
   }
@@ -308,7 +333,7 @@ export class ERMetaNode extends BasicSidebarDTO {
 
   // 监听增量变更
   public monitorTrigger = true;
-
+  public sharedKey: string;
   public timeVerColName: string;
 
   constructor(public dumpnode: DumpTable, public topologyName: string) {

@@ -14,6 +14,7 @@ import * as G6 from '@antv/g6';
 // import Grid from '@antv/g6';
 import {TYPE_DUMP_TABLE, WorkflowAddComponent} from "./workflow.add.component";
 import {consoleTestResultHandler} from "tslint/lib/test";
+import {NzModalService} from "ng-zorro-antd";
 // import {EdgeConfig} from "@antv/g6/lib/types";
 //  @ts-ignore
 // import {} from 'ng-sidebar';
@@ -213,7 +214,7 @@ export class WorkflowERComponent
 
   @Output() nodeClick = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 
@@ -254,6 +255,7 @@ export class WorkflowERComponent
             if (r.extraMeta) {
               let rem = r.extraMeta;
               let em = new ERMetaNode(n, this.topologyName);
+
               em.monitorTrigger = rem.monitorTrigger;
               em.timeVerColName = rem.timeVerColName;
               if (rem.primaryIndexColumnNames) {
@@ -263,6 +265,9 @@ export class WorkflowERComponent
                 });
               }
               em.primaryIndexTab = rem.primaryIndexTab;
+              if (em.primaryIndexTab) {
+                em.sharedKey = rem.sharedKey;
+              }
               rem.colTransfers.forEach((rr: ColumnTransfer) => {
                 // public colKey: string, public transfer: string, public param: string
                 let t = new ColumnTransfer(rr.colKey, rr.transfer, rr.param);
@@ -291,17 +296,7 @@ export class WorkflowERComponent
   }
 
   // @Input()
-  public set dumpNodes(vals: ERRules
-                       // {
-                       //   dumpNodes: { x: number, y: number, nodeMeta: DumpTable }[],
-                       //   linkList: {
-                       //     'id': string
-                       //     , 'cardinality': string
-                       //     , 'child': { id: string }
-                       //     , 'parent': { id: string }
-                       //     , 'joinerKeys': [{ 'childKey': string, 'parentKey': string }] }[]
-                       // }
-  ) {
+  public set dumpNodes(vals: ERRules) {
     if (!this.graph || !vals || !vals.dumpNodes || vals.dumpNodes.length < 1) {
       return;
     }
@@ -430,19 +425,6 @@ export interface ERRules {
   dumpNodes: { x: number, y: number, nodeMeta: DumpTable, extraMeta?: ERMetaNode }[];
   linkList: LinkRule[];
 }
-
-// export class TabExtraMeta {
-//   monitorTrigger = true;
-//   primaryIndexTab = false;
-//   primaryIndexColumnName: string;
-//   colTransfers: ColTransfer[] = [];
-// }
-
-// export class ColTransfer {
-//   colKey: string;
-//   param: string;
-//   transfer: string;
-// }
 
 export class LinkRule {
   'id': string;

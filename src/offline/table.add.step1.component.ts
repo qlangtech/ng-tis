@@ -6,6 +6,7 @@ import {Location} from '@angular/common';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TabColReflect, TablePojo} from './table.add.component';
 import {FormComponent} from "../common/form.component";
+import {NzModalService} from "ng-zorro-antd";
 
 declare var jQuery: any;
 
@@ -95,7 +96,7 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
   @Output() processHttpResult: EventEmitter<any> = new EventEmitter();
 
   constructor(tisService: TISService, protected router: Router,
-              private activateRoute: ActivatedRoute, protected location: Location, modalService: NgbModal) {
+              private activateRoute: ActivatedRoute, protected location: Location, modalService: NzModalService) {
     super(tisService, router, location, modalService);
   }
 

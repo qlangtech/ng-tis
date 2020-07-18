@@ -3,6 +3,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
 import {Router} from '@angular/router';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   // from:/runtime/usradd.htm
@@ -57,7 +58,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 export class UserAddComponent extends BasicFormComponent implements OnInit {
 
   constructor(tisService: TISService, private router: Router
-    , modalService: NgbModal, public activeModal: NgbActiveModal) {
+    , modalService: NzModalService, public activeModal: NgbActiveModal) {
     super(tisService, modalService);
   }
 

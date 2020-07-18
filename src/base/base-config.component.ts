@@ -3,6 +3,7 @@ import {Component, EventEmitter, OnInit} from "@angular/core";
 import {TisResponseResult, TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {PluginSaveResponse} from "../common/tis.plugin";
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
@@ -44,7 +45,7 @@ export class BaseConfigComponent extends BasicFormComponent implements OnInit {
   showExtensionPoint: { open: boolean } = {open: false};
 
   // savePlugin = new EventEmitter<any>();
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

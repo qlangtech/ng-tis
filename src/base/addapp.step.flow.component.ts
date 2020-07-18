@@ -16,6 +16,7 @@ import {ActivatedRoute} from "@angular/router";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
@@ -30,7 +31,7 @@ export class AddAppStepFlowComponent extends BasicFormComponent implements After
 
 
   constructor(private _componentFactoryResolver: ComponentFactoryResolver
-    , private  route: ActivatedRoute, tisService: TISService, modalService: NgbModal) {
+    , private  route: ActivatedRoute, tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 
@@ -57,6 +58,9 @@ export class AddAppStepFlowComponent extends BasicFormComponent implements After
         let url = "/runtime/addapp.ajax";
         this.httpPost(url, `action=schema_action&emethod=get_app&name=${name}`)
           .then((r) => {
+            if (!r) {
+              return;
+            }
             let info = r.bizresult.app;
             let dto = new ConfirmDTO();
             dto.recreate = true;

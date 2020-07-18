@@ -2,6 +2,7 @@ import {TISService} from '../service/tis.service';
 import {Component} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BasicFormComponent} from '../common/basic.form.component';
+import {NzModalService} from "ng-zorro-antd";
 
 declare var jQuery: any;
 
@@ -55,7 +56,7 @@ declare var jQuery: any;
   `
 })
 export class AddGlobalParamComponent extends BasicFormComponent {
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, modalService: NgbModal) {
+  constructor(tisService: TISService, public activeModal: NgbActiveModal, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

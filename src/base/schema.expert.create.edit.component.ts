@@ -7,6 +7,7 @@ import {Subject} from 'rxjs/Subject';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
+import {NzModalService} from "ng-zorro-antd";
 // import {EditorConfiguration} from "codemirror";
 
 
@@ -54,7 +55,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
 
   // private formPojoSubject = new Subject<any>();
 
-  constructor(tisService: TISService, modalService: NgbModal, route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
     super(tisService, modalService, route);
   }
 
@@ -277,7 +278,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
   schemaXmlContent: string;
 
   editField: SchemaField | null;
-  constructor(tisService: TISService, modalService: NgbModal, route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
     super(tisService, modalService, route);
   }
 

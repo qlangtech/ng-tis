@@ -3,6 +3,7 @@ import {TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {NzModalService} from "ng-zorro-antd";
 
 // import 'bootstrap4';
 
@@ -119,7 +120,7 @@ export class CorePluginConfigComponent extends AppFormComponent {
 
   _heteroList: HeteroList[];
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , route: ActivatedRoute, private router: Router) {
     super(tisService, route, modalService);
   }

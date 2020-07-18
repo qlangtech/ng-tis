@@ -11,6 +11,7 @@ import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from
 import {BasicFormComponent} from '../common/basic.form.component';
 import {AppDesc, ConfirmDTO, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from './addapp-pojo';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 // import {eventNames} from "cluster";
 // import {Application, Crontab}    from '../index/application';
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -97,7 +98,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   // 当前的编辑模式处在什么模式
   expertModel = false;
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 
@@ -224,11 +225,11 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
       // 从app定义第一步进入
       let f = this.dto.appform;
       let workflow = f.workflow;
-      let tisTpl = f.tisTpl;
+      // let tisTpl = f.tisTpl;
       // workflow = 'union';
       this.httpPost('/runtime/schemaManage.ajax'
         , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
-        + workflow + '&luceneversion=' + tisTpl)
+        + workflow  )
         .then((r) => {
           if (r.success) {
             return r;

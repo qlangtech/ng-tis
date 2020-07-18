@@ -8,6 +8,7 @@ import {WorkflowAddComponent} from "./workflow.add.component";
 
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -108,8 +109,8 @@ export class WorkflowAddErCardinalityComponent
   parentCols: Array<{ key: string, pk: boolean }> = [];
   childCols: Array<{ key: string, pk: boolean }> = [];
 
-  constructor(tisService: TISService, // public activeModal: NgbActiveModal,
-              modalService: NgbModal, private cdr: ChangeDetectorRef, private _iconService: NzIconService) {
+  constructor(tisService: TISService,
+              modalService: NzModalService, private cdr: ChangeDetectorRef, private _iconService: NzIconService) {
     super(tisService, modalService);
     this._iconService.addIcon(DeleteOutline);
     // this.cdr.detach();

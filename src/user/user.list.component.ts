@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {UserAddComponent} from './user.add.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Pager} from '../common/pagination.component';
+import {NzModalService} from "ng-zorro-antd";
 @Component({
   template:  `
     <div class="container">
@@ -40,7 +41,7 @@ export class UserListComponent extends BasicFormComponent implements OnInit {
   usrs: any[] = [];
   pager: Pager = new Pager(1, 2);
 
-  constructor(tisService: TISService, private router: Router, modalService: NgbModal) {
+  constructor(tisService: TISService, private router: Router, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

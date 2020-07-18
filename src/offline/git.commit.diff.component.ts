@@ -5,6 +5,7 @@ import {Component} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NzModalService} from "ng-zorro-antd";
 
 /**
  * Created by Qinjiu on 5/15/2017.
@@ -47,7 +48,7 @@ export class GitCommitDiffComponent extends BasicFormComponent {
   targetDiff: any;
 
   constructor(public tisService: TISService,
-              public activeModal: NgbActiveModal, modalService: NgbModal) {
+              public activeModal: NgbActiveModal, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

@@ -5,7 +5,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption} from "./tis.plugin";
-import {NzAnchorLinkComponent, NzNotificationService} from "ng-zorro-antd";
+import {NzAnchorLinkComponent, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subscription} from "rxjs";
 
 
@@ -101,7 +101,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   subscription: Subscription;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private notification: NzNotificationService
     , private cdr: ChangeDetectorRef) {
     super(tisService, route, modalService);

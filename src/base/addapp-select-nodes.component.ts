@@ -3,7 +3,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ConfirmDTO, StupidModal} from "./addapp-pojo";
-import {TransferDirection, TransferItem} from "ng-zorro-antd";
+import {NzModalService, TransferDirection, TransferItem} from "ng-zorro-antd";
 
 
 @Component({
@@ -178,7 +178,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
   }
 
 // =================================================================
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

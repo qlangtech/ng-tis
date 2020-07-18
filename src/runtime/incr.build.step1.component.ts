@@ -8,6 +8,7 @@ import {IndexIncrStatus} from "./incr.build.component";
 // import {IncrBuildStep1ParamsSetComponent} from "./incr.build.step1_1_params_set.component";
 import {FormGroup} from "@angular/forms";
 import {PluginSaveResponse} from "../common/tis.plugin";
+import {NzModalService} from "ng-zorro-antd";
 
 // import {eventNames} from "cluster";
 
@@ -66,7 +67,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
 
   // @ViewChild('buildStep1ParamsSetComponent', {static: false}) buildStep1ParamsSetComponent: IncrBuildStep1ParamsSetComponent;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

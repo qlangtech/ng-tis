@@ -2,6 +2,7 @@ import {TISService} from '../service/tis.service';
 import {Component, Injector, Input, OnInit} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BasicFormComponent} from '../common/basic.form.component';
+import {NzModalService} from "ng-zorro-antd";
 
 
 // 设置全局参数
@@ -47,7 +48,7 @@ export class GlobalUpdateParamComponent extends BasicFormComponent implements On
   resparam: any = {value: '', keyName: ''};
   rpidVal: number;
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , public activeModal: NgbActiveModal, private injector: Injector) {
     super(tisService, modalService);
   }

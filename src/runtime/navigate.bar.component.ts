@@ -14,6 +14,7 @@ import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
 // @ts-ignore
 import * as $ from 'jquery';
+import {NzModalService} from "ng-zorro-antd";
 
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 
@@ -138,7 +139,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     return this.app == null;
   }
 
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , private r: Router, private route: ActivatedRoute, private _http: HttpClient
     , private _localStorageService: LocalStorageService
   ) {

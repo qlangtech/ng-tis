@@ -6,16 +6,16 @@ import {TISService} from '../service/tis.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 // import {WorkflowAddComponent} from './workflow.add.component';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {WorkflowChangeCreateComponent} from './workflow.change.create.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
+import {NzModalService} from "ng-zorro-antd";
 
 // import {BaseEvent} from '@shopify/draggable';
 
 // declare var jQuery: any;
 
 export class BasicWFComponent extends BasicFormComponent {
-  constructor(tisService: TISService, modalService: NgbModal, protected router: Router, protected route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute) {
     super(tisService, modalService);
   }
 
@@ -104,7 +104,7 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   // formDisabled: boolean = false;
 
-  constructor(protected tisService: TISService, modalService: NgbModal, router: Router, route: ActivatedRoute) {
+  constructor(protected tisService: TISService, modalService: NzModalService, router: Router, route: ActivatedRoute) {
     super(tisService, modalService, router, route);
   }
 
@@ -205,23 +205,6 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
         }
       });
   }
-
-  createWorkflowChange(id: number): void {
-    // console.log(id);
-    // let action = 'event_submit_do_create_workflow_change=y&action=offline_datasource_action&id=' + id;
-    // this.httpPost('/offline/datasource.ajax', action)
-    //   .then(result => {
-    //     console.log(result);
-    //     this.processResult(result);
-    //     if (result.success) {
-    //       this.initWorkflows(result.bizresult);
-    //     }
-    //   });
-    let ref = // this.modalService.open(WorkflowChangeCreateComponent, {size: 'lg'});
-      this.openLargeDialog(WorkflowChangeCreateComponent);
-    ref.componentInstance.parent = this;
-  }
-
 
   goToWorkflowChange(): void {
     this.router.navigate(['/offline/wf_change_list']);

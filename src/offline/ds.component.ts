@@ -8,13 +8,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
-import {NzFormatEmitEvent, NzTreeNodeOptions} from "ng-zorro-antd";
+import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
 
 // const THRESHOLD = 10000;
 
 @Component({
   template: `
-      <tis-page-header  title="数据源管理" [needRefesh]='false'>
+      <tis-page-header title="数据源管理" [needRefesh]='false'>
 
           <!--
           <a routerLink="/offline/datasourcecommits" routerLinkActive="active">datasource变更历史</a>
@@ -243,7 +243,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   constructor(protected tisService: TISService //
     , private router: Router //
     , private activateRoute: ActivatedRoute // modalService: NgbModal
-    , modalService: NgbModal //
+    , modalService: NzModalService //
   ) {
     super(tisService, modalService);
   }
@@ -440,13 +440,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * 添加门面数据库配置
    */
   addFacadeDb(): void {
-    let dialog: NgbModalRef = this.openNormalDialog(DbAddComponent);
+    let dialog: NzModalRef<DbAddComponent> = this.openNormalDialog(DbAddComponent);
     let db = new DbPojo();
     db.facade = true;
     db.dbId = this.selectedDb.dbId;
-    dialog.componentInstance.dbPojo = db;
+    let cpt = dialog.getContentComponent();
+    cpt.dbPojo = db;
 
-    let facadeAdd: DbAddComponent = dialog.componentInstance;
+    let facadeAdd: DbAddComponent = cpt;
     facadeAdd.successSubmit.subscribe((evt: DbPojo) => {
       if (evt) {
         this.facdeDb = evt;
@@ -462,8 +463,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   editDb(): void {
 
-    let dialog: NgbModalRef = this.openNormalDialog(DbAddComponent);
-    dialog.componentInstance.dbPojo = this.selectedDb;
+    let dialog = this.openNormalDialog(DbAddComponent);
+    dialog.getContentComponent().dbPojo = this.selectedDb;
   }
 
   /**
@@ -475,20 +476,20 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   // }
 
   editTable(table: any) {
-      // this.router.navigate(['/offline/table_edit']
-      //   , {queryParams: {tableId: this.selectedTable.id}});
-      //
-      //
-      // this.modalService.open(TableAddComponent
-      //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
+    // this.router.navigate(['/offline/table_edit']
+    //   , {queryParams: {tableId: this.selectedTable.id}});
+    //
+    //
+    // this.modalService.open(TableAddComponent
+    //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
 
 
-      let dialog: NgbModalRef = this.openNormalDialog(TableAddComponent);
-      //
-      console.log(table);
+    let dialog = this.openNormalDialog(TableAddComponent);
+    //
+   // console.log(table);
 
-      dialog.componentInstance.processMode
-        = {tableid: this.selectedTable.tabId, 'title': '更新数据表', isNew: false};
+    dialog.getContentComponent().processMode
+      = {tableid: this.selectedTable.tabId, 'title': '更新数据表', isNew: false};
   }
 
   /**

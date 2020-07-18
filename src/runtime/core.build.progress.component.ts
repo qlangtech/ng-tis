@@ -5,7 +5,7 @@ import {TISService} from "../service/tis.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 import {NgTerminal} from "ng-terminal";
-import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd";
+import {NzDrawerRef, NzDrawerService, NzModalService} from "ng-zorro-antd";
 import {Observable, Subject} from "rxjs";
 import {map} from 'rxjs/operators';
 
@@ -62,25 +62,39 @@ export class ProgressTitleComponent {
   }
 }
 
-
 /**
  * 全量构建索引可视化页面
  * Created by baisui on 2017/7/12 0012.
  */
-
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <!--
-      <button (click)="triggerFullBuild()">触发全量构建</button>
-      back="../../full_build_history"
-       -->
-      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb"  [showBreadcrumb]="showBreadcrumb">
+      <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumb]="showBreadcrumb">
           <button nz-button (click)="openReltimeLog()">实时日志</button>
       </tis-page-header>
-
       <nz-spin [nzSpinning]="isSpinning" [nzDelay]="1000" nzSize="large">
+          <div class="stat-header">
+              <nz-descriptions nzBordered [nzSize]="'small'">
+                  <nz-descriptions-item nzTitle="状态">
+                      <i [ngClass]="progressStat.stateClass" [ngStyle]="{'color':progressStat.stateColor}" aria-hidden="true"></i>
+                      <button nz-button nzType="link" (click)="openReltimeLog()">{{progressStat.literalState}}</button>
+                  </nz-descriptions-item>
+                  <nz-descriptions-item nzTitle="开始时间">
+                      {{progressStat.createTime| dateformat}}
+                  </nz-descriptions-item>
+                  <nz-descriptions-item nzTitle="耗时">
+                      {{consuming | date:'HH:mm:ss'}}
+                  </nz-descriptions-item>
+                  <nz-descriptions-item nzTitle="阶段">
+                      <nz-tag [nzColor]="'blue'">{{progressStat.startPhase}}</nz-tag>
+                      <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+                      <nz-tag [nzColor]="'blue'">{{progressStat.endPhase}}</nz-tag>
+                  </nz-descriptions-item>
+                  <nz-descriptions-item nzTitle="触发方式">
+                      {{progressStat.triggerType}}
+                  </nz-descriptions-item>
+              </nz-descriptions>
+          </div>
           <nz-collapse [nzBordered]="false">
               <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
@@ -148,6 +162,11 @@ export class ProgressTitleComponent {
   `,
   styles: [
       `
+          .stat-header {
+              margin-left: 15px;
+              margin-bottom: 10px;
+          }
+
           .child-block {
               list-style-type: none;
           }
@@ -166,7 +185,8 @@ export class ProgressTitleComponent {
   ]
 })
 export class BuildProgressComponent extends AppFormComponent implements AfterViewInit, OnDestroy {
-
+  // 运行耗时
+  consuming = 0;
   @ViewChild('termTemplate', {static: false}) termTemplate: TemplateRef<{
     $implicit: { value: string };
     drawerRef: NzDrawerRef<string>;
@@ -220,9 +240,10 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   };
   isSpinning = false;
   termVisible = false;
+  progressStat: ProgressStat = new ProgressStat();
 
   // private count: number = 1;
-  constructor(tisService: TISService, modalService: NgbModal
+  constructor(tisService: TISService, modalService: NzModalService
     , route: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(tisService, route, modalService);
     // ng-terminal说明文档
@@ -296,6 +317,8 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         let json = JSON.parse(response.data);
         if (json.logType && json.logType === "FULL") {
           return new WSMessage('full', json);
+        } else if (json.consuming) {
+          return new WSMessage('stat', json);
         } else {
           return new WSMessage('build_status_metrics', json);
         }
@@ -307,6 +330,13 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         return;
       }
       switch (response.logtype) {
+        case "stat":
+          this.progressStat = Object.assign(new ProgressStat(), response.data);
+          this.consuming = (Date.now() - this.progressStat.createTime);
+          setInterval(() => {
+            this.consuming += 1000;
+          }, 1000);
+          break;
         case "build_status_metrics":
           let status = response.data;
           this.liveExecLog.dumpPhase = status.dumpPhase;
@@ -375,3 +405,22 @@ class BuildTask {
     return phase >= this.startPhase && phase <= this.endPhase;
   }
 }
+
+class ProgressStat {
+  consuming: string; // "4分钟"
+  createTime: number; // 1594608772000
+  endPhase: string; // "宽表构建"
+  endTime: number; // 1594609013000
+  id: number;
+  literalState: string; // "成功"
+  opTime: number; // 1594609012000
+  startPhase: string; // "数据导出"
+  startTime: number; // 1594608772000
+  state: string; //
+  stateClass: string; // "fa fa-check"
+  stateColor: string; // "green"
+  triggerType: string; // "手动"
+  workFlowId: number; // 45
+
+}
+

@@ -24,6 +24,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 // import 'codemirror/lib/codemirror.css';
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
+import {NzModalService} from "ng-zorro-antd";
 // @ts-ignore
 // import {Shape} from '@antv/g6';
 
@@ -90,7 +91,7 @@ export class WorkflowAddJoinComponent
   // @ViewChild('sqleditor', {static: false}) sqleditor: ElementRef;
   listOfOption: Array<Option> = [];
 
-  constructor(tisService: TISService, modalService: NgbModal) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

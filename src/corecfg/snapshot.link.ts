@@ -8,6 +8,7 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../service/tis.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -33,7 +34,7 @@ export class SnapshotLinkComponent extends BasicFormComponent {
   //
   // }
 
-  constructor(tisService: TISService, modalService: NgbModal, private router: Router, private route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
   }
 

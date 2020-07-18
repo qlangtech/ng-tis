@@ -4,6 +4,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -22,7 +23,7 @@ import {NgTerminal} from "ng-terminal";
 export class IncrPodLogsStatusComponent extends AppFormComponent implements AfterContentInit, AfterViewInit {
   private currCollection: CurrentCollection;
   @ViewChild('term', {static: true}) terminal: NgTerminal;
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

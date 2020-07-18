@@ -5,6 +5,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
 import {IndexIncrStatus} from "./incr.build.component";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -30,7 +31,7 @@ export class IncrBuildStep3Component extends AppFormComponent implements AfterCo
   @Input() dto: IndexIncrStatus;
   private currCollection: CurrentCollection;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

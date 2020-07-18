@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {TablePojo} from './table.add.component';
+import {NzModalService} from "ng-zorro-antd";
 
 declare var jQuery: any;
 
@@ -49,7 +50,7 @@ export class TableAddStep2Component extends TableAddStep implements OnInit {
   @Output() processHttpResult: EventEmitter<any> = new EventEmitter();
 
   constructor(public tisService: TISService, protected router: Router
-    , protected location: Location, modalService: NgbModal) {
+    , protected location: Location, modalService: NzModalService) {
     super(tisService, router, location, modalService);
   }
 

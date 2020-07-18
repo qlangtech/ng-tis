@@ -8,7 +8,7 @@ import {WorkflowAddComponent} from "./workflow.add.component";
 
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
-import {NzNotificationService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 
 @Component({
@@ -39,20 +39,23 @@ import {NzNotificationService} from "ng-zorro-antd";
                               </nz-select> <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePrimaryKey(pkName)"></i>
                               </span>
                                   <button nz-button nzType="dashed" class="primary-key" (click)="addPrimaryIndexColumnName($event)">
-                                  <i nz-icon nzType="plus"></i>Add field
+                                  <i nz-icon nzType="plus"></i>添加主键列
                               </button>
                               </span>
-                              <!--
-                          <nz-input-group  [nzAddOnBefore]="primaryIndexTab" nzCompact style="width:20em">
-                              <nz-select nzPlaceHolder="Select a column"  nzShowSearch nzAllowClear  [(ngModel)]="this.erMetaNode.primaryIndexColumnName"
-                                         [ngModelOptions]="{standalone: true}"  >
-                                  <nz-option *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
-                              </nz-select>
-                          </nz-input-group>
-                          -->
                               <ng-template #primaryIndexTab>
                                   <i nz-icon nzType="key" nzTheme="outline"></i>
                               </ng-template>
+                          </nz-form-control>
+                      </nz-form-item>
+                      <nz-form-item *ngIf="this.erMetaNode.primaryIndexTab" class="meta-item">
+                          <nz-form-label [nzSpan]="4">分区键</nz-form-label>
+                          <nz-form-control [nzSpan]="13">
+                              <nz-select class="primary-key" nzPlaceHolder="分区键" nzShowSearch nzAllowClear [(ngModel)]="erMetaNode.sharedKey"
+                                         [ngModelOptions]="{standalone: true}">
+                                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
+                                      <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
+                                  </nz-option>
+                              </nz-select>
                           </nz-form-control>
                       </nz-form-item>
                       <nz-form-item class="meta-item">
@@ -201,11 +204,8 @@ export class WorkflowAddErMetaComponent
   transfers: Array<{ key: string }> = [];
 
   constructor(tisService: TISService, private notification: NzNotificationService,
-              modalService: NgbModal, private cdr: ChangeDetectorRef, private _iconService: NzIconService) {
+              modalService: NzModalService, private cdr: ChangeDetectorRef) {
     super(tisService, modalService);
-    this._iconService.addIcon(DeleteOutline);
-    // this.cdr.detach();
-    // this.formDisabled = true;
     this.transfers.push({"key": "dateYYYYmmdd"});
     this.transfers.push({"key": "dateYYYYMMddHHmmss"});
     // this.transfers.push({"key": "dateYYYYmmdd"});

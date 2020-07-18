@@ -3,6 +3,7 @@ import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -24,7 +25,7 @@ import {ActivatedRoute} from "@angular/router";
 export class IncrBuildStep0Component extends AppFormComponent implements AfterContentInit {
   @Output() nextStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

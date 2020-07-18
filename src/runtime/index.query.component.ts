@@ -9,6 +9,7 @@ import * as $ from 'jquery';
 import {PojoComponent} from "./pojo.component";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LocalStorageService} from "angular-2-local-storage";
+import {NzModalService} from "ng-zorro-antd";
 
 const LocalStoreTags = 'local_Store_Tags';
 
@@ -276,7 +277,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   tagAddForm: FormGroup;
   private _localStoreTags: Array<TagQueryForm>;
 
-  constructor(tisService: TISService, modalService: NgbModal, private fb: FormBuilder, private _localStorageService: LocalStorageService) {
+  constructor(tisService: TISService, modalService: NzModalService, private fb: FormBuilder, private _localStorageService: LocalStorageService) {
     super(tisService, modalService);
   }
 

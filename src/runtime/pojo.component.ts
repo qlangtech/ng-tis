@@ -9,6 +9,7 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
+import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
@@ -36,7 +37,7 @@ export class PojoComponent extends AppFormComponent {
   //   this.code = e;
   // }
 
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

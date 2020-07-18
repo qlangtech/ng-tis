@@ -4,6 +4,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
+import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
@@ -276,7 +277,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   lineChartLabels: Array<any> = [];
   rageVal = '1440';
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NgbModal) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

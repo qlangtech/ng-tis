@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {TISService} from "../service/tis.service";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {BasicFormComponent} from "../common/basic.form.component";
+import {NzModalService} from "ng-zorro-antd";
 
 // 这个类专门负责router
 @Component({
@@ -80,8 +81,7 @@ export class TriggerDumpComponent extends BasicFormComponent {
   iptUserPoint2 = '';
   iptUserPoint1 = '';
 
-  constructor(tisService: TISService, modalService: NgbModal, public activeModal: NgbActiveModal) {
-    // this.tisService.setAppSelectable(true);
+  constructor(tisService: TISService, modalService: NzModalService, public activeModal: NgbActiveModal) {
     super(tisService, modalService);
   }
 
