@@ -4,7 +4,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption} from "./tis.plugin";
+import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption, PluginName, PluginMeta} from "./tis.plugin";
 import {NzAnchorLinkComponent, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subscription} from "rxjs";
 
@@ -101,6 +101,29 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   subscription: Subscription;
 
+  public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
+    let item: Item = null;
+    let fieldsErrs: Array<IFieldError> = null;
+
+    if (errorFields) {
+      for (let index = 0; index < errorFields.length; index++) {
+        fieldsErrs = errorFields[index];
+        item = items[index];
+        let itemProp: ItemPropVal;
+        fieldsErrs.forEach((fieldErr) => {
+          itemProp = item.vals[fieldErr.name];
+          itemProp.error = fieldErr.content;
+
+          if (!itemProp.primaryVal) {
+            if (fieldErr.errorfields.length !== 1) {
+              throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
+            }
+            PluginsComponent.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
+          }
+        })
+      }
+    }
+  }
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private notification: NzNotificationService
     , private cdr: ChangeDetectorRef) {
@@ -136,7 +159,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     if (!this.plugins || this.plugins.length < 1) {
       throw new Error("plugin argument can not be null");
     }
-    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + this.plugins.join("&plugin=");
+    let pluginMeta = this.plugins.map((p) => {
+      let param: any = p;
+      if (param.name) {
+        return param.name;
+      } else {
+        return p;
+      }
+    }).join("&plugin=");
+    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
     this.jsonPost(url, {}).then((r) => {
       this._heteroList = [];
       if (r.success) {
@@ -308,7 +339,16 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   savePluginSetting(event: MouseEvent) {
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
-    let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=' + this.plugins.join("&plugin=");
+    // console.log(this.plugins);
+    let pluginMeta = this.plugins.map((p) => {
+      let param: any = p;
+      if (param.name) {
+        return param.name + (!!param.require ? ':require' : '');
+      } else {
+        return p;
+      }
+    }).join("&plugin=");
+    let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=' + pluginMeta;
 
     let postData: Array<Item[]> = [];
     this._heteroList.forEach((h) => {
@@ -318,18 +358,21 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     this.jsonPost(url, postData).then((r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
-      if (r.success && r.msg.length > 0) {
-        this.notification.create('success', '成功', r.msg[0]);
+      if (r.success) {
+        // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
+        if (this.showSaveButton && r.msg.length > 0) {
+          this.notification.create('success', '成功', r.msg[0]);
+        }
         return;
       }
       let pluginErrorFields = r.errorfields;
-      console.log(pluginErrorFields);
+     // console.log(pluginErrorFields);
       let index = 0;
       this._heteroList.forEach((h) => {
         let items: Item[] = h.items;
 
         let errorFields = pluginErrorFields[index++];
-        this.processErrorField(errorFields, items);
+        PluginsComponent.processErrorField(errorFields, items);
       });
     }).catch((e) => {
       this.ajaxOccur.emit(new PluginSaveResponse(false, false));
@@ -337,30 +380,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     if (event) {
       event.stopPropagation();
-    }
-  }
-
-  private processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
-    let item: Item = null;
-    let fieldsErrs: Array<IFieldError> = null;
-
-    if (errorFields) {
-      for (let index = 0; index < errorFields.length; index++) {
-        fieldsErrs = errorFields[index];
-        item = items[index];
-        let ip: ItemPropVal;
-        fieldsErrs.forEach((fieldErr) => {
-          ip = item.vals[fieldErr.name];
-          ip.error = fieldErr.content;
-
-          if (!ip.primaryVal) {
-            if (fieldErr.errorfields.length !== 1) {
-              throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
-            }
-            this.processErrorField(fieldErr.errorfields, [ip.descVal]);
-          }
-        })
-      }
     }
   }
 
@@ -398,7 +417,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       <input *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"/>
                   </span>
                   <span *ngSwitchCase="4">
-                       <nz-input-number *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary"  [name]="_pp.key" (input)="inputValChange(_pp,$event)"></nz-input-number>
+                       <nz-input-number *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"></nz-input-number>
                   </span>
                   <span *ngSwitchCase="2">
                       <textarea rows="20" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"></textarea>

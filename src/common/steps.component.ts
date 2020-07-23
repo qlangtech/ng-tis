@@ -1,7 +1,12 @@
 import {AfterContentInit, Component, Input} from "@angular/core";
 
 
-const typeCreateIndex = "createIndex";
+// const typeCreateIndex = "createIndex";
+
+enum StepType {
+  CreateIndex = "createIndex",
+  CreateIncr = "createIncr"
+}
 
 // implements OnInit, AfterContentInit
 @
@@ -17,7 +22,7 @@ const typeCreateIndex = "createIndex";
     styles: [
         `
             .tis-steps {
-                margin: 20px 0 20px 0;
+                margin: 20px 10px 20px 0;
             }
       `
     ]
@@ -26,7 +31,7 @@ export class TisStepsComponent implements AfterContentInit {
   processMap = new Map<string, Array<string>>();
   stepLiteria = ["第一步", "第二步", "第三步", "第四步", "第五步", "第六步", "第七步", "第八步", "第九步"]
   @Input()
-  type: "createIndex";
+  type: StepType;
 
   @Input()
   step = 0;
@@ -34,7 +39,8 @@ export class TisStepsComponent implements AfterContentInit {
 
   constructor() {
     let createIndexPhase: Array<string> = ["基本信息", "元数据信息", "服务器节点", "确认"];
-    this.processMap.set(typeCreateIndex, createIndexPhase);
+    this.processMap.set(StepType.CreateIndex, createIndexPhase);
+    this.processMap.set(StepType.CreateIncr, ["脚本生成", "构建部署", "状态确认"]);
   }
 
   ngAfterContentInit() {

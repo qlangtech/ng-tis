@@ -5,33 +5,23 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd";
 
 @Component({
   // templateUrl: '/offline/tableaddstep.htm'
   template: `
-      <fieldset [disabled]='formDisabled'>
-          <div class="modal-header">
-              <h4 class="modal-title">{{processMode.title}}</h4>
-              <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <tis-msg [result]="result"></tis-msg>
-              <div class="container">
+      <tis-msg [result]="result"></tis-msg>
+      <div class="container">
 
-                  <tableAddStep1 [isShow]="currentIndex===0" (previousStep)="goToPreviousStep($event)"
-                                 (nextStep)="goToNextStep($event)"
-                                 (processHttpResult)="processResult($event)"
-                                 [tablePojo]="tablePojo"></tableAddStep1>
-                  <tableAddStep2 [isShow]="currentIndex===1" (previousStep)="goToPreviousStep($event)"
-                                 (nextStep)="goToNextStep($event)" (processHttpResult)="processResult($event)"
-                                 [step1Form]="step1Form"
-                                 [tablePojo]="tablePojo"></tableAddStep2>
-              </div>
-          </div>
-      </fieldset>
+          <tableAddStep1 [isShow]="currentIndex===0" (previousStep)="goToPreviousStep($event)"
+                         (nextStep)="goToNextStep($event)"
+                         (processHttpResult)="processResult($event)"
+                         [tablePojo]="tablePojo"></tableAddStep1>
+          <tableAddStep2 [isShow]="currentIndex===1" (previousStep)="goToPreviousStep($event)"
+                         (nextStep)="goToNextStep($event)" (processHttpResult)="processResult($event)"
+                         [step1Form]="step1Form"
+                         [tablePojo]="tablePojo"></tableAddStep2>
+      </div>
   `
 })
 export class TableAddComponent extends BasicFormComponent implements OnInit {
@@ -44,10 +34,10 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
 
   @Input() processMode: { tableid?: number, 'title': string, isNew: boolean } = {'title': '添加数据表', isNew: true};
 
-  constructor(tisService: TISService, modalService: NzModalService
+  constructor(tisService: TISService
     , private activateRoute: ActivatedRoute
-    , public activeModal: NgbActiveModal) {
-    super(tisService, modalService);
+    , private activeModal: NzModalRef) {
+    super(tisService);
     this.tablePojo = new TablePojo();
     this.step1Form = new TablePojo();
   }

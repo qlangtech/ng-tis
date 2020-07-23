@@ -16,44 +16,46 @@ import {NzModalRef, NzModalService} from "ng-zorro-antd";
 @Component({
   template: `
       <br/>
-      <nz-row [nzGutter]="16">
-          <nz-col [nzSpan]="6">
-              <nz-card class="primary-card">
-                  <nz-statistic [nzValue]="(instanceDirDesc.allcount | number)!" [nzTitle]="'总记录数(条)'"></nz-statistic>
-              </nz-card>
-          </nz-col>
-          <nz-col [nzSpan]="6">
-              <nz-card class="primary-card">
-                  <nz-statistic [nzValue]="(2019.111 | number: '1.0-2')!" [nzTitle]="'当天更新次数'"></nz-statistic>
-              </nz-card>
-          </nz-col>
-          <nz-col [nzSpan]="12">
-              <nz-card nzTitle="副本目录信息" class="primary-card">
-                  {{instanceDirDesc.desc}}
-              </nz-card>
-          </nz-col>
-      </nz-row>
-      <br/>
-      <nz-row [nzGutter]="16">
-          <nz-col [nzSpan]="24">
-              <nz-card [nzTitle]="'节点拓扑'">
-                  <nz-row [nzGutter]="16">
-                      <nz-col [nzSpan]="2">
-                          <ul id="tis-node-enum">
-                              <li style="background-color: #57A957" [ngStyle]="{'background-color': STATE_COLOR.COLOR_Active }">Active</li>
-                              <li style="background-color: #d5dd00">Recovering</li>
-                              <li style="background-color: #c48f00">Down</li>
-                              <li style="background-color: #C43C35">Recovery Failed</li>
-                              <li style="background-color: #e0e0e0">Gone</li>
-                          </ul>
-                      </nz-col>
-                      <nz-col [nzSpan]="22">
-                          <svg id="svg-canvas" #svgblock width='100%' height=600></svg>
-                      </nz-col>
-                  </nz-row>
-              </nz-card>
-          </nz-col>
-      </nz-row>
+      <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+          <nz-row [nzGutter]="16">
+              <nz-col [nzSpan]="6">
+                  <nz-card class="primary-card">
+                      <nz-statistic [nzValue]="(instanceDirDesc.allcount | number)!" [nzTitle]="'总记录数(条)'"></nz-statistic>
+                  </nz-card>
+              </nz-col>
+              <nz-col [nzSpan]="6">
+                  <nz-card class="primary-card">
+                      <nz-statistic [nzValue]="(2019.111 | number: '1.0-2')!" [nzTitle]="'当天更新次数'"></nz-statistic>
+                  </nz-card>
+              </nz-col>
+              <nz-col [nzSpan]="12">
+                  <nz-card nzTitle="副本目录信息" class="primary-card">
+                      {{instanceDirDesc.desc}}
+                  </nz-card>
+              </nz-col>
+          </nz-row>
+          <br/>
+          <nz-row [nzGutter]="16">
+              <nz-col [nzSpan]="24">
+                  <nz-card [nzTitle]="'节点拓扑'">
+                      <nz-row [nzGutter]="16">
+                          <nz-col [nzSpan]="2">
+                              <ul id="tis-node-enum">
+                                  <li style="background-color: #57A957" [ngStyle]="{'background-color': STATE_COLOR.COLOR_Active }">Active</li>
+                                  <li style="background-color: #d5dd00">Recovering</li>
+                                  <li style="background-color: #c48f00">Down</li>
+                                  <li style="background-color: #C43C35">Recovery Failed</li>
+                                  <li style="background-color: #e0e0e0">Gone</li>
+                              </ul>
+                          </nz-col>
+                          <nz-col [nzSpan]="22">
+                              <svg id="svg-canvas" #svgblock width='100%' height=600></svg>
+                          </nz-col>
+                      </nz-row>
+                  </nz-card>
+              </nz-col>
+          </nz-row>
+      </nz-spin>
   `,
   styles: [`
       .tis-node-label tspan {

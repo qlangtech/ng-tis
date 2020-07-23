@@ -37,7 +37,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
   protected initialize(app: CurrentCollection): void {
   }
 
-  ngOnInit() {
+  ngAfterViewInit () {
   }
 
   protected get codeMirrirCfg(): EditorConfiguration {
@@ -47,7 +47,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     };
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
 
     let configFST: Map<any, { next: any, pre: any }> = new Map();
 
@@ -93,4 +93,5 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 export class IndexIncrStatus {
   public incrScriptCreated: boolean;
   public incrScriptMainFileContent: String;
+  public k8sPluginInitialized: boolean;
 }

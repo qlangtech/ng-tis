@@ -7,7 +7,6 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
 
 // const breadcrumbArry = ['数据流', '/offline/wf', 'totalpay', '/offline/wf_update/totalpay'];
-
 @Component({
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
@@ -26,7 +25,7 @@ import {NzModalService} from "ng-zorro-antd";
                   {{rr.literalState}}
               </ng-template>
           </tis-col>
-          <tis-col title="阶段描述" width="12">
+          <tis-col title="阶段描述" width="24">
               <ng-template let-rr='r'>
                   <nz-tag [nzColor]="'blue'">{{rr.startPhase}}</nz-tag>
                   <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
@@ -40,21 +39,13 @@ import {NzModalService} from "ng-zorro-antd";
               </ng-template>
           </tis-col>
 
-          <tis-col title="耗时" width="24">
+          <tis-col title="耗时" width="12">
               <ng-template let-rr='r'>
                   {{rr.consuming}}
               </ng-template>
           </tis-col>
           <tis-col title="触发方式" width="10">
               <ng-template let-rr='r'>{{rr.triggerType}}</ng-template>
-          </tis-col>
-          <tis-col title="数据流" width="14">
-              <ng-template let-rr='r'>union</ng-template>
-          </tis-col>
-          <tis-col title="操作">
-              <ng-template let-app='r'>
-                  <a href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-              </ng-template>
           </tis-col>
       </tis-page>
   `

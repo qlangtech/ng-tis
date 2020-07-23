@@ -1,6 +1,12 @@
 /*Deserialize*/
 
-export declare type PluginType = 'mq' | 'k8s-config' | 'fs';
+import {isBoolean} from "util";
+
+export declare type PluginName = 'mq' | 'k8s-config' | 'fs' ;
+
+export declare type PluginType = PluginName | PluginMeta;
+
+export declare type PluginMeta = { name: PluginName, require: boolean };
 
 export class AttrDesc {
   key: string;
@@ -51,6 +57,9 @@ export class Descriptor {
 }
 
 /*Items*/
+/**
+ * 对应一个plugin的输入项
+ */
 export class Item {
   impl = '';
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
@@ -59,11 +68,25 @@ export class Item {
   displayName = '';
   private _propVals: ItemPropVal[];
 
+  /**
+   * 创建一个新的Item
+   *
+   * @param fieldNames
+   */
+  public static create(...fieldNames: string[]): Item {
+    let item = new Item(null);
+    fieldNames.forEach((fname) => {
+      item.vals[fname] = new ItemPropVal();
+    });
+    return item;
+  }
+
   constructor(public dspt: Descriptor) {
     if (dspt) {
       this.impl = dspt.impl;
     }
   }
+
 
   public wrapItemVals(): void {
     let newVals = {};
@@ -76,7 +99,6 @@ export class Item {
       }
       newVal = at.addNewEmptyItemProp();
       if (at.describable) {
-        // console.log(at);
         let d = at.descriptors.get(v.impl);
         if (!d) {
           throw new Error(`impl:${v.impl} can not find relevant descriptor`);
@@ -88,14 +110,6 @@ export class Item {
       } else {
         newVal._primaryVal = v;
       }
-      // newVal = new ItemPropVal();
-      // newVal.key = attr.key;
-      // newVal.required = attr.required;
-      // if (attr.describable) {
-      //   newVal.descVal = this.createDescribleVal(v, attr);
-      // } else {
-      //   newVal._primaryVal = v;
-      // }
       newVals[at.key] = (newVal);
       this.vals = newVals;
     });

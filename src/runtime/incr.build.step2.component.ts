@@ -10,16 +10,11 @@ import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
-
-      <nz-steps [nzCurrent]="1">
-          <nz-step nzTitle="第一步" nzDescription="脚本生成"></nz-step>
-          <nz-step nzTitle="第二步" nzDescription="构建部署"></nz-step>
-          <nz-step nzTitle="第三步" nzDescription="状态确认"></nz-step>
-      </nz-steps>
+      <tis-steps type="createIncr" [step]="1"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
-              <button nz-button nzType="default" (click)="createIndexStepPre()">上一步</button>
-              <button nz-button nzType="primary" (click)="createIndexStepNext()">部署</button>
+              <button nz-button nzType="default" (click)="createIndexStepPre()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>&nbsp;
+              <button nz-button nzType="primary" (click)="createIndexStepNext()" [nzLoading]="formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i>部署</button>&nbsp;
               <button nz-button nzType="default" (click)="cancelStep()">取消</button>
           </tis-header-tool>
       </tis-page-header>
@@ -153,8 +148,7 @@ export class IncrBuildStep2Component extends AppFormComponent implements AfterCo
   }
 
   createIndexStepNext() {
-    // console.log(  this.specForm.getRawValue());
-    let url = '/coredefine/corenodemanage.ajax?event_submit_do_compile_and_package_deploy_incr_sync_channal=y&action=core_action';
+    let url = '/coredefine/corenodemanage.ajax?event_submit_do_deploy_incr_sync_channal=y&action=core_action';
     // 保存MQ消息
     this.jsonPost(url, this.specForm.value).then((r) => {
       if (r.success) {

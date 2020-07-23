@@ -113,11 +113,12 @@ export class TISService {
     let opts = {'headers': headers, 'params': params};
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts)
       .toPromise()
-      .then(response => {
+      .then((response) => {
         let result = this.processResult(response);
         if (result) {
           return result;
         }
+        return () => Promise.reject(response);
       }).catch(this.handleError);
   }
 
@@ -132,15 +133,20 @@ export class TISService {
   }
 
 
-// 发送json表单
+  // 发送json表单
   public jsonPost(url: string, body: any): Promise<TisResponseResult> {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
     let opts = {'headers': this.appendHeaders(headers)};
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts).pipe()
       .toPromise()
-      .then(response => {
-        return this.processResult(response);
+      // @ts-ignore
+      .then((response) => {
+        let result = this.processResult(response);
+        if (result) {
+          return result;
+        }
+        return () => Promise.reject(response);
       }).catch(this.handleError);
   }
 
@@ -164,6 +170,7 @@ export class TISService {
       // faild
       let errs: string[] = result.errormsg;
 
+      // 在页面上显示错误
       if (!!result.action_error_page_show) {
         return result;
       }
@@ -173,11 +180,13 @@ export class TISService {
       if (result.errorfields && result.errorfields.length > 0) {
         return result;
       }
+      // return result;
     }
   }
 
   protected handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
+    // console.error('An error occurred', error);
+    this.notification.create('error', '错误', error, {nzDuration: 6000});
     NProgress.done();
     return Promise.reject(error.message || error);
   }

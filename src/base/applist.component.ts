@@ -33,12 +33,6 @@ import {NzModalService} from "ng-zorro-antd";
               <tis-col title="创建时间" width="20">
                   <ng-template let-app='r'> {{app.createTime | dateformat}}</ng-template>
               </tis-col>
-
-              <tis-col title="操作">
-                  <ng-template let-app='r'>
-                      <a href="javascript:void(0)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                  </ng-template>
-              </tis-col>
           </tis-page>
       </form>
   `

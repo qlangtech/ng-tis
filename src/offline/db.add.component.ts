@@ -9,94 +9,69 @@ import {Location} from '@angular/common';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 //  @ts-ignore
 import * as $ from 'jquery';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd";
 
 
 @Component({
   template: `
-      <fieldset [disabled]='formDisabled'>
-          <div class="modal-header">
-              <h4 class="modal-title">{{title}}</h4>
-              <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <div class="container">
-                  <tis-page-header [showBreadcrumb]="false" [result]="result">
-                      <button nz-button nzType="primary" (click)="saveDbConfig(form)">提交</button>
-                  </tis-page-header>
-                  <form #form>
-                      <input type="hidden" name="facade" [value]="dbPojo.facade"/>
-                      <input type="hidden" name="id" [value]="dbPojo.dbId"/>
-                      <div class="form-group row">
-                          <label for="input-db-name" class="col-2 col-form-label">数据库名</label>
-                          <div class="col-10">
-                              <input id="input-db-name" class="form-control" type="text"
-                                     name="dbName" required (change)="onChangeDbConfig()"
-                                     [value]="dbPojo.dbName" [readonly]="dbNameReadOnly">
-                          </div>
-                      </div>
-                      <div *ngIf="!dbPojo.facade" class="form-group row">
-                          <label for="input-db-type" class="col-2 col-form-label">数据库类型</label>
-                          <div class="col-10">
-                              <select id="input-db-type" class="form-control" name="dbType" (change)="onChangeDbConfig()"
-                                      [value]="dbPojo.dbType">
-                                  <option value="mysql">MySql</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-username" class="col-2 col-form-label">用户名</label>
-                          <div class="col-10">
-                              <input id="input-username" class="form-control" type="text" name="userName"
-                                     (change)="onChangeDbConfig()"
-                                     value="{{dbPojo.userName}}">
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-password" class="col-2 col-form-label">密码</label>
-                          <div class="col-10">
-                              <input id="input-password" class="form-control" type="password" name="password" placeholder="没有变化不需要输入"
-                                     (change)="onChangeDbConfig()">
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-port" class="col-2 col-form-label">端口</label>
-                          <div class="col-10">
-                              <input id="input-port" class="form-control" type="number"
-                                     name="port" (change)="onChangeDbConfig()"
-                                     value="{{dbPojo.port}}">
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-encode" class="col-2 col-form-label">编码</label>
-                          <div class="col-10">
-                              <select id="input-encode" class="form-control" name="encoding" [value]="dbPojo.encoding">
-                                  <option value="UTF-8">UTF-8</option>
-                                  <option value="GBK">GBK</option>
-                              </select>
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-ext-params" class="col-2 col-form-label">附加参数</label>
-                          <div class="col-10">
-                              <input id="input-ext-params" class="form-control"
-                                     type="text" placeholder="useUnicode=true" name="extraParams"
-                                     [value]="dbPojo.extraParams">
-                          </div>
-                      </div>
-                      <div class="form-group row">
-                          <label for="input-host-desc" class="col-2 col-form-label">节点描述</label>
-                          <div class="col-10">
-                <textarea id="input-host-desc" class="form-control" rows="6" name="host" [value]="dbPojo.host"
-                          placeholder="127.0.0.1[00-31],127.0.0.2[32-63],127.0.0.3,127.0.0.4[9],baisui.com[0-9]"></textarea>
-                          </div>
-                      </div>
-                  </form>
-              </div>
-          </div>
-      </fieldset>
+      <tis-page-header [showBreadcrumb]="false" [result]="result">
+          <button nz-button  (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">校验</button>&nbsp;
+          <button nz-button nzType="primary" (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">提交</button>
+      </tis-page-header>
+
+      <tis-form>
+          <tis-ipt title="数据库名" name="dbName">
+              <ng-template let-i='i'>
+                  <input type="hidden" name="facade" [value]="dbPojo.facade"/>
+                  <input type="hidden" name="id" [value]="dbPojo.dbId"/>
+                  <input nz-input [id]="i.id" [name]="i.name"
+                         name="dbName" required (ngModelChange)="onChangeDbConfig($event)"
+                         [(ngModel)]="dbPojo.dbName" [readonly]="dbNameReadOnly">
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="数据库类型" name="dbType">
+              <ng-template let-i='i'>
+                  <nz-select [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.dbType" nzAllowClear>
+                      <nz-option nzValue="mysql" nzLabel="MySql"></nz-option>
+                  </nz-select>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="用户名" name="userName">
+              <ng-template let-i='i'>
+                  <input nz-input [id]="i.id" [name]="i.name"
+                         [(ngModel)]="dbPojo.userName"/>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="密码" name="password">
+              <ng-template let-i='i'>
+                  <input nz-input type="password" [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.password" placeholder="没有变化不需要输入"/>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="端口" name="port">
+              <ng-template let-i='i'>
+                  <input [id]="i.id" nz-input type="number" [name]="i.name" [(ngModel)]="dbPojo.port"/>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="编码" name="encoding">
+              <ng-template let-i='i'>
+                  <nz-select [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.encoding" nzAllowClear>
+                      <nz-option nzValue="UTF-8" nzLabel="UTF-8"></nz-option>
+                      <nz-option nzValue="GBK" nzLabel="GBK"></nz-option>
+                  </nz-select>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="附加参数" name="extraParams">
+              <ng-template let-i='i'>
+                  <input [id]="i.id" nz-input [name]="i.name" [(ngModel)]="dbPojo.extraParams"/>
+              </ng-template>
+          </tis-ipt>
+          <tis-ipt title="节点描述" name="host">
+              <ng-template let-i='i'>
+                  <textarea [id]="i.id" nz-input [name]="i.name" [nzAutosize]="{ minRows: 6, maxRows: 6 }" [(ngModel)]="dbPojo.host"
+                            placeholder="127.0.0.1[00-31],127.0.0.2[32-63],127.0.0.3,127.0.0.4[9],baisui.com[0-9]"></textarea>
+              </ng-template>
+          </tis-ipt>
+      </tis-form>
   `
 })
 export class DbAddComponent extends BasicFormComponent implements OnInit {
@@ -108,9 +83,6 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   @Output() successSubmit = new EventEmitter<any>();
   // id: any;
   isAdd: boolean;
-  // 是否是Cobar的配置
-  // facade = false;
-  // private _title: string;
   confirmBtn: string;
 
   get dbNameReadOnly(): boolean {
@@ -118,9 +90,9 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   }
 
   constructor(tisService: TISService,
-              private location: Location, modalService: NzModalService
-    , public activeModal: NgbActiveModal) {
-    super(tisService, modalService);
+              private location: Location
+    , public activeModal: NzModalRef) {
+    super(tisService);
   }
 
 
@@ -212,7 +184,7 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
         });
   }
 
-  onChangeDbConfig(): void {
+  onChangeDbConfig(event: any): void {
     // this.confirmBtnDisable = true;
     console.log('change');
   }
@@ -239,18 +211,18 @@ export class DbEnum {
 }
 
 export class DbPojo {
-  private _dbName: string = '';
-  private _dbType: string = 'MySql';
-  private _userName: string = '';
+  private _dbName = '';
+  private _dbType = 'MySql';
+  private _userName = '';
   private _password: string;
-  private _port: string = '3306';
-  private _encoding: string = 'UTF-8';
-  private _extraParams: string = '';
-  private _shardingType: string = 'single';
-  private _host: string = '';
-  private _shardingEnum: string = '';
+  private _port = '3306';
+  private _encoding = 'UTF-8';
+  private _extraParams = '';
+  private _shardingType = 'single';
+  private _host = '';
+  private _shardingEnum = '';
   // 是否是Cobar配置
-  private _facade: boolean = false;
+  private _facade = false;
 
   constructor(public _dbId?: number) {
 

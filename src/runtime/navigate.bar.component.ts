@@ -24,7 +24,16 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
   template: `
     <nav id="tis-navbar" class="navbar navbar-expand-lg navbar-light bg-light">
       <div [ngSwitch]="appHasNotDefine">
-        <a *ngSwitchCase="true" class="navbar-brand" href="javascript:void(0)">TIS</a>
+        <a *ngSwitchCase="true" class="navbar-brand" href="javascript:void(0)">
+            <svg version="1.1"
+                 preserveAspectRatio="xMinYMin meet"
+                 xmlns="http://www.w3.org/2000/svg"
+                 width="50" height="31"
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
+
+                <image xlink:href="/images/icon/tis-log.svg" width="50" height="31"/>
+            </svg>
+        </a>
         <a *ngSwitchCase="false" class="navbar-brand" routerLink="/base/applist">
           <i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
       </div>
@@ -77,9 +86,9 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
             <div class="dropdown-menu" aria-labelledby="navbarManage">
 
               <a class="dropdown-item" routerLink="/base/departmentlist">业务线</a>
-                <a class="dropdown-item" routerLink="/base/basecfg">插件配置</a>
+              <a class="dropdown-item" routerLink="/base/basecfg">插件配置</a>
+              <a class="dropdown-item" routerLink="/base/tpl/snapshotset">索引模版</a>
               <a class="dropdown-item" routerLink="/base/globalparams">全局参数</a>
-
               <a class="dropdown-item" routerLink="/base/operationlog">操作日志</a>
             </div>
           </li>

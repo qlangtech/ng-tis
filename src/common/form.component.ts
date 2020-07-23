@@ -94,18 +94,16 @@ export class InputContentDirective implements OnInit {
 @Component({
   selector: 'tis-form',
   template: `
-    <fieldset >
       <ng-content select="tis-page-header"></ng-content>
 
-      <form #form>
-        <div *ngFor="let i of inputs" class="form-group row">
-          <label [for]="'ipt-'+i.name" class="col-sm-2 col-form-label">{{i.title}}</label>
-          <div class="col-sm-10">
-            <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
-          </div>
-        </div>
+      <form nz-form #form>
+          <nz-form-item *ngFor="let i of inputs">
+              <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'ipt-'+i.name">{{i.title}}</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
+              </nz-form-control>
+          </nz-form-item>
       </form>
-    </fieldset>
   `,
 
 })

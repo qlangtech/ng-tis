@@ -7,32 +7,25 @@ import {EditorConfiguration} from "codemirror";
 import {IndexIncrStatus} from "./incr.build.component";
 // import {IncrBuildStep1ParamsSetComponent} from "./incr.build.step1_1_params_set.component";
 import {FormGroup} from "@angular/forms";
-import {PluginSaveResponse} from "../common/tis.plugin";
+import {Item, PluginSaveResponse} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd";
+import {PluginsComponent} from "../common/plugins.component";
 
 // import {eventNames} from "cluster";
 
 
 @Component({
   template: `
-
-      <nz-steps nzCurrent="0">
-          <nz-step nzTitle="第一步" nzDescription="脚本生成"></nz-step>
-          <nz-step nzTitle="第二步" nzDescription="构建部署"></nz-step>
-          <nz-step nzTitle="第三步" nzDescription="状态确认"></nz-step>
-      </nz-steps>
+      <tis-steps type="createIncr" [step]="0"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
           </tis-header-tool>
       </tis-page-header>
       <nz-spin nzSize="large" [nzSpinning]="formDisabled">
-          <nz-tabset [nzTabBarExtraContent]="extraTemplate" (nzSelectedIndexChange)="tabChange($event)">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="配置" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <!--
-                      <incr-build-step1-1-params-set (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></incr-build-step1-1-params-set>
-                    -->
-                      <tis-plugins [savePlugin]="savePlugin" [plugins]="['mq']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>
+                      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="执行脚本">
@@ -44,8 +37,11 @@ import {NzModalService} from "ng-zorro-antd";
               </nz-tab>
           </nz-tabset>
           <ng-template #extraTemplate>
-              <button nz-button nzType="primary" (click)="createIndexStep1Next()">保存&下一步</button>
-              <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+              <nz-affix [nzOffsetTop]="10">
+                  <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon nzType="save" nzTheme="outline" ></i>保存&下一步</button>
+                  &nbsp;
+                  <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+              </nz-affix>
           </ng-template>
       </nz-spin>
   `,
@@ -61,8 +57,10 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: IndexIncrStatus;
+  plugins = [{name: 'mq', require: true}];
 
   savePlugin = new EventEmitter<any>();
+  tabSelectIndex = 0;
   // private configParamForm: FormGroup;
 
   // @ViewChild('buildStep1ParamsSetComponent', {static: false}) buildStep1ParamsSetComponent: IncrBuildStep1ParamsSetComponent;
@@ -71,7 +69,15 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
     super(tisService, route, modalService);
   }
 
-  tabChange(e: number) {
+  ngOnInit(): void {
+
+    if (!this.dto.k8sPluginInitialized) {
+      this.plugins.push({name: 'incr-config', require: true});
+    }
+    super.ngOnInit();
+  }
+
+  tabChange(index: number) {
 
   }
 
@@ -105,7 +111,15 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   createIndexStep1Next() {
-    this.savePlugin.emit();
+    // console.log("tabSelectIndex:" + this.tabSelectIndex)
+    if (this.tabSelectIndex === 0) {
+      // 当前正在 '配置' tab
+      this.savePlugin.emit();
+    } else {
+      // 当前正在 '执行脚本' tab
+      this.compileAndPackageIncr();
+    }
+
     // if (this.buildStep1ParamsSetComponent) {
     //   let f = this.buildStep1ParamsSetComponent.validateForm;
     //   if (f.invalid) {
@@ -121,6 +135,26 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
     // console.log(this.buildStep1ParamsSetComponent.validateForm.value);
   }
 
+  private compileAndPackageIncr() {
+    let url = '/coredefine/corenodemanage.ajax?emethod=compileAndPackage&action=core_action';
+    this.jsonPost(url, {}).then((result) => {
+      if (result.success) {
+        // 执行编译打包
+        this.nextStep.emit(this.dto);
+      } else {
+        let errFields = result.errorfields;
+        if (errFields.length > 0) {
+          let errFieldKey = "incr_script_compile_error";
+          let item: Item = Item.create(errFieldKey);
+          PluginsComponent.processErrorField(errFields[0], [item]);
+          if ("error" === item.vals[errFieldKey].error) {
+            this.tabSelectIndex = 1;
+          }
+        }
+      }
+    });
+  }
+
   cancelStep() {
   }
 
@@ -128,14 +162,15 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
 
     if (event.saveSuccess) {
       // 成功
-      let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_script_meta=y&action=core_action';
-      this.jsonPost(url, {}).then((r) => {
-        if (r.success) {
-          // r.bizresult;
-          this.nextStep.emit(this.dto);
-          console.log("ddddddddddddd");
-        }
-      });
+      // let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_script_meta=y&action=core_action';
+      //  this.jsonPost(url, {}).then((r) => {
+      //    if (r.success) {
+      // r.bizresult;
+      this.compileAndPackageIncr();
+      // this.nextStep.emit(this.dto);
+      //  console.log("ddddddddddddd");
+      //   }
+      // });
     }
 
     setTimeout(() => {
