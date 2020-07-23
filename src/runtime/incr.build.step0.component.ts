@@ -40,10 +40,6 @@ export class IncrBuildStep0Component extends AppFormComponent implements AfterCo
     this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=create_incr_sync_channal')
       .then((r) => {
         if (r.success) {
-          // this.app = r.bizresult.app;
-          // this.config = r.bizresult.config;
-          // this.instanceDirDesc = r.bizresult.instanceDirDesc;
-          // this._incrScript = "ddd";
           this.nextStep.next(r.bizresult);
         }
       });

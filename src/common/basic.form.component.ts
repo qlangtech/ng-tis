@@ -93,7 +93,7 @@ export class BasicFormComponent {
 
     let option: any = {
       // nzTitle: title,
-      nzWidth: "80%",
+      nzWidth: "800",
       nzContent: component,
       nzFooter: null,
     };
@@ -114,48 +114,39 @@ export class BasicFormComponent {
 
   // 发送http post请求
   protected httpPost(url: string, body: string): Promise<TisResponseResult> {
-
-    // setTimeout(() => {
     this.formDisabled = true;
-    // });
     NProgress.start();
     this.clearProcessResult();
-    return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch((e) => {
-      this.formDisabled = false;
-      return e;
-    });
+    return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
   }
 
   // 发送json表单
   protected jsonPost(url: string, body: any): Promise<TisResponseResult> {
-    // setTimeout(() => {
     this.formDisabled = true;
-    // });
     NProgress.start();
     this.clearProcessResult();
-    return this.tisService.jsonPost(url, body).then(this.webExecuteCallback).catch((e) => {
-      this.formDisabled = false;
-      return e;
-    });
+    return this.tisService.jsonPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+  }
+
+// = (r: TisResponseResult): TisResponseResult => {
+  protected handleError = (error: any): Promise<any> => {
+   // console.log(this);
+    this.formDisabled = false;
+    NProgress.done();
+    return Promise.reject(error.message || error);
   }
 
   protected jsonp(url: string): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
-    return this.tisService.jsonp(url).then(this.webExecuteCallback).catch((e) => {
-      this.formDisabled = false;
-      return e;
-    });
+    return this.tisService.jsonp(url).then(this.webExecuteCallback).catch(this.handleError);
   }
 
   public jPost(url: string, o: any): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();
-    return this.tisService.jPost(url, o).then(this.webExecuteCallback).catch((e) => {
-      this.formDisabled = false;
-      return e;
-    });
+    return this.tisService.jPost(url, o).then(this.webExecuteCallback).catch(this.handleError);
   }
 
 }

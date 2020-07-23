@@ -124,8 +124,6 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "
                       </nz-tabset>
                       <ng-template #extraTemplate>
                           <button nz-button nzType="default" (click)="addFacadeDb()" [disabled]="facdeDb != null">添加门面配置</button>
-
-
                           <button nz-button (click)="editDb()">编辑</button>
                           <!--
                            <button type="button" class="btn btn-secondary btn-sm" (click)="syncDbOnline()">同步配置到线上</button>
@@ -301,7 +299,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     // this.modalService.open(DbAddComponent
     //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
 
-    this.openNormalDialog(DbAddComponent);
+    this.openNormalDialog(DbAddComponent, "添加数据库");
   }
 
   // 添加表按钮点击响应
@@ -463,7 +461,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   editDb(): void {
 
-    let dialog = this.openNormalDialog(DbAddComponent);
+    let dialog = this.openNormalDialog(DbAddComponent, "更新数据库");
     dialog.getContentComponent().dbPojo = this.selectedDb;
   }
 
@@ -486,7 +484,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
     let dialog = this.openNormalDialog(TableAddComponent);
     //
-   // console.log(table);
+    // console.log(table);
 
     dialog.getContentComponent().processMode
       = {tableid: this.selectedTable.tabId, 'title': '更新数据表', isNew: false};

@@ -10,11 +10,8 @@ import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
-      <nz-steps [nzCurrent]="2">
-          <nz-step nzTitle="第一步" nzDescription="脚本生成"></nz-step>
-          <nz-step nzTitle="第二步" nzDescription="构建部署"></nz-step>
-          <nz-step nzTitle="第三步" nzDescription="状态确认"></nz-step>
-      </nz-steps>
+     
+      <tis-steps type="createIncr" [step]="2"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
               <button nz-button nzType="default" (click)="createIndexStepPre()">上一步</button>

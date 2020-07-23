@@ -36,7 +36,7 @@ declare var jQuery: any;
                   <th width="100px">
                       区别比较
                   </th>
-                  <th width="200px">日志</th>
+                  <th width="20%">日志</th>
                   <th>详细</th>
                   <th>parent</th>
               </tr>
@@ -153,21 +153,6 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
   public openSelectrevsion(snapshot: any): void {
     this.targetSnapshot = snapshot;
     this.openSelectrevsionVisible = true;
-
-//     let modalRef: NzModalRef<SnapshotchangeDialogComponent> =
-//       this.modalService.create({
-//         nzTitle: '提交：切换版本理由是什么？',
-//         nzContent: SnapshotchangeDialogComponent,
-//         nzFooter: "dddd"
-//       });
-//     modalRef.getContentComponent().selectedSnapshotid = this.selSnapshotid;
-//     modalRef.afterClose.subscribe((snid: number) => {
-//       if (snid === this.selSnapshotid) {
-//         this.publishSnapshotid = snid;
-//       }
-//     }, () => {
-// // regected
-//     });
   }
 
 

@@ -42,14 +42,14 @@ import {EditorConfiguration} from "codemirror";
                   </div>
                   <div nz-row [nzGutter]="8">
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true">
+                          <nz-card [nzHoverable]="true" (click)="routerTo('/base/basecfg')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="setting" nzTheme="outline"></i>基础配置</h1>
+                                  <h1><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true">
+                          <nz-card [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
                               <div class="tis-card-content">
                                   <h1><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
                               </div>
