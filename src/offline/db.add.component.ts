@@ -10,66 +10,49 @@ import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 //  @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {IFieldError, Item} from "../common/tis.plugin";
+import {PluginsComponent} from "../common/plugins.component";
 
 
 @Component({
   template: `
       <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <button nz-button  (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">校验</button>&nbsp;
+          <button nz-button (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">校验</button>&nbsp;
           <button nz-button nzType="primary" (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">提交</button>
       </tis-page-header>
 
-      <tis-form>
-          <tis-ipt title="数据库名" name="dbName">
-              <ng-template let-i='i'>
-                  <input type="hidden" name="facade" [value]="dbPojo.facade"/>
-                  <input type="hidden" name="id" [value]="dbPojo.dbId"/>
-                  <input nz-input [id]="i.id" [name]="i.name"
-                         name="dbName" required (ngModelChange)="onChangeDbConfig($event)"
-                         [(ngModel)]="dbPojo.dbName" [readonly]="dbNameReadOnly">
-              </ng-template>
+      <tis-form [fieldsErr]="errorItem">
+          <tis-ipt #dbname title="数据库名" name="dbName" require="true">
+              <input nz-input [id]="dbname.name" [name]="dbname.name"
+                     required (ngModelChange)="onChangeDbConfig( dbname.name , $event)"
+                     [(ngModel)]="dbPojo.dbName" [readonly]="dbNameReadOnly">
           </tis-ipt>
-          <tis-ipt title="数据库类型" name="dbType">
-              <ng-template let-i='i'>
-                  <nz-select [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.dbType" nzAllowClear>
-                      <nz-option nzValue="mysql" nzLabel="MySql"></nz-option>
-                  </nz-select>
-              </ng-template>
+          <tis-ipt #type title="数据库类型" name="dbType" require="true">
+              <nz-select [id]="type.name" [name]="type.name" [(ngModel)]="dbPojo.dbType" nzAllowClear (ngModelChange)="onChangeDbConfig( type.name , $event)">
+                  <nz-option nzValue="mysql" nzLabel="MySql"></nz-option>
+              </nz-select>
           </tis-ipt>
-          <tis-ipt title="用户名" name="userName">
-              <ng-template let-i='i'>
-                  <input nz-input [id]="i.id" [name]="i.name"
-                         [(ngModel)]="dbPojo.userName"/>
-              </ng-template>
+          <tis-ipt #username title="用户名" name="userName" require="true">
+              <input nz-input [id]="username.name" [name]="username.name" [(ngModel)]="dbPojo.userName" (ngModelChange)="onChangeDbConfig( username.name , $event)"/>
           </tis-ipt>
-          <tis-ipt title="密码" name="password">
-              <ng-template let-i='i'>
-                  <input nz-input type="password" [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.password" placeholder="没有变化不需要输入"/>
-              </ng-template>
+          <tis-ipt #password title="密码" name="password" require="true">
+              <input nz-input type="password" [id]="password.name" [name]="password.name" [(ngModel)]="dbPojo.password" (ngModelChange)="onChangeDbConfig( password.name , $event)" placeholder="没有变化不需要输入"/>
           </tis-ipt>
-          <tis-ipt title="端口" name="port">
-              <ng-template let-i='i'>
-                  <input [id]="i.id" nz-input type="number" [name]="i.name" [(ngModel)]="dbPojo.port"/>
-              </ng-template>
+          <tis-ipt #port title="端口" name="port" require="true">
+              <input [id]="port.name" nz-input type="number" [name]="port.name" (ngModelChange)="onChangeDbConfig( port.name , $event)" [(ngModel)]="dbPojo.port"/>
           </tis-ipt>
-          <tis-ipt title="编码" name="encoding">
-              <ng-template let-i='i'>
-                  <nz-select [id]="i.id" [name]="i.name" [(ngModel)]="dbPojo.encoding" nzAllowClear>
-                      <nz-option nzValue="UTF-8" nzLabel="UTF-8"></nz-option>
-                      <nz-option nzValue="GBK" nzLabel="GBK"></nz-option>
-                  </nz-select>
-              </ng-template>
+          <tis-ipt #ecode title="编码" name="encoding" require="true">
+              <nz-select [id]="ecode.name" [name]="ecode.name" [(ngModel)]="dbPojo.encoding" (ngModelChange)="onChangeDbConfig( ecode.name , $event)" nzAllowClear>
+                  <nz-option nzValue="UTF-8" nzLabel="UTF-8"></nz-option>
+                  <nz-option nzValue="GBK" nzLabel="GBK"></nz-option>
+              </nz-select>
           </tis-ipt>
-          <tis-ipt title="附加参数" name="extraParams">
-              <ng-template let-i='i'>
-                  <input [id]="i.id" nz-input [name]="i.name" [(ngModel)]="dbPojo.extraParams"/>
-              </ng-template>
+          <tis-ipt #extraParams title="附加参数" name="extraParams">
+              <input [id]="extraParams.name" nz-input [name]="extraParams.name" (ngModelChange)="onChangeDbConfig( extraParams.name , $event)" [(ngModel)]="dbPojo.extraParams"/>
           </tis-ipt>
-          <tis-ipt title="节点描述" name="host">
-              <ng-template let-i='i'>
-                  <textarea [id]="i.id" nz-input [name]="i.name" [nzAutosize]="{ minRows: 6, maxRows: 6 }" [(ngModel)]="dbPojo.host"
-                            placeholder="127.0.0.1[00-31],127.0.0.2[32-63],127.0.0.3,127.0.0.4[9],baisui.com[0-9]"></textarea>
-              </ng-template>
+          <tis-ipt #host title="节点描述" name="host" require="true">
+              <textarea [id]="host.name" nz-input [name]="host.name" [nzAutosize]="{ minRows: 6, maxRows: 6 }" (ngModelChange)="onChangeDbConfig( host.name , $event)" [(ngModel)]="dbPojo.host"
+                        placeholder="127.0.0.1[00-31],127.0.0.2[32-63],127.0.0.3,127.0.0.4[9],baisui.com[0-9]"></textarea>
           </tis-ipt>
       </tis-form>
   `
@@ -77,11 +60,12 @@ import {NzModalRef, NzModalService} from "ng-zorro-antd";
 export class DbAddComponent extends BasicFormComponent implements OnInit {
   switchType = 'single';
   dbEnums: DbEnum[] = [];
-  @Input()
-  dbPojo: DbPojo = new DbPojo();
+  @Input() dbPojo: DbPojo = new DbPojo();
+
+  errorItem: Item = Item.create([]);
 
   @Output() successSubmit = new EventEmitter<any>();
-  // id: any;
+
   isAdd: boolean;
   confirmBtn: string;
 
@@ -111,28 +95,39 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
 
   public saveDbConfig(form: any): void {
     //  console.log($(form).serialize());
-    let action = $(form).serialize();
-    if (this.isAdd) {
-    } else {
-    }
-    this.httpPost('/offline/datasource.ajax?action=offline_datasource_action&event_submit_do_'
-      + this.actionMethod + '=y', action)
-      .then(
-        result => {
-          this.processResult(result);
-          if (result.success) {
-            let d = result.bizresult;
-            let facdeDb = new DbPojo(this.dbPojo._dbId);
-            facdeDb.facade = true;
-            facdeDb.dbName = d.dbName;
-            facdeDb.encoding = d.encoding;
-            facdeDb.host = d.host;
-            facdeDb.password = '******';
-            facdeDb.port = d.port;
-            facdeDb.userName = d.userName;
-            this.successSubmit.emit(facdeDb);
+    // let action = $(form).serialize();
+
+    this.jsonPost('/offline/datasource.ajax?action=offline_datasource_action&event_submit_do_'
+      + this.actionMethod + '=y', this.dbPojo)
+      .then(result => {
+        this.processResult(result);
+        if (result.success) {
+          // let d = result.bizresult;
+          // let facdeDb = new DbPojo(this.dbPojo.dbId);
+          // facdeDb.facade = true;
+          // facdeDb.dbName = d.dbName;
+          // facdeDb.encoding = d.encoding;
+          // facdeDb.host = d.host;
+          // facdeDb.password = '******';
+          // facdeDb.port = d.port;
+          // facdeDb.userName = d.userName;
+          this.successSubmit.emit(this.dbPojo);
+          this.activeModal.close(this.dbPojo);
+        } else {
+          // 多个插件组
+          let errFields = result.errorfields;
+          if (errFields && errFields.length > 0) {
+            let pluginsErr = errFields[0];
+            if (pluginsErr.length > 0) {
+              let pluginErr: Array<IFieldError> = pluginsErr[0];
+              let errKeys = pluginErr.map((r) => r.name);
+              let item: Item = Item.create(errKeys);
+              PluginsComponent.processErrorField(pluginsErr, [item]);
+              this.errorItem = item;
+            }
           }
-        });
+        }
+      });
   }
 
   private get actionMethod(): string {
@@ -140,7 +135,7 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   }
 
   changeType(value: string): void {
-    console.log(value);
+    // console.log(value);
     this.switchType = value;
   }
 
@@ -174,7 +169,6 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
           // console.log(result);
           // this.testDbBtnDisable = false;
           this.processResult(result);
-          // console.log(result.bizresult);
           this.dbEnums = [];
           if (result.bizresult) {
             for (let dbEnum of result.bizresult) {
@@ -184,9 +178,12 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
         });
   }
 
-  onChangeDbConfig(event: any): void {
+  onChangeDbConfig(fieldname: string, event: any): void {
     // this.confirmBtnDisable = true;
-    console.log('change');
+    // console.log(`change:${fieldname}`);
+    delete this.errorItem.vals[fieldname];
+    this.errorItem = Object.assign(Item.create([]), this.errorItem );
+  // this.errorItem = Item.create([]);
   }
 
   goBack(): void {
@@ -211,118 +208,20 @@ export class DbEnum {
 }
 
 export class DbPojo {
-  private _dbName = '';
-  private _dbType = 'MySql';
-  private _userName = '';
-  private _password: string;
-  private _port = '3306';
-  private _encoding = 'UTF-8';
-  private _extraParams = '';
-  private _shardingType = 'single';
-  private _host = '';
-  private _shardingEnum = '';
+  dbName = '';
+  dbType = 'MySql';
+  userName = '';
+  password: string;
+  port = '3306';
+  encoding = 'UTF-8';
+  extraParams = '';
+  shardingType = 'single';
+  host = '';
+  shardingEnum = '';
   // 是否是Cobar配置
-  private _facade = false;
+  facade = false;
 
-  constructor(public _dbId?: number) {
+  constructor(public dbId?: number) {
 
   }
-
-  get facade(): boolean {
-    return this._facade;
-  }
-
-  set facade(value: boolean) {
-    this._facade = value;
-  }
-
-  get dbId(): number {
-    return this._dbId;
-  }
-
-  set dbId(value: number) {
-    this._dbId = value;
-  }
-
-  get dbName(): string {
-    return this._dbName;
-  }
-
-  set dbName(value: string) {
-    this._dbName = value;
-  }
-
-  get dbType(): string {
-    return this._dbType;
-  }
-
-  set dbType(value: string) {
-    this._dbType = value;
-  }
-
-  get userName(): string {
-    return this._userName;
-  }
-
-  set userName(value: string) {
-    this._userName = value;
-  }
-
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    this._password = value;
-  }
-
-  get port(): string {
-    return this._port;
-  }
-
-  set port(value: string) {
-    this._port = value;
-  }
-
-  get encoding(): string {
-    return this._encoding;
-  }
-
-  set encoding(value: string) {
-    this._encoding = value;
-  }
-
-  get extraParams(): string {
-    return this._extraParams;
-  }
-
-  set extraParams(value: string) {
-    this._extraParams = value;
-  }
-
-  get shardingType(): string {
-    return this._shardingType;
-  }
-
-  set shardingType(value: string) {
-    this._shardingType = value;
-  }
-
-  get host(): string {
-    return this._host;
-  }
-
-  set host(value: string) {
-    this._host = value;
-  }
-
-  get shardingEnum(): string {
-    return this._shardingEnum;
-  }
-
-  set shardingEnum(value: string) {
-    this._shardingEnum = value;
-  }
-
-
 }

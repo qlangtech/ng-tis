@@ -8,7 +8,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
-import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
+import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions} from "ng-zorro-antd";
 
 // const THRESHOLD = 10000;
 
@@ -61,7 +61,7 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "
           </nz-sider>
           <nz-content>
 
-              <nz-spin *ngIf="treeNodeClicked" style="width:100%;min-height: 200px" [nzSize]="'large'" [nzSpinning]="nodeLoad">
+              <nz-spin *ngIf="treeNodeClicked " style="width:100%;min-height: 200px" [nzSize]="'large'" [nzSpinning]="this.formDisabled">
                   <div *ngIf="selectedDb && selectedDb.dbId">
 
                       <tis-page-header [showBreadcrumbRoot]="false" size="sm" [title]="'数据库'">
@@ -124,11 +124,13 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "
                       </nz-tabset>
                       <ng-template #extraTemplate>
                           <button nz-button nzType="default" (click)="addFacadeDb()" [disabled]="facdeDb != null">添加门面配置</button>
-                          <button nz-button (click)="editDb()">编辑</button>
+                          &nbsp;
+                          <button nz-button (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
+                          &nbsp;
                           <!--
                            <button type="button" class="btn btn-secondary btn-sm" (click)="syncDbOnline()">同步配置到线上</button>
                           -->
-                          <button nz-button nzType="danger" (click)="deleteDb()">删除</button>
+                          <button nz-button nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
                       </ng-template>
                   </div>
 
@@ -137,16 +139,11 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNodeOptions} from "
                       <tis-page-header [showBreadcrumbRoot]="false" size="sm" title="表信息">
                           <tis-header-tool>
                               <button nz-button nzType="default" (click)="editTable(selectedTable)">
-                                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                  <i nz-icon nzType="edit" nzTheme="outline"></i>
                                   编辑
-                              </button>
-                              <!--
-                               <button nz-button  nzType="default" (click)="syncTableOnline()">
-                                   <i class="fa fa-cloud-upload" aria-hidden="true"></i>同步配置到线上
-                               </button>
-                              -->
+                              </button>&nbsp;
                               <button nz-button nzType="danger" (click)="deleteTable()">
-                                  <i class="fa fa-trash-o" aria-hidden="true"></i>删除
+                                  <i nz-icon nzType="delete" nzTheme="outline"></i>删除
                               </button>
                           </tis-header-tool>
                       </tis-page-header>
@@ -236,12 +233,13 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
   treeLoad = false;
   treeNodeClicked = false;
-  nodeLoad = false;
+ // nodeLoad = false;
 
   constructor(protected tisService: TISService //
     , private router: Router //
     , private activateRoute: ActivatedRoute // modalService: NgbModal
     , modalService: NzModalService //
+    , private notify: NzNotificationService
   ) {
     super(tisService, modalService);
   }
@@ -273,7 +271,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   }
 
   treeInit(dbs: any): void {
-    console.log(dbs);
+    // console.log(dbs);
     this.nodes = [];
     for (let db of dbs) {
       let children = [];
@@ -299,7 +297,12 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     // this.modalService.open(DbAddComponent
     //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
 
-    this.openNormalDialog(DbAddComponent, "添加数据库");
+    let modalRef = this.openDialog(DbAddComponent, {nzTitle: "添加数据库"});
+    modalRef.afterClose.subscribe((r) => {
+      if (r) {
+        this.notify.success("成功", `数据库${r.dbName}添加成功`, {nzDuration: 6000});
+      }
+    })
   }
 
   // 添加表按钮点击响应
@@ -322,7 +325,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
 
 
-    this.openNormalDialog(TableAddComponent);
+    this.openDialog(TableAddComponent, {nzTitle: "itanjia添加"});
   }
 
 
@@ -350,7 +353,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   private onEvent(event: any): void {
-    this.nodeLoad = true;
+
     let type = event.type;
     let id = event.id;
     //  let realId = 0;
@@ -385,10 +388,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             this.processResult(result);
           }
         } finally {
-          this.nodeLoad = false;
         }
       }).catch((e) => {
-      this.nodeLoad = false;
     });
   }
 
@@ -438,7 +439,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * 添加门面数据库配置
    */
   addFacadeDb(): void {
-    let dialog: NzModalRef<DbAddComponent> = this.openNormalDialog(DbAddComponent);
+    let dialog: NzModalRef<DbAddComponent> = this.openDialog(DbAddComponent, {nzTitle: "添加门面数据库"});
     let db = new DbPojo();
     db.facade = true;
     db.dbId = this.selectedDb.dbId;
@@ -461,7 +462,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   editDb(): void {
 
-    let dialog = this.openNormalDialog(DbAddComponent, "更新数据库");
+    let dialog = this.openDialog(DbAddComponent, {nzTitle: "更新数据库"});
     dialog.getContentComponent().dbPojo = this.selectedDb;
   }
 
@@ -482,7 +483,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
 
 
-    let dialog = this.openNormalDialog(TableAddComponent);
+    let dialog = this.openDialog(TableAddComponent, {nzTitle: "更新数据表"});
     //
     // console.log(table);
 
@@ -494,18 +495,25 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * 删除一个db
    */
   deleteDb(): void {
-    let action = 'action=offline_datasource_action&';
-    action = action + 'event_submit_do_delete_datasource_db_by_id=y&id=' + this.selectedDb.dbId;
-    this.tisService.httpPost('/offline/datasource.ajax', action)
-      .then(result => {
-        console.log(result);
-        if (result.success) {
-          this.processResult(result);
-          this.router.navigate(['/t/offline']);
-        } else {
-          this.processResult(result);
-        }
-      });
+    this.modalService.confirm({
+      nzTitle: '删除数据库',
+      nzContent: `是否要删除数据库'${this.selectedDb.dbName}'`,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        let action = 'action=offline_datasource_action&';
+        action = action + 'event_submit_do_delete_datasource_db_by_id=y&id=' + this.selectedDb.dbId;
+        this.httpPost('/offline/datasource.ajax', action)
+          .then(result => {
+            if (result.success) {
+              this.processResult(result);
+              // this.router.navigate(['/t/offline']);
+            } else {
+              this.processResult(result);
+            }
+          });
+      }
+    });
   }
 
   /**

@@ -145,7 +145,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
         let errFields = result.errorfields;
         if (errFields.length > 0) {
           let errFieldKey = "incr_script_compile_error";
-          let item: Item = Item.create(errFieldKey);
+          let item: Item = Item.create([errFieldKey]);
           PluginsComponent.processErrorField(errFields[0], [item]);
           if ("error" === item.vals[errFieldKey].error) {
             this.tabSelectIndex = 1;
