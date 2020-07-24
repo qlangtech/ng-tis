@@ -7,7 +7,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
-import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {ModalOptions, ModalOptionsForService, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -89,19 +89,21 @@ export class BasicFormComponent {
     // return modalRef;
   }
 
-  public openNormalDialog(component: any, title?: string): NzModalRef<any> {
+  // <T>(options?: ModalOptionsForService<T>): NzModalRef<T>;
+  public openDialog(component: any, options: ModalOptionsForService<any>): NzModalRef<any> {
 
     let option: any = {
       // nzTitle: title,
       nzWidth: "800",
       nzContent: component,
       nzFooter: null,
+      nzMaskClosable: false
     };
-    if (title) {
-      option.nzTitle = title
-    }
+    // if (title) {
+    //   option.nzTitle = title
+    // }
 
-    return this.modalService.create(option);
+    return this.modalService.create(Object.assign(option, options));
     // const modalRef: NgbModalRef = this.modalService.open(component
     //   , {size: 'xl', backdrop: 'static'});
     // return modalRef;
@@ -130,7 +132,7 @@ export class BasicFormComponent {
 
 // = (r: TisResponseResult): TisResponseResult => {
   protected handleError = (error: any): Promise<any> => {
-   // console.log(this);
+    // console.log(this);
     this.formDisabled = false;
     NProgress.done();
     return Promise.reject(error.message || error);

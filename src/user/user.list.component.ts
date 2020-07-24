@@ -65,6 +65,6 @@ export class UserListComponent extends BasicFormComponent implements OnInit {
   public usradd(): void {
 
     // this.modalService.open(UserAddComponent);
-    this.openNormalDialog(UserAddComponent);
+    this.openDialog(UserAddComponent);
   }
 }

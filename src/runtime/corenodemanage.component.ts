@@ -276,7 +276,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   // 变更历史
   public openSnapshotVerChangeLog(): void {
     // this.modalService.open(SnapshotChangeLogComponent, {windowClass: 'schema-edit-modal'});
-    this.openNormalDialog(SnapshotChangeLogComponent);
+    this.openDialog(SnapshotChangeLogComponent);
   }
 
   // 从其他索引拷贝索引配置
@@ -288,7 +288,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   public openTriggerFullDumpDialog(): void {
     // 打开触发全量构建对话框
     //   const modalRef = this.modalService.open(TriggerDumpComponent);
-    this.openNormalDialog(TriggerDumpComponent);
+    this.openDialog(TriggerDumpComponent);
 
   }
 
@@ -304,7 +304,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   public openPojoDialog(): void {
     // var modalRef: NgbModalRef = this.modalService.open(PojoComponent, {windowClass: 'schema-edit-modal'});
 
-    this.openNormalDialog(PojoComponent);
+    this.openDialog(PojoComponent);
 
   }
 

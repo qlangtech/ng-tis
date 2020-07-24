@@ -73,7 +73,7 @@ export class Item {
    *
    * @param fieldNames
    */
-  public static create(...fieldNames: string[]): Item {
+  public static create(fieldNames: string[]): Item {
     let item = new Item(null);
     fieldNames.forEach((fname) => {
       item.vals[fname] = new ItemPropVal();

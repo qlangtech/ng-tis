@@ -14,15 +14,14 @@ declare var jQuery: any;
 @Component({
   selector: 'tableAddStep1',
   template: `
+      <tis-page-header [showBreadcrumb]="false">
+          <tis-header-tool>
+              <input type="hidden" name="event_submit_do_check_table_logic_name_repeat" value="y"/>
+              <input type="hidden" name="action" value="offline_datasource_action"/>
+              <button nz-button nzType="primary" (click)="createNextStep(form)">下一步</button>
+          </tis-header-tool>
+      </tis-page-header>
       <tis-form [hidden]="!isShow" #form>
-          <tis-page-header [showBreadcrumb]="false">
-              <tis-header-tool>
-                  <input type="hidden" name="event_submit_do_check_table_logic_name_repeat" value="y"/>
-                  <input type="hidden" name="action" value="offline_datasource_action"/>
-                  <button nz-button nzType="primary" (click)="createNextStep(form)">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
-
           <tis-ipt title="数据库" name="dbname">
               <ng-template let-i='i'>
                   <select *ngIf="!updateMode"  [tis-ipt-prop]="i"

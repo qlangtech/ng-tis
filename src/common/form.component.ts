@@ -1,17 +1,129 @@
 import {
-  AfterContentInit,
+  AfterContentInit, AfterViewInit, ChangeDetectionStrategy,
   Component, ContentChild,
   ContentChildren,
-  Directive, ElementRef,
+  Directive, ElementRef, EmbeddedViewRef,
   // EventEmitter,
   Input, OnInit,
   // Output,
   QueryList, TemplateRef, ViewChild,
   ViewContainerRef
 } from "@angular/core";
+import {IFieldError, Item, ItemPropVal} from "./tis.plugin";
 // import {ActivatedRoute, Router} from "@angular/router";
 
 declare var jQuery: any;
+
+@Component({
+  selector: 'tis-ipt',
+  template: `
+    <!-- -->
+      <ng-template #inputTpl><ng-content></ng-content></ng-template>
+`
+})
+export class TisInputTool implements AfterContentInit, AfterViewInit {
+  static emptyItemPropVal = new ItemPropVal();
+  @Input() title: string;
+  @Input() name: string;
+  @Input() require: boolean;
+
+  itemProp: ItemPropVal = TisInputTool.emptyItemPropVal;
+
+
+  @ViewChild("inputTpl", {static: true}) contentTempate: TemplateRef<any>;
+
+
+  ngAfterContentInit(): void {
+
+    let e = jQuery(this.contentTempate.elementRef.nativeElement);
+    e.find("input").on("change", function () {
+      console.log("kkkkkkkkkkkk");
+    });
+    //
+    // e.html("oooooooo");
+
+    // e.find("input").on("change", function () {
+    //   console.log("kkkkkkkkkkkk");
+    // });
+  }
+
+  ngAfterViewInit(): void {
+    // console.log("ngAfterViewInit");
+    // let e = jQuery(this.contentTempate.elementRef.nativeElement);
+    // e.on("click", function () {
+    //   console.log("on click");
+    // })
+  }
+
+  constructor(public viewContainerRef: ViewContainerRef) {
+
+  }
+}
+
+// https://stackoverflow.com/questions/49127877/render-elements-of-querylist-in-the-template
+@Component({
+  selector: 'tis-form',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+      <ng-content select="tis-page-header"></ng-content>
+
+      <form nz-form #form>
+          <nz-form-item *ngFor="let i of ipts">
+              <nz-form-label [nzRequired]="i.require" [nzSm]="6" [nzXs]="24" [nzFor]="i.name">{{i.title}}</nz-form-label>
+              <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="i.itemProp.validateStatus" [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
+                <!--
+                  <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
+                   https://stackoverflow.com/questions/49127877/render-elements-of-querylist-in-the-template
+                  -->
+                  <ng-container *ngTemplateOutlet="i.contentTempate" ></ng-container>
+              </nz-form-control>
+          </nz-form-item>
+      </form>
+  `,
+})
+export class FormComponent implements AfterContentInit , OnInit {
+  @ContentChildren(TisInputTool) ipts: QueryList<TisInputTool>;
+  @Input() title: string;
+  _fieldsErr: Item = Item.create([]);
+  @Input() set fieldsErr(val: Item) {
+    console.log("fieldsErr");
+    this._fieldsErr = val;
+    if (this.ipts) {
+      this.ngAfterContentInit();
+    }
+  }
+  @ViewChild('form', {static: false}) _form: ElementRef;
+
+  fields: TisInputTool[] = [];
+
+  constructor() {
+
+  }
+  ngOnInit(): void {
+  }
+  ngAfterContentInit() {
+    console.log(this.ipts);
+    let tplFields = this.ipts.toArray();
+    tplFields.map((input) => {
+      input.itemProp = this.fieldErr(input.name);
+    });
+    this.fields = tplFields;
+  }
+
+  fieldErr(field: string): ItemPropVal {
+    let item = this._fieldsErr.vals[field];
+    if (!item) {
+      return TisInputTool.emptyItemPropVal;
+    } else {
+      return item;
+    }
+  }
+
+  public get form(): String {
+    // console.info((jQuery(this._form.nativeElement).serialize()));
+    return (jQuery(this._form.nativeElement).serialize());
+  }
+}
 
 
 @Directive({selector: '[tis-ipt-prop]'})
@@ -31,41 +143,11 @@ export class TisInputProp implements AfterContentInit {
   constructor(public viewContainerRef: ViewContainerRef) {
 
   }
-
-  // @ContentChild(TemplateRef) contentTempate: TemplateRef<any>;
-  // nativeElement: any;
-
-  // constructor(viewContainerRef: ViewContainerRef) {
-  // this.nativeElement = viewContainerRef.element.nativeElement;
-  // }
 }
 
-@Directive({selector: 'tis-ipt'})
-export class TisInputTool implements AfterContentInit {
-  @Input() title: string;
-  @Input() name: string;
-
-  @ContentChild(TemplateRef, {static: false})
-  contentTempate: TemplateRef<any>;
+// @Directive({selector: 'tis-ipt'})
 
 
-  ngAfterContentInit(): void {
-    // console.info(this.contentTempate.elementRef.nativeElement.innerHTML);
-    // console.info("dddddd");
-    // console.info(  this.viewContainerRef.element.nativeElement.innerHTML);
-  }
-
-  constructor(public viewContainerRef: ViewContainerRef) {
-
-  }
-
-  // @ContentChild(TemplateRef) contentTempate: TemplateRef<any>;
-  // nativeElement: any;
-
-  // constructor(viewContainerRef: ViewContainerRef) {
-  // this.nativeElement = viewContainerRef.element.nativeElement;
-  // }
-}
 
 
 // @ts-ignore
@@ -81,55 +163,15 @@ export class InputContentDirective implements OnInit {
 
   ngOnInit(): void {
 
-    if (this.iptMeta.contentTempate) {
-      this.viewContainerRef.createEmbeddedView(
-        this.iptMeta.contentTempate
-        , {'i': {id: 'ipt-' + this.iptMeta.name, name: this.iptMeta.name}}
-      );
-    }
+    // if (this.iptMeta.contentTempate) {
+    //   let embed = this.viewContainerRef.createEmbeddedView(
+    //     this.iptMeta.contentTempate
+    //     , {'i': {id: 'ipt-' + this.iptMeta.name, name: this.iptMeta.name}}
+    //   );
+    //
+    //  // console.log(  this.iptMeta.contentTempate.elementRef.nativeElement );
+    // }
   }
 }
 
-// <input type="text" class="form-control" id="staticEmail" value="email@example.com">
-@Component({
-  selector: 'tis-form',
-  template: `
-      <ng-content select="tis-page-header"></ng-content>
 
-      <form nz-form #form>
-          <nz-form-item *ngFor="let i of inputs">
-              <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'ipt-'+i.name">{{i.title}}</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
-              </nz-form-control>
-          </nz-form-item>
-      </form>
-  `,
-
-})
-export class FormComponent implements AfterContentInit {
-
-  @ContentChildren(TisInputTool) ipts: QueryList<TisInputTool>;
-  @Input() title: string;
-
-
-  @ViewChild('form', {static: false}) _form: ElementRef;
-
-  constructor() {
-
-  }
-
-  public get form(): String {
-    // console.info((jQuery(this._form.nativeElement).serialize()));
-    return (jQuery(this._form.nativeElement).serialize());
-  }
-
-  get inputs(): TisInputTool[] {
-    return this.ipts.toArray();
-  }
-
-  ngAfterContentInit() {
-  }
-
-
-}

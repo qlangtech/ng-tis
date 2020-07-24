@@ -282,7 +282,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   openPOJOView() {
-    this.openNormalDialog(PojoComponent);
+    this.openDialog(PojoComponent);
   }
 
   ngOnInit(): void {
