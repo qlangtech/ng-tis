@@ -49,7 +49,7 @@
     "dagre": "^0.8.4",
     "date-fns": "^1.30.1",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "ng-chartjs": "^0.1.2",
     "ng-terminal": "^2.2.0",
     "ng-zorro-antd": "^9.3.0",
