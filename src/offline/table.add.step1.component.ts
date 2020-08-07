@@ -14,76 +14,31 @@ declare var jQuery: any;
 @Component({
   selector: 'tableAddStep1',
   template: `
-      <tis-page-header [showBreadcrumb]="false">
-          <tis-header-tool>
+      <nz-spin [nzSpinning]="formDisabled" [nzSize]="'large'">
+          <tis-page-header [showBreadcrumb]="false" [result]="result">
               <input type="hidden" name="event_submit_do_check_table_logic_name_repeat" value="y"/>
               <input type="hidden" name="action" value="offline_datasource_action"/>
-              <button nz-button nzType="primary" (click)="createNextStep(form)">下一步</button>
-          </tis-header-tool>
-      </tis-page-header>
-      <tis-form [hidden]="!isShow" #form>
-          <tis-ipt title="数据库" name="dbname">
-              <ng-template let-i='i'>
-                  <select *ngIf="!updateMode"  [tis-ipt-prop]="i"
-                          (change)="dbChange($event)" [(ngModel)]="tablePojo.dbId">
-                      <option *ngFor="let db of dbs" [value]="db.value">{{db.name}}</option>
-                  </select>
-                  <input *ngIf="updateMode" [tis-ipt-prop]="i" readonly [value]="tablePojo.dbName"/>
-              </ng-template>
-          </tis-ipt>
+              <button nz-button nzType="primary" (click)="createNextStep(form)" [disabled]="!tablePojo.tableName">下一步</button>
+          </tis-page-header>
+          <tis-form #form>
+              <tis-ipt #dbname title="数据库" name="dbname" require>
+                  <nz-select *ngIf="!updateMode" [name]="dbname.name" [id]="dbname.name" (ngModelChange)="dbChange($event)" [(ngModel)]="tablePojo.dbId">
+                      <nz-option *ngFor="let db of dbs" [nzValue]="db.value" [nzLabel]="db.name"></nz-option>
+                  </nz-select>
+                  <input nz-input *ngIf="updateMode" [name]="dbname.name" [id]="dbname.name" disabled [value]="tablePojo.dbName"/>
+              </tis-ipt>
 
-          <tis-ipt *ngIf='tbs.length>0 && !updateMode' title="表名" name="table">
-              <ng-template let-i='i'>
-                  <select [tis-ipt-prop]="i"
-                          (change)="tabChange()" [(ngModel)]="tablePojo.tableName">
-                      <option *ngFor="let t of tbs" [value]="t.value">{{t.name}}</option>
-                  </select>
-              </ng-template>
-          </tis-ipt>
+              <tis-ipt #table *ngIf='tbs.length>0 && !updateMode' title="表名" name="table" require>
+                  <nz-select [name]="table.name" [id]="table.name" (change)="tabChange()" [(ngModel)]="tablePojo.tableName">
+                      <nz-option *ngFor="let t of tbs" [nzValue]="t.value" [nzLabel]="t.name"></nz-option>
+                  </nz-select>
+              </tis-ipt>
 
-          <tis-ipt *ngIf='updateMode' title="表名" name="table">
-              <ng-template let-i='i'>
-                  <input [tis-ipt-prop]="i" readonly [value]="tablePojo.tableName"/>
-              </ng-template>
-          </tis-ipt>
-
-          <!--
-          <tis-ipt *ngIf='tbs.length>0 && !updateMode' title="表逻辑名" name="logicname">
-              <ng-template let-i='i'>
-                  <input [tis-ipt-prop]="i" type="text" [(ngModel)]="tablePojo.tableLogicName"/>
-              </ng-template>
-          </tis-ipt>
-          <tis-ipt *ngIf='updateMode' title="表逻辑名" name="logicname">
-              <ng-template let-i='i'>
-                  <input [tis-ipt-prop]="i" type="text" readonly [value]="tablePojo.tableLogicName"/>
-              </ng-template>
-          </tis-ipt>
- -->
-          <tis-ipt title="分区数(个)" name="partitionNum">
-              <ng-template let-i='i'>
-                  <select [tis-ipt-prop]="i"
-                          [(ngModel)]="tablePojo.partitionNum">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                  </select>
-              </ng-template>
-          </tis-ipt>
-
-          <tis-ipt title="分区间隔(小时)" name="partitionInterval">
-              <ng-template let-i='i'>
-                  <select [tis-ipt-prop]="i"
-                          [(ngModel)]="tablePojo.partitionInterval">
-                      <option>4</option>
-                      <option>8</option>
-                      <option>12</option>
-                      <option>24</option>
-                  </select>
-              </ng-template>
-          </tis-ipt>
-      </tis-form>
-
+              <tis-ipt *ngIf='updateMode' title="表名" name="table" require>
+                  <input nz-input tis-ipt-prop disabled [value]="tablePojo.tableName"/>
+              </tis-ipt>
+          </tis-form>
+      </nz-spin>
   `
 })
 export class TableAddStep1Component extends TableAddStep implements OnInit {
@@ -95,8 +50,8 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
   @Output() processHttpResult: EventEmitter<any> = new EventEmitter();
 
   constructor(tisService: TISService, protected router: Router,
-              private activateRoute: ActivatedRoute, protected location: Location, modalService: NzModalService) {
-    super(tisService, router, location, modalService);
+              private activateRoute: ActivatedRoute, protected location: Location) {
+    super(tisService, router, location);
   }
 
 
@@ -105,14 +60,12 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
   }
 
   // DB名称选择
-  public dbChange(e: any) {
-    // console.info(this.tablePojo.dbName);
+  public dbChange(dbid: string) {
     this.tbs = [];
-    this.tablePojo.tableName = null;
+    // this.tablePojo.tableName = null;
     this.tabChange();
     this.httpPost('/offline/datasource.ajax'
-      , 'event_submit_do_select_db_change=y&action=offline_datasource_action&dbid='
-      + this.tablePojo.dbId
+      , `event_submit_do_select_db_change=y&action=offline_datasource_action&dbid=${dbid}`
     ).then(result => {
       if (result.success) {
         this.tbs = result.bizresult;
@@ -121,11 +74,15 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
   }
 
   public tabChange(): void {
-   // this.tablePojo.tableLogicName = this.tablePojo.tableName;
+    // this.tablePojo.tableLogicName = this.tablePojo.tableName;
   }
 
 
   ngOnInit(): void {
+    if (this.tablePojo && this.tablePojo.dbId) {
+      this.dbChange(this.tablePojo.dbId);
+    }
+
     this.httpPost('/offline/datasource.ajax',
       'event_submit_do_get_usable_db_names=y&action=offline_datasource_action')
       .then(
@@ -133,16 +90,6 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
           this.processHttpResult.emit(result);
           if (result.success) {
             this.dbs = result.bizresult;
-            // console.log(this.dbs);
-            // let queryParams = this.activateRoute.snapshot.queryParams;
-            // if (queryParams['dbName']) {
-            //   this.tablePojo.dbName = queryParams['dbName'];
-            //   console.log(this.tablePojo.dbName);
-            // } else {
-            //   if (this.dbs.length > 0) {
-            //     this.tablePojo.dbName = this.dbs[0];
-            //   }
-            // }
           }
         });
   }
@@ -180,9 +127,5 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
           }
         }
       );
-    // } else {
-    //   this.nextStep.emit(form);
-    // }
-
   }
 }

@@ -1,24 +1,23 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TisResponseResult, TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {DbPojo} from "./db.add.component";
 
 @Component({
   // templateUrl: '/offline/tableaddstep.htm'
   template: `
       <tis-msg [result]="result"></tis-msg>
-      <div class="container">
-
-          <tableAddStep1 [isShow]="currentIndex===0" (previousStep)="goToPreviousStep($event)"
+      <div>
+          <tableAddStep1 *ngIf="currentIndex===0"
                          (nextStep)="goToNextStep($event)"
-                         (processHttpResult)="processResult($event)"
                          [tablePojo]="tablePojo"></tableAddStep1>
-          <tableAddStep2 [isShow]="currentIndex===1" (previousStep)="goToPreviousStep($event)"
-                         (nextStep)="goToNextStep($event)" (processHttpResult)="processResult($event)"
+          <tableAddStep2 *ngIf="currentIndex===1" (previousStep)="goToPreviousStep($event)"
+                         (processSuccess)="processTableAddSuccess($event)"
                          [step1Form]="step1Form"
                          [tablePojo]="tablePojo"></tableAddStep2>
       </div>
@@ -32,7 +31,7 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
   tablePojo: TablePojo;
   // id: number;
 
-  @Input() processMode: { tableid?: number, 'title': string, isNew: boolean } = {'title': '添加数据表', isNew: true};
+  @Input() processMode: { tableid?: number, dbId?: string, isNew: boolean } = {isNew: true};
 
   constructor(tisService: TISService
     , private activateRoute: ActivatedRoute
@@ -50,7 +49,16 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
   ngOnInit(): void {
     // let queryParams = this.activateRoute.snapshot.queryParams;
     // console.log(queryParams);
+
+    // let mparams = this.activeModal.getConfig().nzComponentParams;
+
+    // DbPojo
+    if (this.processMode.dbId) {
+        this.tablePojo.dbId = this.processMode.dbId;
+    }
+    // console.log(this.tablePojo);
     let mode = this.processMode;
+    // console.log(mode);
     this.tablePojo.isAdd = true;
     if (!mode.isNew) {
       // this.id = mode['tableId'];
@@ -59,21 +67,12 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
       // this.title = '修改数据表';
 
       let action = `action=offline_datasource_action&event_submit_do_get_datasource_table_by_id=y&id=${mode.tableid}`;
-      this.tisService.httpPost('/offline/datasource.ajax', action)
+      this.httpPost('/offline/datasource.ajax', action)
         .then(result => {
           if (result.success) {
             let t = result.bizresult;
-            // this.tablePojo.tableLogicName = t.gitDatasourceTablePojo.tableLogicName;
-            // this.tablePojo.partitionNum = t.gitDatasourceTablePojo.partitionNum;
-            // this.tablePojo.dbName = t.gitDatasourceTablePojo.dbName;
-            // this.tablePojo.partitionInterval = t.gitDatasourceTablePojo.partitionInterval;
-            // this.tablePojo.selectSql = t.gitDatasourceTablePojo.selectSql;
-            // this.tablePojo.sqlAnalyseResult = t.sqlAnalyseResult;
-
             this.tablePojo = $.extend(this.tablePojo, t);
           }
-          console.log(result);
-          console.log(this.tablePojo);
         });
     }
   }
@@ -81,18 +80,15 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
   goToNextStep(form: TablePojo) {
     this.currentIndex = (this.currentIndex + 1) % this.stepsNum;
     this.step1Form = form;
-    // console.log(this.step1Form);
-    // console.log('next');
   }
 
   goToPreviousStep(form: any) {
     this.currentIndex = (this.currentIndex - 1) % this.stepsNum;
-    console.log('previous');
   }
 
-  showMessage(form: any) {
-    console.log('*********');
-    console.log(form);
+
+  processTableAddSuccess(e: TisResponseResult) {
+    this.activeModal.close(e);
   }
 }
 
@@ -108,7 +104,7 @@ export class TablePojo {
     public sqlAnalyseResult?: any,
     public isAdd?: boolean,
     public id?: number,
-    public dbId?: number,
+    public dbId?: string,
     public tableName?: string,
   ) {
 

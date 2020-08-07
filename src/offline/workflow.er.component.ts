@@ -232,70 +232,85 @@ export class WorkflowERComponent
     return this._editMode;
   }
 
-  erTabSelect() {
-    this.httpPost(`/offline/datasource.ajax?emethod=get_er_rule&action=offline_datasource_action`, 'topology=' + this.topologyName)
+  erTabSelect(syncDumpNodes?: boolean) {
+    this.httpPost(`/offline/datasource.ajax?emethod=get_er_rule&action=offline_datasource_action`
+      , `topology=${this.topologyName}&sync=${syncDumpNodes}`)
       .then(result => {
-        let tmpNodes: { x: number, y: number, nodeMeta: DumpTable, extraMeta?: ERMetaNode }[] = [];
-        let linkList: LinkRule[] = [];
-        // this.erNodes = [];
-        let dumpNodes: any[] = null;
-        if (result.bizresult && (dumpNodes = result.bizresult.dumpNodes)) {
-          let rlist: any[] = result.bizresult.relationList;
-          rlist.forEach((r) => {
-            linkList.push(r);
-            // linkList.push(lr);
-          });
-          let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
-          // console.log(nodeMeta);
-          dumpNodes.forEach((r) => {
-            let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.tabid, r.name);
-            let m = WorkflowAddComponent.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
-            m.label = r.name;
+        if (syncDumpNodes) {
+          let biz = result.bizresult;
+          let willBeAdd = biz.shallBeAdd;
+          let willBeRemove = biz.shallBeRemove;
+          let erRule = biz.errule;
 
-            if (r.extraMeta) {
-              let rem = r.extraMeta;
-              let em = new ERMetaNode(n, this.topologyName);
+          this.processErRuleResult(biz);
 
-              em.monitorTrigger = rem.monitorTrigger;
-              em.timeVerColName = rem.timeVerColName;
-              if (rem.primaryIndexColumnNames) {
-                em.primaryIndexColumnNames = [];
-                rem.primaryIndexColumnNames.forEach((pkName: { name: string, pk: boolean }) => {
-                  em.primaryIndexColumnNames.push(new PrimaryIndexColumnName(pkName.name, pkName.pk));
-                });
-              }
-              em.primaryIndexTab = rem.primaryIndexTab;
-              if (em.primaryIndexTab) {
-                em.sharedKey = rem.sharedKey;
-              }
-              rem.colTransfers.forEach((rr: ColumnTransfer) => {
-                // public colKey: string, public transfer: string, public param: string
-                let t = new ColumnTransfer(rr.colKey, rr.transfer, rr.param);
-                em.columnTransferList.push(t);
-              });
-              // console.log(em);
-              m.extraMeta = em;
-            }
-
-            tmpNodes.push(m);
-          });
         } else {
-          let j = this.graph.save();
-          let tNodes: any[] = j.nodes;
-          tNodes.forEach((n) => {
-            if (n.nodeMeta instanceof DumpTable) {
-              tmpNodes.push(n);
-            }
-          });
+          this.processErRuleResult(result.bizresult);
         }
-        let erNodes: ERRules = Object.apply({});
-        erNodes.dumpNodes = tmpNodes;
-        erNodes.linkList = linkList;
-        this.dumpNodes = erNodes; // {'dumpNodes': tmpNodes, 'linkList': linkList};
       });
   }
 
-  // @Input()
+  private processErRuleResult(erRules: any) {
+    let tmpNodes: { x: number, y: number, nodeMeta: DumpTable, extraMeta?: ERMetaNode }[] = [];
+    let linkList: LinkRule[] = [];
+    // this.erNodes = [];
+    let dumpNodes: any[] = null;
+    if (erRules && (dumpNodes = erRules.dumpNodes)) {
+      let rlist: any[] = erRules.relationList;
+      rlist.forEach((r) => {
+        linkList.push(r);
+        // linkList.push(lr);
+      });
+      let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
+      // console.log(nodeMeta);
+      dumpNodes.forEach((r) => {
+        let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.tabid, r.name);
+        let m = WorkflowAddComponent.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
+        m.label = r.name;
+
+        if (r.extraMeta) {
+          let rem = r.extraMeta;
+          let em = new ERMetaNode(n, this.topologyName);
+
+          em.monitorTrigger = rem.monitorTrigger;
+          em.timeVerColName = rem.timeVerColName;
+          if (rem.primaryIndexColumnNames) {
+            em.primaryIndexColumnNames = [];
+            rem.primaryIndexColumnNames.forEach((pkName: { name: string, pk: boolean }) => {
+              em.primaryIndexColumnNames.push(new PrimaryIndexColumnName(pkName.name, pkName.pk));
+            });
+          }
+          em.primaryIndexTab = rem.primaryIndexTab;
+          if (em.primaryIndexTab) {
+            em.sharedKey = rem.sharedKey;
+          }
+          rem.colTransfers.forEach((rr: ColumnTransfer) => {
+            // public colKey: string, public transfer: string, public param: string
+            let t = new ColumnTransfer(rr.colKey, rr.transfer, rr.param);
+            em.columnTransferList.push(t);
+          });
+          // console.log(em);
+          m.extraMeta = em;
+        }
+
+        tmpNodes.push(m);
+      });
+    } else {
+      let j = this.graph.save();
+      let tNodes: any[] = j.nodes;
+      tNodes.forEach((n) => {
+        if (n.nodeMeta instanceof DumpTable) {
+          tmpNodes.push(n);
+        }
+      });
+    }
+    let erNodes: ERRules = Object.apply({});
+    erNodes.dumpNodes = tmpNodes;
+    erNodes.linkList = linkList;
+    this.dumpNodes = erNodes;
+  }
+
+// @Input()
   public set dumpNodes(vals: ERRules) {
     if (!this.graph || !vals || !vals.dumpNodes || vals.dumpNodes.length < 1) {
       return;

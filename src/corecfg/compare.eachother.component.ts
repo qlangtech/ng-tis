@@ -50,7 +50,7 @@ export class CompareEachOtherComponent extends BasicFormComponent implements OnI
       .then(result => {
         this.compareResults = result.bizresult.results;
         this.twoSnapshot = result.bizresult;
-        this.modalRef.getInstance().nzTitle = `版本配置比较 Ver[${this.twoSnapshot.snapshotOtherId}] ~ Ver[${this.twoSnapshot.snapshotId}]`;
+        this.modalRef.getConfig().nzTitle = `版本配置比较 Ver[${this.twoSnapshot.snapshotOtherId}] ~ Ver[${this.twoSnapshot.snapshotId}]`;
       });
   }
 

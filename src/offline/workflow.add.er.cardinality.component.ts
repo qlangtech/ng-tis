@@ -60,7 +60,7 @@ import {NzModalService} from "ng-zorro-antd";
                           <label nz-checkbox [(ngModel)]="rr.checked" [ngModelOptions]="{standalone: true}"></label>
                       </td>
                       <td>
-                          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.parentKey" [ngModelOptions]="{standalone: true}"
+                          <nz-select  nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.parentKey" [ngModelOptions]="{standalone: true}"
                                      (ngModelChange)="parentKeyChange(rr,$event)">
                               <nz-option *ngFor="let r of this.parentCols" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
                           </nz-select>

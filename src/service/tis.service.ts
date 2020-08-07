@@ -13,7 +13,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {IFieldError} from "../common/tis.plugin";
 import {consoleTestResultHandler} from "tslint/lib/test";
 // import {IFieldError} from "../runtime/tis.plugin";
@@ -184,9 +184,21 @@ export class TISService {
     }
   }
 
-  protected handleError(error: any): Promise<any> {
-    // console.error('An error occurred', error);
-    this.notification.create('error', '错误', error, {nzDuration: 6000});
+  // protected handleError(error: any): Promise<any> {
+  //   // console.error('An error occurred', error);
+  //   this.notification.create('error', '错误', error, {nzDuration: 6000});
+  //   NProgress.done();
+  //   return Promise.reject(error.message || error);
+  // }
+
+  protected handleError = (error: any): Promise<any> => {
+    // console.log(error);
+    if (error instanceof HttpErrorResponse) {
+      let err: HttpErrorResponse = error;
+      this.notification.create('error', '错误', `系统发生错误，请联系系统管理员<br> ${err.message} <br> ${err.error} `, {nzPlacement: 'topLeft', nzDuration: 60000, nzStyle: {width: "800px"}});
+    }
+    // console.log(this);
+
     NProgress.done();
     return Promise.reject(error.message || error);
   }

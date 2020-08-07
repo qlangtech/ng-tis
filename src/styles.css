@@ -27,3 +27,7 @@ html,body {
   padding: 0;
 }
 
+nz-select , nz-cascader {
+  width: 100%;
+}
+

@@ -7,13 +7,13 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NzModalService} from "ng-zorro-antd";
 
 export class TableAddStep extends BasicFormComponent {
-  @Input() isShow: boolean;
+ // @Input() isShow: boolean;
   @Output() previousStep: EventEmitter<any> = new EventEmitter();
   @Output() nextStep: EventEmitter<any> = new EventEmitter();
 
   constructor(protected tisService: TISService, protected router: Router
-    , protected localtion: Location, modalService: NzModalService) {
-    super(tisService, modalService);
+    , protected localtion: Location) {
+    super(tisService);
   }
 
   // 执行下一步
@@ -26,9 +26,9 @@ export class TableAddStep extends BasicFormComponent {
     this.nextStep.emit(form);
   }
 
-  protected goHomePage(tableId: number): void {
-    // this.router.navigate(['/t/offline'], {queryParams: {tableId: tableId}});
-  }
+  // protected goHomePage(tableId: number): void {
+  //   // this.router.navigate(['/t/offline'], {queryParams: {tableId: tableId}});
+  // }
 
   protected goBack(): void {
     this.localtion.back();

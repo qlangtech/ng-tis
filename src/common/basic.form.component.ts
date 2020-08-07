@@ -7,7 +7,7 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
-import {ModalOptions, ModalOptionsForService, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -49,10 +49,6 @@ export class BasicFormComponent {
   }
 
   public processResult(result: any): void {
-    // this.result = result;
-    // setTimeout(() => {
-    //   this.clearProcessResult();
-    // }, 5000);
     return this.processResultWithTimeout(result, 10000);
   }
 
@@ -90,7 +86,7 @@ export class BasicFormComponent {
   }
 
   // <T>(options?: ModalOptionsForService<T>): NzModalRef<T>;
-  public openDialog(component: any, options: ModalOptionsForService<any>): NzModalRef<any> {
+  public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
 
     let option: any = {
       // nzTitle: title,
@@ -132,6 +128,7 @@ export class BasicFormComponent {
 
 // = (r: TisResponseResult): TisResponseResult => {
   protected handleError = (error: any): Promise<any> => {
+    // console.log(error);
     // console.log(this);
     this.formDisabled = false;
     NProgress.done();

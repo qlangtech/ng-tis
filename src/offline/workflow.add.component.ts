@@ -77,7 +77,7 @@ export const TYPE_DUMP_TABLE = 'table';
       <div>
           <div id="processon_designer" class="processon-designer">
               <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-                  <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="tabSelectedIndex">
+                  <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectedIndex">
                       <nz-tab nzTitle="DF">
                           <div class="designer_body clear">
                               <div class="body_vtoolsbar">
@@ -111,9 +111,10 @@ export const TYPE_DUMP_TABLE = 'table';
                               <li nz-menu-item (click)="executeWorkflow(this.workflow)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建</li>
                               <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史</li>
                           </ul>
-                      </nz-dropdown-menu>
+                      </nz-dropdown-menu> &nbsp;
+                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()" ><i nz-icon nzType="sync" nzTheme="outline"></i>同步数据表</button>
                       &nbsp;
-                      <button nz-button nzType="primary" (click)="saveTopology()">保存</button>
+                      <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
                   </ng-template>
 
 
@@ -224,7 +225,7 @@ export class WorkflowAddComponent extends BasicWFComponent
   @ViewChild('sqleditor', {static: false}) sqleditor: ElementRef;
   @ViewChild('draggableblock', {static: false}) draggableblock: ElementRef;
 
-  @ViewChild('erComponent', {static: false}) erRuleComponent: WorkflowERComponent;
+  @ViewChild(WorkflowERComponent, {static: false}) erRuleComponent: WorkflowERComponent;
   tabSelectedIndex = 0;
 
   public static addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
@@ -833,18 +834,9 @@ export class WorkflowAddComponent extends BasicWFComponent
     this._opened = true;
   }
 
-  // isChecked(id: number): boolean {
-  //   if (this.workflow.dependTableIds) {
-  //     for (let id1 of this.workflow.dependTableIds) {
-  //       if (id === id1) {
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
-
+  syncTabs() {
+    this.erRuleComponent.erTabSelect(true);
+  }
 }
 
 
