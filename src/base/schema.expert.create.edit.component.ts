@@ -138,7 +138,6 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
       <nz-table #fieldlist
-                [nzWidthConfig]="widthConfig"
                 [nzScroll]="scrollConfig"
                 [nzData]="fields" [nzShowPagination]="false" [nzFrontPagination]="false" [nzSize]="'small'">
           <thead>
@@ -187,10 +186,10 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                       </div>
                   </td>
                   <td>
-                      <nz-select class="type-select" [(ngModel)]="f.fieldtype" nzPlaceHolder="请选择" (ngModelChange)="fieldTypeChange(f)">
+                      <nz-select class="type-select" [(ngModel)]="f.fieldtype" nzPlaceHolder="请选择" [nzDropdownMatchSelectWidth]="true" (ngModelChange)="fieldTypeChange(f)">
                           <nz-option [nzValue]="pp.name" [nzLabel]="pp.name" *ngFor="let pp of ftypes"></nz-option>
                       </nz-select>
-                      <nz-select *ngIf="f.split" class="type-select" [(ngModel)]="f.tokenizerType" nzAllowClear nzPlaceHolder="选择" (ngModelChange)="fieldTypeChange(f)">
+                      <nz-select *ngIf="f.split" class="type-select" [(ngModel)]="f.tokenizerType" nzAllowClear nzPlaceHolder="选择" [nzDropdownMatchSelectWidth]="true" (ngModelChange)="fieldTypeChange(f)">
                           <nz-option [nzValue]="t.key" [nzLabel]="t.value" *ngFor="let t of getAnalyzer(f.fieldtype)"></nz-option>
                       </nz-select>
                   </td>

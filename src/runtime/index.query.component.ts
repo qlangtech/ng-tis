@@ -282,7 +282,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   openPOJOView() {
-    this.openDialog(PojoComponent);
+    this.openDialog(PojoComponent, {nzTitle: "POJO"});
   }
 
   ngOnInit(): void {
@@ -408,7 +408,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
     let tags = this.localStoreTags;
     tags.push(new TagQueryForm(tag, form));
     this._localStorageService.set(LocalStoreTags, tags);
-   // this.refreshLocalStoreTags();
+    // this.refreshLocalStoreTags();
   }
 
   deleteQueryFormTag(tagName: string) {
@@ -421,7 +421,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
       tags.splice(index, 1);
       // console.log(tags);
       this._localStorageService.set(LocalStoreTags, tags);
-     // this.refreshLocalStoreTags();
+      // this.refreshLocalStoreTags();
     }
   }
 

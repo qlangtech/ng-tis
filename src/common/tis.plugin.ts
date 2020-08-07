@@ -1,6 +1,8 @@
 /*Deserialize*/
 
 import {isBoolean} from "util";
+import {TisResponseResult} from "../service/tis.service";
+import {PluginsComponent} from "./plugins.component";
 
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' ;
 
@@ -79,6 +81,21 @@ export class Item {
       item.vals[fname] = new ItemPropVal();
     });
     return item;
+  }
+
+  public static processFieldsErr(result: TisResponseResult): Item {
+    let errFields = result.errorfields;
+    if (errFields && errFields.length > 0) {
+      let pluginsErr = errFields[0];
+      if (pluginsErr.length > 0) {
+        let pluginErr: Array<IFieldError> = pluginsErr[0];
+        let errKeys = pluginErr.map((r) => r.name);
+        let item: Item = Item.create(errKeys);
+        PluginsComponent.processErrorField(pluginsErr, [item]);
+        return item;
+      }
+    }
+    return Item.create([]);
   }
 
   constructor(public dspt: Descriptor) {

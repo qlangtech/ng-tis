@@ -3,7 +3,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TisResponseResult, TISService} from '../service/tis.service';
 import {TableAddStep} from './table.add.step';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
@@ -17,17 +17,15 @@ declare var jQuery: any;
 @Component({
   selector: 'tableAddStep2',
   template: `
-      <div class="container" [hidden]="!isShow">
+      <nz-spin [nzSpinning]="formDisabled" [nzSize]="'large'">
+          <tis-page-header [showBreadcrumb]="false" [result]="this.result">
+              <button nz-button nzType="default" (click)="createPreviousStep(form)">上一步</button>&nbsp;
+              <button nz-button nzType="primary" (click)="saveTableConfig(form)" [nzLoading]="this.formDisabled">提交</button>
+          </tis-page-header>
           <form #form>
               <fieldset [disabled]='formDisabled'>
                   <input type="hidden" name="event_submit_do_add_datasource_table" value="y"/>
                   <input type="hidden" name="action" value="offline_datasource_action"/>
-
-                  <p style="text-align:right;">
-                      <button nz-button nzType="default" (click)="createPreviousStep(form)">上一步</button>
-                      <button nz-button nzType="primary" (click)="saveTableConfig(form)">提交
-                      </button>
-                  </p>
                   <div class="form-group">
                       <label for="selectsql">SELECT SQL</label>
                       <textarea id="selectsql" class="form-control"
@@ -37,21 +35,20 @@ declare var jQuery: any;
                   </div>
               </fieldset>
           </form>
-      </div>
+      </nz-spin>
   `
 })
 export class TableAddStep2Component extends TableAddStep implements OnInit {
   columns: ColumnTypes[] = [];
-  // confirmDisable: boolean;
   tableName: string;
   @Input() tablePojo: TablePojo;
 
   @Input() step1Form: TablePojo;
-  @Output() processHttpResult: EventEmitter<any> = new EventEmitter();
+  @Output() processSuccess: EventEmitter<TisResponseResult> = new EventEmitter();
 
   constructor(public tisService: TISService, protected router: Router
-    , protected location: Location, modalService: NzModalService) {
-    super(tisService, router, location, modalService);
+    , protected location: Location) {
+    super(tisService, router, location);
   }
 
 
@@ -60,12 +57,12 @@ export class TableAddStep2Component extends TableAddStep implements OnInit {
   }
 
   saveTableConfig(form: any): void {
-    let action = jQuery(form).serialize()
-      + '&tableLogicName=' + this.step1Form.tableName
-      + '&partitionNum=' + this.step1Form.partitionNum
-      + '&dbName=' + this.step1Form.dbName
-      + '&partitionInterval=' + this.step1Form.partitionInterval
-      + '&tableName=' + this.step1Form.tableName;
+    // let action = jQuery(form).serialize()
+    //   + '&tableLogicName=' + this.step1Form.tableName
+    //   + '&partitionNum=' + this.step1Form.partitionNum
+    //   + '&dbName=' + this.step1Form.dbName
+    //   + '&partitionInterval=' + this.step1Form.partitionInterval
+    //   + '&tableName=' + this.step1Form.tableName;
     // console.log(action);
     // this.confirmDisable = true;
     // if (!this.tablePojo.isAdd) {
@@ -74,26 +71,24 @@ export class TableAddStep2Component extends TableAddStep implements OnInit {
     // }
     this.jsonPost('/offline/datasource.ajax?event_submit_do_add_datasource_table=y&action=offline_datasource_action', this.step1Form)
       .then(result => {
-        // this.confirmDisable = false;
-        this.processHttpResult.emit(result);
-        // console.log(result);
+        this.processResult(result);
         if (result.success) {
-          this.goHomePage(result.bizresult);
+          this.processSuccess.emit(result);
         }
       });
   }
 
   selectSqlChange(sql: any): void {
     // this.confirmDisable = true;
-    console.log(sql);
+   // console.log(sql);
     let action = 'event_submit_do_analyse_select_sql=y&action=offline_datasource_action'
       + '&sql=' + sql + '&dbName='; // + this.step1Form.dbName.value;
-    console.log(action);
+   // console.log(action);
     this.httpPost('/offline/datasource.ajax', action)
       .then(
         result => {
           this.columns = [];
-          this.processHttpResult.emit(result);
+          this.processSuccess.emit(result);
           // console.log(result);
           if (result.success) {
             // this.confirmDisable = false;
