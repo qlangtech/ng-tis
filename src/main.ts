@@ -4,9 +4,9 @@ import {enableProdMode} from '@angular/core';
 
 // import 'zone.js';
 // import 'reflect-metadata';
-import {environment} from './environments/environment';
+import {Tis} from './environments/environment';
 //
-if (environment.production) {
+if (Tis.environment.production) {
   enableProdMode();
 }
 
