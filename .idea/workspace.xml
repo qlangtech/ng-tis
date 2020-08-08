@@ -3,34 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/operation.log.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/operation.log.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/corecfg/compare.eachother.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/compare.eachother.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/environments/environment.prod.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index/application.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/application.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main-jit.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/git.commits.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/polyfills.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/index.query.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/index.query.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user/user.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -187,7 +162,7 @@
       <workItem from="1593412737251" duration="111225000" />
       <workItem from="1594870239072" duration="174097000" />
       <workItem from="1596089906585" duration="551000" />
-      <workItem from="1596802134809" duration="796000" />
+      <workItem from="1596802134809" duration="4461000" />
     </task>
     <servers />
   </component>
