@@ -12,41 +12,41 @@ import {NzModalService} from "ng-zorro-antd";
       <my-navigate [core]="app"></my-navigate>
       <nz-layout class="main-layout">
           <nz-sider [nzWidth]="150" [nzTheme]="'light'">
-              <ul class="nav nav-pills flex-column">
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./">
+              <ul nz-menu nzMode="inline" >
+                  <li nz-menu-item>
+                      <a  routerLink="./">
                           <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>主控台</a>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./query">
+                  <li nz-menu-item >
+                      <a  routerLink="./query">
                           <i class="fa fa-search fa-2x" aria-hidden="true"></i>查询</a>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
+                  <li nz-menu-item >
+                      <a  routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
                   </li>
 
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
+                  <li nz-menu-item >
+                      <a  routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
                   </li>
 
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./incr_build">
+                  <li nz-menu-item >
+                      <a  routerLink="./incr_build">
                           <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时通道</a>
                   </li>
 
-                  <li class="nav-item">
-                      <a class="nav-link" (click)="gotoFullbuildView()"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
+                  <li nz-menu-item >
+                      <a  (click)="gotoFullbuildView()"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
                   </li>
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
-                  </li>
-
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
+                  <li nz-menu-item >
+                      <a  routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
                   </li>
 
-                  <li class="nav-item">
-                      <a class="nav-link" routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
+                  <li nz-menu-item >
+                      <a  routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
+                  </li>
+
+                  <li nz-menu-item >
+                      <a  routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
                   </li>
               </ul>
           </nz-sider>
@@ -95,6 +95,8 @@ export class CorenodemanageIndexComponent extends BasicFormComponent implements 
         this.app = new CurrentCollection(0, params['name']);
         this.currentApp = this.app;
       });
+   // this.router.isActive()
+    // this.route.
   }
 
 // 控制页面上的 业务线选择是否要显示

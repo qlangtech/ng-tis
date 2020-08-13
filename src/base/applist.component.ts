@@ -19,7 +19,7 @@ import {NzModalService} from "ng-zorro-antd";
           <tis-page [rows]="pageList" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
               <tis-col title="索引名称" width="14" (search)="filterByAppName($event)">
                   <ng-template let-app='r'>
-                      <a [routerLink]="['/c',app.projectName]">{{app.projectName}}</a>
+                      <button nz-button nzType="link" (click)="gotoApp(app)">{{app.projectName}}</button>
                   </ng-template>
               </tis-col>
               <tis-col title="接口人" width="14" field="recept"></tis-col>
@@ -93,5 +93,10 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   filterByAppName(data: { query: string, reset: boolean }) {
     // console.log(query);
     Pager.go(this.router, this.route, 1, {name: data.reset ? null : data.query});
+  }
+
+  gotoApp(app) {
+    // <a [routerLink]="['/c',app.projectName]">{{app.projectName}}</a>
+    this.router.navigate(['/c', app.projectName]);
   }
 }
