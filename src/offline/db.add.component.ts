@@ -84,6 +84,7 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // console.log(this.dbPojo);
     if (this.dbPojo.dbId) {
       this.isAdd = false;
     } else {
@@ -134,7 +135,7 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
 
 
   private get actionMethod(): string {
-    return ((this.isAdd || this.dbPojo.facade) ? 'add' : 'edit') + '_' + (this.dbPojo.facade ? 'facade' : 'datasource') + '_db';
+    return ((this.isAdd ) ? 'add' : 'edit') + '_' + (this.dbPojo.facade ? 'facade' : 'datasource') + '_db';
   }
 
 

@@ -70,12 +70,12 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
 
                       </tis-page-header>
 
-                      <nz-tabset [nzSelectedIndex]="selectedDbIndex" [nzTabBarExtraContent]="extraTemplate">
+                      <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" [nzTabBarExtraContent]="extraTemplate">
                           <nz-tab nzTitle="明细">
                               <nz-descriptions nzBordered>
                                   <nz-descriptions-item [nzSpan]="3" nzTitle="数据库名">
                                       <div style="width: 400px">
-                                      {{selectedDb.dbName}}
+                                          {{selectedDb.dbName}}
                                       </div>
                                   </nz-descriptions-item>
                                   <nz-descriptions-item [nzSpan]="3" nzTitle="节点描述">{{selectedDb.host}}
@@ -371,6 +371,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               // console.log(this.selectedDb);
               if (biz.facade) {
                 this.facdeDb = this.createDB(id, biz.facade);
+                this.facdeDb.facade = true;
               }
 
             } else if (type === 'table') {
@@ -429,6 +430,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     facadeAdd.successSubmit.subscribe((evt: DbPojo) => {
       if (evt) {
         this.facdeDb = evt;
+        this.facdeDb.facade = true;
         // 将tab切换到facade上
         this.selectedDbIndex = 1;
       }
@@ -441,8 +443,24 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   editDb(): void {
 
-    let dialog = this.openDialog(DbAddComponent, {nzTitle: "更新数据库"});
-    dialog.getContentComponent().dbPojo = this.selectedDb;
+    let dialog = this.openDialog(DbAddComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
+    dialog.getContentComponent().dbPojo = Object.assign(new DbPojo(), this.facadeModel ? this.facdeDb : this.selectedDb);
+    dialog.afterClose.subscribe((r) => {
+      if (r) {
+        let db: DbPojo = Object.assign(new DbPojo(), r);
+       // console.log(db);
+        if (db.facade) {
+          this.facdeDb = db;
+        } else {
+          this.selectedDb = db;
+        }
+        this.notify.success("成功", "数据库更新成功", {nzDuration: 6000});
+      }
+    });
+  }
+
+  private get facadeModel(): boolean {
+    return (this.selectedDbIndex === 1);
   }
 
   /**

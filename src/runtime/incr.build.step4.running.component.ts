@@ -2,9 +2,9 @@ import {AfterContentInit, Component, EventEmitter, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 
 @Component({
@@ -59,7 +59,7 @@ import {NzModalService} from "ng-zorro-antd";
                               </table>
                           </nz-card>
 
-                          <ng-template  #incrcontrol >
+                          <ng-template #incrcontrol>
                               <button nz-button nzType="link" nz-dropdown [nzDropdownMenu]="menu"><i nz-icon nzType="setting" nzTheme="outline"></i></button>
                               <nz-dropdown-menu #menu="nzDropdownMenu">
                                   <ul nz-menu>
@@ -124,7 +124,18 @@ import {NzModalService} from "ng-zorro-antd";
           </nz-tab>
       </nz-tabset>
       <ng-template #extraTemplate>
-          <button nz-button>Extra Action</button>
+          <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+          <!--
+           <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
+               操作
+               <i nz-icon nzType="down"></i>
+           </button>
+           <nz-dropdown-menu #menu4="nzDropdownMenu">
+               <ul nz-menu>
+                   <li nz-menu-item><i nz-icon nzType="delete" nzTheme="outline"></i>删除</li>
+               </ul>
+           </nz-dropdown-menu>
+          -->
       </ng-template>
   `,
   styles: [
@@ -277,7 +288,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   lineChartLabels: Array<any> = [];
   rageVal = '1440';
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
+  constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, private notification: NzNotificationService) {
     super(tisService, route, modalService);
   }
 
@@ -315,5 +326,17 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
       })
     return false;
+  }
+
+  /**
+   * 删除增量通道
+   */
+  incrChannelDelete() {
+    this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+      if (r.success) {
+        this.notification.success("成功", `已经成功删除增量实例${this.currentApp.appName}`, {nzDuration: 6000});
+        this.router.navigate(["."]);
+      }
+    });
   }
 }
