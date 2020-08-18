@@ -66,6 +66,7 @@ import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzEmptyModule} from 'ng-zorro-antd/empty';
 import {NzRadioModule} from 'ng-zorro-antd/radio';
 import {NzBadgeModule} from 'ng-zorro-antd/badge';
+import {NzDividerModule} from 'ng-zorro-antd/divider';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -89,7 +90,7 @@ import {NzBadgeModule} from 'ng-zorro-antd/badge';
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+  exports: [NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
