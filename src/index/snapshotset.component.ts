@@ -126,8 +126,8 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
 
   constructor(tisService: TISService
     , modalService: NzModalService, private router: Router, private route: ActivatedRoute
-    , private notification: NzNotificationService) {
-    super(tisService, modalService);
+    , notification: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   ngOnInit() {

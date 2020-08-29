@@ -61,9 +61,9 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
   // @ContentChild(TemplateRef, {static: false})
   // contentTempate: TemplateRef<any>;
   constructor(private fb: FormBuilder,
-              tisService: TISService, modalService: NgbModal,  nzmodalService: NzModalService
-    , private router: Router, route: ActivatedRoute, private notification: NzNotificationService) {
-    super(tisService, nzmodalService, route);
+              tisService: TISService, modalService: NgbModal, nzmodalService: NzModalService
+    , private router: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(tisService, nzmodalService, route, notification);
   }
 
   ngOnInit(): void {
