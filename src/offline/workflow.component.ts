@@ -8,15 +8,15 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 // import {BaseEvent} from '@shopify/draggable';
 
 // declare var jQuery: any;
 
 export class BasicWFComponent extends BasicFormComponent {
-  constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute, notification?: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
 

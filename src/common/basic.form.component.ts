@@ -8,6 +8,7 @@ import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -30,7 +31,11 @@ export class BasicFormComponent {
     return !!route.snapshot.data[KEY_show_Bread_crumb];
   }
 
-  constructor(protected tisService: TISService, protected modalService?: NzModalService) {
+  constructor(protected tisService: TISService, protected modalService?: NzModalService, protected notification?: NzNotificationService) {
+  }
+
+  protected successNotify(msg: string, duration?: number) {
+    this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
@@ -240,8 +245,8 @@ export abstract class BasicSideBar extends BasicFormComponent {
   @Input() g6Graph: any;
   @Input() parentComponent: IDataFlowMainComponent; // WorkflowAddComponent;
 
-  protected constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  protected constructor(tisService: TISService, modalService: NzModalService, notification?: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   _saveClick(): void {
@@ -265,8 +270,8 @@ export interface IDataFlowMainComponent {
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
   // private appTisService: AppTISService;
 
-  protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService) {
-    super(tisService, modalService);
+  protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService, notification?: NzNotificationService) {
+    super(tisService, modalService, notification);
     // this.appTisService = tisService;
   }
 

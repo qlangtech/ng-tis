@@ -112,7 +112,7 @@ export const TYPE_DUMP_TABLE = 'table';
                               <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史</li>
                           </ul>
                       </nz-dropdown-menu> &nbsp;
-                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()" ><i nz-icon nzType="sync" nzTheme="outline"></i>同步数据表</button>
+                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()"><i nz-icon nzType="sync" nzTheme="outline"></i>同步数据表</button>
                       &nbsp;
                       <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
                   </ng-template>
@@ -281,10 +281,10 @@ export class WorkflowAddComponent extends BasicWFComponent
               router: Router,
               route: ActivatedRoute,
               private fb: FormBuilder,
-              private notification: NzNotificationService,
+              notification: NzNotificationService,
               private cdr: ChangeDetectorRef,
               private modal: NzModalService) {
-    super(tisService, modal, router, route);
+    super(tisService, modal, router, route, notification);
     // this.formDisabled = true;
     // this.workflow = new Workflow();
     //  this.cdr.detach();

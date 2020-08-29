@@ -12,7 +12,7 @@ declare var jQuery: any;
 import {Subject} from 'rxjs/Subject';
 import {EditorConfiguration} from "codemirror";
 import {ActivatedRoute, Params} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 // import {Observable} from 'rxjs/Observable';
 
@@ -28,8 +28,8 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
 
   // private resSnapshotid = new Subject<number>();
 
-  constructor(tisService: TISService, modalService: NzModalService, protected route: ActivatedRoute) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, protected route: ActivatedRoute, notification?: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   @Input() set snapshotid(val: number) {

@@ -124,10 +124,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
     }
   }
+
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
-    , private notification: NzNotificationService
+    , notification: NzNotificationService
     , private cdr: ChangeDetectorRef) {
-    super(tisService, route, modalService);
+    super(tisService, route, modalService, notification);
     // console.log(tisService);
     // this._validateForm = this._fb.group({
     //   mqTopic: ['', [Validators.required]],
@@ -366,7 +367,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         return;
       }
       let pluginErrorFields = r.errorfields;
-     // console.log(pluginErrorFields);
+      // console.log(pluginErrorFields);
       let index = 0;
       this._heteroList.forEach((h) => {
         let items: Item[] = h.items;

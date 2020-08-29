@@ -203,9 +203,9 @@ export class WorkflowAddErMetaComponent
   cols: Array<{ key: string, pk: boolean }> = [];
   transfers: Array<{ key: string }> = [];
 
-  constructor(tisService: TISService, private notification: NzNotificationService,
+  constructor(tisService: TISService, notification: NzNotificationService,
               modalService: NzModalService, private cdr: ChangeDetectorRef) {
-    super(tisService, modalService);
+    super(tisService, modalService, notification);
     this.transfers.push({"key": "dateYYYYmmdd"});
     this.transfers.push({"key": "dateYYYYMMddHHmmss"});
     // this.transfers.push({"key": "dateYYYYmmdd"});

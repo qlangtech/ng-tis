@@ -9,134 +9,138 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 @Component({
   template: `
-      <nz-tabset [nzTabBarExtraContent]="extraTemplate">
-          <nz-tab nzTitle="基本">
+      <nz-spin size="large" [nzSpinning]="this.formDisabled">
 
-              <div style="background: #ECECEC;padding:20px;">
-                  <div nz-row [nzGutter]="8">
-                      <div nz-col [nzSpan]="8">
-                          <nz-card nzTitle="阀门控制" [nzBodyStyle]="{'height':'300px'}" [nzExtra]="incrcontrol">
-                              <table align="left">
-                                  <tr>
-                                      <td>
-                                          <i>DB</i><br>
-                                          <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
-                                      </td>
-                                      <td align="center">
-                                          <b style="color:blue;font-size:40px" id="tis-incr-in-rate">9999</b>
-                                          <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
-                                              <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
-                                              <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
-                                          </div>
-                                      </td>
-                                      <td align="center" valign="center">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate">
+              <nz-tab nzTitle="基本">
+
+                  <div style="background: #ECECEC;padding:20px;">
+                      <div nz-row [nzGutter]="8">
+                          <div nz-col [nzSpan]="8">
+                              <nz-card nzTitle="阀门控制" [nzBodyStyle]="{'height':'300px'}" [nzExtra]="incrcontrol">
+                                  <table align="left">
+                                      <tr>
+                                          <td>
+                                              <i>DB</i><br>
+                                              <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
+                                          </td>
+                                          <td align="center">
+                                              <b style="color:blue;font-size:40px" id="tis-incr-in-rate">9999</b>
+                                              <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
+                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
+                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
+                                              </div>
+                                          </td>
+                                          <td align="center" valign="center">
 
 
-                                          <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
-                                              启停 <i nz-icon nzType="down"></i>
-                                          </button>
-                                          <nz-dropdown-menu #menu4="nzDropdownMenu">
-                                              <ul nz-menu>
-                                                  <li nz-menu-item (click)="incrResumePause(true)">暂停</li>
-                                                  <li nz-menu-item (click)="incrResumePause(false)">启动</li>
-                                              </ul>
-                                          </nz-dropdown-menu>
-                                          <br/>
-                                          <i class="fa fa-cog fa-spin" style="font-size:3em" aria-hidden="true"></i>
-                                      </td>
-                                      <td align="center"><b style="color:blue;font-size:40px" id="tis-incr-out-rate">123</b>
-                                          <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
-                                              <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
-                                              <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
-                                          </div>
+                                              <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
+                                                  启停 <i nz-icon nzType="down"></i>
+                                              </button>
+                                              <nz-dropdown-menu #menu4="nzDropdownMenu">
+                                                  <ul nz-menu>
+                                                      <li nz-menu-item (click)="incrResumePause(true)">暂停</li>
+                                                      <li nz-menu-item (click)="incrResumePause(false)">启动</li>
+                                                  </ul>
+                                              </nz-dropdown-menu>
+                                              <br/>
+                                              <i class="fa fa-cog fa-spin" style="font-size:3em" aria-hidden="true"></i>
+                                          </td>
+                                          <td align="center"><b style="color:blue;font-size:40px" id="tis-incr-out-rate">123</b>
+                                              <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
+                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
+                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
+                                              </div>
 
-                                      </td>
-                                      <td>
-                                          <i>TIS</i><br>
-                                          <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
-                                      </td>
-                                  </tr>
-                              </table>
-                          </nz-card>
+                                          </td>
+                                          <td>
+                                              <i>TIS</i><br>
+                                              <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
+                                          </td>
+                                      </tr>
+                                  </table>
+                              </nz-card>
 
-                          <ng-template #incrcontrol>
-                              <button nz-button nzType="link" nz-dropdown [nzDropdownMenu]="menu"><i nz-icon nzType="setting" nzTheme="outline"></i></button>
-                              <nz-dropdown-menu #menu="nzDropdownMenu">
-                                  <ul nz-menu>
-                                      <li nz-menu-item>
-                                          <a>1st item</a>
-                                      </li>
-                                      <li nz-menu-item>
-                                          <a>2nd item</a>
-                                      </li>
-                                      <li nz-menu-item>
-                                          <a>3rd item</a>
-                                      </li>
-                                  </ul>
-                              </nz-dropdown-menu>
-                          </ng-template>
+                              <ng-template #incrcontrol>
+                                  <button nz-button nzType="link" nz-dropdown [nzDropdownMenu]="menu"><i nz-icon nzType="setting" nzTheme="outline"></i></button>
+                                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                                      <ul nz-menu>
+                                          <li nz-menu-item>
+                                              <a>1st item</a>
+                                          </li>
+                                          <li nz-menu-item>
+                                              <a>2nd item</a>
+                                          </li>
+                                          <li nz-menu-item>
+                                              <a>3rd item</a>
+                                          </li>
+                                      </ul>
+                                  </nz-dropdown-menu>
+                              </ng-template>
+                          </div>
+                          <div nz-col [nzSpan]="8">
+                              <nz-card nzTitle="实时流量" [nzBodyStyle]="{'height':'300px'}">
+                                  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                                          [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+                                  </canvas>
+                              </nz-card>
+                          </div>
                       </div>
-                      <div nz-col [nzSpan]="8">
-                          <nz-card nzTitle="实时流量" [nzBodyStyle]="{'height':'300px'}">
-                              <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                                      [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                              </canvas>
-                          </nz-card>
-                      </div>
-                  </div>
 
-                  <div nz-row [nzGutter]="8">
-                      <div nz-col [nzSpan]="8">
-                          <nz-card [nzTitle]="timerangeBar">
-                              <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                                      [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                              </canvas>
-                          </nz-card>
-                          <ng-template #timerangeBar>
-                              近期流量
-                              <nz-radio-group [(ngModel)]="rageVal" (ngModelChange)="reload_cluster_state($event)" [nzButtonStyle]="'solid'">
-                                  <label nz-radio-button nzValue="60">近１小时</label>
-                                  <label nz-radio-button nzValue="1440">今天</label>
-                                  <label nz-radio-button nzValue="300">近５小时</label>
-                                  <label nz-radio-button nzValue="7200">近１５天</label>
-                                  <label nz-radio-button nzValue="43200">近1个月</label>
-                              </nz-radio-group>
-                          </ng-template>
+                      <div nz-row [nzGutter]="8">
+                          <div nz-col [nzSpan]="8">
+                              <nz-card [nzTitle]="timerangeBar">
+                                  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                                          [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+                                  </canvas>
+                              </nz-card>
+                              <ng-template #timerangeBar>
+                                  近期流量
+                                  <nz-radio-group [(ngModel)]="rageVal" (ngModelChange)="reload_cluster_state($event)" [nzButtonStyle]="'solid'">
+                                      <label nz-radio-button nzValue="60">近１小时</label>
+                                      <label nz-radio-button nzValue="1440">今天</label>
+                                      <label nz-radio-button nzValue="300">近５小时</label>
+                                      <label nz-radio-button nzValue="7200">近１５天</label>
+                                      <label nz-radio-button nzValue="43200">近1个月</label>
+                                  </nz-radio-group>
+                              </ng-template>
+                          </div>
                       </div>
                   </div>
-              </div>
-              <div style="display: flex;">
-                  <div style="flex:1">
+                  <div style="display: flex;">
+                      <div style="flex:1">
+                      </div>
+                      <div style="flex:1">
+                      </div>
                   </div>
-                  <div style="flex:1">
-                  </div>
-              </div>
-          </nz-tab>
-          <nz-tab nzTitle="规格">
-              <ng-template nz-tab>
-                  world
-              </ng-template>
-          </nz-tab>
-          <nz-tab nzTitle="日志">
-              <ng-template nz-tab>
-                  <incr-pod-logs-status></incr-pod-logs-status>
-              </ng-template>
-          </nz-tab>
-      </nz-tabset>
-      <ng-template #extraTemplate>
-          <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
-          <!--
-           <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
-               操作
-               <i nz-icon nzType="down"></i>
-           </button>
-           <nz-dropdown-menu #menu4="nzDropdownMenu">
-               <ul nz-menu>
-                   <li nz-menu-item><i nz-icon nzType="delete" nzTheme="outline"></i>删除</li>
-               </ul>
-           </nz-dropdown-menu>
-          -->
-      </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="规格">
+                  <ng-template nz-tab>
+                      world
+                  </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="日志">
+                  <ng-template nz-tab>
+                      <incr-pod-logs-status></incr-pod-logs-status>
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
+          <ng-template #extraTemplate>
+              <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+              <!--
+               <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
+                   操作
+                   <i nz-icon nzType="down"></i>
+               </button>
+               <nz-dropdown-menu #menu4="nzDropdownMenu">
+                   <ul nz-menu>
+                       <li nz-menu-item><i nz-icon nzType="delete" nzTheme="outline"></i>删除</li>
+                   </ul>
+               </nz-dropdown-menu>
+              -->
+          </ng-template>
+      </nz-spin>
+
   `,
   styles: [
       `
@@ -288,8 +292,8 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   lineChartLabels: Array<any> = [];
   rageVal = '1440';
 
-  constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, private notification: NzNotificationService) {
-    super(tisService, route, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, route, modalService, notification);
   }
 
 
@@ -323,7 +327,9 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
     this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_resume_pause=y&action=core_action&pause=" + pause)
       .then((r) => {
-
+        if (r.success) {
+          this.notification.success("成功", r.msg[0], {nzDuration: 6000});
+        }
       })
     return false;
   }
