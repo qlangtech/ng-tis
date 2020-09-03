@@ -7,7 +7,6 @@ import {Routes, RouterModule} from '@angular/router';
 import {DepartmentListComponent} from './department.list.component';
 import {ApplistComponent} from './applist.component';
 import {OperationLogComponent} from './operation.log.component';
-import {GlobalParamsComponent} from './global.params.component';
 // import {AddAppFormComponent} from './addapp-form.component';
 import {AddAppStepFlowComponent} from './addapp.step.flow.component';
 import {BaseConfigComponent} from "./base-config.component";
@@ -40,12 +39,13 @@ const basemanageRoutes: Routes = [
             component: SnapshotsetComponent,
             data: {
               showBreadcrumb: true,
-              template : true
+              template: true
             }
           },
           {
             path: 'tpl/xml_conf/:restype/:snapshotid',
-            component: SchemaXmlEditComponent},
+            component: SchemaXmlEditComponent
+          },
           {
             path: 'tpl/schema_visual/:snapshotid',
             component: SchemaEditVisualizingModelComponent
@@ -53,10 +53,6 @@ const basemanageRoutes: Routes = [
           {
             path: 'departmentlist',
             component: DepartmentListComponent
-          },
-          {
-            path: 'globalparams',
-            component: GlobalParamsComponent
           },
           {
             path: 'operationlog',

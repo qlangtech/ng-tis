@@ -23,7 +23,7 @@ export class MultiViewDAG {
       componentRef.instance.dto = dto;
     }
 
-    console.log({next: nextCpt, pre: preCpt});
+    // console.log({next: nextCpt, pre: preCpt});
 
     if (nextCpt !== null) {
       componentRef.instance.nextStep.subscribe((e: any) => {

@@ -3,7 +3,6 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BaseMangeRoutingModule} from "./base.manage-routing.module";
-import {GlobalParamsComponent} from "./global.params.component";
 import {ApplistComponent} from "./applist.component";
 import {BaseMangeIndexComponent} from "./base.manage.index.component";
 import {DepartmentListComponent} from "./department.list.component";
@@ -29,11 +28,11 @@ import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
   id: 'basemanage',
   imports: [CommonModule, FormsModule, NgbModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
-    GlobalParamsComponent, ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent,  DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
+    ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent
   ],
-  entryComponents: [GlobalParamsComponent, ApplistComponent
+  entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
     , GlobalUpdateParamComponent, AddAppFormComponent, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent],

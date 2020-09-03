@@ -88,7 +88,6 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               <a class="dropdown-item" routerLink="/base/departmentlist">业务线</a>
               <a class="dropdown-item" routerLink="/base/basecfg">插件配置</a>
               <a class="dropdown-item" routerLink="/base/tpl/snapshotset">索引模版</a>
-              <a class="dropdown-item" routerLink="/base/globalparams">全局参数</a>
               <a class="dropdown-item" routerLink="/base/operationlog">操作日志</a>
             </div>
           </li>

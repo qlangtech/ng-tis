@@ -135,9 +135,9 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
 
     let sn = this.route.snapshot;
     if (!!sn.data['template']) {
-      this.currentApp = new CurrentCollection(0, "search4template");
+      this.tisService.currentApp = new CurrentCollection(0, "search4template");
     } else {
-      this.currentApp = new CurrentCollection(0, sn.params['name']);
+      this.tisService.currentApp = new CurrentCollection(0, sn.params['name']);
     }
 
     this.route.queryParams.subscribe((param) => {

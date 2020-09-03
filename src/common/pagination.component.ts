@@ -245,8 +245,15 @@ export class TdContentDirective implements OnInit {
       font-family: \\5b8b\\4f53, arial, san-serif;
   }
 
+  .ant-table-filter-icon {
+      cursor: pointer;
+  }
+
   .search-box {
       padding: 8px;
+      background-color: white;
+      border: 1px solid #a6a6a6;
+      border-radius: 4px;
   }
 
   .search-box input {

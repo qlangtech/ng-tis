@@ -23,6 +23,9 @@ import {NzModalService} from "ng-zorro-antd";
                   </ng-template>
               </tis-col>
               <tis-col title="接口人" width="14" field="recept"></tis-col>
+              <tis-col title="数据流">
+                  <ng-template let-app="r">{{app.dataflowName}}</ng-template>
+              </tis-col>
               <tis-col title="归属部门" field="dptName">
                   <ng-template let-app='r'>
    <span style="color:#999999;" [ngSwitch]="app.dptName !== null">

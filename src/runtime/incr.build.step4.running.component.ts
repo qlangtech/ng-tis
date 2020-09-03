@@ -1,132 +1,72 @@
-import {AfterContentInit, Component, EventEmitter, Output} from "@angular/core";
+import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {IndexIncrStatus} from "./incr.build.component";
+import {Subject} from "rxjs";
+import {map} from "rxjs/operators";
+import {WSMessage} from "./core.build.progress.component";
+import {NgTerminal} from "ng-terminal";
 
 
 @Component({
   template: `
       <nz-spin size="large" [nzSpinning]="this.formDisabled">
-
-          <nz-tabset [nzTabBarExtraContent]="extraTemplate">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="基本">
-
-                  <div style="background: #ECECEC;padding:20px;">
-                      <div nz-row [nzGutter]="8">
-                          <div nz-col [nzSpan]="8">
-                              <nz-card nzTitle="阀门控制" [nzBodyStyle]="{'height':'300px'}" [nzExtra]="incrcontrol">
-                                  <table align="left">
-                                      <tr>
-                                          <td>
-                                              <i>DB</i><br>
-                                              <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
-                                          </td>
-                                          <td align="center">
-                                              <b style="color:blue;font-size:40px" id="tis-incr-in-rate">9999</b>
-                                              <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
-                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
-                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
-                                              </div>
-                                          </td>
-                                          <td align="center" valign="center">
-
-
-                                              <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
-                                                  启停 <i nz-icon nzType="down"></i>
-                                              </button>
-                                              <nz-dropdown-menu #menu4="nzDropdownMenu">
-                                                  <ul nz-menu>
-                                                      <li nz-menu-item (click)="incrResumePause(true)">暂停</li>
-                                                      <li nz-menu-item (click)="incrResumePause(false)">启动</li>
-                                                  </ul>
-                                              </nz-dropdown-menu>
-                                              <br/>
-                                              <i class="fa fa-cog fa-spin" style="font-size:3em" aria-hidden="true"></i>
-                                          </td>
-                                          <td align="center"><b style="color:blue;font-size:40px" id="tis-incr-out-rate">123</b>
-                                              <div id="db-syn" style="width:130px;height:5px;background-color:blue;">
-                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow1" aria-hidden="true"></i>
-                                                  <i class="fa fa-caret-right fa-2x arrow my-arrow2" aria-hidden="true"></i>
-                                              </div>
-
-                                          </td>
-                                          <td>
-                                              <i>TIS</i><br>
-                                              <i class="fa fa-database" style="font-size:7em" aria-hidden="true"></i>
-                                          </td>
-                                      </tr>
-                                  </table>
-                              </nz-card>
-
-                              <ng-template #incrcontrol>
-                                  <button nz-button nzType="link" nz-dropdown [nzDropdownMenu]="menu"><i nz-icon nzType="setting" nzTheme="outline"></i></button>
-                                  <nz-dropdown-menu #menu="nzDropdownMenu">
-                                      <ul nz-menu>
-                                          <li nz-menu-item>
-                                              <a>1st item</a>
-                                          </li>
-                                          <li nz-menu-item>
-                                              <a>2nd item</a>
-                                          </li>
-                                          <li nz-menu-item>
-                                              <a>3rd item</a>
-                                          </li>
-                                      </ul>
-                                  </nz-dropdown-menu>
-                              </ng-template>
-                          </div>
-                          <div nz-col [nzSpan]="8">
-                              <nz-card nzTitle="实时流量" [nzBodyStyle]="{'height':'300px'}">
-                                  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                                          [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                                  </canvas>
-                              </nz-card>
-                          </div>
-                      </div>
-
-                      <div nz-row [nzGutter]="8">
-                          <div nz-col [nzSpan]="8">
-                              <nz-card [nzTitle]="timerangeBar">
-                                  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                                          [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                                  </canvas>
-                              </nz-card>
-                              <ng-template #timerangeBar>
-                                  近期流量
-                                  <nz-radio-group [(ngModel)]="rageVal" (ngModelChange)="reload_cluster_state($event)" [nzButtonStyle]="'solid'">
-                                      <label nz-radio-button nzValue="60">近１小时</label>
-                                      <label nz-radio-button nzValue="1440">今天</label>
-                                      <label nz-radio-button nzValue="300">近５小时</label>
-                                      <label nz-radio-button nzValue="7200">近１５天</label>
-                                      <label nz-radio-button nzValue="43200">近1个月</label>
-                                  </nz-radio-group>
-                              </ng-template>
-                          </div>
-                      </div>
-                  </div>
-                  <div style="display: flex;">
-                      <div style="flex:1">
-                      </div>
-                      <div style="flex:1">
-                      </div>
-                  </div>
+                  <ng-template nz-tab>
+                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>
+                  </ng-template>
               </nz-tab>
               <nz-tab nzTitle="规格">
-                  <ng-template nz-tab>
-                      world
-                  </ng-template>
+                  <nz-descriptions nzTitle="配置" nzBordered>
+                      <nz-descriptions-item nzTitle="Docker Image">{{dto.incrDeployment.dockerImage}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="创建时间">{{dto.incrDeployment.creationTimestamp | dateformat}}</nz-descriptions-item>
+                  </nz-descriptions>
+                  <nz-descriptions nzTitle="当前状态" nzBordered>
+                      <nz-descriptions-item nzTitle="availableReplicas">{{dto.incrDeployment.status.availableReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="fullyLabeledReplicas">{{dto.incrDeployment.status.fullyLabeledReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="observedGeneration">{{dto.incrDeployment.status.observedGeneration}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="readyReplicas">{{dto.incrDeployment.status.readyReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="replicas">{{dto.incrDeployment.status.replicas}}</nz-descriptions-item>
+                  </nz-descriptions>
+                  <nz-descriptions nzTitle="资源分配" nzBordered>
+                      <nz-descriptions-item nzTitle="CPU">
+                          <nz-tag>request</nz-tag>
+                          {{dto.incrDeployment.cpuRequest.val + dto.incrDeployment.cpuRequest.unit}}
+                          <nz-tag>limit</nz-tag>
+                          {{dto.incrDeployment.cpuLimit.val + dto.incrDeployment.cpuLimit.unit}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="Memory">
+                          <nz-tag>request</nz-tag>
+                          {{dto.incrDeployment.memoryRequest.val + dto.incrDeployment.memoryRequest.unit}}
+                          <nz-tag>limit</nz-tag>
+                          {{dto.incrDeployment.memoryLimit.val + dto.incrDeployment.memoryLimit.unit}}</nz-descriptions-item>
+                  </nz-descriptions>
+                  <nz-descriptions nzTitle="环境变量" nzBordered>
+                      <nz-descriptions-item *ngFor=" let e of  dto.incrDeployment.envs | keyvalue" [nzTitle]="e.key">{{e.value}}</nz-descriptions-item>
+                  </nz-descriptions>
               </nz-tab>
               <nz-tab nzTitle="日志">
                   <ng-template nz-tab>
-                      <incr-pod-logs-status></incr-pod-logs-status>
+                      <incr-pod-logs-status [msgSubject]="this.msgSubject"></incr-pod-logs-status>
                   </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="操作">
+                  <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">
+                  </nz-page-header>
+
+                  <nz-list class="ant-advanced-search-form" nzBordered>
+                      <nz-list-item>
+                          <span nz-typography>删除增量实例</span>
+                          <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                      </nz-list-item>
+                  </nz-list>
               </nz-tab>
           </nz-tabset>
           <ng-template #extraTemplate>
-              <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
               <!--
                <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
                    操作
@@ -140,209 +80,130 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
               -->
           </ng-template>
       </nz-spin>
-
   `,
   styles: [
       `
+          nz-descriptions {
+              margin-top: 15px;
+          }
+
+          nz-tab {
+              padding-left: 10px;
+          }
+
+          .danger-control-title {
+              margin-top: 10px;
+              padding: 0px 0;
+          }
+
+          .ant-advanced-search-form {
+              padding: 10px;
+              #background: #fbfbfb;
+              border: 2px solid #d97f85;
+              border-radius: 6px;
+              margin-bottom: 10px;
+              clear: both;
+          }
+
           [nz-row] {
               margin-bottom: 10px;
-          }
-
-          .my-arrow1 {
-              animation: mymove1 10s linear infinite;
-              -webkit-animation: mymove1 2s linear infinite; /*Safari and Chrome*/
-          }
-
-          @keyframes mymove1 {
-              from {
-                  left: 0px;
-              }
-              to {
-                  left: 60px;
-              }
-          }
-
-          @-webkit-keyframes mymove1 /*Safari and Chrome*/
-          {
-              from {
-                  left: 0px;
-              }
-              to {
-                  left: 60px;
-              }
-          }
-
-
-          .my-arrow2 {
-              animation: mymove2 10s linear infinite;
-              -webkit-animation: mymove2 2s linear infinite; /*Safari and Chrome*/
-          }
-
-          @keyframes mymove2 {
-              from {
-                  left: 60px;
-              }
-              to {
-                  left: 120px;
-              }
-          }
-
-          @-webkit-keyframes mymove2 /*Safari and Chrome*/
-          {
-              from {
-                  left: 60px;
-              }
-              to {
-                  left: 120px;
-              }
-          }
-
-          .my-arrow3 {
-              animation: mymove3 10s linear infinite;
-              -webkit-animation: mymove3 2s linear infinite; /*Safari and Chrome*/
-          }
-
-          @keyframes mymove3 {
-              from {
-                  left: 120px;
-              }
-              to {
-                  left: 180px;
-              }
-          }
-
-          @-webkit-keyframes mymove3 /*Safari and Chrome*/
-          {
-              from {
-                  left: 120px;
-              }
-              to {
-                  left: 180px;
-              }
-          }
-
-          .my-arrow4 {
-              animation: mymove4 10s linear infinite;
-              -webkit-animation: mymove4 2s linear infinite; /*Safari and Chrome*/
-          }
-
-          @keyframes mymove4 {
-              from {
-                  left: 180px;
-              }
-              to {
-                  left: 240px;
-              }
-          }
-
-          @-webkit-keyframes mymove4 /*Safari and Chrome*/
-          {
-              from {
-                  left: 180px;
-              }
-              to {
-                  left: 240px;
-              }
-          }
-
-          .my-arrow5 {
-              animation: mymove5 10s linear infinite;
-              -webkit-animation: mymove5 2s linear infinite; /*Safari and Chrome*/
-          }
-
-          @keyframes mymove5 {
-              from {
-                  left: 240px;
-              }
-              to {
-                  left: 300px;
-              }
-          }
-
-          @-webkit-keyframes mymove5 /*Safari and Chrome*/
-          {
-              from {
-                  left: 240px;
-              }
-              to {
-                  left: 300px;
-              }
           }
     `
   ]
 })
-export class IncrBuildStep4RunningComponent extends AppFormComponent implements AfterContentInit {
+export class IncrBuildStep4RunningComponent extends AppFormComponent implements AfterContentInit, OnDestroy {
+  private componentDestroy: boolean;
+  tabSelectIndex = 0;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
+  dto: IndexIncrStatus = new IndexIncrStatus();
+  private msgSubject: Subject<WSMessage>;
 
-  lineChartOptions: ChartOptions = {
-    responsive: true,
-    scales: {
-      yAxes: [{
-        ticks: {
-          min: 0
-        }
-      }]
-    }
-  };
-  public lineChartData: ChartDataSets[] = [
-    {data: [], label: 'updateCount'}
-    // {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
-  ];
-  lineChartLabels: Array<any> = [];
-  rageVal = '1440';
-
+  // 实时流量配置
   constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {
     super(tisService, route, modalService, notification);
   }
-
 
   protected initialize(app: CurrentCollection): void {
   }
 
   ngAfterContentInit(): void {
-    this.reload_cluster_state(this.rageVal);
-  }
+    // console.log(this.dto);
 
-
-  reload_cluster_state(range: string) {
-    this.httpPost('/runtime/cluster_status.ajax', 'action=cluster_state_collect_action&event_submit_do_collect=y&m=' + range)
-      .then((data) => {
-        let rows = data.bizresult;
-        let serialData: { data?: any, label: string } = {label: "UpdateCount"};
-        serialData.data = [];
-        let labels: Array<any> = [];
-        this.lineChartLabels = [];
-        rows.forEach((r: any) => {
-          serialData.data.push(r.updateCount);
-          labels.push(r.label);
-        });
-        this.lineChartData = [serialData];
-        this.lineChartLabels = labels;
-      });
+    // this.startMonitorMqTagsStatus();
 
   }
 
-  incrResumePause(pause: boolean) {
 
-    this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_resume_pause=y&action=core_action&pause=" + pause)
-      .then((r) => {
-        if (r.success) {
-          this.notification.success("成功", r.msg[0], {nzDuration: 6000});
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.route.fragment.subscribe((r) => {
+      if (r === 'podlog') {
+        this.tabSelectIndex = 2;
+        this.startMonitorMqTagsStatus('incrdeploy-change');
+      } else {
+        this.startMonitorMqTagsStatus('mq_tags_status');
+      }
+    })
+  }
+
+  public startMonitorMqTagsStatus(logtype: string) {
+    // console.log(this.currentApp);
+    this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${this.currentApp.name}`)
+      .pipe(map((response: MessageEvent) => {
+        let json = JSON.parse(response.data);
+        // console.log(json);
+        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
+          return new WSMessage('mq_tags_status', json);
+        } else if (json.logType && json.logType === "INCR") {
+          return new WSMessage('incr', json);
+        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
+          return new WSMessage('incrdeploy-change', json);
         }
-      })
-    return false;
+        return null;
+      }));
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroy = true;
+    if (this.msgSubject) {
+      this.msgSubject.unsubscribe()
+    }
   }
 
   /**
    * 删除增量通道
    */
   incrChannelDelete() {
-    this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
-      if (r.success) {
-        this.notification.success("成功", `已经成功删除增量实例${this.currentApp.appName}`, {nzDuration: 6000});
-        this.router.navigate(["."]);
+    this.modalService.confirm({
+      nzTitle: '删除',
+      nzContent: `是否要删除增量实例'${this.currentApp.appName}'`,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+          if (r.success) {
+            this.successNotify(`已经成功删除增量实例${this.currentApp.appName}`);
+            //  this.router.navigate(["."], {relativeTo: this.route});
+            this.nextStep.next(null);
+          }
+        });
       }
     });
   }
+}
+
+interface TisIncrStatus {
+  summary: IncrSummary;
+  tags: Array<TagState>;
+}
+
+interface TagState {
+  tag: string;
+  trantransferIncr: number;
+}
+
+interface IncrSummary {
+  solrConsume: number;
+  tableConsumeCount: number;
 }
