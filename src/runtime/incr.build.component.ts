@@ -1,6 +1,6 @@
 import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
@@ -14,12 +14,14 @@ import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.compone
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
+import {IncrDeployment} from "./misc/incr.deployment";
 
 
 @Component({
   template: `
-    <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px" >
-      <ng-template #container></ng-template> </nz-spin>`
+      <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
+          <ng-template #container></ng-template>
+      </nz-spin>`
 })
 export class IncrBuildComponent extends AppFormComponent implements AfterViewInit, OnInit {
 
@@ -27,6 +29,19 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
   private multiViewDAG: MultiViewDAG;
+
+
+  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void)) {
+    basicForm.httpPost('/coredefine/corenodemanage.ajax'
+      , 'action=core_action&emethod=get_incr_status')
+      .then((r) => {
+        if (r.success) {
+          // r.bizresult.incrScriptCreated;
+          let incrStatus: IndexIncrStatus = r.bizresult;
+          hander(incrStatus);
+        }
+      }); // incrScriptMainFileContent
+  }
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver, private _iconService: NzIconService) {
@@ -37,7 +52,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
   protected initialize(app: CurrentCollection): void {
   }
 
-  ngAfterViewInit () {
+  ngAfterViewInit() {
   }
 
   protected get codeMirrirCfg(): EditorConfiguration {
@@ -57,28 +72,24 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     configFST.set(IncrBuildStep1Component, {next: IncrBuildStep2Component, pre: IncrBuildStep0Component});
     configFST.set(IncrBuildStep2Component, {next: IncrBuildStep3Component, pre: IncrBuildStep1Component});
     configFST.set(IncrBuildStep3Component, {next: IncrBuildStep4RunningComponent, pre: IncrBuildStep2Component});
-    configFST.set(IncrBuildStep4RunningComponent, {next: null, pre: IncrBuildStep3Component});
-   // console.log(this.containerRef);
+    configFST.set(IncrBuildStep4RunningComponent, {next: IncrBuildStep0Component, pre: IncrBuildStep3Component});
+    // console.log(this.containerRef);
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-  //  this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
-    this.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=core_action&emethod=get_incr_status')
-      .then((r) => {
-        if (r.success) {
-          // r.bizresult.incrScriptCreated;
-          let k8sRCCreated = r.bizresult.k8sReplicationControllerCreated;
-          if (k8sRCCreated) {
-            // 增量已经在集群中运行，显示增量状态
-            this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, null);
-          } else {
-            // 脚本还未创建
-            // this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
-            this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
-          }
-          this.incrScript = r.bizresult.incrScriptMainFileContent;
-        }
-      }); // incrScriptMainFileContent
+    //  this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
+    IncrBuildComponent.getIncrStatusThenEnter(this, (incrStatus) => {
+      let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
+      if (k8sRCCreated) {
+        // 增量已经在集群中运行，显示增量状态
+        this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, incrStatus);
+      } else {
+        // 脚本还未创建
+        // this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
+        this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
+      }
+      this.incrScript = incrStatus.incrScriptMainFileContent;
+    });
   }
+
 
   get incrScript(): string {
     return this._incrScript;
@@ -92,6 +103,16 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
 export class IndexIncrStatus {
   public incrScriptCreated: boolean;
-  public incrScriptMainFileContent: String;
+  public incrScriptMainFileContent: string;
   public k8sPluginInitialized: boolean;
+  public k8sReplicationControllerCreated: boolean;
+
+  public incrDeployment: IncrDeployment;
+
+  public incrProcess: IncrProcess;
+}
+
+export interface IncrProcess {
+  incrGoingOn: boolean;
+  incrProcessPaused: boolean;
 }

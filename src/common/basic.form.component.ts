@@ -111,12 +111,16 @@ export class BasicFormComponent {
   }
 
   // 设置当前上下文中的应用
-  protected set currentApp(app: CurrentCollection) {
-    this.tisService.currentApp = app;
+  // protected set currentApp(app: CurrentCollection) {
+  //   this.tisService.currentApp = app;
+  // }
+
+  protected get currentApp(): CurrentCollection {
+    return this.tisService.currentApp;
   }
 
   // 发送http post请求
-  protected httpPost(url: string, body: string): Promise<TisResponseResult> {
+  public httpPost(url: string, body: string): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();
@@ -278,10 +282,13 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
   ngOnInit(): void {
     this.route.params
       .subscribe((params: Params) => {
+        // console.log(params['name']);
         // if (this.tisService instanceof AppTISService) {
         let appTisService: TISService = this.tisService;
+        // console.log(appTisService.currentApp);
         if (!appTisService.currentApp && params['name']) {
-          this.currentApp = new CurrentCollection(0, params['name']);
+          appTisService.currentApp = new CurrentCollection(0, params['name']);
+          // console.log(this.currentApp);
         }
         this.initialize(appTisService.currentApp);
       });

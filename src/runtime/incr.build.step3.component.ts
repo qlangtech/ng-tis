@@ -2,25 +2,35 @@ import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, Output,
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
-import {IndexIncrStatus} from "./incr.build.component";
+import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
 import {NzModalService} from "ng-zorro-antd";
 
 
 @Component({
   template: `
-     
       <tis-steps type="createIncr" [step]="2"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
-              <button nz-button nzType="default" (click)="createIndexStepPre()">上一步</button>
-              <button nz-button nzType="primary" (click)="createIndexStepNext()">回到首页</button>
-              <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+              <!--
+                   <button nz-button nzType="default" (click)="createIndexStepPre()">上一步</button>
+                   <button nz-button nzType="primary" (click)="createIndexStepNext()">回到首页</button>
+                   <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+              -->
           </tis-header-tool>
       </tis-page-header>
-     <incr-pod-logs-status></incr-pod-logs-status>
-  `
+
+
+      <nz-result
+              nzStatus="success"
+              [nzTitle]="'已经成功为'+this.currentApp.name+'创建增量通道'"
+              nzSubTitle="接下来请进入增量通道管理页面"
+      >
+          <div nz-result-extra>
+              <button nz-button nzType="primary" (click)="gotoManage()">进入</button>
+          </div>
+      </nz-result>`
 })
 export class IncrBuildStep3Component extends AppFormComponent implements AfterContentInit, AfterViewInit {
   @Output() nextStep = new EventEmitter<any>();
@@ -28,7 +38,7 @@ export class IncrBuildStep3Component extends AppFormComponent implements AfterCo
   @Input() dto: IndexIncrStatus;
   private currCollection: CurrentCollection;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
     super(tisService, route, modalService);
   }
 
@@ -55,5 +65,16 @@ export class IncrBuildStep3Component extends AppFormComponent implements AfterCo
   }
 
   cancelStep() {
+  }
+
+  gotoManage() {
+    // this.router.navigate(["."], {relativeTo: this.route});
+
+    IncrBuildComponent.getIncrStatusThenEnter(this, (incrStatus) => {
+      let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
+      if (k8sRCCreated) {
+        this.nextStep.emit(incrStatus);
+      }
+    });
   }
 }

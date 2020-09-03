@@ -388,7 +388,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 }
 
-class WSMessage {
+export class WSMessage {
   constructor(public logtype: string, public data?: any) {
 
   }

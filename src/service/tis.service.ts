@@ -42,7 +42,7 @@ export class TISService {
     , private notification: NzNotificationService) {
   }
 
-// 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
+  // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
   // 创建websocket
   public wsconnect(url: string): Subject<MessageEvent> {
     // if (!this.socket) {
@@ -56,7 +56,11 @@ export class TISService {
     let observable = Observable.create(
       (obs: Observer<MessageEvent>) => {
         ws.onmessage = obs.next.bind(obs);
-        ws.onerror = obs.error.bind(obs);
+        // ws.onerror = obs.error.bind(obs);
+  // TODO： 奇怪 这里接收不到onError的消息，这个后期需要查一下
+  //       ws.onerror = function () {
+  // console.log("error");
+  //       };
         ws.onclose = obs.complete.bind(obs);
         return ws.close.bind(ws);
       }

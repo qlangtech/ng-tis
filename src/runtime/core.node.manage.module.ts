@@ -5,8 +5,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TriggerDumpComponent} from './trigger_dump.component';
 
 
-
-
 // import {SolrCfgEditComponent} from '../corecfg/solrcfg.edit.component';
 
 import {CoreNodeRoutingModule} from './core.node.manage-routing.module';
@@ -56,6 +54,7 @@ import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
+import {IncrBuildStep4RunningTabBaseComponent} from "./incr.build.step4.running.tab-base.component";
 
 // import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
 // import { NzStepsModule } from 'ng-zorro-antd/steps';
@@ -70,14 +69,14 @@ import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
   id: 'coremanage',
   imports: [CommonModule, CoreNodeRoutingModule, FormsModule, NgbModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
-    , ChartsModule,  NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
+    , ChartsModule, NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
   ],
-  declarations: [ // AddAppFlowDirective,
-    TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent,
-      IndexQueryComponent, PojoComponent,
-    CorenodemanageComponent,  CorenodemanageIndexComponent,
+  declarations: [
+    TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent, IncrBuildStep4RunningTabBaseComponent,
+    IndexQueryComponent, PojoComponent,
+    CorenodemanageComponent, CorenodemanageIndexComponent,
     CopyOtherCoreComponent
-    ,  SyncConfigComponent
+    , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
     , IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent
     , IncrPodLogsStatusComponent
@@ -86,7 +85,7 @@ import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}
   ],
-  entryComponents: [ TriggerDumpComponent, PojoComponent,
+  entryComponents: [TriggerDumpComponent, PojoComponent,
     SyncConfigComponent,
     CopyOtherCoreComponent
     , MonitorComponent, MembershipComponent, IncrBuildStep0Component, IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent]

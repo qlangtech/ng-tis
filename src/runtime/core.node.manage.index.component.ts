@@ -2,51 +2,51 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {TISService} from '../service/tis.service';
 import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
-import {BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 
 @Component({
   template: `
-      <my-navigate [core]="app"></my-navigate>
+      <my-navigate [core]="this.currentApp"></my-navigate>
       <nz-layout class="main-layout">
           <nz-sider [nzWidth]="150" [nzTheme]="'light'">
-              <ul nz-menu nzMode="inline" >
+              <ul nz-menu nzMode="inline">
                   <li nz-menu-item>
-                      <a  routerLink="./">
+                      <a routerLink="./">
                           <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>主控台</a>
                   </li>
-                  <li nz-menu-item >
-                      <a  routerLink="./query">
+                  <li nz-menu-item>
+                      <a routerLink="./query">
                           <i class="fa fa-search fa-2x" aria-hidden="true"></i>查询</a>
                   </li>
-                  <li nz-menu-item >
-                      <a  routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
+                  <li nz-menu-item>
+                      <a routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
                   </li>
 
-                  <li nz-menu-item >
-                      <a  routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
+                  <li nz-menu-item>
+                      <a routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
                   </li>
 
-                  <li nz-menu-item >
-                      <a  routerLink="./incr_build">
+                  <li nz-menu-item>
+                      <a routerLink="./incr_build">
                           <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时通道</a>
                   </li>
 
-                  <li nz-menu-item >
-                      <a  (click)="gotoFullbuildView()"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
+                  <li nz-menu-item>
+                      <a (click)="gotoFullbuildView()"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
                   </li>
-                  <li nz-menu-item >
-                      <a  routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
-                  </li>
-
-                  <li nz-menu-item >
-                      <a  routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
+                  <li nz-menu-item>
+                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
                   </li>
 
-                  <li nz-menu-item >
-                      <a  routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
+                  <li nz-menu-item>
+                      <a routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
+                  </li>
+
+                  <li nz-menu-item>
+                      <a routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
                   </li>
               </ul>
           </nz-sider>
@@ -81,23 +81,30 @@ import {NzModalService} from "ng-zorro-antd";
       }
   `]
 })
-export class CorenodemanageIndexComponent extends BasicFormComponent implements OnInit {
-  app: CurrentCollection = new CurrentCollection(0, '');
+export class CorenodemanageIndexComponent extends AppFormComponent implements OnInit {
+  // app: CurrentCollection = new CurrentCollection(0, '');
 
 
-  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
+    super(tisService, route, modalService);
   }
 
-  ngOnInit(): void {
-    this.route.params
-      .subscribe((params: Params) => {
-        this.app = new CurrentCollection(0, params['name']);
-        this.currentApp = this.app;
-      });
-   // this.router.isActive()
-    // this.route.
+  protected initialize(app: CurrentCollection): void {
   }
+
+  // constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService) {
+  //   super(tisService, modalService);
+  // }
+
+  // ngOnInit(): void {
+  //   this.route.params
+  //     .subscribe((params: Params) => {
+  //       this.app = new CurrentCollection(0, params['name']);
+  //       this.currentApp = this.app;
+  //     });
+  //  // this.router.isActive()
+  //   // this.route.
+  // }
 
 // 控制页面上的 业务线选择是否要显示
   // get appSelectable(): boolean {

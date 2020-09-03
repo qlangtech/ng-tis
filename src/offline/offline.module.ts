@@ -24,7 +24,6 @@ import {TisCommonModule} from "../common/common.module";
 // import {SidebarModule} from 'ng-sidebar';
 
 import {NzButtonModule} from 'ng-zorro-antd/button';
-import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import {NzFormModule} from 'ng-zorro-antd/form';
 
@@ -66,7 +65,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     NzInputModule, NzDropDownModule, NzTableModule,  NzSwitchModule,
     FormsModule, NgbModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
-    TisCommonModule, NzButtonModule, NzDrawerModule, NzCascaderModule
+    TisCommonModule, NzButtonModule, NzCascaderModule
     , CommonModule, NzFormModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule
     , NzDividerModule, NzGridModule, NzCheckboxModule
   ],
