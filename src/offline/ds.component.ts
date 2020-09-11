@@ -5,7 +5,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+
 import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
@@ -134,7 +134,7 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
                               <tis-codemirror name="dumpSql"
                                               [ngModel]="selectedTable.selectSql"
                                               [size]="{width:800,height:300}"
-                                              [config]="{readOnly:true,lineWrapping:true }"></tis-codemirror>
+                                              [config]="{readOnly:true,lineWrapping:true,lineNumbers: false}"></tis-codemirror>
                           </nz-descriptions-item>
                       </nz-descriptions>
                   </div>
@@ -448,7 +448,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     dialog.afterClose.subscribe((r) => {
       if (r) {
         let db: DbPojo = Object.assign(new DbPojo(), r);
-       // console.log(db);
+        // console.log(db);
         if (db.facade) {
           this.facdeDb = db;
         } else {

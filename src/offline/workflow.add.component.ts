@@ -19,7 +19,7 @@ import {
 } from '../common/basic.form.component';
 
 import {TISService} from '../service/tis.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {BasicWFComponent, WorkflowComponent, Dataflow} from './workflow.component';
 //  @ts-ignore
 import {Draggable} from '@shopify/draggable';
@@ -275,8 +275,7 @@ export class WorkflowAddComponent extends BasicWFComponent
       s4() + '-' + s4() + s4() + s4();
   }
 
-  constructor(tisService: TISService, // public activeModal: NgbActiveModal,
-              modalService: NgbModal,
+  constructor(tisService: TISService, //
               private _componentFactoryResolver: ComponentFactoryResolver,
               router: Router,
               route: ActivatedRoute,

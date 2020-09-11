@@ -84,17 +84,6 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
       console.log("============");
       console.log(ip.viewContainerRef.element.nativeElement.innerHTML);
     })
-
-    // let e = jQuery(this.contentTempate.elementRef.nativeElement);
-    // e.find("input").on("change", function () {
-    //   console.log("kkkkkkkkkkkk");
-    // });
-    //
-    // e.html("oooooooo");
-
-    // e.find("input").on("change", function () {
-    //   console.log("kkkkkkkkkkkk");
-    // });
   }
 
   ngAfterViewInit(): void {
@@ -139,7 +128,7 @@ export class FormComponent implements AfterContentInit, OnInit {
   @Input() title: string;
   _fieldsErr: Item = Item.create([]);
   @Input() set fieldsErr(val: Item) {
-    console.log("fieldsErr");
+   // console.log("fieldsErr");
     this._fieldsErr = val;
     if (this.ipts) {
       this.ngAfterContentInit();
@@ -158,7 +147,7 @@ export class FormComponent implements AfterContentInit, OnInit {
   }
 
   ngAfterContentInit() {
-    console.log(this.ipts);
+   // console.log(this.ipts);
     let tplFields = this.ipts.toArray();
     tplFields.map((input) => {
       input.itemProp = this.fieldErr(input.name);

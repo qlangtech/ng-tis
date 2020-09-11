@@ -3,7 +3,7 @@ import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {NzModalService} from "ng-zorro-antd";
 
 export class TableAddStep extends BasicFormComponent {

@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {BaseMangeRoutingModule} from "./base.manage-routing.module";
@@ -26,7 +26,7 @@ import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 
 @NgModule({
   id: 'basemanage',
-  imports: [CommonModule, FormsModule, NgbModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
+  imports: [CommonModule, FormsModule,  BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
     ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent

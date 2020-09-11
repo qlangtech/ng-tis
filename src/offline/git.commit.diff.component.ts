@@ -4,7 +4,7 @@
 import {Component} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {NzModalService} from "ng-zorro-antd";
 
 /**
@@ -48,7 +48,7 @@ export class GitCommitDiffComponent extends BasicFormComponent {
   targetDiff: any;
 
   constructor(public tisService: TISService,
-              public activeModal: NgbActiveModal, modalService: NzModalService) {
+               modalService: NzModalService) {
     super(tisService, modalService);
   }
 
@@ -58,9 +58,9 @@ export class GitCommitDiffComponent extends BasicFormComponent {
 
     this.commits = this._info.commits;
     this.diffs = this._info.diffs;
-    console.log('--------------');
-    console.log(this.diffs);
-    console.log(this.diffs.length);
+    // console.log('--------------');
+    // console.log(this.diffs);
+    // console.log(this.diffs.length);
 
     for (let diff of this.diffs) {
       if (diff.newFile === true) {

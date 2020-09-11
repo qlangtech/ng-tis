@@ -3,7 +3,7 @@ import {TISService} from '../service/tis.service';
 import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 
@@ -13,39 +13,39 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
       <nz-layout class="main-layout">
           <nz-sider [nzWidth]="150" [nzTheme]="'light'">
               <ul nz-menu nzMode="inline">
-                  <li nz-menu-item>
-                      <a routerLink="./">
+                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>
+                      <a [routerLink]="['./']">
                           <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>主控台</a>
                   </li>
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./query">
                           <i class="fa fa-search fa-2x" aria-hidden="true"></i>查询</a>
                   </li>
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
                   </li>
 
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
                   </li>
 
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./incr_build">
                           <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时通道</a>
                   </li>
 
-                  <li nz-menu-item>
-                      <a (click)="gotoFullbuildView()"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
+                  <li nz-menu-item nzMatchRouter>
+                      <a routerLink="./build_history" (click)="gotoFullbuildView($event)"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
                   </li>
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
                   </li>
 
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
                   </li>
 
-                  <li nz-menu-item>
+                  <li nz-menu-item nzMatchRouter>
                       <a routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
                   </li>
               </ul>
@@ -74,6 +74,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
       .main-layout {
           height: 92vh;
+          clear: both;
       }
 
       nz-content {
@@ -92,7 +93,15 @@ export class CorenodemanageIndexComponent extends AppFormComponent implements On
   protected initialize(app: CurrentCollection): void {
   }
 
-  // constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService) {
+  // isSelected(url: string): boolean {
+  //   return this.router.isActive(url, true);
+  // }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+// constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService) {
   //   super(tisService, modalService);
   // }
 
@@ -112,10 +121,11 @@ export class CorenodemanageIndexComponent extends AppFormComponent implements On
   // }
 
 
-  gotoFullbuildView() {
+  gotoFullbuildView(e: MouseEvent) {
     let url = `/offline/datasource.ajax`;
     this.httpPost(url, 'action=offline_datasource_action&event_submit_do_get_workflowId=y').then((r) => {
       this.router.navigate(['./build_history', r.bizresult.workflowId], {relativeTo: this.route});
     });
+    e.stopPropagation();
   }
 }

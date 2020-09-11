@@ -1,6 +1,6 @@
 import {Component, OnInit, Input, ViewChild, ViewContainerRef, ContentChild, TemplateRef} from '@angular/core';
 import {TISService} from '../service/tis.service';
-import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+
 // import {ScriptService} from '../service/script.service';
 import {BasicEditComponent} from './basic.edit.component';
 import {EditorConfiguration} from "codemirror";
@@ -10,9 +10,6 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 export declare type TisResType = 'schema.xml' | 'solrconfig.xml';
-// import {AngularProfiler} from '@angular/platform-browser/src/browser/tools/common_tools';
-
-// http://stackoverflow.com/ /21311736/how-do-i-increase-modal-width-in-angular-ui-bootstrap
 // Schema编辑
 @Component({
   // templateUrl: '/runtime/jarcontent/schema.htm',
@@ -61,7 +58,7 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
   // @ContentChild(TemplateRef, {static: false})
   // contentTempate: TemplateRef<any>;
   constructor(private fb: FormBuilder,
-              tisService: TISService, modalService: NgbModal, nzmodalService: NzModalService
+              tisService: TISService, nzmodalService: NzModalService
     , private router: Router, route: ActivatedRoute, notification: NzNotificationService) {
     super(tisService, nzmodalService, route, notification);
   }

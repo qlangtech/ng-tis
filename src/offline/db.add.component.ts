@@ -6,7 +6,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 //  @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";

@@ -1,6 +1,6 @@
 import {TISService} from '../service/tis.service';
 import {Component, Injector, Input, OnInit} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NzModalService} from "ng-zorro-antd";
 
@@ -13,7 +13,7 @@ import {NzModalService} from "ng-zorro-antd";
     <fieldset [disabled]='formDisabled'>
       <div class="modal-header">
         <h4 class="modal-title">设置全局配置参数</h4>
-        <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <button type="button" class="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -49,7 +49,7 @@ export class GlobalUpdateParamComponent extends BasicFormComponent implements On
   rpidVal: number;
 
   constructor(tisService: TISService, modalService: NzModalService
-    , public activeModal: NgbActiveModal, private injector: Injector) {
+    , private injector: Injector) {
     super(tisService, modalService);
   }
 

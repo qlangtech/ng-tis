@@ -1,13 +1,8 @@
 import {Component, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
-
-import {NgbActiveModal, NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
-import {SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
-// import {SolrCfgEditComponent} from "../corecfg/solrcfg.edit.component";
 import {CompareEachOtherComponent} from "../corecfg/compare.eachother.component";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {Location} from "@angular/common";
 import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Pager} from "../common/pagination.component";
 
@@ -32,10 +27,8 @@ declare var jQuery: any;
               <thead>
               <tr>
                   <th width="100px">版本</th>
-                  <th width="200px">时间</th>
-                  <th width="100px">
-                      区别比较
-                  </th>
+                  <th width="200px">创建时间</th>
+                  <th width="100px">比较</th>
                   <th width="20%">日志</th>
                   <th>详细</th>
                   <th>parent</th>
@@ -44,13 +37,13 @@ declare var jQuery: any;
               <tbody id="snapshottablebody">
               <tr *ngFor=" let s of dataList.data" [class.checked]="isSelectedSnapshot(s.snId)" (mouseenter)="rowMouseEnter(s, true)" (mouseleave)="rowMouseEnter(s, false)">
                   <td align="right" class="snapshotid">
-                      <i *ngIf="isSelectedSnapshot(s.snId)" style="font-weight:900; font-size: x-large ; color:green;" nz-icon nzType="check" nzTheme="outline"></i>
+                      <i *ngIf="isSelectedSnapshot(s.snId)" style="font-weight:300; font-size: x-large ; color:green;" nz-icon nzType="check" nzTheme="outline"></i>
                       <span>{{s.snId}}</span>
                       <div *ngIf="this.mouseEnteredSnapshot && this.mouseEnteredSnapshot.snId === s.snId" class="control-bar">
                           <button nz-button nzType="primary" (click)="openSelectrevsion(s)">
                               <i nz-icon nzType="select" nzTheme="outline"></i>切换版本
-                          </button> &nbsp;
-                          <button id="btnCompare" nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
+                          </button>&nbsp;
+                          <button nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
                           <button nz-button (click)="doPushConfig2Engine()" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
                       </div>
                   </td>
@@ -59,6 +52,9 @@ declare var jQuery: any;
                       <input class="compare" type="checkbox"
                              [checked]="s.compareChecked" (click)="compareClick(s)"
                              name="comparesnapshotid" value="{{s.snId}}"/>
+                      <!--
+                                           <label name="comparesnapshotid" nz-checkbox [(ngModel)]="s.compareChecked" (click)="compareClick(s)" [nzValue]="s.snId"></label>
+                                           -->
                   </td>
                   <td>
                       <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
@@ -98,6 +94,7 @@ declare var jQuery: any;
           display: inline-block;
           width: 400px;
           text-align: left;
+          z-index: 100;
       }
 
       .snapshotid {

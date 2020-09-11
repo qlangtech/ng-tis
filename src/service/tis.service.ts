@@ -4,10 +4,10 @@ import 'rxjs/add/operator/toPromise';
 // import {Http, Headers, RequestOptionsArgs} from '@angular/http';
 
 
-// import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+//
 import {CurrentCollection} from '../common/basic.form.component';
 import {Observable, Observer, Subject} from "rxjs";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+//
 // import * as NProgress from "nprogress/nprogress";
 
 // @ts-ignore
@@ -38,7 +38,7 @@ export class TISService {
   private currApp: CurrentCollection;
 
   constructor(protected http: HttpClient
-    , private modalService: NgbModal
+    // , private modalService: NgbModal
     , private notification: NzNotificationService) {
   }
 

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';

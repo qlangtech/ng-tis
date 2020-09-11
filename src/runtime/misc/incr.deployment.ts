@@ -37,8 +37,15 @@ export interface IncrDeployment {
   creationTimestamp: number;
   dockerImage: string;
   envs: Map<string, string>;
+  pods: Array<K8sPodState>;
   memoryLimit: MemoryLimit;
   memoryRequest: MemoryRequest;
   replicaCount: number;
   status: Status;
+}
+
+export interface K8sPodState {
+  name: string;
+  phase: string;
+  startTime: string;
 }

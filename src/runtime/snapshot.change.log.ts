@@ -6,7 +6,7 @@ import {Component, OnInit} from '@angular/core';
 import { TISService} from '../service/tis.service';
 import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
 import {NzModalService} from "ng-zorro-antd";
@@ -46,7 +46,7 @@ import {NzModalService} from "ng-zorro-antd";
 export class SnapshotChangeLogComponent extends AppFormComponent {
   logs: any[] = [];
 
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NzModalService) {
+  constructor(tisService: TISService,  route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

@@ -3,7 +3,7 @@
  */
 import {Component, OnInit} from '@angular/core';
 import {TISService} from '../service/tis.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 // import {WorkflowAddComponent} from './workflow.add.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';

@@ -5,7 +5,7 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {TISService} from '../service/tis.service';
 // import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
@@ -37,7 +37,7 @@ export class PojoComponent extends AppFormComponent {
   //   this.code = e;
   // }
 
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, route: ActivatedRoute, modalService: NzModalService) {
+  constructor(tisService: TISService,  route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

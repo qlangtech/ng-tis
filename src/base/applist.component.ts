@@ -2,7 +2,7 @@ import {TISService} from '../service/tis.service';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd";
 

@@ -4,7 +4,7 @@
 import {Component} from '@angular/core';
 import {TISService} from '../service/tis.service';
 // import {ScriptService} from '../service/script.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd";
 

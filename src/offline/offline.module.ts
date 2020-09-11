@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DatasourceComponent} from "./ds.component";
@@ -63,7 +63,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     NzCollapseModule,
     NzTabsModule,
     NzInputModule, NzDropDownModule, NzTableModule,  NzSwitchModule,
-    FormsModule, NgbModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
+    FormsModule,  BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzCascaderModule
     , CommonModule, NzFormModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule

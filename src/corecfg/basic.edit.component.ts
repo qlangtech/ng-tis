@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
 import {TISService} from '../service/tis.service';
-import {NgbModal, ModalDismissReasons, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 

@@ -8,7 +8,7 @@
 //
 //
 // import {TISService} from "../service/tis.service";
-// // import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+// //
 // import {ScriptService} from "../service/script.service";
 // // import {BasiManageModule} from "../base/base.manage.module";
 // // import {CoreNodeManageModule} from "./core.node.manage.module";

@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {UserRoutingModule} from './user-routing.module';
 import {UserListComponent} from './user.list.component';
@@ -13,7 +12,7 @@ import {TisCommonModule} from '../common/common.module';
 
 @NgModule({
   id: 'usermanage',
-  imports: [CommonModule, FormsModule, NgbModule, UserRoutingModule, TisCommonModule],
+  imports: [CommonModule, FormsModule,  UserRoutingModule, TisCommonModule],
   declarations: [UserIndexComponent, UserListComponent, UserAddComponent
   ],
   entryComponents: [UserIndexComponent, UserListComponent, UserAddComponent,

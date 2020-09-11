@@ -9,7 +9,7 @@ import {Http, Headers, RequestOptionsArgs} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import {Headers, Http, RequestOptionsArgs} from '@angular/http';
 >>>>>>> aa80d33f314a3c626b6adb9fb2e0f8626159f9db
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {CurrentCollection} from '../common/basic.form.component';
 
 declare var TIS: any;

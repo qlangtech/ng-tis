@@ -1,7 +1,7 @@
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption, PluginName, PluginMeta} from "./tis.plugin";
@@ -42,8 +42,7 @@ import {Subscription} from "rxjs";
                       <div style="clear: both"></div>
                       <item-prop-val [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
                   </div>
-
-                  <button nz-button nz-dropdown [nzDropdownMenu]="menu" [nzDisabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
+                  <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
                           <li nz-menu-item *ngFor="let d of h.descriptorList">

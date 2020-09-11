@@ -9,7 +9,7 @@ import zh from '@angular/common/locales/zh';
 import {AppComponent} from "./app.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TISService} from "../service/tis.service";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+//
 // import {ScriptService} from "../service/script.service";
 import {TisCommonModule} from "../common/common.module";
 import {CorenodemanageComponent} from "./corenodemanage.component";
@@ -37,7 +37,7 @@ registerLocaleData(zh);
 // router 的配置
 @NgModule({
   id: 'tisRoot',
-  imports: [BrowserModule, FormsModule, NgbModule, TisCommonModule,
+  imports: [BrowserModule, FormsModule, TisCommonModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([
       {  // 索引一览

@@ -3,7 +3,7 @@ import {TISService} from '../service/tis.service';
 import {TableAddStep} from './table.add.step';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {TabColReflect, TablePojo} from './table.add.component';
 import {FormComponent} from "../common/form.component";
 import {NzModalService} from "ng-zorro-antd";

@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {NzModalService} from "ng-zorro-antd";
+import {Item} from "../common/tis.plugin";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -11,60 +11,37 @@ import {NzModalService} from "ng-zorro-antd";
   // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createIndex" [step]="0"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <tis-header-tool>
-              <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>
-          </tis-header-tool>
-      </tis-page-header>
-      <form #form method="post">
-          <fieldset [disabled]='formDisabled'>
+      <tis-form [fieldsErr]="errorItem">
+          <tis-page-header [showBreadcrumb]="false" [result]="result">
+              <tis-header-tool>
+                  <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>
+              </tis-header-tool>
+          </tis-page-header>
+          <tis-ipt #indexName title="索引名称" name="projectName" require="true">
+              <nz-input-group nzAddOnBefore="search4">
+                  <input required type="text" [id]="indexName.name" nz-input [(ngModel)]="model.name" name="name"/>
+              </nz-input-group>
+          </tis-ipt>
 
-              <div class="form-group row">
-                  <label for="name-input" class="col-2 col-form-label">索引名称</label>
-                  <div class="col-10">
-                      <nz-input-group nzAddOnBefore="search4">
-                          <input required type="text" id="name-input" nz-input [(ngModel)]="model.name" name="name"/>
-                      </nz-input-group>
-                  </div>
-              </div>
-              <!--
-               <div class="form-group row">
-                 <label for="inputtpl" class="col-2 col-form-label">配置模板</label>
-                 <div class="col-10">
-                   <select id="inputtpl" name="tisTpl" [(ngModel)]="model.tisTpl" class="form-control">
-                     <option value="">请选择</option>
-                     <option *ngFor="let p of tplenum" value="{{p.value}}">{{p.name}}</option>
-                   </select>
-                 </div>
-               </div>
-               -->
-              <div class="form-group row">
-                  <label for="input_workflow" class="col-2 col-form-label">数据流</label>
-                  <div class="col-10">
-                      <select name="workflow" class="form-control" [(ngModel)]="model.workflow">
-                          <option value="">请选择</option>
-                          <option *ngFor="let p of usableWorkflow" value="{{p.id+':'+p.name}}">{{p.name}}</option>
-                      </select>
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="inputDepartment" class="col-2 col-form-label">所属部门</label>
-                  <div class="col-10">
-                      <select name="dptId" class="form-control" [(ngModel)]="model.dptId">
-                          <option value="-1">请选择</option>
-                          <option *ngFor="let pp of model.dpts" value="{{pp.value}}">{{pp.name}}</option>
-                      </select>
-                  </div>
-              </div>
-              <div class="form-group row">
-                  <label for="inputRecept" class="col-2 col-form-label">接口人</label>
-                  <div class="col-10">
-                      <input type="text" class="form-control" id="inputRecept" [(ngModel)]="model.recept" name="recept"
-                             placeholder="小明">
-                  </div>
-              </div>
-          </fieldset>
-      </form>
+          <tis-ipt #workflow title="数据流" name="workflow" require="true">
+              <nz-select name="workflow" [(ngModel)]="model.workflow">
+                  <nz-option nzLabel="请选择" ></nz-option>
+                  <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name" ></nz-option>
+              </nz-select>
+          </tis-ipt>
+
+          <tis-ipt #dptId title="所属部门" name="dptId" require="true">
+              <nz-select name="dptId" class="form-control" [(ngModel)]="model.dptId">
+                  <nz-option [nzValue]="'-1'" nzLabel="请选择"></nz-option>
+                  <nz-option *ngFor="let pp of model.dpts" [nzValue]="pp.value"  [nzLabel]="pp.name" ></nz-option>
+              </nz-select>
+          </tis-ipt>
+
+          <tis-ipt #recept title="接口人" name="recept" require="true">
+              <input  nz-input [id]="recept.name" [(ngModel)]="model.recept" name="recept"
+                     placeholder="小明">
+          </tis-ipt>
+      </tis-form>
       <!-- Content here -->
   `
   , styles: [
@@ -73,7 +50,7 @@ import {NzModalService} from "ng-zorro-antd";
   ]
 })
 export class AddAppFormComponent extends BasicFormComponent implements OnInit {
-
+  errorItem: Item = Item.create([]);
   // model = new Application(
   //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
   // );
@@ -116,11 +93,12 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
     this.jsonPost('/runtime/addapp.ajax?action=add_app_action&emethod=validate_app_form'
       , dto.appform)
       .then((r) => {
+        this.processResult(r);
         if (r.success) {
           // console.log(dto);
           this.nextStep.emit(dto);
         } else {
-          this.processResult(r);
+          this.errorItem = Item.processFieldsErr(r);
         }
       });
   }

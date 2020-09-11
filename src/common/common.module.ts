@@ -1,8 +1,8 @@
 import {NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 // import {HttpModule, JsonpModule} from "@angular/http";
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {DateFormatPipe} from "../common/date.format.pipe";
+
+import {DateFormatPipe, TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {PaginationComponent, TdContentDirective, ThDirective, TisColumn} from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
@@ -69,6 +69,7 @@ import {NzBadgeModule} from 'ng-zorro-antd/badge';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
 import {NzResultModule} from 'ng-zorro-antd/result';
+import {NzProgressModule} from 'ng-zorro-antd/progress';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -81,21 +82,21 @@ import {NzResultModule} from 'ng-zorro-antd/result';
     NgTerminalModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
-    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, NgbModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
+    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
   declarations: [
     ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    DateFormatPipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    DateFormatPipe, TimeConsumePipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent,
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+  exports: [NzProgressModule, DateFormatPipe, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule,
-    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, DateFormatPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
+    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule],
   entryComponents: [CompareEachOtherComponent],
