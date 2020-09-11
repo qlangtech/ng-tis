@@ -1,11 +1,9 @@
 import {Component} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd";
-
-// import 'bootstrap4';
 
 
 @Component({

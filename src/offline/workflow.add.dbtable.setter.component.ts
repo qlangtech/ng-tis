@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {BasicSideBar, DumpTable} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 
 
 /*
@@ -62,7 +62,7 @@ export class WorkflowAddDbtableSetterComponent
   private dto: DumpTable;
   sql = 'select * from usertable;';
 
-  constructor(tisService: TISService, // public activeModal: NgbActiveModal,
+  constructor(tisService: TISService, //
               modalService: NzModalService) {
     super(tisService, modalService);
   }

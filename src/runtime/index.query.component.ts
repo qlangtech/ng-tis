@@ -2,7 +2,7 @@ import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
 import {TisResponseResult, TISService} from "../service/tis.service";
 import {EditorConfiguration} from "codemirror";
 import {BasicFormComponent} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {HttpParams} from "@angular/common/http";
 //  @ts-ignore
 import * as $ from 'jquery';

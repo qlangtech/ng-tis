@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {TISService} from "../service/tis.service";
-import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd";
 
@@ -10,8 +10,7 @@ import {NzModalService} from "ng-zorro-antd";
       <fieldset>
           <div class="modal-header">
               <h4 class="modal-title">触发全量索引构建</h4>
-              <button type="button" class="close" aria-label="Close"
-                      (click)="activeModal.dismiss('Cross click')">
+              <button type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
@@ -81,7 +80,7 @@ export class TriggerDumpComponent extends BasicFormComponent {
   iptUserPoint2 = '';
   iptUserPoint1 = '';
 
-  constructor(tisService: TISService, modalService: NzModalService, public activeModal: NgbActiveModal) {
+  constructor(tisService: TISService, modalService: NzModalService, ) {
     super(tisService, modalService);
   }
 

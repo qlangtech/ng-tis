@@ -1,16 +1,13 @@
 import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ChartDataSets, ChartOptions} from "chart.js";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {WSMessage} from "./core.build.progress.component";
-import {NgTerminal} from "ng-terminal";
-
+import {K8sPodState} from "./misc/incr.deployment";
 
 @Component({
   template: `
@@ -18,6 +15,11 @@ import {NgTerminal} from "ng-terminal";
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="基本">
                   <ng-template nz-tab>
+                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>
+                      <ng-template #errorTpl>
+                          增量处理节点启动有误
+                          <button nz-button nzType="link" (click)="tabSelectIndex=2">查看启动日志</button>
+                      </ng-template>
                       <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>
                   </ng-template>
               </nz-tab>
@@ -48,10 +50,30 @@ import {NgTerminal} from "ng-terminal";
                   <nz-descriptions nzTitle="环境变量" nzBordered>
                       <nz-descriptions-item *ngFor=" let e of  dto.incrDeployment.envs | keyvalue" [nzTitle]="e.key">{{e.value}}</nz-descriptions-item>
                   </nz-descriptions>
+
+                  <h4 class="ant-descriptions-title pods">Pods</h4>
+                  <nz-table #pods nzSize="small" nzBordered="true" nzShowPagination="false" [nzData]="this?.dto.incrDeployment.pods">
+                      <thead>
+                      <tr>
+                          <th width="20%">名称</th>
+                          <th>状态</th>
+                          <th>创建时间</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let pod of pods.data">
+                          <td>{{pod.name}}</td>
+                          <td>
+                              <nz-tag [nzColor]="'blue'"> {{pod.phase}}</nz-tag>
+                          </td>
+                          <td>{{pod.startTime | date:'yyyy/MM/dd HH:mm:ss'}}</td>
+                      </tr>
+                      </tbody>
+                  </nz-table>
               </nz-tab>
               <nz-tab nzTitle="日志">
                   <ng-template nz-tab>
-                      <incr-pod-logs-status [msgSubject]="this.msgSubject"></incr-pod-logs-status>
+                      <incr-pod-logs-status [incrStatus]="this.dto" [msgSubject]="this.msgSubject"></incr-pod-logs-status>
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="操作">
@@ -83,6 +105,10 @@ import {NgTerminal} from "ng-terminal";
   `,
   styles: [
       `
+          .pods {
+              margin-top: 12px;
+          }
+
           nz-descriptions {
               margin-top: 15px;
           }
@@ -140,7 +166,13 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     this.route.fragment.subscribe((r) => {
       if (r === 'podlog') {
         this.tabSelectIndex = 2;
-        this.startMonitorMqTagsStatus('incrdeploy-change');
+
+        let firstPod = this.dto.getFirstPod();
+        if (firstPod) {
+          this.startMonitorMqTagsStatus('incrdeploy-change:' + firstPod.name);
+        } else {
+          throw  new Error("have not found any pod");
+        }
       } else {
         this.startMonitorMqTagsStatus('mq_tags_status');
       }

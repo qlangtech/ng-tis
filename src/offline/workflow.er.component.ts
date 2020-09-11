@@ -4,7 +4,7 @@ import {
   // tslint:disable-next-line:no-unused-variable
 } from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 // @ts-ignore
 import * as $ from 'jquery';
 

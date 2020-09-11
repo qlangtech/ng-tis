@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, EventEmitter, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
 
@@ -16,7 +16,7 @@ import {NzModalService} from "ng-zorro-antd";
               [nzNotFoundContent]="contentTpl"
       >
           <ng-template #contentTpl>
-              <button class="btn btn-primary" (click)="createIncrSyncChannal()">创建增量通道</button>
+              <button nz-button nzType="primary" (click)="createIncrSyncChannal()">创建增量通道</button>
           </ng-template>
       </nz-empty>
 </nz-spin>

@@ -1,7 +1,7 @@
 import {AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { BasicSideBar} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 
 //  @ts-ignore
 // import {} from 'ng-sidebar';
@@ -79,7 +79,7 @@ export class WorkflowAddUnionComponent
   listOfOption: Array<{ label: string; value: string }> = [];
   listOfTagOptions: any[] = [];
 
-  constructor(tisService: TISService, // public activeModal: NgbActiveModal,
+  constructor(tisService: TISService, //
               modalService: NzModalService) {
     super(tisService, modalService);
   }

@@ -1,6 +1,6 @@
 import {TISService} from '../service/tis.service';
 import {Component} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NzModalService} from "ng-zorro-antd";
 
@@ -14,7 +14,7 @@ declare var jQuery: any;
       <fieldset [disabled]='formDisabled'>
           <div class="modal-header">
               <h4 class="modal-title">添加全局配置参数</h4>
-              <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+              <button type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
               </button>
           </div>
@@ -56,7 +56,7 @@ declare var jQuery: any;
   `
 })
 export class AddGlobalParamComponent extends BasicFormComponent {
-  constructor(tisService: TISService, public activeModal: NgbActiveModal, modalService: NzModalService) {
+  constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 

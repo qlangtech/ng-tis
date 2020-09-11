@@ -1,7 +1,7 @@
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute} from "@angular/router";
 import {IndexIncrStatus} from "./incr.build.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -35,24 +35,28 @@ import {NzModalService} from "ng-zorro-antd";
                   <nz-form-item>
                       <nz-form-label [nzSpan]="2">CPU</nz-form-label>
                       <nz-form-control>
-                          <div style="display: flex">
-                              <div style="flex: 1">
-                                  <nz-input-group nzAddOnBefore="Request" nzCompact>
-                                      <nz-input-number name="cuprequest" formControlName="cuprequest" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                          <div class="resource-spec">
+                              <div>
+                                  <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="cpuRequestTpl">
+                                      <nz-input-number name="cuprequest" class="input-number" formControlName="cuprequest" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                                  </nz-input-group>
+                                  <ng-template #cpuRequestTpl>
                                       <nz-select formControlName="cuprequestunit">
                                           <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
                                           <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
                                       </nz-select>
-                                  </nz-input-group>
+                                  </ng-template>
                               </div>
-                              <div style="flex: 1">
-                                  <nz-input-group nzAddOnBefore="Limit" nzCompact>
-                                      <nz-input-number formControlName="cuplimit" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                              <div>
+                                  <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="cpuLimitTpl">
+                                      <nz-input-number formControlName="cuplimit" class="input-number" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                                  </nz-input-group>
+                                  <ng-template #cpuLimitTpl>
                                       <nz-select formControlName="cuplimitunit">
                                           <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
                                           <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
                                       </nz-select>
-                                  </nz-input-group>
+                                  </ng-template>
                               </div>
                           </div>
                       </nz-form-control>
@@ -61,10 +65,10 @@ import {NzModalService} from "ng-zorro-antd";
                   <nz-form-item>
                       <nz-form-label [nzSpan]="2">Memory</nz-form-label>
                       <nz-form-control>
-                          <div style="display:flex">
-                              <div style="margin-right: 30px;">
+                          <div class="resource-spec">
+                              <div>
                                   <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="memoryrequestTpl">
-                                      <nz-input-number formControlName="memoryrequest" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                                      <nz-input-number formControlName="memoryrequest" class="input-number" [nzMin]="1" [nzStep]="1"></nz-input-number>
                                   </nz-input-group>
                                   <ng-template #memoryrequestTpl>
                                       <nz-select formControlName="memoryrequestunit">
@@ -75,7 +79,7 @@ import {NzModalService} from "ng-zorro-antd";
                               </div>
                               <div>
                                   <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="memorylimitTpl">
-                                      <nz-input-number formControlName="memorylimit" [nzMin]="1" [nzStep]="1"></nz-input-number>
+                                      <nz-input-number formControlName="memorylimit" class="input-number" [nzMin]="1" [nzStep]="1"></nz-input-number>
                                   </nz-input-group>
                                   <ng-template #memorylimitTpl>
                                       <nz-select formControlName="memorylimitunit">
@@ -94,6 +98,20 @@ import {NzModalService} from "ng-zorro-antd";
       </nz-collapse>
   `,
   styles: [`
+
+      .resource-spec {
+          display: flex;
+      }
+
+      .resource-spec div{
+          flex: 1;
+          margin-right: 20px;
+      }
+
+      .input-number {
+          width: 100%;
+      }
+
       .spec-form {
           max-width: 800px
       }

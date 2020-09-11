@@ -15,7 +15,7 @@ import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {ActivatedRoute} from "@angular/router";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../service/tis.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {NzModalService} from "ng-zorro-antd";
 
 @Component({

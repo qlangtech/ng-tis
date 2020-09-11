@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
 import {IndexIncrStatus} from "./incr.build.component";

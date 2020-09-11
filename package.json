@@ -38,11 +38,11 @@
     "@angular/platform-browser-dynamic": "^9.0.0",
     "@angular/router": "^9.0.0",
     "@antv/g6": "3.0.4",
-    "@ng-bootstrap/ng-bootstrap": "^5.1.0",
+
+
     "@shopify/draggable": "^1.0.0-beta.8",
     "angular-2-local-storage": "3.0.2",
     "angular-in-memory-web-api": "~0.9.0",
-    "bootstrap": "^4.3.1",
     "chart.js": "^2.9.3",
     "codemirror": "^5.48.0",
     "core-js": "^2.4.1",
@@ -51,7 +51,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "ng-chartjs": "^0.1.2",
-    "ng-terminal": "^2.2.0",
+    "ng-terminal": "^2.4.0",
     "ng-zorro-antd": "^9.3.0",
     "ng2-charts": "^2.2.4",
     "nprogress": "^0.2.0",

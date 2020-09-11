@@ -1,22 +1,24 @@
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TISService} from '../service/tis.service';
 // import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
+import {LocalStorageService} from "angular-2-local-storage";
+import {NavigateBarComponent} from "./navigate.bar.component";
+import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 
 @Component({
   template: `
-      <div id="backgroundText" (dblclick)="backgroupDbClick($event)">TIS</div>
       <my-navigate></my-navigate>
-      <nz-layout>
-          <nz-content>
-              <div id="main-entry">
+      <nz-layout style="overflow-x: hidden">
+          <nz-layout>
+              <nz-content style=" opacity: 0.8;">
                   <div nz-row [nzGutter]="8">
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="gotoIndexList()">
@@ -28,14 +30,14 @@ import {EditorConfiguration} from "codemirror";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/wf')">
                               <div class="tis-card-content">
-                                  <h1>数据流</h1>
+                                  <h1><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/ds')">
                               <div class="tis-card-content">
-                                  <h1>数据源</h1>
+                                  <h1><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
                               </div>
                           </nz-card>
                       </div>
@@ -63,38 +65,46 @@ import {EditorConfiguration} from "codemirror";
                           </nz-card>
                       </div>
                   </div>
-              </div>
-          </nz-content>
-          <nz-sider [nzWidth]="400">
-              <nz-list [nzDataSource]="data" nzBordered [nzRenderItem]="item" [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex">
-                  <ng-template #item let-item>
-                      <nz-list-item>
-                          <nz-list-item-meta
-                                  [nzTitle]="nzTitle"
-                                  nzDescription="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                          >
-                              <ng-template #nzTitle>
-                                  <a href="https://ng.ant.design">{{ item.title }}</a>
-                              </ng-template>
-                          </nz-list-item-meta>
+              </nz-content>
+              <nz-sider [nzWidth]="400">
+                  <nz-list [nzDataSource]="_latestSelected" nzBordered [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex">
+                      <nz-list-item *ngFor="let item of _latestSelected">
+                          <span nz-typography><mark>{{item}}</mark></span>
+                          <button nz-button nzType="link" (click)="enterIndex(item)">进入</button>
                       </nz-list-item>
+                  </nz-list>
+                  <ng-template #recentusedindex>
+                      <nz-page-header class="recent-using-tool" [nzGhost]="false">
+                          <nz-page-header-title>最近使用</nz-page-header-title>
+                          <nz-page-header-extra>
+                              <button nz-button (click)="gotoAppAdd()" nzType="primary" [nzSize]="'small'">添加</button>
+                          </nz-page-header-extra>
+                      </nz-page-header>
                   </ng-template>
-              </nz-list>
-              <ng-template #recentusedindex>
-                  <div>
-                      <div style="float: right">
-                          <button nz-button nzType="primary" [nzSize]="'small'">添加</button>
-                      </div>
-                      <div style="margin-top: 3px;">最近使用</div>
-                  </div>
-                  <div style="clear: both"></div>
-              </ng-template>
-          </nz-sider>
+              </nz-sider>
+          </nz-layout>
+          <nz-footer> <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button></nz-footer>
       </nz-layout>
-
+      <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司介绍" (nzOnClose)="companyIntrShow=false">
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+      </nz-drawer>
   `,
   styles: [
       `
+          nz-footer {
+              text-align: center;
+              position: fixed;
+              bottom: 0px;
+              width: 100%;
+          }
+
+          .recent-using-tool {
+              padding: 0px;
+              background: #e3e3e3;
+          }
+
           nz-content {
               min-height: 500px;
           }
@@ -111,13 +121,13 @@ import {EditorConfiguration} from "codemirror";
               padding: 10px;
           }
 
-          #main-entry h1 {
+          .tis-card-content h1 {
               text-align: center;
               position: relative;
               top: 50%;
               height: 30px;
               margin-top: -30px;
-              color: #767676;
+              #color: #767676;
           }
 
           nz-sider {
@@ -127,7 +137,7 @@ import {EditorConfiguration} from "codemirror";
           #backgroundText {
               font-size: 4200%;
               font-family: Arial Black, 黑体;
-              color: rgba(255, 0, 0, 0.13);
+              color: #ded0c4;
               position: absolute;
               top: 0px;
               left: 20%;
@@ -145,11 +155,17 @@ import {EditorConfiguration} from "codemirror";
     `
   ]
 })
-export class RootWelcomeComponent {
-  data: any[] = [];
+export class RootWelcomeComponent implements OnInit {
+  _latestSelected: string[] = [];
+  companyIntrShow = false;
 
+  constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService) {
+  }
 
-  constructor(private r: Router, private route: ActivatedRoute) {
+  ngOnInit(): void {
+
+    let popularSelected: LatestSelectedIndex = NavigateBarComponent.popularSelectedIndex(this._localStorageService);
+    this._latestSelected = popularSelected.popularLatestSelected;
   }
 
   backgroupDbClick(event: MouseEvent) {
@@ -159,7 +175,15 @@ export class RootWelcomeComponent {
     this.routerTo('/base/applist');
   }
 
-   routerTo(path: string) {
+  routerTo(path: string) {
     this.r.navigate([path]);
+  }
+
+  gotoAppAdd() {
+    this.routerTo('/base/appadd');
+  }
+
+  enterIndex(item: string) {
+    this.r.navigate(['/c', item]);
   }
 }

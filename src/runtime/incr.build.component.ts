@@ -1,7 +1,7 @@
 import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
@@ -14,7 +14,7 @@ import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.compone
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
-import {IncrDeployment} from "./misc/incr.deployment";
+import {IncrDeployment, K8sPodState} from "./misc/incr.deployment";
 
 
 @Component({
@@ -30,18 +30,18 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
   private multiViewDAG: MultiViewDAG;
 
-
-  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void)) {
+  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
     basicForm.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=core_action&emethod=get_incr_status')
+      , `action=core_action&emethod=get_incr_status&cache=${cache}`)
       .then((r) => {
         if (r.success) {
           // r.bizresult.incrScriptCreated;
-          let incrStatus: IndexIncrStatus = r.bizresult;
+          let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
           hander(incrStatus);
         }
       }); // incrScriptMainFileContent
   }
+
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver, private _iconService: NzIconService) {
@@ -110,6 +110,21 @@ export class IndexIncrStatus {
   public incrDeployment: IncrDeployment;
 
   public incrProcess: IncrProcess;
+
+  /**
+   * 增量处理节点启动有异常
+   */
+  public get incrProcessLaunchHasError(): boolean {
+    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.incrDeployment && !!this.incrDeployment.status && this.incrDeployment.status.readyReplicas > 0;
+  }
+
+  public getFirstPod(): K8sPodState {
+    for (let i = 0; i < this.incrDeployment.pods.length; i++) {
+      return this.incrDeployment.pods[i];
+      break;
+    }
+    return null;
+  }
 }
 
 export interface IncrProcess {

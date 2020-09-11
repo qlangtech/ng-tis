@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";

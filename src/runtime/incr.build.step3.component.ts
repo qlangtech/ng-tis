@@ -1,9 +1,8 @@
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgTerminal} from "ng-terminal";
 import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
 import {NzModalService} from "ng-zorro-antd";
 

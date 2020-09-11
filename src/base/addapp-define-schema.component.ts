@@ -10,7 +10,6 @@ import {TISService} from '../service/tis.service';
 import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from './schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {AppDesc, ConfirmDTO, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from './addapp-pojo';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NzModalService} from "ng-zorro-antd";
 // import {eventNames} from "cluster";
 // import {Application, Crontab}    from '../index/application';

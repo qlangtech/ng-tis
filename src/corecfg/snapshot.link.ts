@@ -3,7 +3,7 @@
  */
 import {Component, OnInit, Input} from '@angular/core';
 import {SchemaXmlEditComponent, SchemaEditVisualizingModelComponent} from "./schema-xml-edit.component";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+
 // import {SolrCfgEditComponent} from "./solrcfg.edit.component";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../service/tis.service";

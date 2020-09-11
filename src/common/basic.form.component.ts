@@ -1,7 +1,7 @@
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Input, OnInit, Optional, Output, Type} from '@angular/core';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+
 // import JQuery from 'jquery';
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
@@ -218,7 +218,7 @@ export class SideBarToolBar extends BasicFormComponent {
   @Output() delete = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NgbModal, ngModalService: NzModalService) {
+  constructor(tisService: TISService, ngModalService: NzModalService) {
     super(tisService, ngModalService);
   }
 

@@ -7,7 +7,7 @@ import {TisResponseResult, TISService} from '../service/tis.service';
 import {TableAddStep} from './table.add.step';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {TablePojo} from './table.add.component';
 import {NzModalService} from "ng-zorro-antd";
 

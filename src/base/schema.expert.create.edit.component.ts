@@ -4,7 +4,7 @@ import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {Subject} from 'rxjs/Subject';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 import {SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
@@ -142,11 +142,12 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                 [nzData]="fields" [nzShowPagination]="false" [nzFrontPagination]="false" [nzSize]="'small'">
           <thead>
           <tr>
-              <th nzWidth="50px">#</th>
+              <th nzWidth="80px">#</th>
+              <th nzWidth="60px"></th>
               <th>
-                  <span nz-tooltip nzTooltipTitle="对应数据源中的列名"  nzTooltipPlacement="top"  >字段名称</span>
+                  <span nz-tooltip nzTooltipTitle="对应数据源中的列名" nzTooltipPlacement="top">字段名称</span>
               </th>
-              <th><span data-placement="top"
+              <th nzWidth="400px"><span data-placement="top"
                         data-toggle="tooltip">字段类型</span></th>
               <th>可查询</th>
               <th>存储</th>
@@ -167,12 +168,12 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                     -->
                   </td>
                   <td>
+                      <i *ngIf="f.uniqueKey" class="fa fa-key" aria-hidden="true"></i>
+                      <i *ngIf="f.sharedKey" class="fa fa-share-alt"
+                         aria-hidden="true"></i>
+                  </td>
+                  <td>
                       <div [class.has-danger]="f.hasError">
-                          <div *ngIf="f.uniqueKey" class="input-group-addon"><i class="fa fa-key" aria-hidden="true"></i>
-                          </div>
-                          <div *ngIf="f.sharedKey" class="input-group-addon"><i class="fa fa-share-alt"
-                                                                                aria-hidden="true"></i></div>
-
                           <div class="editable-cell" *ngIf="this.editField !== f && f.name !== null; else editTpl">
                               <div class="editable-cell-value-wrap" (click)="startEdit(f, $event)">
                                   {{f.name}}
@@ -234,17 +235,13 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
               </tr>
           </ng-container>
           </tbody>
-          <tfoot>
-          <tr>
-              <th colspan="12" class="clearfix"></th>
-          </tr>
-          </tfoot>
       </nz-table>
   `,
   styles: [
       `
           .type-select {
-              width: 30%;
+              width: 40%;
+              margin-right: 4px;
           }
 
           .editable-cell {
@@ -268,7 +265,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
 
 
   widthConfig = ['50px', '250px', '200px', '100px', '100px', '100px', '200px'];
-  scrollConfig = {x: '1000px', y:  '750px'};
+  scrollConfig = {x: '1150px', y: '700px'};
   private fieldtypesArray: Array<SchemaFieldType>;
   private fieldtypes: Map<string, SchemaFieldType> = new Map();
   fields: SchemaField[];
@@ -277,6 +274,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
   schemaXmlContent: string;
 
   editField: SchemaField | null;
+
   constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
     super(tisService, modalService, route);
   }

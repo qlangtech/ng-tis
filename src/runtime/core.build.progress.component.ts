@@ -2,7 +2,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {ActivatedRoute, Params} from "@angular/router";
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 
 import {NgTerminal} from "ng-terminal";
 import {NzDrawerRef, NzDrawerService, NzModalService} from "ng-zorro-antd";
@@ -14,21 +14,22 @@ import {map} from 'rxjs/operators';
   selector: 'tis-progress',
   template: `
       <dd class="progress">
-          <div *ngIf="t.success" class="progress-bar bg-success" role="progressbar" aria-valuenow="100"
-               style="width: 100%" aria-valuemin="0" aria-valuemax="100">100%
-          </div>
-          <div *ngIf="!t.waiting && !t.complete" class="progress-bar" role="progressbar" [attr.aria-valuenow]="t.percent"
-               [ngStyle]="{'width': t.percent+'%'}" aria-valuemin="0" aria-valuemax="100">
-              {{t.percent}}%({{t.processed}}/{{t.all}})
-          </div>
-          <div *ngIf="t.waiting" class="progress-bar bg-warning" role="progressbar"
-               style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">等待
-          </div>
-          <div *ngIf="t.faild" class="progress-bar bg-danger" role="progressbar"
-               style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">失败
-          </div>
+          <nz-progress *ngIf="t.success" [nzPercent]="100"></nz-progress>
+          <nz-progress *ngIf="!t.waiting && !t.complete" [nzPercent]="t.percent">{{t.percent}}%({{t.processed}}/{{t.all}})</nz-progress>
+          <div *ngIf="t.waiting" class="waiting" ></div>
+          <nz-progress *ngIf="t.faild" [nzPercent]="100" nzStatus="exception"></nz-progress>
       </dd>
-  `
+  `,
+  styles: [
+      `
+          .waiting {
+              background-color: #d6ca64;
+              border-radius: 4px;
+              height: 8px;
+              width: 90%;
+          }
+    `
+  ]
 })
 export class ProgressComponent {
   t: any = {};
@@ -78,12 +79,11 @@ export class ProgressTitleComponent {
                   <nz-descriptions-item nzTitle="状态">
                       <i [ngClass]="progressStat.stateClass" [ngStyle]="{'color':progressStat.stateColor}" aria-hidden="true"></i>
                       <button nz-button nzType="link" (click)="openReltimeLog()">{{progressStat.literalState}}</button>
+                      <span style="color: #000088;font-size: 24px"><i style="color: #bbb8db">耗时:</i>{{consuming | timeconsume }}</span>
                   </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="开始时间">
-                      {{progressStat.createTime| dateformat}}
-                  </nz-descriptions-item>
-                  <nz-descriptions-item nzTitle="耗时">
-                      {{consuming | date:'HH:mm:ss'}}
+                      {{progressStat.startTime | date:'yyyy/MM/dd HH:mm:ss'}}
+
                   </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="阶段">
                       <nz-tag [nzColor]="'blue'">{{progressStat.startPhase}}</nz-tag>
@@ -163,7 +163,6 @@ export class ProgressTitleComponent {
   styles: [
       `
           .stat-header {
-              margin-left: 15px;
               margin-bottom: 10px;
           }
 
@@ -187,6 +186,7 @@ export class ProgressTitleComponent {
 export class BuildProgressComponent extends AppFormComponent implements AfterViewInit, OnDestroy {
   // 运行耗时
   consuming = 0;
+  consumingTimer: any;
   @ViewChild('termTemplate', {static: false}) termTemplate: TemplateRef<{
     $implicit: { value: string };
     drawerRef: NzDrawerRef<string>;
@@ -332,10 +332,18 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
       switch (response.logtype) {
         case "stat":
           this.progressStat = Object.assign(new ProgressStat(), response.data);
-          this.consuming = (Date.now() - this.progressStat.createTime);
-          setInterval(() => {
-            this.consuming += 1000;
-          }, 1000);
+          // let now = Date.now();
+          // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
+          this.consuming = this.progressStat.consumingTime;
+          // 是否在执行中
+          if (this.progressStat.state === 2) {
+            this.consumingTimer = setInterval(() => {
+              this.consuming += 1000;
+            }, 1000);
+          } else if (this.consumingTimer) {
+            // console.log("clearInterval");
+            clearInterval(this.consumingTimer);
+          }
           break;
         case "build_status_metrics":
           let status = response.data;
@@ -416,11 +424,17 @@ class ProgressStat {
   opTime: number; // 1594609012000
   startPhase: string; // "数据导出"
   startTime: number; // 1594608772000
-  state: string; //
+  state: number; //
   stateClass: string; // "fa fa-check"
   stateColor: string; // "green"
   triggerType: string; // "手动"
   workFlowId: number; // 45
+  // 当前时间
+  now: number;
 
+  get consumingTime(): number {
+    let now = (this.state === 2) ? Date.now() : this.endTime;
+    return (now - this.createTime);
+  }
 }
 
