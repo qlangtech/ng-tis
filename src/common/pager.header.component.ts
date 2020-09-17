@@ -38,6 +38,15 @@ export class TisHeaderTool {
   }
 }
 
+
+@Component({
+  selector: 'tis-page-header-left',
+  template: `<ng-content></ng-content>`
+})
+export class PageHeaderLeftComponent {
+}
+
+
 // implements OnInit, AfterContentInit
 @Component({
   selector: 'tis-page-header',
@@ -54,21 +63,19 @@ export class TisHeaderTool {
           </nz-breadcrumb-item>
       </nz-breadcrumb>
       <nz-affix [nzOffsetTop]="10">
-      <div class="tis-head">
-          <tis-msg [result]="result"></tis-msg>
-          <div [ngClass]="headTitleClass">
-              <div class="head-tool-block">
-                  <button *ngIf="needRefesh" nz-button (click)="blockRefesh()"><i nz-icon nzType="redo" nzTheme="outline"></i></button>
-                  <ng-content></ng-content>
+          <div class="tis-head">
+              <tis-msg [result]="result"></tis-msg>
+              <div [ngClass]="headTitleClass">
+                  <div class="head-tool-block">
+                      <button *ngIf="needRefesh" nz-button (click)="blockRefesh()"><i nz-icon nzType="redo" nzTheme="outline"></i></button>
+                      <ng-content></ng-content>
+                  </div>
+                  <a *ngIf="back" href="javascript:void(0)" (click)="comeback()">
+                      <i class="fa fa-reply" aria-hidden="true"></i></a>
+                  <ng-content select="tis-page-header-left"></ng-content>
               </div>
-
-              <a *ngIf="back" href="javascript:void(0)" (click)="comeback()">
-                  <i class="fa fa-reply" aria-hidden="true"></i></a>
-              <!--
-                <span *ngIf="!showBreadcrumb">{{title}}</span>-->
+              <div style="clear:both;"></div>
           </div>
-          <div style="clear:both;"></div>
-      </div>
       </nz-affix>
   `,
 

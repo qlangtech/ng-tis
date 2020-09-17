@@ -16,7 +16,7 @@ import {map} from 'rxjs/operators';
       <dd class="progress">
           <nz-progress *ngIf="t.success" [nzPercent]="100"></nz-progress>
           <nz-progress *ngIf="!t.waiting && !t.complete" [nzPercent]="t.percent">{{t.percent}}%({{t.processed}}/{{t.all}})</nz-progress>
-          <div *ngIf="t.waiting" class="waiting" ></div>
+          <div *ngIf="t.waiting" class="waiting"></div>
           <nz-progress *ngIf="t.faild" [nzPercent]="100" nzStatus="exception"></nz-progress>
       </dd>
   `,
@@ -44,12 +44,14 @@ export class ProgressComponent {
   selector: 'tis-progress-title',
   template: `
       <h6 class="card-title">
-      <span *ngIf="t.success" class="badge badge-pill badge-success">
-        <i class="fa fa-check"
-           aria-hidden="true"></i>成功</span>
-          <span *ngIf="t.faild" class="badge badge-pill badge-danger">
-        <i class="fa fa-times"
-           aria-hidden="true"></i>失败</span>
+      <span *ngIf="t.success">
+         <nz-tag [nzColor]="'#87d068'"><i class="fa fa-check"
+                                          aria-hidden="true"></i>成功</nz-tag></span>
+          <span *ngIf="t.faild">
+        <nz-tag [nzColor]="'#f50'">
+              <i class="fa fa-times"
+                 aria-hidden="true"></i>失败</nz-tag></span>
+
           <i *ngIf="t.processing" class="fa fa-cog fa-spin fa-1x fa-fw"></i>
           <ng-content></ng-content>
       </h6>  `

@@ -73,21 +73,7 @@ import {NgTerminal} from "ng-terminal";
 
           <div nz-row [nzGutter]="8">
               <div nz-col [nzSpan]="8">
-                  <nz-card [nzTitle]="timerangeBar">
-                      <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                              [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                      </canvas>
-                  </nz-card>
-                  <ng-template #timerangeBar>
-                      近期流量
-                      <nz-radio-group [(ngModel)]="rageVal" (ngModelChange)="reload_cluster_state($event)" [nzButtonStyle]="'solid'">
-                          <label nz-radio-button nzValue="60">近１小时</label>
-                          <label nz-radio-button nzValue="1440">今天</label>
-                          <label nz-radio-button nzValue="300">近５小时</label>
-                          <label nz-radio-button nzValue="7200">近１５天</label>
-                          <label nz-radio-button nzValue="43200">近1个月</label>
-                      </nz-radio-group>
-                  </ng-template>
+                  <line-chart [queryType]="'docUpdate'"></line-chart>
               </div>
           </div>
       </div>
@@ -272,22 +258,13 @@ export class IncrBuildStep4RunningTabBaseComponent extends AppFormComponent impl
       }]
     }
   };
+
   // 实时各表tag流量监控图
   public barChartData: ChartDataSets[] = [
     // {data: [], label: 'updateCount'}
     {backgroundColor: '#95e4fa', data: []},
   ];
   barChartLabels: Array<any> = [];
-
-
-  // 近期各时段跟新量监控
-  public lineChartData: ChartDataSets[] = [
-    // {data: [], label: 'updateCount'}
-    {backgroundColor: '#95e4fa', data: []},
-  ];
-  lineChartLabels: Array<any> = [];
-
-  rageVal = '1440';
   tisIncrStatus: TisIncrStatus;
   termVisible = false;
 
@@ -300,10 +277,6 @@ export class IncrBuildStep4RunningTabBaseComponent extends AppFormComponent impl
   }
 
   ngAfterContentInit(): void {
-    // console.log(this.dto);
-    this.reload_cluster_state(this.rageVal);
-
-
     this.msgSubject.subscribe((response: WSMessage): void => {
         if (this.componentDestroy) {
           return;
@@ -338,25 +311,6 @@ export class IncrBuildStep4RunningTabBaseComponent extends AppFormComponent impl
   ngOnDestroy(): void {
     this.componentDestroy = true;
   }
-
-  reload_cluster_state(range: string) {
-    this.httpPost('/runtime/cluster_status.ajax', 'action=cluster_state_collect_action&event_submit_do_collect=y&m=' + range)
-      .then((data) => {
-        let rows = data.bizresult;
-        let serialData: { data?: any, label: string } = {label: "UpdateCount"};
-        serialData.data = [];
-        let labels: Array<any> = [];
-        this.lineChartLabels = [];
-        rows.forEach((r: any) => {
-          serialData.data.push(r.updateCount);
-          labels.push(r.label);
-        });
-        this.lineChartData = [serialData];
-        this.lineChartLabels = labels;
-      });
-
-  }
-
   incrResumePause(pause: boolean) {
 
     this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_resume_pause=y&action=core_action&pause=" + pause)

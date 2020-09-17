@@ -82,7 +82,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               </li>
           </ng-container>
           <ng-container *ngSwitchCase="false">
-              <li  nz-menu-item nzMatchRouter>
+              <li nz-menu-item nzMatchRouter>
                   <nz-select name="selectedCollection"
                              style="width: 100%;"
                              [nzSize]="'large'"
@@ -104,7 +104,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               </li>
               <li class="user-profile" nz-menu-item nzMatchRouter>
                   <button nz-button nz-dropdown [nzDropdownMenu]="user">
-                      百岁
+                      <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>百岁
                       <i nz-icon nzType="down"></i>
                   </button>
                   <nz-dropdown-menu #user="nzDropdownMenu">
@@ -129,11 +129,17 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
       </ul>
   `,
   styles: [`
+      .ng-star-inserted {
+          margin: 0
+      }
+
       .nav-items {
       }
-.navbar-brand{
-    font-size: 15px;
-}
+
+      .navbar-brand {
+          font-size: 15px;
+      }
+
       .user-profile {
           float: right;
       }

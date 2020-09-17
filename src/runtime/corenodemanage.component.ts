@@ -15,8 +15,9 @@ import {NzModalRef, NzModalService} from "ng-zorro-antd";
 // 这个类专门负责router
 @Component({
   template: `
-      <br/>
       <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+          <tis-page-header [showBreadcrumb]="false" [needRefesh]='true' (refesh)="get_view_data()">
+          </tis-page-header>
           <nz-row [nzGutter]="16">
               <nz-col [nzSpan]="6">
                   <nz-card class="primary-card">
@@ -126,20 +127,28 @@ export class CorenodemanageComponent extends AppFormComponent {
     super(tisService, route, modalService);
   }
 
-  protected initialize(app: CurrentCollection): void {
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.get_view_data();
+  }
+
+  get_view_data() {
     this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=get_view_data')
       .then((r) => {
         if (r.success) {
           this.app = r.bizresult.app;
           this.config = r.bizresult.config;
           this.instanceDirDesc = r.bizresult.instanceDirDesc;
-          this.paintToplog(app, this.createGraph(), r.bizresult.topology);
+          this.paintToplog(this.currentApp, this.createGraph(), r.bizresult.topology);
         }
       });
   }
 
+  protected initialize(app: CurrentCollection): void {
+
+  }
+
   private paintToplog(app: CurrentCollection, g: any, data: any): void {
-    // console.log(data);
     let appname = app.appName;
     g.setNode(appname, {label: appname, style: 'fill: white;stroke-width: 1.5px;stroke: #999'});
 
@@ -362,5 +371,7 @@ export class CorenodemanageComponent extends AppFormComponent {
     // <a class="dropdown-item" routerLink="./full_build_history"></a>
     this.router.navigate(["/offline/wf/build_history/45"]);
   }
+
+
 }
 

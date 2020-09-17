@@ -41,6 +41,16 @@ const coreNodeRoutes: Routes = [
             component: WorkflowAddComponent
           },
           {
+            path: 'wf_update/:name/build_history/:wfid/:taskid',
+            component: BuildProgressComponent,
+            data: {showBreadcrumb: true}
+          },
+          {
+            path: 'wf_update/:name/build_history/:wfid',
+            component: FullBuildHistoryComponent,
+            data: {showBreadcrumb: true}
+          },
+          {
             path: '',
             component: DatasourceComponent
           }

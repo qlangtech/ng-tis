@@ -18,27 +18,28 @@ import {Item} from "../common/tis.plugin";
               </tis-header-tool>
           </tis-page-header>
           <tis-ipt #indexName title="索引名称" name="projectName" require="true">
-              <nz-input-group nzAddOnBefore="search4">
+              <nz-input-group nzSize="large" nzAddOnBefore="search4">
                   <input required type="text" [id]="indexName.name" nz-input [(ngModel)]="model.name" name="name"/>
               </nz-input-group>
           </tis-ipt>
 
           <tis-ipt #workflow title="数据流" name="workflow" require="true">
-              <nz-select name="workflow" [(ngModel)]="model.workflow">
-                  <nz-option nzLabel="请选择" ></nz-option>
-                  <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name" ></nz-option>
+              <nz-select nzSize="large" style="width: calc(100% - 6em)" name="workflow" nzDropdownMatchSelectWidth="true" [(ngModel)]="model.workflow">
+                  <nz-option nzLabel="请选择"></nz-option>
+                  <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name"></nz-option>
               </nz-select>
+              <a class="tis-link-btn" [routerLink]="['/','offline','wf_add']">创建数据流</a>
           </tis-ipt>
 
           <tis-ipt #dptId title="所属部门" name="dptId" require="true">
-              <nz-select name="dptId" class="form-control" [(ngModel)]="model.dptId">
+              <nz-select nzSize="large" name="dptId" class="form-control" [(ngModel)]="model.dptId">
                   <nz-option [nzValue]="'-1'" nzLabel="请选择"></nz-option>
-                  <nz-option *ngFor="let pp of model.dpts" [nzValue]="pp.value"  [nzLabel]="pp.name" ></nz-option>
+                  <nz-option *ngFor="let pp of model.dpts" [nzValue]="pp.value" [nzLabel]="pp.name"></nz-option>
               </nz-select>
           </tis-ipt>
 
           <tis-ipt #recept title="接口人" name="recept" require="true">
-              <input  nz-input [id]="recept.name" [(ngModel)]="model.recept" name="recept"
+              <input nzSize="large" nz-input [id]="recept.name" [(ngModel)]="model.recept" name="recept"
                      placeholder="小明">
           </tis-ipt>
       </tis-form>

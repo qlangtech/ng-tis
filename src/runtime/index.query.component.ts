@@ -16,34 +16,6 @@ const LocalStoreTags = 'local_Store_Tags';
 @Component({
   template: `
       <div class="tool-bar">
-          <button nz-button
-                  nz-popover
-                  nzType="link"
-                  nzPopoverTitle="请选择"
-                  nzPopoverTrigger="click"
-                  [nzPopoverContent]="serverNodesTpl"
-                  nzPopoverPlacement="bottomLeft">引擎节点
-          </button>
-          <ng-template #serverNodesTpl>
-              <table width="500">
-                  <tr>
-                      <td width="50%">
-                      </td>
-                      <td align="right">
-                          <button nzSize="small" nz-button id="selectall" (click)="selectAllServerNodes()">全选</button> &nbsp;
-                          <button nzSize="small" nz-button id="unselectall" (click)="unSelectAllServerNodes()">全不选</button>
-                      </td>
-                  </tr>
-              </table>
-              <table width="100%" border="1">
-                  <tr *ngFor="let i of querySelectServerCandiate">
-                      <td width="40px">第{{i.key}}组</td>
-                      <td>
-                          <label nz-checkbox name="serverNode" *ngFor="let server of i.value" [(ngModel)]="server.checked"><span [class.leader-node]="server.leader">{{server.ip}}</span></label>
-                      </td>
-                  </tr>
-              </table>
-          </ng-template>
           <button nz-button nzType="link" (click)="openPOJOView()">POJO</button>
           <div style="float: right">
               <nz-tag *ngFor="let tag of this.localStoreTags" nzMode="closeable" (nzOnClose)="deleteQueryFormTag(tag.tagName)">
@@ -74,7 +46,7 @@ const LocalStoreTags = 'local_Store_Tags';
                       <nz-form-item class="search-query-item">
                           <nz-form-label [nzSpan]="8" [nzFor]="'start_rows'">Start/Rows</nz-form-label>
                           <nz-form-control [nzSpan]="16">
-                              <input nz-input name="start" style="width: 40%" [(ngModel)]="queryForm.start" value="0" size="4"/>/<input style="width: 40%" nz-input name="shownum" [(ngModel)]="queryForm.shownum" size="4"/>
+                              <input nz-input name="start" [size]="4" [maxLength]="4" style="width: 5em;text-align: right" [(ngModel)]="queryForm.start" value="0" size="4"/>/<input [size]="4" [maxLength]="4" style="width: 5em;text-align: right" nz-input name="shownum" [(ngModel)]="queryForm.shownum" size="4"/>
                           </nz-form-control>
                       </nz-form-item>
                   </div>
@@ -87,6 +59,35 @@ const LocalStoreTags = 'local_Store_Tags';
                               <nz-switch name="distrib" [(ngModel)]="queryForm.distrib" [nzCheckedChildren]="checkedTemplate" [nzUnCheckedChildren]="unCheckedTemplate"></nz-switch>
                               <ng-template #checkedTemplate><i nz-icon nzType="check"></i></ng-template>
                               <ng-template #unCheckedTemplate><i nz-icon nzType="close"></i></ng-template>
+
+                              <button nz-button *ngIf="!queryForm.distrib"
+                                      nz-popover
+                                      nzType="link"
+                                      nzPopoverTitle="请选择"
+                                      nzPopoverTrigger="click"
+                                      [nzPopoverContent]="serverNodesTpl"
+                                      nzPopoverPlacement="bottomLeft">引擎节点
+                              </button>
+                              <ng-template #serverNodesTpl>
+                                  <table width="500">
+                                      <tr>
+                                          <td width="50%">
+                                          </td>
+                                          <td align="right">
+                                              <button nzSize="small" nz-button id="selectall" (click)="selectAllServerNodes()">全选</button> &nbsp;
+                                              <button nzSize="small" nz-button id="unselectall" (click)="unSelectAllServerNodes()">全不选</button>
+                                          </td>
+                                      </tr>
+                                  </table>
+                                  <table width="100%" border="1">
+                                      <tr *ngFor="let i of this.queryForm.querySelectServerCandiate">
+                                          <td width="40px">第{{i.key}}组</td>
+                                          <td>
+                                              <label nz-checkbox name="serverNode" *ngFor="let server of i.value" [(ngModel)]="server.checked"><span [class.leader-node]="server.leader">{{server.ip}}</span></label>
+                                          </td>
+                                      </tr>
+                                  </table>
+                              </ng-template>
                           </nz-form-control>
                       </nz-form-item>
                   </div>
@@ -110,27 +111,31 @@ const LocalStoreTags = 'local_Store_Tags';
                   </div>
                   <div nz-col [nzSpan]="6">
                       <nz-form-item class="search-query-item">
-                          <nz-form-label [nzSpan]="6">Fl</nz-form-label>
+                          <nz-form-label [nzSpan]="6">
+                              Fl
+                          </nz-form-label>
                           <nz-form-control [nzSpan]="18">
-                              <button nz-button nzType="link" nz-popover
-                                      nzType="link"
-                                      nzPopoverTitle="请选择"
-                                      [nzPopoverContent]="colsTpl"
-                                      nzPopoverTrigger="click"
-                                      nzPopoverPlacement="bottomLeft"><i nz-icon nzType="select" nzTheme="outline"></i>选择
+                              <button nz-button nzType="link" nzType="link" (click)="colsSelPanelShow= true">
+                                  <i nz-icon nzType="select" nzTheme="outline"></i>选择
                               </button>
-                              <ng-template #colsTpl>
-                                  <div style="width:850px">
-                                      <p style="text-align: right;">
-                                          <button nz-button nzSize="small" id="fieldselectall" (click)="setSelectableCols(true)"><i nz-icon nzType="check" nzTheme="outline"></i>全选</button> &nbsp;
-                                          <button nz-button nzSize="small" id="fieldunselectall" (click)="setSelectableCols(false)">全不选</button>
-                                      </p>
-                                      <ul class="cols-block">
-                                          <li *ngFor="let col of this.queryForm.cols"><label nz-checkbox name="serverNode"
-                                                                                             [(ngModel)]="col.checked" [ngModelOptions]="{standalone: true}">{{col.name}}</label></li>
-                                      </ul>
-                                  </div>
-                              </ng-template>
+                              <nz-badge
+                                      [nzCount]="this.queryForm.selectedColsCount"
+                                      class="site-badge-count-4"
+                                      [nzStyle]="{  backgroundColor: '#52c41a'  }"
+                              ></nz-badge>
+                              <nz-drawer [nzClosable]="true" [nzWidth]="900" [nzVisible]="colsSelPanelShow" nzPlacement="right" nzTitle="选择列" (nzOnClose)="colsSelPanelShowClose()">
+                                  <tis-page-header [showBreadcrumb]="false">
+                                      <tis-page-header-left>
+                                          <button nz-button nzType="primary" nzSize="small" (click)="colsSelPanelShowClose()">确定</button>
+                                      </tis-page-header-left>
+                                      <button nz-button nzSize="small" id="fieldselectall" (click)="setSelectableCols(true)"><i nz-icon nzType="check" nzTheme="outline"></i>全选</button> &nbsp;
+                                      <button nz-button nzSize="small" id="fieldunselectall" (click)="setSelectableCols(false)">全不选</button>
+                                  </tis-page-header>
+                                  <ul class="cols-block">
+                                      <li *ngFor="let col of this.queryForm.cols"><label nz-checkbox
+                                                                                         [(ngModel)]="col.checked" [ngModelOptions]="{standalone: true}">{{col.name}}</label></li>
+                                  </ul>
+                              </nz-drawer>
                           </nz-form-control>
                       </nz-form-item>
                   </div>
@@ -138,10 +143,10 @@ const LocalStoreTags = 'local_Store_Tags';
                       <nz-form-item class="search-query-item">
                           <nz-form-label [nzSpan]="6"><label nz-checkbox name="serverNode" [(ngModel)]="queryForm.facet.facet" [ngModelOptions]="{standalone: true}">Facet</label></nz-form-label>
                           <nz-form-control [nzSpan]="18">
-                              <div *ngIf="queryForm.facet.facet">
-                                  <input nz-input name="facetField" placeholder="facetField" [(ngModel)]="queryForm.facet.facetField"/>
-                                  <input nz-input name="facetPrefix" placeholder="facetPrefix" [(ngModel)]="queryForm.facet.facetPrefix"/>
-                                  <input nz-input name="facetQuery" placeholder="facetQuery" [(ngModel)]="queryForm.facet.facetQuery"/>
+                              <div *ngIf="queryForm.facet.facet" class="combine-input">
+                                  <input nz-input name="facetField" nzSize="small" placeholder="facetField" [(ngModel)]="queryForm.facet.facetField"/>
+                                  <input nz-input name="facetPrefix" nzSize="small" placeholder="facetPrefix" [(ngModel)]="queryForm.facet.facetPrefix"/>
+                                  <input nz-input name="facetQuery" nzSize="small" placeholder="facetQuery" [(ngModel)]="queryForm.facet.facetQuery"/>
                               </div>
                           </nz-form-control>
                       </nz-form-item>
@@ -150,19 +155,16 @@ const LocalStoreTags = 'local_Store_Tags';
                       <nz-form-item class="search-query-item">
                           <nz-form-label [nzSpan]="6">FQ</nz-form-label>
                           <nz-form-control [nzSpan]="18">
-                              <div *ngFor="let fq of this.queryForm.fq; let i = index">
-                                  <input [(ngModel)]="fq.val" nz-input style="width:80%" name="fq" [ngModelOptions]="{standalone: true}"/>
-                                  <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeFqField(fq, $event)"></i>
+                              <div class="combine-input">
+                                  <div *ngFor="let fq of this.queryForm.fq; let i = index">
+                                      <input nzSize="small" [(ngModel)]="fq.val" nz-input style="width:80%" name="fq" [ngModelOptions]="{standalone: true}"/>
+                                      <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeFqField(fq, $event)"></i>
+                                  </div>
+                                  <button nz-button nzSize="small" nzType="dashed" class="add-button" (click)="addFqField($event)">
+                                      <i nz-icon nzType="plus"></i>
+                                      Add
+                                  </button>
                               </div>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="6" [nzNoColon]="true"></nz-form-label>
-                          <nz-form-control [nzSpan]="18">
-                              <button nz-button nzType="dashed" class="add-button" (click)="addFqField($event)">
-                                  <i nz-icon nzType="plus"></i>
-                                  Add
-                              </button>
                           </nz-form-control>
                       </nz-form-item>
                   </div>
@@ -179,7 +181,7 @@ const LocalStoreTags = 'local_Store_Tags';
               </p>
           </fieldset>
       </form>
-      <nz-table #datalist [nzData]="queryResultList" [nzShowPagination]="false">
+      <nz-table #datalist [nzData]="queryResultList" [nzShowPagination]="false" [nzFrontPagination]="false" nz>
           <tbody>
           <tr *ngFor="let row of datalist.data">
               <td>
@@ -209,6 +211,21 @@ const LocalStoreTags = 'local_Store_Tags';
       </nz-modal>
   `,
   styles: [`
+      .fl-title-label {
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+          background-color: #000088;
+          display: inline-block;
+      }
+
+
+
+      .collapse {
+          display: inline-block;
+          margin: 4px 0 0 8px;
+      }
+
       .dynamic-delete-button {
           cursor: pointer;
           position: relative;
@@ -224,7 +241,7 @@ const LocalStoreTags = 'local_Store_Tags';
 
       .ant-advanced-search-form {
           padding: 10px;
-          background: #fbfbfb;
+          background: #ececec;
           border: 1px solid #d9d9d9;
           border-radius: 6px;
           margin-bottom: 10px;
@@ -271,18 +288,19 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   public resultCount = 0;
   queryResultList: { server: string, rowContent: string }[];
   queryForm = new IndexQueryForm();
-  querySelectServerCandiate: Array<{ key: string, value: Array<{ checked: boolean, leader: boolean, ip: string, ipAddress: string }> }> = [];
+
 
   addTagDialogVisible = false;
   tagAddForm: FormGroup;
   private _localStoreTags: Array<TagQueryForm>;
+  colsSelPanelShow = false;
 
   constructor(tisService: TISService, modalService: NzModalService, private fb: FormBuilder, private _localStorageService: LocalStorageService) {
     super(tisService, modalService);
   }
 
   openPOJOView() {
-    this.openDialog(PojoComponent, {nzTitle: "POJO"});
+    this.openDialog(PojoComponent, {nzTitle: "POJO", nzWidth: 900});
   }
 
   ngOnInit(): void {
@@ -297,12 +315,13 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
         let groupNodes = r.bizresult.nodes;
         let cols = r.bizresult.fields;
         for (let key in groupNodes) {
-          this.querySelectServerCandiate.push({'key': key, 'value': groupNodes[key]});
-          if (cols) {
-            cols.forEach((c: string) => {
-              this.queryForm.cols.push({name: c, checked: false});
-            });
-          }
+          this.queryForm.querySelectServerCandiate.push({'key': key, 'value': groupNodes[key]});
+        }
+
+        if (cols) {
+          cols.forEach((c: string) => {
+            this.queryForm.cols.push({name: c, checked: false});
+          });
         }
       });
   }
@@ -312,6 +331,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   startQuery() {
+    this.resultCount = 0;
     let url = `/runtime/index_query.ajax?action=index_query_action&event_submit_do_query=y&resulthandler=exec_null&appname=${this.tisService.currentApp.appName}&${this.queryForm.toParams()}`;
     this.jsonp(url).then((result) => {
       //  console.log(result.bizresult);
@@ -368,7 +388,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   private setSelectAllServerNodes(checked: boolean) {
-    this.querySelectServerCandiate.forEach((group) => {
+    this.queryForm.querySelectServerCandiate.forEach((group) => {
       group.value.forEach((server) => {
         server.checked = checked;
       });
@@ -481,7 +501,11 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
         this.queryForm.facet = Object.assign(new FacetQuery(), facet);
       }
     }
-    console.log(this.queryForm);
+    // console.log(this.queryForm);
+  }
+
+  colsSelPanelShowClose() {
+    this.colsSelPanelShow = false;
   }
 }
 
@@ -501,6 +525,8 @@ export class QueryResultRowContentComponent {
 
 class IndexQueryForm {
   q = "*:*";
+  // 服务端可选节点
+  querySelectServerCandiate: Array<{ key: string, value: Array<{ checked: boolean, leader: boolean, ip: string, ipAddress: string }> }> = [];
   sort: string;
   fq: FilterQuery[] = [new FilterQuery()];
   start = 0;
@@ -514,6 +540,10 @@ class IndexQueryForm {
   cols: Array<{ checked: boolean, name: string }> = [];
 
   facet: FacetQuery = new FacetQuery();
+
+  get selectedColsCount(): number {
+    return this.cols.filter((c) => c.checked).length;
+  }
 
   public toParams(): string {
     let params = this.parseParams(this, new HttpParams());
@@ -530,7 +560,7 @@ class IndexQueryForm {
     let arrayVal: Array<any>;
     for (let x in targetObj) {
       value = targetObj[x];
-      // console.log(`typeof key:${x} val:${value} ${typeof value === 'number'}`);
+      // console.log(`typeof key:${x} val:${value} ${typeof value}`);
       if (value === undefined || value === null) {
         continue;
       }
@@ -550,6 +580,23 @@ class IndexQueryForm {
           }
           if (val.checked) {
             params = params.append('sfields', `${val.name}`);
+          }
+        }
+      } else if (value instanceof Array && 'querySelectServerCandiate' === x) {
+        let selectServerNodes: Array<{ key: string, value: Array<{ checked: boolean, leader: boolean, ip: string, ipAddress: string }> }> = value;
+        if (this.distrib) {
+          continue;
+        }
+        let serverGroup: { key: string, value: Array<{ checked: boolean, leader: boolean, ip: string, ipAddress: string }> } = null;
+        for (let i = 0; i < selectServerNodes.length; i++) {
+          serverGroup = selectServerNodes[i];
+          if (serverGroup.value) {
+            serverGroup.value.forEach((node) => {
+              if (node.checked) {
+                // console.log(node);
+                params = params.append(`servergroup${serverGroup.key}`, `${node.ipAddress}`);
+              }
+            })
           }
         }
       } else if (value instanceof Array) {

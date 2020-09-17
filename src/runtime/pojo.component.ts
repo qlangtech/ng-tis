@@ -13,19 +13,7 @@ import {NzModalService} from "ng-zorro-antd";
 
 @Component({
   template: `
-      <fieldset [disabled]='formDisabled'>
-          <div class="modal-header">
-              <h4 class="modal-title">POJO</h4>
-              <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <div class="modal-body">
-              <div style="height: 700px">
-                  <tis-codemirror [size]="{width:'100%',height:'100%'}" [config]="codeMirrirOpts" [ngModel]="pojoJavaContent"></tis-codemirror>
-              </div>
-          </div>
-      </fieldset>
+          <tis-codemirror  [config]="codeMirrirOpts" [ngModel]="pojoJavaContent"></tis-codemirror>
   `,
 })
 export class PojoComponent extends AppFormComponent {
@@ -37,7 +25,7 @@ export class PojoComponent extends AppFormComponent {
   //   this.code = e;
   // }
 
-  constructor(tisService: TISService,  route: ActivatedRoute, modalService: NzModalService) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 

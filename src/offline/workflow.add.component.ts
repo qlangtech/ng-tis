@@ -73,7 +73,7 @@ export const TYPE_DUMP_TABLE = 'table';
           <ng-template tis-index-add-flow></ng-template>
       </nz-drawer>
 
-      <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle"></tis-page-header>
+      <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle" [result]="result"></tis-page-header>
       <div>
           <div id="processon_designer" class="processon-designer">
               <nz-spin [nzSpinning]="formDisabled" nzSize="large">

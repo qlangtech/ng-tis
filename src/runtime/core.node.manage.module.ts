@@ -42,14 +42,15 @@ import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {IncrBuildStep4RunningTabBaseComponent} from "./incr.build.step4.running.tab-base.component";
+import {LineChartComponent} from "./line.chart.component";
 
 @NgModule({
   id: 'coremanage',
-  imports: [CommonModule, CoreNodeRoutingModule, FormsModule,  TisCommonModule, NzLayoutModule, NzCollapseModule
+  imports: [CommonModule, CoreNodeRoutingModule, FormsModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
     , ChartsModule, NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
   ],
-  declarations: [
+  declarations: [LineChartComponent,
     TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent, IncrBuildStep4RunningTabBaseComponent,
     IndexQueryComponent, PojoComponent,
     CorenodemanageComponent, CorenodemanageIndexComponent,
