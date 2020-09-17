@@ -10,7 +10,7 @@ import {DbAddComponent} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {TableAddStep1Component} from "./table.add.step1.component";
 import {TableAddStep2Component} from "./table.add.step2.component";
-import {GitCommitDiffComponent} from "./git.commit.diff.component";
+// import {GitCommitDiffComponent} from "./git.commit.diff.component";
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 
@@ -76,14 +76,13 @@ const icons: IconDefinition[] = [DeleteOutline];
   declarations: [
     WorkflowComponent, SideBarToolBar, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
     , TableAddComponent, TableAddStep1Component, TableAddStep2Component,
-    GitCommitDiffComponent,
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     // tslint:disable-next-line:whitespace
     , WorkflowAddNestComponent, WorkflowERComponent, WorkflowAddErCardinalityComponent
   ],
   entryComponents: [WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, TableAddComponent, WorkflowAddErMetaComponent
-    , GitCommitDiffComponent, WorkflowAddComponent,
+    , WorkflowAddComponent,
      WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     , WorkflowAddNestComponent, WorkflowAddErCardinalityComponent
   ]

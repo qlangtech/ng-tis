@@ -21,7 +21,7 @@ export class BasicWFComponent extends BasicFormComponent {
 
 
   buildHistory(dataflow: Dataflow): void {
-    console.log(dataflow);
+    // console.log(dataflow);
     this.router.navigate(
       [`/offline/wf/build_history/`, dataflow.id], {relativeTo: this.route});
   }
@@ -41,7 +41,8 @@ export class BasicWFComponent extends BasicFormComponent {
 
             this.processResult({success: true, 'msg': msg});
           } else {
-            alert("重复触发了");
+           // alert("重复触发了");
+            this.errNotify("重复触发了");
           }
         } else {
           this.processResult(d);

@@ -2,7 +2,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {ConfirmDTO, StupidModal} from "./addapp-pojo";
-import {NzModalService, TransferDirection, TransferItem} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService, TransferDirection, TransferItem} from "ng-zorro-antd";
 
 
 @Component({
@@ -127,7 +127,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
   showSearch = false;
 
   ngOnInit(): void {
-   // console.log(this.dto.coreNode.hosts);
+    // console.log(this.dto.coreNode.hosts);
     let url = '/runtime/addapp.ajax?action=add_app_action&emethod=get_selectable_node_list';
     this.jsonPost(url, {}).then((r) => {
       // console.log(r.bizresult);
@@ -177,21 +177,23 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
   }
 
 // =================================================================
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   // ngOnInit(): void {
   // }
 
   createIndexConfirm() {
-    this.formDisabled = true;
-
     let selectedItems = this.list.filter((item) => item.direction === 'right').map((item) => {
       return {hostName: item.key}
     })
     // console.log(selectedItems);
-
+    if (selectedItems.length < 1) {
+      this.errNotify('请选择机器节点');
+      return;
+    }
+    this.formDisabled = true;
     this.dto.coreNode.hosts = selectedItems;
     // this.dto.coreNode.hosts.push()
     this.nextStep.emit(this.dto);

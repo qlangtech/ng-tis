@@ -48,11 +48,9 @@ import {NzModalService} from "ng-zorro-antd";
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
           <form method="post">
 
-              <nz-tabset [nzTabBarExtraContent]="extraTemplate">
+              <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate">
                   <nz-tab [nzTitle]="foolTitleTemplate" (nzClick)="toggleModel(false)">
-                      <ng-template nz-tab>
-                          <visualizing-schema-editor [bizResult]="stupidModal"></visualizing-schema-editor>
-                      </ng-template>
+                      <visualizing-schema-editor [bizResult]="stupidModal"></visualizing-schema-editor>
                   </nz-tab>
                   <nz-tab [nzTitle]="expertTitleTemplate" (nzClick)="toggleModel(true)">
                       <ng-template nz-tab>
@@ -118,6 +116,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     this.jsonPost(
       '/runtime/addapp.ajax?action=schema_action&emethod=goto_app_create_confirm'
       , (dto)).then((r) => {
+      this.processResult(r);
       if (r.success) {
 
         // dto.coreNode = r.bizresult;
@@ -180,25 +179,27 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   // 切换视图状态
   public toggleModel(_expertModel: boolean): void {
     // 判断当前状态和想要变化的状态是否一致
-    // console.log(event);
     if (this.formDisabled || this.expertModel === _expertModel) {
       return;
     }
+    this.formDisabled = true;
     this.clearProcessResult();
-    // this.fields.forEach((e) => {
-    //   e.hasError = false;
-    // })
-
-
-    if (_expertModel === true) {
-      this.schemaVisualtEditor.saveAndMergeXml().then((schemaXmlContent: string) => {
-        this.stupidModal.schemaXmlContent = schemaXmlContent;
-      })
-    } else {
-      // 点击小白模式
-      this.schemaExpertEditor.doSaveContent().then((modal: StupidModal) => {
-        this.stupidModal = modal;
-      });
+    try {
+      if (_expertModel === true) {
+        this.schemaVisualtEditor.saveAndMergeXml().then((schemaXmlContent: string) => {
+          this.stupidModal.schemaXmlContent = schemaXmlContent;
+          this.formDisabled = false;
+        })
+      } else {
+        // 点击小白模式
+        this.schemaExpertEditor.doSaveContent().then((modal: StupidModal) => {
+          this.stupidModal = modal;
+          this.formDisabled = false;
+        });
+      }
+    } catch (e) {
+      this.formDisabled = false;
+      throw e;
     }
     this.expertModel = _expertModel;
   }
@@ -228,7 +229,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
       // workflow = 'union';
       this.httpPost('/runtime/schemaManage.ajax'
         , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
-        + workflow  )
+        + workflow)
         .then((r) => {
           if (r.success) {
             return r;
@@ -240,7 +241,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
           (r: { bizresult: StupidModal }) => {
             //   this.setBizResult(r.bizresult);
             this.stupidModal = StupidModal.deseriablize(r.bizresult);
-           // console.log(this.stupidModal);
+            // console.log(this.stupidModal);
             this.setTplAppid(this.stupidModal);
           });
     } else {

@@ -56,6 +56,7 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   @ViewChild("inputTpl", {static: true}) contentTempate: TemplateRef<any>;
 
   ngOnInit(): void {
+   // console.log("TisInputTool ngOnInit");
   }
 
   ngAfterContentChecked(): void {
@@ -63,8 +64,10 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   }
 
   ngAfterContentInit(): void {
+
     this.ipts.forEach((ipt) => {
       if (ipt.ngControl) {
+       // ipt.nzSize = 'large';
         ipt.ngControl.name = this.name;
         ipt.ngControl.valueChanges.subscribe((val) => {
           delete this.itemProp.error;
@@ -81,8 +84,8 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
     });
 
     this.inputProps.forEach((ip) => {
-      console.log("============");
-      console.log(ip.viewContainerRef.element.nativeElement.innerHTML);
+     // console.log("============");
+     // console.log(ip.viewContainerRef.element.nativeElement.innerHTML);
     })
   }
 
@@ -144,10 +147,10 @@ export class FormComponent implements AfterContentInit, OnInit {
   }
 
   ngOnInit(): void {
+   // console.log("FormComponent ngOnInit"+ this.ipts.length);
   }
 
   ngAfterContentInit() {
-   // console.log(this.ipts);
     let tplFields = this.ipts.toArray();
     tplFields.map((input) => {
       input.itemProp = this.fieldErr(input.name);

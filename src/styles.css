@@ -4,9 +4,9 @@ button {
 }
 
 .tool-bar {
-  background-color: #eeeeee;
+  background-color: #ffffff;
   padding: 5px;
-  border-bottom: 1px solid #a6a6a6;
+
 }
 
 
@@ -31,3 +31,15 @@ nz-select , nz-cascader {
   width: 100%;
 }
 
+.tis-link-btn {
+  display: inline-block;margin: 5px 10px 5px 10px
+}
+
+.combine-input {
+  border: 1px dashed #cccccc;
+  padding: 4px;
+}
+
+.combine-input input , nz-switch ,nz-select {
+  margin: 3px 0 3px 0;
+}

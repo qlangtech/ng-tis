@@ -143,7 +143,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   dto: IndexIncrStatus = new IndexIncrStatus();
-  private msgSubject: Subject<WSMessage>;
+   msgSubject: Subject<WSMessage>;
 
   // 实时流量配置
   constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {

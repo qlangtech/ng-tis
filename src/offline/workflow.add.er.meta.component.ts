@@ -3,7 +3,6 @@ import {BasicSideBar, ColumnTransfer, ERMetaNode, ERRuleNode, LinkKey, PrimaryIn
 import {TISService} from '../service/tis.service';
 
 
-
 import {WorkflowAddComponent} from "./workflow.add.component";
 
 import {NzIconService} from 'ng-zorro-antd/icon';
@@ -27,21 +26,22 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                   <nz-col [nzSpan]="17" style="border-left: 1px solid #d0d0d0;">
                       <nz-form-item class="meta-item">
                           <nz-form-label [nzSpan]="4">主索引表</nz-form-label>
-                          <nz-form-control [nzSpan]="13">
-                              <nz-switch [(ngModel)]="this.erMetaNode.primaryIndexTab" nzCheckedChildren="是" nzUnCheckedChildren="否" [ngModelOptions]="{standalone: true}"></nz-switch>
-                              <span *ngIf="this.erMetaNode.primaryIndexTab"><br/>
-                              <span *ngFor="let pkName of this.erMetaNode.primaryIndexColumnNames">
-                              <nz-select class="primary-key" nzPlaceHolder="Select Index Primay column" nzShowSearch nzAllowClear [(ngModel)]="pkName.name" (ngModelChange)="primaryKeyChange(pkName,$event)"
-                                         [ngModelOptions]="{standalone: true}">
-                                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
-                                     <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
-                                  </nz-option>
-                              </nz-select> <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePrimaryKey(pkName)"></i>
-                              </span>
-                                  <button nz-button nzType="dashed" class="primary-key" (click)="addPrimaryIndexColumnName($event)">
-                                  <i nz-icon nzType="plus"></i>添加主键列
-                              </button>
-                              </span>
+                          <nz-form-control class="combine-input" [nzSpan]="13">
+                              <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.primaryIndexTab" nzCheckedChildren="是" nzUnCheckedChildren="否" [ngModelOptions]="{standalone: true}"></nz-switch>
+                              <ng-container *ngIf="this.erMetaNode.primaryIndexTab"><br/>
+                                  <ng-container *ngFor="let pkName of this.erMetaNode.primaryIndexColumnNames">
+                                      <nz-select nzSize="small" class="primary-key" nzPlaceHolder="Select Index Primay column" nzShowSearch nzAllowClear [(ngModel)]="pkName.name" (ngModelChange)="primaryKeyChange(pkName,$event)"
+                                                 [ngModelOptions]="{standalone: true}">
+                                          <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
+                                              <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
+                                          </nz-option>
+                                      </nz-select>
+                                      <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePrimaryKey(pkName)"></i>
+                                  </ng-container>
+                                  <button nzSize="small" nz-button nzType="dashed" class="primary-key" (click)="addPrimaryIndexColumnName($event)">
+                                      <i nz-icon nzType="plus"></i>添加主键列
+                                  </button>
+                              </ng-container>
                               <ng-template #primaryIndexTab>
                                   <i nz-icon nzType="key" nzTheme="outline"></i>
                               </ng-template>
@@ -50,7 +50,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                       <nz-form-item *ngIf="this.erMetaNode.primaryIndexTab" class="meta-item">
                           <nz-form-label [nzSpan]="4">分区键</nz-form-label>
                           <nz-form-control [nzSpan]="13">
-                              <nz-select class="primary-key" nzPlaceHolder="分区键" nzShowSearch nzAllowClear [(ngModel)]="erMetaNode.sharedKey"
+                              <nz-select nzSize="small" class="primary-key" nzPlaceHolder="分区键" nzShowSearch nzAllowClear [(ngModel)]="erMetaNode.sharedKey"
                                          [ngModelOptions]="{standalone: true}">
                                   <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
                                       <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
@@ -61,9 +61,9 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                       <nz-form-item class="meta-item">
                           <nz-form-label [nzSpan]="4">监听增量变更</nz-form-label>
                           <nz-form-control [nzSpan]="13">
-                              <nz-switch [(ngModel)]="this.erMetaNode.monitorTrigger" nzCheckedChildren="开" nzUnCheckedChildren="关" [ngModelOptions]="{standalone: true}"></nz-switch>
+                              <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.monitorTrigger" nzCheckedChildren="开" nzUnCheckedChildren="关" [ngModelOptions]="{standalone: true}"></nz-switch>
                               &nbsp;
-                              <nz-select class="primary-key timestamp-select" *ngIf="this.erMetaNode.monitorTrigger"
+                              <nz-select nzSize="small" class="primary-key timestamp-select" *ngIf="this.erMetaNode.monitorTrigger"
                                          nzPlaceHolder="Select TimeVerStamp column" nzShowSearch nzAllowClear [(ngModel)]="this.erMetaNode.timeVerColName" [ngModelOptions]="{standalone: true}">
                                   <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
                                       <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
@@ -142,7 +142,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
       `
           .primary-key {
               width: 60%;
-              margin-right: 6px;
+              margin: 3px 0 3px 0;
           }
 
           .timestamp-select {

@@ -38,6 +38,10 @@ export class BasicFormComponent {
     this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
+  protected errNotify(msg: string, duration?: number) {
+    this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
+  }
+
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
     this.formDisabled = false;
     // console.log("webExecuteCallback")
@@ -115,7 +119,7 @@ export class BasicFormComponent {
   //   this.tisService.currentApp = app;
   // }
 
-  protected get currentApp(): CurrentCollection {
+   get currentApp(): CurrentCollection {
     return this.tisService.currentApp;
   }
 
