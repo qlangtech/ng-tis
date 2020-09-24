@@ -28,8 +28,8 @@ declare var jQuery: any;
               <tr>
                   <th width="100px">版本</th>
                   <th width="200px">创建时间</th>
-                  <th width="100px">比较</th>
                   <th width="20%">日志</th>
+                  <th width="100px">比较</th>
                   <th>详细</th>
                   <th>parent</th>
               </tr>
@@ -48,6 +48,9 @@ declare var jQuery: any;
                       </div>
                   </td>
                   <td> {{s.createTime | dateformat}}</td>
+                  <td>
+                      <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
+                      {{s.memo}}</td>
                   <td align="center">
                       <input class="compare" type="checkbox"
                              [checked]="s.compareChecked" (click)="compareClick(s)"
@@ -56,9 +59,6 @@ declare var jQuery: any;
                                            <label name="comparesnapshotid" nz-checkbox [(ngModel)]="s.compareChecked" (click)="compareClick(s)" [nzValue]="s.snId"></label>
                                            -->
                   </td>
-                  <td>
-                      <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
-                      {{s.memo}}</td>
                   <td>
                       <snapshot-linker [snapshot]="s"></snapshot-linker>
                   </td>

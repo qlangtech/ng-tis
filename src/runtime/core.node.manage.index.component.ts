@@ -24,11 +24,11 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./snapshotset"><i class="fa fa-history fa-2x" aria-hidden="true"></i>配置变更</a>
                   </li>
-
+<!--
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./plugin"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>插件配置</a>
                   </li>
-
+-->
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./incr_build">
                           <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时通道</a>
@@ -40,11 +40,11 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
                   </li>
-
+<!--
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
                   </li>
-
+-->
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
                   </li>

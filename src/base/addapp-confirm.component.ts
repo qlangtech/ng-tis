@@ -84,7 +84,6 @@ import {NzModalService} from "ng-zorro-antd";
                           <i *ngIf="f.sharedKey" class="fa fa-share-alt" aria-hidden="true"></i>
                       </td>
                       <td>
-
                           <label>{{f.name}}</label>
                       </td>
                       <td>
@@ -142,11 +141,14 @@ export class AddAppConfirmComponent extends BasicFormComponent implements OnInit
     this.jPost(
       `/runtime/addapp.ajax?action=add_app_action&emethod=${this.dto.recreate ? "create_collection" : "advance_add_app"}`
       , this.dto).then((r) => {
-      this.processResult(r);
-      if (r.success) {
-        // 跳转到/applist列表
-        this.router.navigate(['t/base/applist']);
-      }
+      this.processResultWithTimeout(r, 3000, () => {
+        if (r.success) {
+          // 跳转到/applist列表
+          // this.router.navigate(['t/base/applist']);
+
+          this.router.navigate([`/c/search4${this.appform.name}`]);
+        }
+      });
     });
   }
 

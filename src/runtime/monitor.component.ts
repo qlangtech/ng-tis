@@ -11,7 +11,7 @@ import {NzModalService} from "ng-zorro-antd";
       <tis-page-header  [showBreadcrumb]="false"   [needRefesh]='true' (refesh)="refesh()">
       </tis-page-header>
      -->
-      <div nz-row [nzGutter]="16">
+      <div style="margin-top: 20px" nz-row [nzGutter]="16">
           <div class="line-chart-block" nz-col nzSpan="12">
               <line-chart queryType="solrQuery"></line-chart>
           </div>
@@ -30,8 +30,5 @@ import {NzModalService} from "ng-zorro-antd";
 export class MonitorComponent extends BasicFormComponent {
   constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
-  }
-
-  refesh() {
   }
 }
