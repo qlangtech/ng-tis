@@ -3,6 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index/snapshotset.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/snapshotset.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/monitor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/monitor.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +72,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="npm.ng:serve-aot">
+  <component name="RunManager" selected="npm.ng:serve-jit">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -115,9 +125,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build:aot" />
-        <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.ng:serve" />
       </list>
@@ -168,6 +178,7 @@
       <workItem from="1599703880395" duration="57400000" />
       <workItem from="1600219544188" duration="3864000" />
       <workItem from="1600315375844" duration="1514000" />
+      <workItem from="1600741846005" duration="10338000" />
     </task>
     <servers />
   </component>

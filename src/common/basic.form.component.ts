@@ -42,6 +42,10 @@ export class BasicFormComponent {
     this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
+  protected infoNotify(msg: string, duration?: number) {
+    this.notification.info('信息', msg, {nzDuration: duration > 0 ? duration : 6000});
+  }
+
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
     this.formDisabled = false;
     // console.log("webExecuteCallback")
@@ -57,16 +61,19 @@ export class BasicFormComponent {
     this.result = {msg: [], errormsg: []};
   }
 
-  public processResult(result: any): void {
-    return this.processResultWithTimeout(result, 10000);
+  public processResult(result: any, callback?: () => void): void {
+    return this.processResultWithTimeout(result, 10000, callback);
   }
 
   // 显示执行结果
-  protected processResultWithTimeout(result: any, timeout: number): void {
+  protected processResultWithTimeout(result: any, timeout: number, callback?: () => void): void {
     this.result = result;
     if (timeout > 0) {
       setTimeout(() => {
         this.clearProcessResult();
+        if (callback) {
+          callback();
+        }
       }, timeout);
     }
   }
@@ -119,7 +126,7 @@ export class BasicFormComponent {
   //   this.tisService.currentApp = app;
   // }
 
-   get currentApp(): CurrentCollection {
+  get currentApp(): CurrentCollection {
     return this.tisService.currentApp;
   }
 

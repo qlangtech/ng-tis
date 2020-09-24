@@ -53,6 +53,7 @@ import {Subscription} from "rxjs";
               </nz-collapse-panel>
           </nz-collapse>
       </form>
+
       <!--
             {{this._heteroList | json}}
       -->
@@ -400,7 +401,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   startScroll(event: NzAnchorLinkComponent) {
-    // console.log(event.active)
+    console.log(event);
   }
 }
 

@@ -45,7 +45,7 @@ import {NzModalService} from "ng-zorro-antd";
 
         <p class="item-head"><label>依赖节点</label></p>
         <div>
-          <nz-select name="depsTab" nzMode="tags" style="width: 100%;" nzPlaceHolder="Tag Mode"
+          <nz-select name="depsTab" nzMode="tags" style="width: 100%;" nzPlaceHolder="请选择"
                      [(ngModel)]="joinNodeForm.dependenciseTabIds">
             <nz-option *ngFor="let option of listOfOption"
                        [nzLabel]="option.label"

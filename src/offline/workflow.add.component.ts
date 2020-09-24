@@ -338,7 +338,8 @@ export class WorkflowAddComponent extends BasicWFComponent
         // 打开输入名称对话框
         this.isSaveTopologyDialogVisible = true;
       } else {
-        this.applyTopology2Server();
+        this.applyTopology2Server(() => {
+        });
       }
     }
   }
@@ -359,10 +360,12 @@ export class WorkflowAddComponent extends BasicWFComponent
     if (!this.validateSaveTopologyDialogForm.valid) {
       return;
     }
-    this.applyTopology2Server();
+    this.applyTopology2Server((topologyName) => {
+      this.topologyName = topologyName;
+    });
   }
 
-  private applyTopology2Server(): void {
+  private applyTopology2Server(saveSuccessCallback: (topologyName) => void): void {
     // 关闭对话框
     this.isSaveTopologyDialogVisible = false;
     let j = this.graph.save();
@@ -375,6 +378,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     this.jsonPost(`/offline/datasource.ajax?emethod=${this.isAdd ? 'save' : 'update'}_topology&action=offline_datasource_action`, j)
       .then(result => {
         if (result.success) {
+          saveSuccessCallback(j.topologyName);
           let biz = result.bizresult;
           if (!biz.erExist) {
             // 跳转到ER编辑Tab
@@ -699,8 +703,10 @@ export class WorkflowAddComponent extends BasicWFComponent
       //   }
       // };
       // graph.addItem('node', model);
+
       const nodeid = this.getUid();
       let nm: NodeMeta = clientPos.nodemeta;
+      // console.log(nm.type);
       let sidebarDTO: BasicSidebarDTO;
       switch (nm.type) {
         case TYPE_DUMP_TABLE:
@@ -709,8 +715,12 @@ export class WorkflowAddComponent extends BasicWFComponent
         case 'join':
           sidebarDTO = new JoinNode(nm, nodeid);
           break;
+        case 'union':
+        case 'nest':
+          this.infoNotify('该类型节点还未开放，敬请期待');
+          return;
         default:
-          throw new Error(`invalid type ${clientPos.nodemeta.type}`);
+          throw new Error(`invalid type ${clientPos.nodemeta.type},nm.type:${nm.type}`);
       }
 
       this.graph.addItem('node', WorkflowAddComponent.addItem2UI(nodeid, clientPos.x, clientPos.y, clientPos.nodemeta, sidebarDTO));

@@ -14,7 +14,7 @@ import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
 // @ts-ignore
 import * as $ from 'jquery';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 
@@ -102,19 +102,19 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                       </nz-option>
                   </nz-select>
               </li>
-              <li class="user-profile" nz-menu-item nzMatchRouter>
-                  <button nz-button nz-dropdown [nzDropdownMenu]="user">
-                      <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>百岁
-                      <i nz-icon nzType="down"></i>
-                  </button>
-                  <nz-dropdown-menu #user="nzDropdownMenu">
-                      <ul nz-menu>
-                          <li nz-menu-item>信息</li>
-                          <li nz-menu-item>退出</li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </li>
           </ng-container>
+          <li class="user-profile" nz-menu-item nzMatchRouter>
+              <button nz-button nz-dropdown [nzDropdownMenu]="user">
+                  <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
+                  <i nz-icon nzType="down"></i>
+              </button>
+              <nz-dropdown-menu #user="nzDropdownMenu">
+                  <ul nz-menu>
+                      <li nz-menu-item (click)="viewProfile()">信息</li>
+                      <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
+                  </ul>
+              </nz-dropdown-menu>
+          </li>
           <!--
                     <li nz-menu-item>
                         <a class="nav-link dropdown-toggle" href="#" id="navbarUsers" data-toggle="dropdown"
@@ -159,8 +159,9 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   // public ops: any[];
   @ViewChild(RouterOutlet, {static: false}) router: RouterOutlet;
   // selectedIndex ;
-  collectionOptionList: string[] = ['search4totalpay'];
+  collectionOptionList: string[] = [];
   isLoading: boolean;
+  userProfile: UserProfile;
 
   searchChange$ = new Subject<string>();
 
@@ -185,9 +186,9 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
   constructor(tisService: TISService, modalService: NzModalService
     , private r: Router, private route: ActivatedRoute, private _http: HttpClient
-    , private _localStorageService: LocalStorageService
+    , private _localStorageService: LocalStorageService, notification: NzNotificationService
   ) {
-    super(tisService, modalService);
+    super(tisService, modalService, notification);
   }
 
 
@@ -219,6 +220,12 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     }
 
     this.collectionOptionList = popularSelected.popularLatestSelected;
+
+    let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
+    this.httpPost(getUserUrl, '').then((r) => {
+      this.userProfile = r.bizresult;
+      // console.log(r);
+    })
   }
 
   // 点击切换当前app
@@ -257,4 +264,28 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     this.collectionOptionList = popularSelected.popularLatestSelected;
     this.r.navigate(['/c/' + this.app.appName]);
   }
+
+  logout() {
+
+    if (1 === 1) {
+      this.viewProfile();
+      return;
+    }
+
+    let logoutUrl = `/runtime/applist.ajax?emethod=login&action=login_action`;
+    this.httpPost(logoutUrl, '').then((r) => {
+      this.userProfile = undefined;
+    })
+  }
+
+  viewProfile() {
+    this.infoNotify("用户权限功能还未开放，敬请期待" );
+  }
+}
+
+interface UserProfile {
+  department: string;
+  departmentid: number,
+  id: string;
+  name: string;
 }
