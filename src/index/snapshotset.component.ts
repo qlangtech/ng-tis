@@ -44,10 +44,10 @@ declare var jQuery: any;
                               <i nz-icon nzType="select" nzTheme="outline"></i>切换版本
                           </button>&nbsp;
                           <button nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
-                          <button nz-button (click)="doPushConfig2Engine()" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
+                          <button nz-button (click)="doPushConfig2Engine(s.snId)" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
                       </div>
                   </td>
-                  <td> {{s.createTime | dateformat}}</td>
+                  <td> {{s.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</td>
                   <td>
                       <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
                       {{s.memo}}</td>
@@ -229,15 +229,14 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
   }
 
 
-  public doPushConfig2Engine(): void {
+  public doPushConfig2Engine(snapshotid: string): void {
 
 
-    this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=update_schema_all_server&needReload=false')
+    this.httpPost('/coredefine/corenodemanage.ajax', `action=core_action&emethod=update_schema_all_server&needReload=false&snapshotid=${snapshotid}`)
       .then(result => {
         this.processResult(result);
         if (result.success) {
           setTimeout(() => {
-            // this.activeModal.close(this.selectedSnapshotid);
             this.openSelectrevsionVisible = false;
           }, 2000);
         }

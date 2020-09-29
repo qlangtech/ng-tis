@@ -26,7 +26,7 @@ import {K8sPodState} from "./misc/incr.deployment";
               <nz-tab nzTitle="规格">
                   <nz-descriptions nzTitle="配置" nzBordered>
                       <nz-descriptions-item nzTitle="Docker Image">{{dto.incrDeployment.dockerImage}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="创建时间">{{dto.incrDeployment.creationTimestamp | dateformat}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="创建时间">{{dto.incrDeployment.creationTimestamp | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
                   </nz-descriptions>
                   <nz-descriptions nzTitle="当前状态" nzBordered>
                       <nz-descriptions-item nzTitle="availableReplicas">{{dto.incrDeployment.status.availableReplicas}}</nz-descriptions-item>

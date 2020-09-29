@@ -28,7 +28,7 @@ import {NzModalService} from "ng-zorro-antd";
 
           <tis-col title="创建时间" width="24">
               <ng-template let-rr='r'>
-                  {{rr.gmtCreate|dateformat}}
+                  {{rr.gmtCreate|date : "yyyy/MM/dd HH:mm:ss"}}
               </ng-template>
           </tis-col>
 

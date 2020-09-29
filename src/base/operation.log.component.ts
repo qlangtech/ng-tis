@@ -21,7 +21,7 @@ import {NzModalService} from "ng-zorro-antd";
           <tis-col *ngIf="showBreadcrumb" title="应用" field="appName" >
           </tis-col>
           <tis-col title="创建时间">
-              <ng-template let-l='r'>{{l.createTime | dateformat}}</ng-template>
+              <ng-template let-l='r'>{{l.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</ng-template>
           </tis-col>
           <tis-col title="操作">
               <ng-template let-l='r'>

@@ -82,13 +82,13 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               </li>
           </ng-container>
           <ng-container *ngSwitchCase="false">
-              <li nz-menu-item nzMatchRouter>
+              <li class="index-select-block" nz-menu-item nzMatchRouter>
                   <nz-select name="selectedCollection"
                              style="width: 100%;"
                              [nzSize]="'large'"
                              [(ngModel)]="app.name"
-                             nzPlaceHolder="Select Index"
-                             [nzDropdownMatchSelectWidth]="true"
+                             nzPlaceHolder="请选择"
+                             [nzDropdownMatchSelectWidth]="false"
                              nzShowSearch
                              (ngModelChange)="onCollectionChange($event)"
                              [nzServerSearch]="true"
@@ -110,7 +110,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               </button>
               <nz-dropdown-menu #user="nzDropdownMenu">
                   <ul nz-menu>
-                      <li nz-menu-item (click)="viewProfile()">信息</li>
+                      <li nz-menu-item (click)="viewProfile()"><i nz-icon nzType="info" nzTheme="outline"></i>信息</li>
                       <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
                   </ul>
               </nz-dropdown-menu>
@@ -131,6 +131,10 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
   styles: [`
       .ng-star-inserted {
           margin: 0
+      }
+
+      .index-select-block {
+          width: 300px;
       }
 
       .nav-items {
@@ -279,7 +283,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   viewProfile() {
-    this.infoNotify("用户权限功能还未开放，敬请期待" );
+    this.infoNotify("用户权限功能还未开放，敬请期待");
   }
 }
 

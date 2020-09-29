@@ -19,17 +19,28 @@ import {NzModalRef, NzModalService} from "ng-zorro-antd";
           <tis-page-header [showBreadcrumb]="false" [needRefesh]='true' (refesh)="get_view_data()">
           </tis-page-header>
           <nz-row [nzGutter]="16">
-              <nz-col [nzSpan]="6">
+              <nz-col [nzSpan]="3">
                   <nz-card class="primary-card">
                       <nz-statistic [nzValue]="(instanceDirDesc.allcount | number)!" [nzTitle]="'总记录数(条)'"></nz-statistic>
                   </nz-card>
               </nz-col>
-              <nz-col [nzSpan]="6">
-                  <nz-card class="primary-card">
-                      <nz-statistic [nzValue]="(2019.111 | number: '1.0-2')!" [nzTitle]="'当天更新次数'"></nz-statistic>
+              <nz-col [nzSpan]="5">
+                  <nz-card class="primary-card" [nzExtra]="todayMetricsQueryTemplate">
+                      <nz-statistic [nzValue]="(this.todayMetrics?.queryCount | number: '1.0-2')!" [nzTitle]="'当天查询次数'"></nz-statistic>
                   </nz-card>
+                  <ng-template #todayMetricsQueryTemplate>
+                      <a routerLink="./monitor"><i nz-icon nzType="line-chart" nzTheme="outline"></i></a>
+                  </ng-template>
               </nz-col>
-              <nz-col [nzSpan]="12">
+              <nz-col [nzSpan]="5">
+                  <nz-card class="primary-card" [nzExtra]="todayMetricsUpdateTemplate">
+                      <nz-statistic [nzValue]="(this.todayMetrics?.updateCount | number: '1.0-2')!" [nzTitle]="'当天更新次数'"></nz-statistic>
+                  </nz-card>
+                  <ng-template #todayMetricsUpdateTemplate>
+                      <a routerLink="./monitor"><i nz-icon nzType="line-chart" nzTheme="outline"></i></a>
+                  </ng-template>
+              </nz-col>
+              <nz-col [nzSpan]="11">
                   <nz-card nzTitle="副本目录信息" class="primary-card">
                       {{instanceDirDesc.desc}}
                   </nz-card>
@@ -111,6 +122,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   app: any;
   config: any;
   instanceDirDesc: any = {allcount: 0};
+  todayMetrics: TodayMetrics;
 
   STATE_COLOR = {
     COLOR_Active: '#57A957',
@@ -139,6 +151,7 @@ export class CorenodemanageComponent extends AppFormComponent {
           this.app = r.bizresult.app;
           this.config = r.bizresult.config;
           this.instanceDirDesc = r.bizresult.instanceDirDesc;
+          this.todayMetrics = r.bizresult.metrics;
           this.paintToplog(this.currentApp, this.createGraph(), r.bizresult.topology);
         }
       });
@@ -373,5 +386,14 @@ export class CorenodemanageComponent extends AppFormComponent {
   }
 
 
+}
+
+interface TodayMetrics {
+  // "metrics":{
+  //   "queryCount":0,
+  //   "updateCount":0
+  // },
+  queryCount: number;
+  updateCount: number;
 }
 
