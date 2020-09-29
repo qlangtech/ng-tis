@@ -86,9 +86,18 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
           <nz-footer> <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button></nz-footer>
       </nz-layout>
       <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司介绍" (nzOnClose)="companyIntrShow=false">
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
+          <div nz-row [nzGutter]="8">
+              <div nz-col nzSpan="8">
+                  <nz-card  nzTitle="钉钉讨论群">
+                      <img width="260" src="/images/dingding_talk_group.jpeg" />
+                  </nz-card>
+              </div>
+              <div nz-col nzSpan="8">
+                  <nz-card  nzTitle="微信讨论群">
+                      <img width="260" src="/images/weixin_talk_group.jpg" />
+                  </nz-card>
+              </div>
+          </div>
       </nz-drawer>
   `,
   styles: [

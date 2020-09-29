@@ -3,15 +3,15 @@
  */
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({name: 'dateformat'})
-export class DateFormatPipe implements PipeTransform {
-
-  transform(value: number, args?: string[]): any {
-    let t = new Date();
-    t.setTime(value);
-    return t.getFullYear() + '/' + t.getMonth() + '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes();
-  }
-}
+// @Pipe({name: 'dateformat'})
+// export class DateFormatPipe implements PipeTransform {
+//
+//   transform(value: number, args?: string[]): any {
+//     let t = new Date();
+//     t.setTime(value);
+//     return t.getFullYear() + '/' + t.getMonth() + '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes();
+//   }
+// }
 
 
 @Pipe({name: 'timeconsume'})

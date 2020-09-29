@@ -26,7 +26,7 @@ import {NzModalService} from "ng-zorro-antd";
    <i *ngSwitchDefault>初始账户</i></span></ng-template>
               </tis-col>
               <tis-col title="创建时间">
-                  <ng-template let-u='r'>{{u.createTime|dateformat}}
+                  <ng-template let-u='r'>{{u.createTime|date : "yyyy/MM/dd HH:mm:ss"}}
                   </ng-template>
               </tis-col>
               <tis-col title="操作">
