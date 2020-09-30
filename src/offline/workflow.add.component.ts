@@ -95,7 +95,7 @@ export const TYPE_DUMP_TABLE = 'table';
                               </div>
                           </div>
                       </nz-tab>
-                      <nz-tab nzTitle="ER">
+                      <nz-tab *ngIf="!!topologyName" nzTitle="ER">
                           <ng-template nz-tab>
                               <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)" [topologyName]="topologyName"
                                           [_nodeTypes]="_nodeTypes" (nodeClick)="erNodesNodeClick($event)"></offline-er>

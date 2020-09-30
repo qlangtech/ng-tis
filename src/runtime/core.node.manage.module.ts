@@ -33,7 +33,7 @@ import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {ChartsModule} from 'ng2-charts';
 
-import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
+// import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {IncrPodLogsStatusComponent} from "./incr.pod.logs.status.component";
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzIconModule, NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
@@ -48,7 +48,7 @@ import {LineChartComponent} from "./line.chart.component";
   id: 'coremanage',
   imports: [CommonModule, CoreNodeRoutingModule, FormsModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
-    , ChartsModule, NzDropDownModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
+    , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule, NzCheckboxModule
   ],
   declarations: [LineChartComponent,
     TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent, IncrBuildStep4RunningTabBaseComponent,

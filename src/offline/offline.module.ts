@@ -38,7 +38,7 @@ import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
-import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
+// import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {SideBarToolBar} from "../common/basic.form.component";
 import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
@@ -62,7 +62,7 @@ const icons: IconDefinition[] = [DeleteOutline];
   imports: [ // CommonModule,
     NzCollapseModule,
     NzTabsModule,
-    NzInputModule, NzDropDownModule, NzTableModule,  NzSwitchModule,
+    NzInputModule, NzTableModule,  NzSwitchModule,
     FormsModule,  BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzCascaderModule

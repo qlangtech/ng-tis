@@ -24,18 +24,17 @@ import {Item} from "../common/tis.plugin";
           </tis-ipt>
 
           <tis-ipt #workflow title="数据流" name="workflow" require="true">
-              <nz-select nzSize="large" style="width: calc(100% - 6em)" name="workflow" nzDropdownMatchSelectWidth="true" [(ngModel)]="model.workflow">
-                  <nz-option nzLabel="请选择"></nz-option>
+              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="workflow" nzDropdownMatchSelectWidth="true" [(ngModel)]="model.workflow">
                   <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name"></nz-option>
               </nz-select>
               <a class="tis-link-btn" [routerLink]="['/','offline','wf_add']">创建数据流</a>
           </tis-ipt>
 
           <tis-ipt #dptId title="所属部门" name="dptId" require="true">
-              <nz-select nzSize="large" name="dptId" class="form-control" [(ngModel)]="model.dptId">
-                  <nz-option [nzValue]="'-1'" nzLabel="请选择"></nz-option>
+              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="model.dptId">
                   <nz-option *ngFor="let pp of model.dpts" [nzValue]="pp.value" [nzLabel]="pp.name"></nz-option>
               </nz-select>
+              <a class="tis-link-btn" [routerLink]="['/','base','departmentlist']">部门管理</a>
           </tis-ipt>
 
           <tis-ipt #recept title="接口人" name="recept" require="true">
