@@ -56,7 +56,7 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   @ViewChild("inputTpl", {static: true}) contentTempate: TemplateRef<any>;
 
   ngOnInit(): void {
-   // console.log("TisInputTool ngOnInit");
+    // console.log("TisInputTool ngOnInit");
   }
 
   ngAfterContentChecked(): void {
@@ -67,7 +67,7 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
 
     this.ipts.forEach((ipt) => {
       if (ipt.ngControl) {
-       // ipt.nzSize = 'large';
+        // ipt.nzSize = 'large';
         ipt.ngControl.name = this.name;
         ipt.ngControl.valueChanges.subscribe((val) => {
           delete this.itemProp.error;
@@ -84,8 +84,8 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
     });
 
     this.inputProps.forEach((ip) => {
-     // console.log("============");
-     // console.log(ip.viewContainerRef.element.nativeElement.innerHTML);
+      // console.log("============");
+      // console.log(ip.viewContainerRef.element.nativeElement.innerHTML);
     })
   }
 
@@ -110,28 +110,31 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   selector: 'tis-form',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <ng-content select="tis-page-header"></ng-content>
+      <nz-spin [nzSpinning]="this.spinning">
+          <ng-content select="tis-page-header"></ng-content>
 
-      <form nz-form #form>
-          <nz-form-item *ngFor="let i of ipts">
-              <nz-form-label [nzRequired]="i.require" [nzSm]="6" [nzXs]="24" [nzFor]="i.name">{{i.title}}</nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="i.itemProp.validateStatus" [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
-                  <!--
-                    <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
-                     https://stackoverflow.com/questions/49127877/render-elements-of-querylist-in-the-template
-                    -->
-                  <ng-container *ngTemplateOutlet="i.contentTempate"></ng-container>
-              </nz-form-control>
-          </nz-form-item>
-      </form>
+          <form nz-form #form>
+              <nz-form-item *ngFor="let i of ipts">
+                  <nz-form-label [nzRequired]="i.require" [nzSm]="6" [nzXs]="24" [nzFor]="i.name">{{i.title}}</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="i.itemProp.validateStatus" [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
+                      <!--
+                        <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
+                         https://stackoverflow.com/questions/49127877/render-elements-of-querylist-in-the-template
+                        -->
+                      <ng-container *ngTemplateOutlet="i.contentTempate"></ng-container>
+                  </nz-form-control>
+              </nz-form-item>
+          </form>
+      </nz-spin>
   `,
 })
 export class FormComponent implements AfterContentInit, OnInit {
   @ContentChildren(TisInputTool) ipts: QueryList<TisInputTool>;
   @Input() title: string;
+  @Input() spinning = false;
   _fieldsErr: Item = Item.create([]);
   @Input() set fieldsErr(val: Item) {
-   // console.log("fieldsErr");
+    // console.log("fieldsErr");
     this._fieldsErr = val;
     if (this.ipts) {
       this.ngAfterContentInit();
@@ -147,7 +150,7 @@ export class FormComponent implements AfterContentInit, OnInit {
   }
 
   ngOnInit(): void {
-   // console.log("FormComponent ngOnInit"+ this.ipts.length);
+    // console.log("FormComponent ngOnInit"+ this.ipts.length);
   }
 
   ngAfterContentInit() {

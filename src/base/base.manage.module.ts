@@ -22,13 +22,14 @@ import {NzButtonModule} from 'ng-zorro-antd/button';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {BaseConfigComponent} from "./base-config.component";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
+import {DepartmentAddComponent} from "./department.add.component";
 
 
 @NgModule({
   id: 'basemanage',
-  imports: [CommonModule, FormsModule,  BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
+  imports: [CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
-    ApplistComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
+    ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent
   ],

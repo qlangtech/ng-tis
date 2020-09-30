@@ -85,7 +85,8 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
           </nz-layout>
           <nz-footer> <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button></nz-footer>
       </nz-layout>
-      <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司介绍" (nzOnClose)="companyIntrShow=false">
+      <!--https://market.aliyun.com/qidian/company/1180716023102499578-->
+      <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司版权所有" (nzOnClose)="companyIntrShow=false">
           <div nz-row [nzGutter]="8">
               <div nz-col nzSpan="8">
                   <nz-card  nzTitle="钉钉讨论群">
@@ -93,7 +94,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                   </nz-card>
               </div>
               <div nz-col nzSpan="8">
-                  <nz-card  nzTitle="微信讨论群">
+                  <nz-card  nzTitle="微信公众号">
                       <img width="260" src="/images/weixin_talk_group.jpg" />
                   </nz-card>
               </div>

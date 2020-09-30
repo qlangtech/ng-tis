@@ -145,7 +145,7 @@ export class WorkflowAddDbtableSetterComponent
     let tab: string = this.cascadervalues[1];
     let tabinfo: string[] = tab.split('%');
 
-    console.log(this.dto);
+    // console.log(this.dto);
 
     this.saveClick.emit(new DumpTable(this.nodeMeta, this.dto.nodeid
       , this.sql, this.cascadervalues[0], tabinfo[0], tabinfo[1]));

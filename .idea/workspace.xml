@@ -2,19 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/base/department.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/department.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/operation.log.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/operation.log.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/date.format.pipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/date.format.pipe.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index/snapshotset.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/snapshotset.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/user/user.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.list.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +45,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/runtime" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/base" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
@@ -55,11 +55,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/base" />
       <recent name="$PROJECT_DIR$/src/runtime" />
       <recent name="$PROJECT_DIR$/src/common" />
       <recent name="$PROJECT_DIR$/src/offline" />
       <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -180,7 +180,7 @@
       <workItem from="1599703880395" duration="57400000" />
       <workItem from="1600219544188" duration="3864000" />
       <workItem from="1600315375844" duration="1514000" />
-      <workItem from="1600741846005" duration="15109000" />
+      <workItem from="1600741846005" duration="30556000" />
     </task>
     <servers />
   </component>

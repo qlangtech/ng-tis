@@ -1,4 +1,4 @@
-import {AfterContentInit, AfterViewInit, Component,  OnInit} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {
   BasicSideBar,
   BasicSidebarDTO,
@@ -31,55 +31,55 @@ import {NzModalService} from "ng-zorro-antd";
 @Component({
   template: `
 
-    <div>
+      <div>
 
-      <sidebar-toolbar (close)="_closeSidebar()"
-                       (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
+          <sidebar-toolbar (close)="_closeSidebar()"
+                           (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
 
-      <form class="clear" nz-form nzLayout="horizontal" >
+          <form class="clear" nz-form nzLayout="horizontal">
 
-        <p class="item-head"><label>名称</label></p>
-        <div>
-          <input nz-input name="joinNodeName" [(ngModel)]="joinNodeForm.nodeName"/>
-        </div>
+              <p class="item-head"><label>名称</label></p>
+              <div>
+                  <input nz-input name="joinNodeName" [(ngModel)]="joinNodeForm.nodeName"/>
+              </div>
 
-        <p class="item-head"><label>依赖节点</label></p>
-        <div>
-          <nz-select name="depsTab" nzMode="tags" style="width: 100%;" nzPlaceHolder="请选择"
-                     [(ngModel)]="joinNodeForm.dependenciseTabIds">
-            <nz-option *ngFor="let option of listOfOption"
-                       [nzLabel]="option.label"
-                       [nzValue]="option.value"></nz-option>
-          </nz-select>
-        </div>
-        <p class="item-head"><label>SQL</label></p>
-        <div id="sqleditorBlock">
+              <p class="item-head"><label>依赖节点</label></p>
+              <div>
+                  <nz-select name="depsTab" nzMode="tags" style="width: 100%;" nzPlaceHolder="请选择"
+                             [(ngModel)]="joinNodeForm.dependenciseTabIds">
+                      <nz-option *ngFor="let option of listOfOption"
+                                 [nzLabel]="option.label"
+                                 [nzValue]="option.value"></nz-option>
+                  </nz-select>
+              </div>
+              <p class="item-head"><label>SQL</label></p>
+              <div id="sqleditorBlock">
 
-          <tis-codemirror name="sqltext" [size]="{width:null,height:600}"
-                          [(ngModel)]="joinNodeForm.joinSql"></tis-codemirror>
+                  <tis-codemirror name="sqltext" [size]="{width:null,height:600}"
+                                  [(ngModel)]="joinNodeForm.joinSql"></tis-codemirror>
 
-        </div>
+              </div>
 
 
-      </form>
+          </form>
 
-    </div>
+      </div>
 
   `,
 
   styles: [
       `
-      .item-head {
-        margin: 20px 0px 0px 0px;
-      }
+          .item-head {
+              margin: 20px 0px 0px 0px;
+          }
 
-      #sqleditorBlock {
-        width: 100%;
-      }
+          #sqleditorBlock {
+              width: 100%;
+          }
 
-      .clear {
-        clear: both;
-      }
+          .clear {
+              clear: both;
+          }
     `]
 })
 // JOIN 节点设置
@@ -99,10 +99,6 @@ export class WorkflowAddJoinComponent
 
     // @ts-ignore
     let dto: JoinNode = selectNode;
-    // console.log(dto);
-    // console.log(dto);
-
-
     this.joinNodeForm = new JoinNodeForm(this.nodeMeta, dto, this);
 
     this.refeshDependencyOption();
@@ -127,7 +123,7 @@ export class WorkflowAddJoinComponent
     // console.log(this.joinNodeForm.dto);
     let id = this.joinNodeForm.dto.id;
     let node = this.g6Graph.findById(id);
-    console.log(node);
+    //  console.log(node);
 
     this.g6Graph.removeItem(node);
     this.parentComponent.joinNodeMap.delete(id);
@@ -145,7 +141,15 @@ export class WorkflowAddJoinComponent
   }
 
   _saveClick(): void {
-    this.saveClick.emit(this.joinNodeForm);
+   // console.log(this.joinNodeForm.dto);
+    let url = '/offline/datasource.ajax?action=offline_datasource_action&emethod=validateWorkflowAddJoinComponentForm'
+    this.jsonPost(url, this.joinNodeForm.dto).then((r) => {
+        this.processResult(r);
+        if (r.success) {
+          this.saveClick.emit(this.joinNodeForm);
+        }
+      }
+    );
   }
 
   // 点击保存之后处理逻辑
@@ -166,7 +170,7 @@ export class WorkflowAddJoinComponent
     // 将新的节点添加上
     evt.dependenciseTabIds.forEach((targetNodeid: any) => {
       let edgeid = addComponent.getUid();
-     // console.log({'nodeid': nodeid, 'old': old, 'target': targetNodeid, 'newedgeid': edgeid});
+      // console.log({'nodeid': nodeid, 'old': old, 'target': targetNodeid, 'newedgeid': edgeid});
       graph.addItem('edge', {
         'id': edgeid,
         source: nodeid,
@@ -243,7 +247,7 @@ class JoinNodeForm extends BasicSidebarDTO {
         } else {
           // throw new Error(`option id ${id} can not find relevant Option Object`);
         }
-        console.log({'findid': id , 'finded': find });
+        console.log({'findid': id, 'finded': find});
       });
 
       this.dto.dependencies = opts;
