@@ -128,8 +128,6 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
   protected afterSaveContent(result: any): void {
     this.saveSuccess.emit(result);
   }
-
-
 }
 
 
@@ -148,7 +146,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                   <span nz-tooltip nzTooltipTitle="对应数据源中的列名" nzTooltipPlacement="top">字段名称</span>
               </th>
               <th nzWidth="400px"><span data-placement="top"
-                        data-toggle="tooltip">字段类型</span></th>
+                                        data-toggle="tooltip">字段类型</span></th>
               <th>可查询</th>
               <th>存储</th>
               <th><span>可排序</span>
@@ -158,7 +156,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
           </thead>
           <tbody>
           <ng-container *ngFor="let f of fieldlist.data let i = index">
-              <tr [class.editor-up]="f.editorOpen" class="editable-row">
+              <tr [class.editor-up]="f.editorOpen"  class="editable-row">
                   <td nzShowExpand (nzExpandChange)="editorOpenClick(f)">
                       <span>{{f.index}}</span>
                       <!--
@@ -169,11 +167,10 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                   </td>
                   <td>
                       <i *ngIf="f.uniqueKey" class="fa fa-key" aria-hidden="true"></i>
-                      <i *ngIf="f.sharedKey" class="fa fa-share-alt"
-                         aria-hidden="true"></i>
+                      <i *ngIf="f.sharedKey" class="fa fa-share-alt" aria-hidden="true"></i>
                   </td>
-                  <td>
-                      <div [class.has-danger]="f.hasError">
+                  <td [class.has-danger]="f.errInfo.fieldNameError">
+                      <div >
                           <div class="editable-cell" *ngIf="this.editField !== f && f.name !== null; else editTpl">
                               <div class="editable-cell-value-wrap" (click)="startEdit(f, $event)">
                                   {{f.name}}
@@ -181,12 +178,11 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                           </div>
                           <ng-template #editTpl>
                               <input nz-input
-                                     placeholder="请输入字段名称" (focus)="fieldEditGetFocus(f)" [(ngModel)]="f.name" [class.form-control-danger]="f.hasError"
-                                     name="{{'name'+f.id}}"/>
+                                     placeholder="请输入字段名称" (focus)="fieldEditGetFocus(f)" [(ngModel)]="f.name" name="{{'name'+f.id}}"/>
                           </ng-template>
                       </div>
-                  </td>
-                  <td>
+                  </td >
+                  <td [class.has-danger]="f.errInfo.fieldTypeError" >
                       <nz-select class="type-select" [(ngModel)]="f.fieldtype" nzPlaceHolder="请选择" [nzDropdownMatchSelectWidth]="true" (ngModelChange)="fieldTypeChange(f)">
                           <nz-option [nzValue]="pp.name" [nzLabel]="pp.name" *ngFor="let pp of ftypes"></nz-option>
                       </nz-select>
@@ -194,13 +190,13 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                           <nz-option [nzValue]="t.key" [nzLabel]="t.value" *ngFor="let t of getAnalyzer(f.fieldtype)"></nz-option>
                       </nz-select>
                   </td>
-                  <td>
+                  <td [class.has-danger-left]="f.errInfo.fieldPropRequiredError">
                       <label nz-checkbox [(ngModel)]="f.indexed" (ngModelChange)="indexedCheckChange($event.target,f)"></label>
                   </td>
-                  <td>
+                  <td [class.has-danger-center]="f.errInfo.fieldPropRequiredError">
                       <label nz-checkbox [(ngModel)]="f.stored" (ngModelChange)="storedCheckChange($event.target,f)"></label>
                   </td>
-                  <td>
+                  <td [class.has-danger-right]="f.errInfo.fieldPropRequiredError">
                       <label nz-checkbox [(ngModel)]="f.docval" (ngModelChange)="docvalCheckChange($event.target,f)"></label>
                   </td>
                   <td>
@@ -239,6 +235,31 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
   `,
   styles: [
       `
+          .has-danger {
+              border: 2px solid #ff6f70;
+              border-radius: 3px;
+          }
+
+          .has-danger-left {
+              border-left: 2px solid #ff6f70;
+              border-top: 2px solid #ff6f70;
+              border-bottom: 2px solid #ff6f70;
+              border-radius: 3px;
+          }
+
+          .has-danger-right {
+              border-right: 2px solid #ff6f70;
+              border-top: 2px solid #ff6f70;
+              border-bottom: 2px solid #ff6f70;
+              border-radius: 3px;
+          }
+
+          .has-danger-center {
+              border-top: 2px solid #ff6f70;
+              border-bottom: 2px solid #ff6f70;
+              border-radius: 3px;
+          }
+
           .type-select {
               width: 40%;
               margin-right: 4px;
@@ -477,9 +498,9 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
     field.id = flength;
     field.index = f.index + 1;
     field.inputDisabled = false;
-    field.fieldtype = 'string';
+    // field.fieldtype = 'string';
     field.tokenizerType = '-1';
-    field.split = true;
+    field.split = false;
     this.fields.splice(index + 1, 0, field);
     for (let sIndex = index + 2; sIndex < this.fields.length; sIndex++) {
       this.fields[sIndex].index++;

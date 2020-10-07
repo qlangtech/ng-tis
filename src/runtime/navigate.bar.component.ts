@@ -1,8 +1,8 @@
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {TISService} from "../service/tis.service";
+import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {TisResponseResult, TISService} from "../service/tis.service";
 // import {Application} from "../index/application";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -14,7 +14,9 @@ import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
 // @ts-ignore
 import * as $ from 'jquery';
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
+import {InitSystemComponent} from "../common/init.system.component";
 
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 
@@ -104,6 +106,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               </li>
           </ng-container>
           <li class="user-profile" nz-menu-item nzMatchRouter>
+              <button nz-button nzType="link" (click)="openTisAbout()">关于</button>
               <button nz-button nz-dropdown [nzDropdownMenu]="user">
                   <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
                   <i nz-icon nzType="down"></i>
@@ -114,6 +117,12 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                       <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
                   </ul>
               </nz-dropdown-menu>
+              <ng-template #tisAbout>
+                  <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
+                      <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
+                  </nz-descriptions>
+              </ng-template>
           </li>
           <!--
                     <li nz-menu-item>
@@ -166,8 +175,11 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   collectionOptionList: string[] = [];
   isLoading: boolean;
   userProfile: UserProfile;
+  tisMeta: TISMeta = {};
 
   searchChange$ = new Subject<string>();
+
+  @ViewChild('tisAbout', {read: TemplateRef, static: true}) tisAppAbout: TemplateRef<any>;
 
   @Input() set core(idxapp: any) {
     this.app = idxapp;
@@ -227,9 +239,23 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
     let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
     this.httpPost(getUserUrl, '').then((r) => {
-      this.userProfile = r.bizresult;
-      // console.log(r);
+      if (r.success) {
+        this.userProfile = r.bizresult.usr;
+        this.tisMeta = r.bizresult.tisMeta;
+        if (!r.bizresult.sysInitialized) {
+          this.openInitSystemDialog();
+        }
+      }
     })
+  }
+
+  openInitSystemDialog() {
+    let ref: NzModalRef<InitSystemComponent> = this.openDialog(InitSystemComponent, {nzTitle: "初始化TIS", nzClosable: false});
+    ref.afterClose.subscribe((result: TisResponseResult) => {
+      if (result.success) {
+        this.successNotify("TIS配置初始化完成");
+      }
+    });
   }
 
   // 点击切换当前app
@@ -285,11 +311,27 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   viewProfile() {
     this.infoNotify("用户权限功能还未开放，敬请期待");
   }
+
+  openTisAbout(): void {
+    this.modalService.info({
+      nzTitle: '关于TIS',
+      nzContent: this.tisAppAbout,
+      nzOkText: 'OK',
+      nzOnOk: () => {
+      }
+    });
+  }
 }
+
 
 interface UserProfile {
   department: string;
   departmentid: number,
   id: string;
   name: string;
+}
+
+interface TISMeta {
+  buildVersion?: string;
+  createTime?: string;
 }

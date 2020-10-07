@@ -122,7 +122,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   app: any;
   config: any;
   instanceDirDesc: any = {allcount: 0};
-  todayMetrics: TodayMetrics;
+  todayMetrics: TodayMetrics = { queryCount: 0, updateCount: 0};
 
   STATE_COLOR = {
     COLOR_Active: '#57A957',
@@ -290,10 +290,10 @@ export class CorenodemanageComponent extends AppFormComponent {
   }
 
   // 配置同步到线上
-  public openSyncConfigDialog(): void {
-    // this.modalService.open(SyncConfigComponent, {size: 'lg'});
-    this.openLargeDialog(SyncConfigComponent);
-  }
+  // public openSyncConfigDialog(): void {
+  //   // this.modalService.open(SyncConfigComponent, {size: 'lg'});
+  //   this.openLargeDialog(SyncConfigComponent);
+  // }
 
   // 变更历史
   public openSnapshotVerChangeLog(): void {
@@ -301,11 +301,11 @@ export class CorenodemanageComponent extends AppFormComponent {
     this.openDialog(SnapshotChangeLogComponent, {nzTitle: "版本切换历史"});
   }
 
-  // 从其他索引拷贝索引配置
-  public openCopyOtherIndexDialog(): void {
-    // this.modalService.open(CopyOtherCoreComponent, {size: 'lg'});
-    this.openLargeDialog(CopyOtherCoreComponent);
-  }
+  // // 从其他索引拷贝索引配置
+  // public openCopyOtherIndexDialog(): void {
+  //   // this.modalService.open(CopyOtherCoreComponent, {size: 'lg'});
+  //   this.openLargeDialog(CopyOtherCoreComponent);
+  // }
 
   public openTriggerFullDumpDialog(): void {
     // 打开触发全量构建对话框

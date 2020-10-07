@@ -2,14 +2,16 @@ import {Component, OnInit, Input, ViewChild, ViewContainerRef, ContentChild, Tem
 import {TISService} from '../service/tis.service';
 
 // import {ScriptService} from '../service/script.service';
-import {BasicEditComponent} from './basic.edit.component';
+import {AbstractSchemaEditComponent, BasicEditComponent} from './basic.edit.component';
 import {EditorConfiguration} from "codemirror";
-import {StupidModal} from "../base/addapp-pojo";
+import {FieldErrorInfo, StupidModal} from "../base/addapp-pojo";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SchemaVisualizingEditComponent} from "../base/schema.expert.create.edit.component";
 
 export declare type TisResType = 'schema.xml' | 'solrconfig.xml';
+
 // Schema编辑
 @Component({
   // templateUrl: '/runtime/jarcontent/schema.htm',
@@ -49,71 +51,59 @@ export declare type TisResType = 'schema.xml' | 'solrconfig.xml';
   // 不知道为啥西面这个加style的方法不行
   // styles:['.schema-edit-modal .modal-dialog {max-width:1200px;}']
 })
-export class SchemaXmlEditComponent extends BasicEditComponent {
+export class SchemaXmlEditComponent extends AbstractSchemaEditComponent {
   // private resType: TisResType = 'schema.xml';
-  pageTitle: string;
-  memoForm: FormGroup;
-
-  @ViewChild('memoblock', {read: TemplateRef, static: true}) memoblock: TemplateRef<any>;
   // @ContentChild(TemplateRef, {static: false})
   // contentTempate: TemplateRef<any>;
-  constructor(private fb: FormBuilder,
+  constructor(fb: FormBuilder,
               tisService: TISService, nzmodalService: NzModalService
-    , private router: Router, route: ActivatedRoute, notification: NzNotificationService) {
-    super(tisService, nzmodalService, route, notification);
+    , router: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(fb, tisService, nzmodalService, router, route, notification);
   }
 
-  ngOnInit(): void {
-    super.ngOnInit();
+  protected startSubmitRemoteServer() {
 
-    this.memoForm = this.fb.group({
-      memo: [null, [Validators.required, Validators.minLength(5)]],
-    });
-  }
-
-  submitForm(): boolean {
-    for (const i in this.memoForm.controls) {
-
-      let control: AbstractControl = this.memoForm.controls[i];
-      control.markAsDirty();
-      control.updateValueAndValidity();
-      // TODO 最小文本长度的校验一时半会想不明白怎么搞
-      console.error(control.errors);
-    }
-    return this.memoForm.valid;
-  }
-
-  public doSaveContent(): void {
-
-    this.model.filename = this.pageTitle;
-    this.model.snapshotid = this.snid;
-
-    this.modalService.confirm({
-      nzTitle: '日志',
-      nzContent: this.memoblock,
-      nzOkText: '提交',
-      nzCancelText: '取消',
-      nzOnOk: () => {
-        if (!this.submitForm()) {
-          return false;
-        }
-        this.jPost('/runtime/jarcontent/schema.ajax?action=save_file_content_action&event_submit_do_save_content=y'
-          , this.model).then(result => {
-          if (result.success) {
-            this.router.navigate(['../../../snapshotset'], {relativeTo: this.route});
-            this.notification.create('success', '成功', result.msg[0]);
-          }
-        });
-
+    this.jPost('/runtime/jarcontent/schema.ajax?action=save_file_content_action&event_submit_do_save_content=y'
+      , this.model).then(result => {
+      if (result.success) {
+        this.router.navigate(['../../../snapshotset'], {relativeTo: this.route});
+        this.notification.create('success', '成功', result.msg[0]);
       }
     });
   }
 
 
-  protected getResType(params: Params): string {
-    this.pageTitle = super.getResType(params);
-    return this.pageTitle;
-  }
+  // public doSaveContent(): void {
+  //
+  //   this.model.filename = this.pageTitle;
+  //   this.model.snapshotid = this.snid;
+  //
+  //   this.modalService.confirm({
+  //     nzTitle: '日志',
+  //     nzContent: this.memoblock,
+  //     nzOkText: '提交',
+  //     nzCancelText: '取消',
+  //     nzOnOk: () => {
+  //       if (!this.submitForm()) {
+  //         return false;
+  //       }
+  //       this.jPost('/runtime/jarcontent/schema.ajax?action=save_file_content_action&event_submit_do_save_content=y'
+  //         , this.model).then(result => {
+  //         if (result.success) {
+  //           this.router.navigate(['../../../snapshotset'], {relativeTo: this.route});
+  //           this.notification.create('success', '成功', result.msg[0]);
+  //         }
+  //       });
+  //
+  //     }
+  //   });
+  // }
+
+
+  // protected getResType(params: Params): string {
+  //   this.pageTitle = super.getResType(params);
+  //   return this.pageTitle;
+  // }
 
   get codeMirrirOpts(): EditorConfiguration {
     return {
@@ -122,20 +112,20 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
     };
   }
 
-  protected afterSaveContent(result: any): void {
-
-    if (result.success) {
-
-      // if (result.success) {
-      //   this.afterSaveContent(result.bizresult);
-      // } else {
-      //
-      // }
-      // setTimeout(() => {
-      //   this.activeModal.close(result.bizresult.snapshot);
-      // }, 1000);
-    }
-  }
+  // protected afterSaveContent(result: any): void {
+  //
+  //   if (result.success) {
+  //
+  //     // if (result.success) {
+  //     //   this.afterSaveContent(result.bizresult);
+  //     // } else {
+  //     //
+  //     // }
+  //     // setTimeout(() => {
+  //     //   this.activeModal.close(result.bizresult.snapshot);
+  //     // }, 1000);
+  //   }
+  // }
 }
 
 
@@ -152,6 +142,15 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
       <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
           <visualizing-schema-editor [bizResult]="stupidModal"></visualizing-schema-editor>
       </nz-spin>
+      <ng-template #memoblock>
+          <form nz-form [formGroup]="memoForm">
+              <nz-form-item>
+                  <nz-form-control [nzSpan]="20" nzErrorTip="最小长度5个字符">
+                      <textarea name="memo" rows="4" style="width: 100%" nz-input formControlName="memo" [(ngModel)]="this.model.memo"></textarea>
+                  </nz-form-control>
+              </nz-form-item>
+          </form>
+      </ng-template>
   `,
   styles: [
       ` #config-content {
@@ -161,17 +160,38 @@ export class SchemaXmlEditComponent extends BasicEditComponent {
   // 不知道为啥西面这个加style的方法不行
   // styles:['.schema-edit-modal .modal-dialog {max-width:1200px;}']
 })
-export class SchemaEditVisualizingModelComponent extends BasicEditComponent {
+export class SchemaEditVisualizingModelComponent extends AbstractSchemaEditComponent {
   resType: TisResType = 'schema.xml';
   stupidModal: StupidModal = new StupidModal();
+  @ViewChild(SchemaVisualizingEditComponent, {static: false}) private schemaVisualtEditor: SchemaVisualizingEditComponent;
 
-  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
-    super(tisService, modalService, route);
+  constructor(fb: FormBuilder,
+              tisService: TISService, nzmodalService: NzModalService
+    , router: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(fb, tisService, nzmodalService, router, route, notification);
   }
 
-  // protected getResType(): string {
-  //   return this.resType;
-  // }
+  protected startSubmitRemoteServer() {
+    // console.log(this.stupidModal);
+    let postModel = this.schemaVisualtEditor.stupidModel;
+    this.jsonPost('/runtime/jarcontent/schema.ajax?action=schema_action&event_submit_do_save_by_expert_model=y'
+      , {'visualizingForm': postModel, 'meta': this.model}).then(result => {
+     // console.log(result);
+      if (result.success) {
+        this.router.navigate(['../../snapshotset'], {relativeTo: this.route});
+        // this.notification.create('success', '成功', result.msg[0]);
+        this.successNotify(result.msg[0])
+      } else {
+        let errs: Array<FieldErrorInfo> = result.bizresult;
+       // console.log(result.success);
+        errs.forEach((err) => {
+          postModel.markFieldErr(err);
+        });
+        this.stupidModal = postModel;
+      }
+    });
+  }
+
 
   protected getResType(params: Params): string {
     return this.resType;
@@ -186,7 +206,7 @@ export class SchemaEditVisualizingModelComponent extends BasicEditComponent {
   }
 
   protected processConfigResult(conf: any): void {
-    console.log(conf);
+    // console.log(conf);
     this.stupidModal = StupidModal.deseriablize(conf);
   }
 

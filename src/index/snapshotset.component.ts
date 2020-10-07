@@ -141,7 +141,11 @@ export class SnapshotsetComponent extends BasicFormComponent implements OnInit {
       let page = param["page"];
       this.httpPost('/runtime/jarcontent/snapshotset.ajax'
         , `action=snapshot_revsion_action&event_submit_do_get_snapshot_list=y&page=${page}`)
-        .then(result => this.processSnapshotList(result));
+        .then(result => {
+          if (result.success) {
+            this.processSnapshotList(result);
+          }
+        });
     });
 
   }

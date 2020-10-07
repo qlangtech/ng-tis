@@ -11,12 +11,11 @@ import {NzModalService} from "ng-zorro-antd";
       <nz-spin [nzSize]="'large'" [nzSpinning]="this.formDisabled || pluginComponentDisabled">
           <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzTabBarExtraContent]="extraTemplate">
               <nz-tab nzTitle="全局" (nzDeselect)="configDeSelect($event)">
+                  <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                  <!--
                   <ng-template nz-tab>
-                      <!--
-                      <incr-build-step1-1-params-set (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></incr-build-step1-1-params-set>
-                    -->
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
+               -->
               </nz-tab>
               <nz-tab nzTitle="实时" (nzDeselect)="configDeSelect($event)">
                   <!---->
@@ -61,14 +60,17 @@ export class BaseConfigComponent extends BasicFormComponent implements OnInit {
   }
 
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
-    console.log(event.formDisabled);
+    // console.log(event.formDisabled);
     if (!event.formDisabled) {
       this.pluginComponentDisabled = event.formDisabled;
     }
   }
 
   tabChange(event: number) {
-    this.pluginComponentDisabled = true;
+    // console.log(event);
+    if (event > 0) {
+      this.pluginComponentDisabled = true;
+    }
   }
 
   configDeSelect(event: void) {

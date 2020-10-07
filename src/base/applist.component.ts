@@ -62,8 +62,10 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
       this.httpPost('/runtime/applist.ajax'
         , 'emethod=get_apps&action=app_view_action' + nameQuery)
         .then((r) => {
-          this.pager = Pager.create(r);
-          this.pageList = r.bizresult.rows;
+          if (r.success) {
+            this.pager = Pager.create(r);
+            this.pageList = r.bizresult.rows;
+          }
         });
     })
   }

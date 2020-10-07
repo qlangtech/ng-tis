@@ -68,9 +68,11 @@ export class DepartmentListComponent extends BasicFormComponent implements OnIni
   }
 
   openAddDptDialog() {
-    let ref: NzModalRef<DepartmentAddComponent> =  this.openDialog(DepartmentAddComponent, {nzTitle: "添加部门"})
+    let ref: NzModalRef<DepartmentAddComponent> = this.openDialog(DepartmentAddComponent, {nzTitle: "添加部门"})
     ref.afterClose.subscribe((r) => {
-      this.bizline =  [r].concat(this.bizline);
+      if (r) {
+        this.bizline = [r].concat(this.bizline);
+      }
     });
   }
 
