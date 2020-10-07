@@ -83,19 +83,29 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                   </ng-template>
               </nz-sider>
           </nz-layout>
-          <nz-footer> <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button></nz-footer>
+          <nz-footer>
+              <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button>
+          </nz-footer>
       </nz-layout>
       <!--https://market.aliyun.com/qidian/company/1180716023102499578-->
       <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司版权所有" (nzOnClose)="companyIntrShow=false">
           <div nz-row [nzGutter]="8">
               <div nz-col nzSpan="8">
-                  <nz-card  nzTitle="钉钉讨论群">
-                      <img width="260" src="/images/dingding_talk_group.jpeg" />
+                  <nz-card nzTitle="相关">
+                      <nz-descriptions [nzColumn]="1">
+                          <nz-descriptions-item [nzTitle]="githubRef"><a target="_blank" href="https://github.com/qlangtech/tis-solr">https://github.com/qlangtech/tis-solr</a></nz-descriptions-item>
+                       <ng-template #githubRef> <i nz-icon nzType="github" nzTheme="outline"></i></ng-template>
+                      </nz-descriptions>
                   </nz-card>
               </div>
               <div nz-col nzSpan="8">
-                  <nz-card  nzTitle="微信公众号">
-                      <img width="260" src="/images/weixin_talk_group.jpg" />
+                  <nz-card nzTitle="钉钉讨论群">
+                      <img width="260" src="/images/dingding_talk_group.jpeg"/>
+                  </nz-card>
+              </div>
+              <div nz-col nzSpan="8">
+                  <nz-card nzTitle="微信公众号">
+                      <img width="260" src="/images/weixin_talk_group.jpg"/>
                   </nz-card>
               </div>
           </div>
