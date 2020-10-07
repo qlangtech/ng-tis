@@ -11,6 +11,13 @@ export class StupidModal {
   shareKey: string;
   tplAppId: number;
 
+  public markFieldErr(err: FieldErrorInfo): void {
+    let field = this.fields.find((f) => f.id === err.id);
+    if (field) {
+      field.errInfo = err;
+    }
+  }
+
   public static deseriablize(r: StupidModal): StupidModal {
     let stupidModal = Object.assign(new StupidModal(), r);
     stupidModal.schemaXmlContent = r.schemaXmlContent;
@@ -42,14 +49,11 @@ export class SchemaFieldTypeTokensType {
 export class SchemaFieldType {
   split = false;
   name: string;
-  rangeAware: false;
   tokensType: Array<SchemaFieldTypeTokensType> = [];
 }
 
 export class SchemaField {
   sharedKey = false;
-  // rangequery = false;
-  // range = false;
   indexed = false;
   docval = true;
   uniqueKey = false;
@@ -64,6 +68,8 @@ export class SchemaField {
   id: number;
   tokenizerType: string;
 
+  errInfo: FieldErrorInfo = {};
+
   _editorOpen = false;
   get editorOpen(): boolean {
     return this._editorOpen;
@@ -72,6 +78,13 @@ export class SchemaField {
   set editorOpen(val: boolean) {
     this._editorOpen = val;
   }
+}
+
+export interface FieldErrorInfo {
+  id?: number;
+  fieldNameError?: boolean;
+  fieldTypeError?: boolean;
+  fieldPropRequiredError?: boolean;
 }
 
 // 从schema编辑页面跳转到确认页面使用的包装对象

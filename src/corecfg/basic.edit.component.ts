@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, Input, TemplateRef} from '@angular/core';
 import {TISService} from '../service/tis.service';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from '../common/basic.form.component';
@@ -10,8 +10,9 @@ declare var jQuery: any;
 
 import {Subject} from 'rxjs/Subject';
 import {EditorConfiguration} from "codemirror";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 // import {Observable} from 'rxjs/Observable';
 
@@ -19,7 +20,7 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
 
   showSaveControl = true;
 
-  public model: FormData = new FormData();
+  public model: SchemaFormData = new SchemaFormData();
   // protected code: ElementRef;
   // protected codeMirror: any;
   // schemaContent: string;
@@ -130,7 +131,75 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
   }
 }
 
-export class FormData {
+
+export abstract class AbstractSchemaEditComponent extends BasicEditComponent {
+
+  pageTitle: string;
+  protected memoForm: FormGroup;
+
+  @ViewChild('memoblock', {read: TemplateRef, static: true}) memoblock: TemplateRef<any>;
+
+  constructor(protected fb: FormBuilder,
+              tisService: TISService, nzmodalService: NzModalService
+    , protected router: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(tisService, nzmodalService, route, notification);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+    this.memoForm = this.fb.group({
+      memo: [null, [Validators.required, Validators.minLength(5)]],
+    });
+  }
+
+  submitForm(): boolean {
+    for (const i in this.memoForm.controls) {
+
+      let control: AbstractControl = this.memoForm.controls[i];
+      control.markAsDirty();
+      control.updateValueAndValidity();
+      // TODO 最小文本长度的校验一时半会想不明白怎么搞
+      // console.error(control.errors);
+    }
+    return this.memoForm.valid;
+  }
+
+  public doSaveContent(): void {
+
+    this.model.filename = this.pageTitle;
+    this.model.snapshotid = this.snid;
+
+    this.modalService.confirm({
+      nzTitle: '日志',
+      nzContent: this.memoblock,
+      nzOkText: '提交',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        if (!this.submitForm()) {
+          return false;
+        }
+        this.startSubmitRemoteServer()
+      }
+    });
+  }
+
+
+  protected getResType(params: Params): string {
+    this.pageTitle = super.getResType(params);
+    return this.pageTitle;
+  }
+
+  protected afterSaveContent(result: any): void {
+
+    if (result.success) {
+    }
+  }
+
+  protected abstract startSubmitRemoteServer();
+}
+
+export class SchemaFormData {
   snapshotid: number;
   content: string;
   filename: string;

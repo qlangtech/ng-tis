@@ -70,6 +70,7 @@ import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
 import {NzResultModule} from 'ng-zorro-antd/result';
 import {NzProgressModule} from 'ng-zorro-antd/progress';
+import {InitSystemComponent} from "../common/init.system.component";
 
 @NgModule({
   id: 'tiscommonModule',
@@ -90,7 +91,7 @@ import {NzProgressModule} from 'ng-zorro-antd/progress';
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent,
-    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, OperationLogComponent
+    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
   exports: [NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

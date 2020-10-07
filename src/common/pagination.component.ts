@@ -38,7 +38,11 @@ export class Pager {
 
   public static create(result: TisResponseResult): Pager {
     let biz = result.bizresult;
-    return new Pager(biz.curPage, biz.totalPage, biz.totalCount, biz.pageSize);
+    if (biz) {
+      return new Pager(biz.curPage, biz.totalPage, biz.totalCount, biz.pageSize);
+    } else {
+      return new Pager();
+    }
   }
 
   constructor(public page = 0, public allPage = 0, public totalCount = 0, public pageSize = 10) {

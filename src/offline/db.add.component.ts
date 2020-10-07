@@ -11,17 +11,15 @@ import {Location} from '@angular/common';
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
 import {IFieldError, Item} from "../common/tis.plugin";
-import {PluginsComponent} from "../common/plugins.component";
 
 
 @Component({
   template: `
-      <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <button nz-button (click)="verifyDbConfig()" [nzLoading]="this.formDisabled">校验</button>&nbsp;
-          <button nz-button nzType="primary" (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">提交</button>
-      </tis-page-header>
-
       <tis-form [fieldsErr]="errorItem">
+          <tis-page-header [showBreadcrumb]="false" [result]="result">
+              <button nz-button (click)="verifyDbConfig()" [nzLoading]="this.formDisabled">校验</button>&nbsp;
+              <button nz-button nzType="primary" (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">提交</button>
+          </tis-page-header>
           <tis-ipt #dbname title="数据库名" name="dbName" require="true">
               <input nz-input [id]="dbname.name" [(ngModel)]="dbPojo.dbName" [readonly]="dbNameReadOnly">
           </tis-ipt>
@@ -116,14 +114,6 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
         if (result.success) {
           let dbid = result.bizresult;
           this.dbPojo.dbId = dbid;
-          // let facdeDb = new DbPojo(this.dbPojo.dbId);
-          // facdeDb.facade = true;
-          // facdeDb.dbName = d.dbName;
-          // facdeDb.encoding = d.encoding;
-          // facdeDb.host = d.host;
-          // facdeDb.password = '******';
-          // facdeDb.port = d.port;
-          // facdeDb.userName = d.userName;
           this.successSubmit.emit(this.dbPojo);
           this.activeModal.close(this.dbPojo);
         } else {

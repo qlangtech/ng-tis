@@ -89,17 +89,13 @@ export class BasicFormComponent {
     });
   }
 
-  public openLargeDialog(component: any): NzModalRef<any> {
-
-    return this.modalService.create({
-      nzTitle: 'dddd',
-      nzContent: component
-    });
-
-    // const modalRef: NgbModalRef = this.modalService.open(
-    //   component, {windowClass: 'schema-edit-modal', backdrop: 'static'});
-    // return modalRef;
-  }
+  // public openLargeDialog(component: any): NzModalRef<any> {
+  //
+  //   return this.modalService.create({
+  //     nzTitle: 'dddd',
+  //     nzContent: component
+  //   });
+  // }
 
   // <T>(options?: ModalOptionsForService<T>): NzModalRef<T>;
   public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
@@ -148,7 +144,7 @@ export class BasicFormComponent {
 
 // = (r: TisResponseResult): TisResponseResult => {
   protected handleError = (error: any): Promise<any> => {
-    // console.log(error);
+     // console.log(error);
     // console.log(this);
     this.formDisabled = false;
     NProgress.done();

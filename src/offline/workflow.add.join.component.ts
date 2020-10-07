@@ -25,6 +25,7 @@ import {TISService} from '../service/tis.service';
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd";
+import {Item} from "../common/tis.plugin";
 // @ts-ignore
 // import {Shape} from '@antv/g6';
 
@@ -35,34 +36,25 @@ import {NzModalService} from "ng-zorro-antd";
 
           <sidebar-toolbar (close)="_closeSidebar()"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
-
-          <form class="clear" nz-form nzLayout="horizontal">
-
-              <p class="item-head"><label>名称</label></p>
-              <div>
-                  <input nz-input name="joinNodeName" [(ngModel)]="joinNodeForm.nodeName"/>
-              </div>
-
-              <p class="item-head"><label>依赖节点</label></p>
-              <div>
-                  <nz-select name="depsTab" nzMode="tags" style="width: 100%;" nzPlaceHolder="请选择"
+          <tis-form [fieldsErr]="errorItem" formLayout="vertical">
+              <tis-page-header [showBreadcrumb]="false" [result]="result">
+              </tis-page-header>
+              <tis-ipt #nodeName title="名称" name="exportName" require="true">
+                  <input required type="text" [id]="nodeName.name" nz-input [(ngModel)]="joinNodeForm.nodeName" [name]="nodeName.name"/>
+              </tis-ipt>
+              <tis-ipt #dptNodes title="依赖节点" name="dependencies" require="true">
+                  <nz-select [name]="dptNodes.name" nzMode="tags" style="width: 100%;" nzPlaceHolder="请选择"
                              [(ngModel)]="joinNodeForm.dependenciseTabIds">
                       <nz-option *ngFor="let option of listOfOption"
                                  [nzLabel]="option.label"
                                  [nzValue]="option.value"></nz-option>
                   </nz-select>
-              </div>
-              <p class="item-head"><label>SQL</label></p>
-              <div id="sqleditorBlock">
-
-                  <tis-codemirror name="sqltext" [size]="{width:null,height:600}"
+              </tis-ipt>
+              <tis-ipt #sql title="SQL" name="sql" require="true">
+                  <tis-codemirror class="ant-input" [name]="sql.name" [size]="{width:null,height:600}"
                                   [(ngModel)]="joinNodeForm.joinSql"></tis-codemirror>
-
-              </div>
-
-
-          </form>
-
+              </tis-ipt>
+          </tis-form>
       </div>
 
   `,
@@ -85,7 +77,7 @@ import {NzModalService} from "ng-zorro-antd";
 // JOIN 节点设置
 export class WorkflowAddJoinComponent
   extends BasicSideBar implements OnInit, AfterContentInit, AfterViewInit {
-
+  errorItem: Item = Item.create([]);
   joinNodeForm: JoinNodeForm;
 
   // @ViewChild('sqleditor', {static: false}) sqleditor: ElementRef;
@@ -141,12 +133,14 @@ export class WorkflowAddJoinComponent
   }
 
   _saveClick(): void {
-   // console.log(this.joinNodeForm.dto);
+    // console.log(this.joinNodeForm.dto);
     let url = '/offline/datasource.ajax?action=offline_datasource_action&emethod=validateWorkflowAddJoinComponentForm'
     this.jsonPost(url, this.joinNodeForm.dto).then((r) => {
         this.processResult(r);
         if (r.success) {
           this.saveClick.emit(this.joinNodeForm);
+        } else {
+          this.errorItem = Item.processFieldsErr(r);
         }
       }
     );

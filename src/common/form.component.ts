@@ -3,7 +3,7 @@ import {
   AfterContentInit, AfterViewInit, ChangeDetectionStrategy,
   Component, ContentChild,
   ContentChildren,
-  Directive, ElementRef, EmbeddedViewRef,
+  Directive, ElementRef,
   // EventEmitter,
   Input, OnInit,
   // Output,
@@ -113,10 +113,11 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
       <nz-spin [nzSpinning]="this.spinning">
           <ng-content select="tis-page-header"></ng-content>
 
-          <form nz-form #form>
+          <form nz-form #form [nzLayout]="this.formLayout">
               <nz-form-item *ngFor="let i of ipts">
-                  <nz-form-label [nzRequired]="i.require" [nzSm]="6" [nzXs]="24" [nzFor]="i.name">{{i.title}}</nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="i.itemProp.validateStatus" [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
+                  <nz-form-label [nzRequired]="i.require" [nzSpan]="isHorizontal ? 6 : null" [nzFor]="i.name">{{i.title}}</nz-form-label>
+                  <nz-form-control [nzSpan]="isHorizontal ? 14 : null" [nzValidateStatus]="i.itemProp.validateStatus"
+                                   [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
                       <!--
                         <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
                          https://stackoverflow.com/questions/49127877/render-elements-of-querylist-in-the-template
@@ -129,6 +130,8 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   `,
 })
 export class FormComponent implements AfterContentInit, OnInit {
+  @Input()
+  formLayout: 'horizontal' | 'vertical' | 'inline' = 'horizontal';
   @ContentChildren(TisInputTool) ipts: QueryList<TisInputTool>;
   @Input() title: string;
   @Input() spinning = false;
@@ -144,6 +147,10 @@ export class FormComponent implements AfterContentInit, OnInit {
   @ViewChild('form', {static: false}) _form: ElementRef;
 
   fields: TisInputTool[] = [];
+
+  get isHorizontal(): boolean {
+    return this.formLayout === 'horizontal';
+  }
 
   constructor() {
 

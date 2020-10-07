@@ -401,7 +401,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   startScroll(event: NzAnchorLinkComponent) {
-    console.log(event);
+   // console.log(event);
   }
 }
 

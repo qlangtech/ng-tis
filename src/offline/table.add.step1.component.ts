@@ -14,31 +14,29 @@ declare var jQuery: any;
 @Component({
   selector: 'tableAddStep1',
   template: `
-      <nz-spin [nzSpinning]="formDisabled" [nzSize]="'large'">
+      <tis-form [spinning]="formDisabled" #form>
           <tis-page-header [showBreadcrumb]="false" [result]="result">
               <input type="hidden" name="event_submit_do_check_table_logic_name_repeat" value="y"/>
               <input type="hidden" name="action" value="offline_datasource_action"/>
               <button nz-button nzType="primary" (click)="createNextStep(form)" [disabled]="!tablePojo.tableName">下一步</button>
           </tis-page-header>
-          <tis-form #form>
-              <tis-ipt #dbname title="数据库" name="dbname" require>
-                  <nz-select *ngIf="!updateMode" [name]="dbname.name" [id]="dbname.name" (ngModelChange)="dbChange($event)" [(ngModel)]="tablePojo.dbId">
-                      <nz-option *ngFor="let db of dbs" [nzValue]="db.value" [nzLabel]="db.name"></nz-option>
-                  </nz-select>
-                  <input nz-input *ngIf="updateMode" [name]="dbname.name" [id]="dbname.name" disabled [value]="tablePojo.dbName"/>
-              </tis-ipt>
+          <tis-ipt #dbname title="数据库" name="dbname" require>
+              <nz-select *ngIf="!updateMode" [name]="dbname.name" [id]="dbname.name" (ngModelChange)="dbChange($event)" [(ngModel)]="tablePojo.dbId">
+                  <nz-option *ngFor="let db of dbs" [nzValue]="db.value" [nzLabel]="db.name"></nz-option>
+              </nz-select>
+              <input nz-input *ngIf="updateMode" [name]="dbname.name" [id]="dbname.name" disabled [value]="tablePojo.dbName"/>
+          </tis-ipt>
 
-              <tis-ipt #table *ngIf='tbs.length>0 && !updateMode' title="表名" name="table" require>
-                  <nz-select [name]="table.name" [id]="table.name" (change)="tabChange()" [(ngModel)]="tablePojo.tableName">
-                      <nz-option *ngFor="let t of tbs" [nzValue]="t.value" [nzLabel]="t.name"></nz-option>
-                  </nz-select>
-              </tis-ipt>
+          <tis-ipt #table *ngIf='tbs.length>0 && !updateMode' title="表名" name="table" require>
+              <nz-select [name]="table.name" [id]="table.name" [nzShowSearch]="true" (change)="tabChange()" [(ngModel)]="tablePojo.tableName">
+                  <nz-option *ngFor="let t of tbs" [nzValue]="t.value" [nzLabel]="t.name"></nz-option>
+              </nz-select>
+          </tis-ipt>
 
-              <tis-ipt *ngIf='updateMode' title="表名" name="table" require>
-                  <input nz-input tis-ipt-prop disabled [value]="tablePojo.tableName"/>
-              </tis-ipt>
-          </tis-form>
-      </nz-spin>
+          <tis-ipt *ngIf='updateMode' title="表名" name="table" require>
+              <input nz-input tis-ipt-prop disabled [value]="tablePojo.tableName"/>
+          </tis-ipt>
+      </tis-form>
   `
 })
 export class TableAddStep1Component extends TableAddStep implements OnInit {

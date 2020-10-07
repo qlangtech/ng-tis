@@ -38,7 +38,7 @@ export class TISService {
   private currApp: CurrentCollection;
 
   constructor(protected http: HttpClient
-    // , private modalService: NgbModal
+              // , private modalService: NgbModal
     , private notification: NzNotificationService) {
   }
 
@@ -57,10 +57,10 @@ export class TISService {
       (obs: Observer<MessageEvent>) => {
         ws.onmessage = obs.next.bind(obs);
         // ws.onerror = obs.error.bind(obs);
-  // TODO： 奇怪 这里接收不到onError的消息，这个后期需要查一下
-  //       ws.onerror = function () {
-  // console.log("error");
-  //       };
+        // TODO： 奇怪 这里接收不到onError的消息，这个后期需要查一下
+        //       ws.onerror = function () {
+        // console.log("error");
+        //       };
         ws.onclose = obs.complete.bind(obs);
         return ws.close.bind(ws);
       }
@@ -149,8 +149,10 @@ export class TISService {
         let result = this.processResult(response);
         if (result) {
           return result;
+        } else {
+          return response;
         }
-        return () => Promise.reject(response);
+        // return () => Promise.reject(response);
       }).catch(this.handleError);
   }
 
