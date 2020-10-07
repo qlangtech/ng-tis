@@ -11,27 +11,9 @@ import * as $ from 'jquery';
 import {Grid} from "@antv/g6/build/plugins.js";
 
 import * as G6 from '@antv/g6';
-// import Grid from '@antv/g6';
 import {TYPE_DUMP_TABLE, WorkflowAddComponent} from "./workflow.add.component";
-import {consoleTestResultHandler} from "tslint/lib/test";
 import {NzModalService} from "ng-zorro-antd";
-// import {EdgeConfig} from "@antv/g6/lib/types";
-//  @ts-ignore
-// import {} from 'ng-sidebar';
-// import {Droppable} from '@shopify/draggable';
-// @ts-ignore
-// import { Graph } from '@antv/g6';
-// @ts-ignore
-// @ts-ignore
 
-// @ts-ignore
-// import * as $ from 'jquery';
-// import 'codemirror/mode/sql/sql.js';
-// import 'codemirror/lib/codemirror.css';
-// import {EditorConfiguration, fromTextArea} from 'codemirror';
-// @ts-ignore
-// import {Shape} from '@antv/g6';
-// console.log(G6);
 
 const edgeActiveStyle = {
   'endArrow': true,
