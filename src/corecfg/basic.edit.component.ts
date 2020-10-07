@@ -135,7 +135,7 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
 export abstract class AbstractSchemaEditComponent extends BasicEditComponent {
 
   pageTitle: string;
-  protected memoForm: FormGroup;
+  memoForm: FormGroup;
 
   @ViewChild('memoblock', {read: TemplateRef, static: true}) memoblock: TemplateRef<any>;
 

@@ -1,6 +1,4 @@
-/*Deserialize*/
 
-import {isBoolean} from "util";
 import {TisResponseResult} from "../service/tis.service";
 import {PluginsComponent} from "./plugins.component";
 
