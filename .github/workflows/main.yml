@@ -27,5 +27,6 @@ jobs:
         run: npm install
            
       - name: run build
-        run: npm run ng:serve-aot
+        #run: npm run ng:serve-aot
+        run: ng --version
     
