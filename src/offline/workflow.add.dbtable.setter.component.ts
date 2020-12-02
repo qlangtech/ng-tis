@@ -22,7 +22,7 @@ import {TISService} from '../service/tis.service';
 */
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
-import {CascaderOption, NzModalService} from "ng-zorro-antd";
+import {CascaderOption, NzCascaderOption, NzModalService} from "ng-zorro-antd";
 
 
 //
@@ -57,7 +57,7 @@ import {CascaderOption, NzModalService} from "ng-zorro-antd";
 export class WorkflowAddDbtableSetterComponent
   extends BasicSideBar implements OnInit, AfterContentInit, AfterViewInit {
 
-  cascaderOptions: CascaderOption[] = [];
+  cascaderOptions: NzCascaderOption[] = [];
   cascadervalues: any = {};
   private dto: DumpTable;
   sql = 'select * from usertable;';
@@ -74,12 +74,12 @@ export class WorkflowAddDbtableSetterComponent
       .then(result => {
         if (result.success) {
           this.cascaderOptions = [];
-          const dbs = result.bizresult;
+          const dbs = result.bizresult.dbs;
           for (let db of dbs) {
             let children = [];
             if (db.tables) {
               for (let table of db.tables) {
-                let c: CascaderOption = {
+                let c: NzCascaderOption = {
                   'value': `${table.id}%${table.tableLogicName}`,
                   'label': table.tableLogicName,
                   'isLeaf': true
@@ -87,7 +87,7 @@ export class WorkflowAddDbtableSetterComponent
                 children.push(c);
               }
             }
-            let dbNode: CascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
+            let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
             this.cascaderOptions.push(dbNode);
           }
           // console.log(this.cascaderOptions);

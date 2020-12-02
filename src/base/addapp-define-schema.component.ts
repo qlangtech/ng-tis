@@ -3,7 +3,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TisResponseResult, TISService} from '../service/tis.service';
 // import {Observable} from 'rxjs/Observable';
 // import {of} from 'rxjs/observable/of';
 // import {SchemaExpertDirective} from './addapp.schema.expert.editor.directive';
@@ -129,37 +129,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
   }
 
-
-  //
-  public expertSchemaEditorInitComplete(e: { success: boolean, bizresult: [] }): void {
-
-    // this.processResult(e);
-    // this.fields.forEach((f) => {
-    //   f.hasError = false;
-    // });
-    // if (e.success) {
-    //   // this.expertModel = true;
-    //   // console.info(e.bizresult.cfgContent);
-    //   // this.schemaExpertEditor.setCodeMirrorContent(e.bizresult.cfgContent, false);
-    //
-    // } else {
-    //   // 显示校验错误
-    //   // console.info(typeof e.bizresult);
-    // if ((typeof e.bizresult) === 'array') {
-    //   if (e.bizresult) {
-    //     e.bizresult.forEach((ee: { fieldInputBlank: boolean, id: number }) => {
-    //       const find = this.fields.find((f) => {
-    //         return f.id === ee.id && ee.fieldInputBlank;
-    //       });
-    //       if (find) {
-    //         find.hasError = true;
-    //       }
-    //     });
-    //   }
-    //
-    //   // }
-    // }
-
+  public expertSchemaEditorInitComplete(e: TisResponseResult): void {
     this.expertModel = e.success;
   }
 
@@ -238,7 +208,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
           }
         })
         .then(
-          (r: { bizresult: StupidModal }) => {
+          (r: TisResponseResult) => {
             //   this.setBizResult(r.bizresult);
             this.stupidModal = StupidModal.deseriablize(r.bizresult);
             // console.log(this.stupidModal);

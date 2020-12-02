@@ -212,7 +212,7 @@ export class TISService {
 }
 
 export interface TisResponseResult {
-  bizresult: any;
+  bizresult?: any;
   success: boolean;
   errormsg?: string[];
   action_error_page_show?: boolean;
