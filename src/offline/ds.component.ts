@@ -9,6 +9,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
+import {PluginsComponent} from "../common/plugins.component";
+import {Descriptor, HeteroList, PluginType} from "../common/tis.plugin";
 
 // const THRESHOLD = 10000;
 
@@ -24,11 +26,14 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
       <nz-layout>
           <nz-sider [nzWidth]="300">
               <div class="btn-block">
-                  <button nz-button nzSize="small" style="width: 3em" nzType="default" (click)="addDbBtnClick()">
-                      <i class="fa fa-plus" aria-hidden="true"></i>
-                      <i class="fa fa-database" aria-hidden="true"></i>
-                  </button>
-
+                  <button style="width: 4em" nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="dbAdd"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></button>
+                  <nz-dropdown-menu #dbAdd="nzDropdownMenu">
+                      <ul nz-menu>
+                          <li nz-menu-item *ngFor="let d of datasourceDesc">
+                              <a href="javascript:void(0)" (click)="addDbBtnClick(d)">{{d.displayName}}</a>
+                          </li>
+                      </ul>
+                  </nz-dropdown-menu>
                   <button nz-button nz-dropdown nzSize="small" style="width: 4em" [nzDropdownMenu]="menu">
                       <i class="fa fa-plus" aria-hidden="true"></i>
                       <i class="fa fa-table" aria-hidden="true"></i>
@@ -62,7 +67,6 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
               </nz-spin>
           </nz-sider>
           <nz-content>
-
               <nz-spin *ngIf="treeNodeClicked " style="width:100%;min-height: 200px" [nzSize]="'large'" [nzSpinning]="this.formDisabled">
                   <div *ngIf="selectedDb && selectedDb.dbId">
 
@@ -72,38 +76,21 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
 
                       <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" [nzTabBarExtraContent]="extraTemplate">
                           <nz-tab nzTitle="明细">
-                              <nz-descriptions nzBordered>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="数据库名">
-                                      <div style="width: 400px">
-                                          {{selectedDb.dbName}}
-                                      </div>
-                                  </nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="节点描述">{{selectedDb.host}}
-                                  </nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="端口">{{selectedDb.port}}
-                                  </nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="用户名">{{selectedDb.userName}}
-                                  </nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="密码">{{'******'}}
-                                  </nz-descriptions-item>
-                              </nz-descriptions>
+                              <tis-plugins #detailPlugin (afterInit)="afterPluginInit($event)" [errorsPageShow]="true"
+                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [plugins]="pluginsMetas"></tis-plugins>
                           </nz-tab>
                           <nz-tab *ngIf="facdeDb" [nzTitle]="'门面'">
-                              <nz-descriptions nzBordered>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="数据库名">
-                                      <div style="width: 400px">
-                                          {{facdeDb.dbName}}
-                                      </div>
-                                  </nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="节点描述">{{facdeDb.host}}</nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="端口">{{facdeDb.port}}</nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="用户名">{{facdeDb.userName}}</nz-descriptions-item>
-                                  <nz-descriptions-item [nzSpan]="3" nzTitle="密码">{{'******'}}</nz-descriptions-item>
-                              </nz-descriptions>
                           </nz-tab>
                       </nz-tabset>
                       <ng-template #extraTemplate>
-                          <button nz-button nzType="default" (click)="addFacadeDb()" [disabled]="facdeDb != null">添加门面配置</button>
+                          <button *ngIf="supportFacade" nz-button nzType="default" nz-dropdown [nzDropdownMenu]="dbFacadeAdd"  [disabled]="facdeDb != null">添加门面配置<i nz-icon nzType="down"></i></button>
+                          <nz-dropdown-menu #dbFacadeAdd="nzDropdownMenu">
+                              <ul nz-menu>
+                                  <li nz-menu-item *ngFor="let d of facadeSourceDesc">
+                                      <a href="javascript:void(0)" (click)="addDbBtnClick(d)">{{d.displayName}}</a>
+                                  </li>
+                              </ul>
+                          </nz-dropdown-menu>
                           &nbsp;
                           <button nz-button (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
                           &nbsp;
@@ -189,9 +176,16 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   selectedTable: { tabId?: number, tableName?: string, dbId?: number, dbName?: string, selectSql?: string } = {};
   searchValue: any;
   selectedDbIndex = 0;
-
+  @ViewChild('detailPlugin', {static: false}) detailPlugin: PluginsComponent;
   treeLoad = false;
   treeNodeClicked = false;
+  supportFacade = false;
+  facadeSourceDesc: Array<Descriptor> = [];
+
+  pluginsMetas: PluginType[] = [];
+
+  // 可选的数据源
+  datasourceDesc: Array<Descriptor> = [];
 
 
   constructor(protected tisService: TISService //
@@ -212,7 +206,11 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.processResult(result);
 
         if (result.success) {
-          this.treeInit(result.bizresult);
+
+          let dbs = result.bizresult.dbs;
+          let descList = PluginsComponent.wrapDescriptors(result.bizresult.pluginDesc);
+          this.datasourceDesc = Array.from(descList.values());
+          this.treeInit(dbs);
           setTimeout(() => {
             let queryParams = this.activateRoute.snapshot.queryParams;
             if (queryParams['dbId']) {
@@ -246,9 +244,36 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     // console.log( this.dbtree );
   }
 
-// 添加数据库按钮点击响应
-  public addDbBtnClick(): void {
-    let modalRef = this.openDialog(DbAddComponent, {nzTitle: "添加数据库"});
+  /**
+   * 当前选中的DS plugin 描述信息
+   * @param desc
+   */
+  private dsPluginDesc(desc: Descriptor): HeteroList[] {
+    let h = new HeteroList();
+    h.extensionPoint = desc.extendPoint;
+    h.descriptors.set(desc.impl, desc);
+    PluginsComponent.addNewItem(h, desc, false);
+    return [h];
+  }
+
+  // 添加数据库按钮点击响应
+  public addDbBtnClick(pluginDesc: Descriptor): void {
+    // console.log(pluginDesc)
+    // let modalRef = this.openDialog(DbAddComponent, {nzTitle: "添加数据库"});
+
+    // <tis-plugins (ajaxOccur)="onResponse($event)" [errorsPageShow]="true" [formControlSpan]="20"
+    //   [shallInitializePluginItems]="false" [_heteroList]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
+    let modalRef = this.openDialog(PluginsComponent, {nzTitle: "添加数据库"});
+    let addDb: PluginsComponent = modalRef.getContentComponent();
+    addDb.errorsPageShow = true;
+    addDb.formControlSpan = 20;
+    addDb.shallInitializePluginItems = false;
+    addDb._heteroList = this.dsPluginDesc(pluginDesc);
+    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_detailed,update_false"}])
+    addDb.showSaveButton = true;
+    //  addDb.plugins = ['datasource'];
+
+    // modalRef.getContentComponent().dsPluginDesc = pluginDesc;
     modalRef.afterClose.subscribe((r: DbPojo) => {
       // console.log(r);
       if (r) {
@@ -364,9 +389,10 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             let biz = result.bizresult;
 
             if (type === 'db') {
-
               let detail = biz.detailed;
               let db = this.createDB(id, detail);
+              this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${db.dbName},type_detailed`}];
+              // this.detailPlugin.initializePluginItems();
               this.selectedDb = db;
               // console.log(this.selectedDb);
               if (biz.facade) {
@@ -389,12 +415,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
   private createDB(id: string, detail: any) {
     let db = new DbPojo(id);
-
-    db.dbType = detail.dbType;
-    db.host = detail.hostDesc;
-    db.dbName = detail.name;
-    db.port = detail.port;
-    db.userName = detail.userName;
+    db.dbName = detail.identityName;
     return db;
   }
 
@@ -443,9 +464,20 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   editDb(): void {
 
-    let dialog = this.openDialog(DbAddComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
-    dialog.getContentComponent().dbPojo = Object.assign(new DbPojo(), this.facadeModel ? this.facdeDb : this.selectedDb);
-    dialog.afterClose.subscribe((r) => {
+    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
+    let addDb: PluginsComponent = modalRef.getContentComponent();
+    addDb.errorsPageShow = true;
+    addDb.formControlSpan = 20;
+    addDb.itemChangeable = false;
+    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${this.facadeModel ? "facade" : "detailed"}`}])
+    addDb.shallInitializePluginItems = true;
+    // addDb._heteroList = this.dsPluginDesc(pluginDesc);
+    addDb.showSaveButton = true;
+
+
+    // let dialog = this.openDialog(DbAddComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
+    // dialog.getContentComponent().dbPojo = Object.assign(new DbPojo(), this.facadeModel ? this.facdeDb : this.selectedDb);
+    modalRef.afterClose.subscribe((r) => {
       if (r) {
         let db: DbPojo = Object.assign(new DbPojo(), r);
         // console.log(db);
@@ -580,6 +612,23 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   }
 
 
+  afterPluginInit(evne: HeteroList[]) {
+    evne.forEach((hlist) => {
+      let it = hlist.descriptorList;
+      it.forEach((des) => {
+        let ep = des.extractProps;
+        this.supportFacade = ep["supportFacade"];
+        let facadeSourceTypes: string[] = ep["facadeSourceTypes"];
+        this.facadeSourceDesc = [];
+        facadeSourceTypes.filter((r) => {
+          let findDes = this.datasourceDesc.find((dd) => dd.displayName === r);
+          if (findDes) {
+            this.facadeSourceDesc.push(findDes);
+          }
+        });
+      });
+    });
+  }
 }
 
 export class Node {

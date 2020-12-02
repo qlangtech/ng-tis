@@ -3,9 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/src/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/tis.service.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +182,21 @@
       <workItem from="1599703880395" duration="57400000" />
       <workItem from="1600219544188" duration="3864000" />
       <workItem from="1600315375844" duration="1514000" />
-      <workItem from="1600741846005" duration="68905000" />
+      <workItem from="1600741846005" duration="70194000" />
+      <workItem from="1602304901552" duration="143000" />
+      <workItem from="1602641796431" duration="649000" />
+      <workItem from="1603076106812" duration="2016000" />
+      <workItem from="1603250860059" duration="821000" />
+      <workItem from="1603878265994" duration="558000" />
+      <workItem from="1604023128838" duration="2178000" />
+      <workItem from="1604370092011" duration="1245000" />
+      <workItem from="1604888899551" duration="1083000" />
+      <workItem from="1604969591451" duration="1237000" />
+      <workItem from="1605271449341" duration="328000" />
+      <workItem from="1606203938387" duration="20538000" />
+      <workItem from="1606352401137" duration="8981000" />
+      <workItem from="1606388810838" duration="15390000" />
+      <workItem from="1606719856906" duration="5099000" />
     </task>
     <servers />
   </component>

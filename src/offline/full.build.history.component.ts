@@ -115,7 +115,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     }
     this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
       let taskid = r.bizresult.taskid;
-      let msg: any = [];
+      let msg: Array<any> = [];
       msg.push({
         'content': processStrategy.sucMsg
         , 'link': {'content': `查看构建状态(${taskid})`, 'href': './' + taskid}

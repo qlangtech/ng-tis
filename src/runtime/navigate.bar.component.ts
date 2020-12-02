@@ -122,6 +122,13 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                       <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
                       <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
                   </nz-descriptions>
+                  <svg version="1.1"
+                       preserveAspectRatio="xMinYMin meet"
+                       xmlns="http://www.w3.org/2000/svg"
+                       width="70" height="43"
+                       xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <image xlink:href="/images/icon/tis-log.svg" width="70" />
+                  </svg>
               </ng-template>
           </li>
           <!--

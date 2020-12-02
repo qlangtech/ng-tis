@@ -10,55 +10,24 @@ import {Location} from '@angular/common';
 //  @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
-import {IFieldError, Item} from "../common/tis.plugin";
+import {Descriptor, HeteroList, IFieldError, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {PluginsComponent} from "../common/plugins.component";
 
 
 @Component({
   template: `
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <button nz-button (click)="verifyDbConfig()" [nzLoading]="this.formDisabled">校验</button>&nbsp;
-              <button nz-button nzType="primary" (click)="saveDbConfig(null)" [nzLoading]="this.formDisabled">提交</button>
-          </tis-page-header>
-          <tis-ipt #dbname title="数据库名" name="dbName" require="true">
-              <input nz-input [id]="dbname.name" [(ngModel)]="dbPojo.dbName" [readonly]="dbNameReadOnly">
-          </tis-ipt>
-          <tis-ipt #type title="数据库类型" name="dbType" require="true">
-              <nz-select [id]="type.name" [name]="type.name" [(ngModel)]="dbPojo.dbType" nzAllowClear>
-                  <nz-option nzValue="mysql" nzLabel="MySql"></nz-option>
-              </nz-select>
-          </tis-ipt>
-          <tis-ipt #username title="用户名" name="userName" require="true">
-              <input nz-input [id]="username.name" [name]="username.name" [(ngModel)]="dbPojo.userName"/>
-          </tis-ipt>
-          <tis-ipt #password title="密码" name="password" require="true">
-              <input nz-input type="password" [id]="password.name" [name]="password.name" [(ngModel)]="dbPojo.password" placeholder="没有变化不需要输入"/>
-          </tis-ipt>
-          <tis-ipt #port title="端口" name="port" require="true">
-              <input [id]="port.name" nz-input type="number" [name]="port.name" [(ngModel)]="dbPojo.port"/>
-          </tis-ipt>
-          <tis-ipt #ecode title="编码" name="encoding" require="true">
-              <nz-select [id]="ecode.name" [name]="ecode.name" [(ngModel)]="dbPojo.encoding" nzAllowClear>
-                  <nz-option nzValue="UTF-8" nzLabel="UTF-8"></nz-option>
-                  <nz-option nzValue="GBK" nzLabel="GBK"></nz-option>
-              </nz-select>
-          </tis-ipt>
-          <tis-ipt #extraParams title="附加参数" name="extraParams">
-              <input [id]="extraParams.name" nz-input [name]="extraParams.name" [(ngModel)]="dbPojo.extraParams"/>
-          </tis-ipt>
-          <tis-ipt #host title="节点描述" name="host" require="true">
-              <textarea [id]="host.name" nz-input [name]="host.name" [nzAutosize]="{ minRows: 6, maxRows: 6 }" [(ngModel)]="dbPojo.host"
-                        placeholder="127.0.0.1[00-31],127.0.0.2[32-63],127.0.0.3,127.0.0.4[9],baisui.com[0-9]"></textarea>
-          </tis-ipt>
-      </tis-form>
+    {{hlist|json}}
+      <tis-plugins (ajaxOccur)="onResponse($event)" [errorsPageShow]="true" [formControlSpan]="20"
+      [shallInitializePluginItems]="false" [_heteroList]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
   `
 })
 export class DbAddComponent extends BasicFormComponent implements OnInit {
   switchType = 'single';
   dbEnums: DbEnum[] = [];
   @Input() dbPojo: DbPojo = new DbPojo();
-
   errorItem: Item = Item.create([]);
+
+  hlist: HeteroList[] = [];
 
   @Output() successSubmit = new EventEmitter<any>();
 
@@ -69,11 +38,24 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
     return !this.dbPojo.facade && this.dbPojo.dbId != null;
   }
 
+  // /**
+  //  * 当前选中的DS plugin 描述信息
+  //  * @param desc
+  //  */
+  // set dsPluginDesc(desc: Descriptor) {
+  //   let h = new HeteroList();
+  //   h.extensionPoint = desc.extendPoint;
+  //   h.descriptors.set(desc.impl, desc);
+  //   PluginsComponent.addNewItem(h, desc, false);
+  //   this.hlist = [h];
+  // }
+
   constructor(tisService: TISService,
               private location: Location
     , public activeModal: NzModalRef) {
     super(tisService);
   }
+
 
 
   get title(): string {
@@ -82,6 +64,9 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    // console.log(this.hlist);
+
     // console.log(this.dbPojo);
     if (this.dbPojo.dbId) {
       this.isAdd = false;
@@ -123,9 +108,15 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
       });
   }
 
+  onResponse(resp: PluginSaveResponse) {
+    if (resp.saveSuccess) {
+    //  this.activeModal.close(this.dbPojo);
+    }
+  }
+
 
   private get actionMethod(): string {
-    return ((this.isAdd ) ? 'add' : 'edit') + '_' + (this.dbPojo.facade ? 'facade' : 'datasource') + '_db';
+    return ((this.isAdd) ? 'add' : 'edit') + '_' + (this.dbPojo.facade ? 'facade' : 'datasource') + '_db';
   }
 
 
@@ -198,14 +189,14 @@ export class DbEnum {
 
 export class DbPojo {
   dbName = '';
-  dbType: string;
-  userName = '';
-  password: string;
-  port = '3306';
-  encoding = 'UTF-8';
-  extraParams = '';
-  shardingType = 'single';
-  host = '';
+  // dbType: string;
+  // userName = '';
+  // password: string;
+  // port = '3306';
+  // encoding = 'UTF-8';
+  // extraParams = '';
+  // shardingType = 'single';
+  // host = '';
   shardingEnum = '';
   // 是否是Cobar配置
   facade = false;

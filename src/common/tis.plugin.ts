@@ -1,12 +1,10 @@
-
 import {TisResponseResult} from "../service/tis.service";
 import {PluginsComponent} from "./plugins.component";
 
-export declare type PluginName = 'mq' | 'k8s-config' | 'fs' ;
-
+export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' ;
+export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string };
 export declare type PluginType = PluginName | PluginMeta;
 
-export declare type PluginMeta = { name: PluginName, require: boolean };
 
 export class AttrDesc {
   key: string;
@@ -19,10 +17,16 @@ export class AttrDesc {
   type: number;
   options: Array<ValOption>;
   required: boolean;
+  eprops: { String: any };
 
-  public addNewEmptyItemProp(): ItemPropVal {
-    let desVal = new ItemPropVal();
+  /**
+   *
+   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+   */
+  public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
+    let desVal = new ItemPropVal(updateModel);
     desVal.key = this.key;
+    desVal.eprops = this.eprops;
     desVal.required = this.required;
     desVal.type = this.type;
     // 当type为6时，options应该有内容
@@ -54,6 +58,8 @@ export class Descriptor {
   displayName: string;
   extendPoint: string;
   attrs: AttrDesc[];
+  extractProps: { string: any };
+  veriflable: boolean;
 }
 
 /*Items*/
@@ -112,7 +118,7 @@ export class Item {
       if (!v) {
         return;
       }
-      newVal = at.addNewEmptyItemProp();
+      newVal = at.addNewEmptyItemProp(true);
       if (at.describable) {
         let d = at.descriptors.get(v.impl);
         if (!d) {
@@ -130,9 +136,11 @@ export class Item {
     });
   }
 
-  public clearPropVals(): void {
+  public clearPropVals(dspClear = true): void {
     delete this._propVals;
-    this.dspt = null;
+    if (dspClear) {
+      this.dspt = null;
+    }
   }
 
   public get propVals(): ItemPropVal[] {
@@ -151,7 +159,7 @@ export class Item {
       let ip: ItemPropVal = this.vals[attr.key];
       if (!ip) {
         // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
-        ip = attr.addNewEmptyItemProp();
+        ip = attr.addNewEmptyItemProp(true);
         this.vals[attr.key] = ip;
       }
       // console.log(ip);
@@ -178,6 +186,30 @@ export class ItemPropVal {
   // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
   descVal: DescribleVal;
   error: string;
+  private _eprops: { string: any };
+  private dftVal: any;
+  placeholder: string;
+  _primaryVal = '';
+
+  set eprops(vals: { String: any }) {
+    // @ts-ignore
+    this._eprops = vals || {};
+    this.dftVal = this._eprops['dftVal'];
+    this.placeholder = this._eprops['placeholder'] || '';
+  }
+
+
+  constructor(public updateModel = false) {
+  }
+
+  get label(): string {
+    let label = this._eprops['label'];
+    return label ? label : this.key;
+  }
+
+  public getEProp(key: string): any {
+    return this._eprops[key];
+  }
 
   get hasFeedback(): boolean {
     return !(!this.error);
@@ -187,14 +219,16 @@ export class ItemPropVal {
     return this.hasFeedback ? 'error' : '';
   }
 
-  _primaryVal = '';
-
   set primary(val: string) {
     this._primaryVal = val;
   }
 
   get primary(): string {
+    if (!this.updateModel && this.dftVal) {
+      this._primaryVal = this.dftVal;
+    }
     return this._primaryVal;
+    // return this.updateModel ? this._primaryVal : this.dftVal;
   }
 
   get primaryVal(): boolean {
@@ -207,7 +241,7 @@ export class HeteroList {
   descriptors: Map<string /* impl */, Descriptor> = new Map();
   private _descriptorList: Array<Descriptor>;
 
-  get descriptorList(): Array<Descriptor> {
+  public get descriptorList(): Array<Descriptor> {
     if (!this._descriptorList) {
       this._descriptorList = Array.from(this.descriptors.values());
     }

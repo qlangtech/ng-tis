@@ -20,7 +20,7 @@ const KEY_show_Bread_crumb = "showBreadcrumb";
 
 // declare var NProgress: any;
 export class BasicFormComponent {
-  result: any;
+  result: TisResponseResult;
   // 表单是否禁用
 
   public formDisabled = false;
@@ -58,16 +58,17 @@ export class BasicFormComponent {
   }
 
   protected clearProcessResult(): void {
-    this.result = {msg: [], errormsg: []};
+    this.result = {success: true, msg: [], errormsg: []};
   }
 
-  public processResult(result: any, callback?: () => void): void {
+  public processResult(result: TisResponseResult, callback?: () => void): void {
     return this.processResultWithTimeout(result, 10000, callback);
   }
 
   // 显示执行结果
-  protected processResultWithTimeout(result: any, timeout: number, callback?: () => void): void {
+  protected processResultWithTimeout(result: TisResponseResult, timeout: number, callback?: () => void): void {
     this.result = result;
+     console.log(result);
     if (timeout > 0) {
       setTimeout(() => {
         this.clearProcessResult();
@@ -144,7 +145,7 @@ export class BasicFormComponent {
 
 // = (r: TisResponseResult): TisResponseResult => {
   protected handleError = (error: any): Promise<any> => {
-     // console.log(error);
+    // console.log(error);
     // console.log(this);
     this.formDisabled = false;
     NProgress.done();

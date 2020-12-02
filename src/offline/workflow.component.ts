@@ -124,15 +124,15 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   }
 
-  testmsg(): void {
-
-    let msg: any = [];
-    msg.push({
-      'content': '全量索引构建已经触发'
-      , 'link': {'content': '状态日志:' + 12345, 'href': './buildprogress/' + 12345}
-    });
-    this.processResult({success: true, 'msg': msg});
-  }
+  // testmsg(): void {
+  //
+  //   let msg: any = [];
+  //   msg.push({
+  //     'content': '全量索引构建已经触发'
+  //     , 'link': {'content': '状态日志:' + 12345, 'href': './buildprogress/' + 12345}
+  //   });
+  //   this.processResult({success: true, 'msg': msg});
+  // }
 
   public processResultPublic(result: any): void {
     this.processResult(result);
