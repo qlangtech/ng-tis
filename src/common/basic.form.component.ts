@@ -68,7 +68,7 @@ export class BasicFormComponent {
   // 显示执行结果
   protected processResultWithTimeout(result: TisResponseResult, timeout: number, callback?: () => void): void {
     this.result = result;
-     console.log(result);
+     // console.log(result);
     if (timeout > 0) {
       setTimeout(() => {
         this.clearProcessResult();

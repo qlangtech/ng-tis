@@ -3,17 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/tis.service.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -196,7 +190,10 @@
       <workItem from="1606203938387" duration="20538000" />
       <workItem from="1606352401137" duration="8981000" />
       <workItem from="1606388810838" duration="15390000" />
-      <workItem from="1606719856906" duration="5099000" />
+      <workItem from="1606719856906" duration="5332000" />
+      <workItem from="1606956896987" duration="294000" />
+      <workItem from="1607317708908" duration="6228000" />
+      <workItem from="1607562790355" duration="13796000" />
     </task>
     <servers />
   </component>

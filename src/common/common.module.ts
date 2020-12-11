@@ -71,6 +71,7 @@ import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
 import {NzResultModule} from 'ng-zorro-antd/result';
 import {NzProgressModule} from 'ng-zorro-antd/progress';
 import {InitSystemComponent} from "../common/init.system.component";
+import {NzSpaceModule} from 'ng-zorro-antd/space';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -94,7 +95,7 @@ import {InitSystemComponent} from "../common/init.system.component";
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+  exports: [NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
