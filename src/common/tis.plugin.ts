@@ -60,6 +60,7 @@ export class Descriptor {
   attrs: AttrDesc[];
   extractProps: { string: any };
   veriflable: boolean;
+  pkField: string;
 }
 
 /*Items*/
@@ -130,6 +131,7 @@ export class Item {
         newVal.descVal = at.createDescribleVal(ii);
       } else {
         newVal._primaryVal = v;
+        newVal.pk = (at.key === this.dspt.pkField);
       }
       newVals[at.key] = (newVal);
       this.vals = newVals;
@@ -190,6 +192,9 @@ export class ItemPropVal {
   private dftVal: any;
   placeholder: string;
   _primaryVal = '';
+  // 是否是主键
+  pk: boolean;
+  has_set_primaryVal = false;
 
   set eprops(vals: { String: any }) {
     // @ts-ignore
@@ -224,8 +229,9 @@ export class ItemPropVal {
   }
 
   get primary(): string {
-    if (!this.updateModel && this.dftVal) {
+    if (!this.updateModel && !this.has_set_primaryVal && this.dftVal) {
       this._primaryVal = this.dftVal;
+      this.has_set_primaryVal = true;
     }
     return this._primaryVal;
     // return this.updateModel ? this._primaryVal : this.dftVal;
@@ -265,8 +271,16 @@ export class HeteroList {
 }
 
 export class PluginSaveResponse {
-  constructor(public  saveSuccess: boolean, public formDisabled: boolean) {
+  constructor(public  saveSuccess: boolean, public formDisabled: boolean, private bizResult?: any) {
 
+  }
+
+  public hasBiz(): boolean {
+    return !!this.bizResult;
+  }
+
+  public biz(): any {
+    return this.bizResult;
   }
 }
 

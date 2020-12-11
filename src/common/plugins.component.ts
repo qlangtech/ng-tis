@@ -20,7 +20,7 @@ import {Subscription} from "rxjs";
           </tis-page-header>
           <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
               <div style="float: right;">
-                  <button nz-button nzType="primary" (click)="savePluginSetting($event)">保存</button>
+                  <button nz-button nzType="primary" (click)="savePluginSetting($event,false)">保存</button>
               </div>
               <div *ngIf="shallInitializePluginItems && this.itemChangeable" class="plugins-nav">
                   <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
@@ -34,6 +34,7 @@ import {Subscription} from "rxjs";
                   <div class="extension-point" [id]="h.identity">
                       <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
                   </div>
+                  items.length:{{h.items.length}}
                   <div *ngFor=" let item of h.items" [ngClass]="{'item-block':shallInitializePluginItems}">
                       <div style="float:right">
                           <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
@@ -42,9 +43,10 @@ import {Subscription} from "rxjs";
                           </button>
                       </div>
                       <div>
-                          <button *ngIf="item.dspt.veriflable" nz-button nzSize="small"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
+                          <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                       </div>
                       <div style="clear: both"></div>
+                      propValsLength:{{item.propVals.length}}
                       <item-prop-val [disabled]="!showSaveButton" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
                   </div>
                   <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
@@ -124,8 +126,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   subscription: Subscription;
 
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
+  @Output() afterSave = new EventEmitter<PluginSaveResponse>();
   private _plugins: PluginType[] = [];
-
 
   /**
    *
@@ -196,13 +198,17 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           });
           attr.options = opts;
         }
-        // console.log(attr);
         attrs.push(attr);
       });
       d.attrs = attrs;
       descMap.set(impl, d);
     }
     return descMap;
+  }
+
+
+  configCheck(event: MouseEvent) {
+    this.savePluginSetting(event, true);
   }
 
   @Input()
@@ -246,7 +252,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   ngAfterContentInit(): void {
     if (this.savePlugin) {
       this.subscription = this.savePlugin.subscribe((e: any) => {
-        this.savePluginSetting(null);
+        this.savePluginSetting(null, false);
       });
     }
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
@@ -340,7 +346,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  savePluginSetting(event: MouseEvent) {
+  savePluginSetting(event: MouseEvent, verifyConfig: boolean) {
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
@@ -354,7 +360,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     //     return p;
     //   }
     // }).join("&plugin=");
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${this.errorsPageShow}`;
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${this.errorsPageShow}&verify=${verifyConfig}`;
 
     let postData: Array<Item[]> = [];
     this._heteroList.forEach((h) => {
@@ -364,8 +370,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     this.jsonPost(url, postData).then((r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
-
-
+      if (!verifyConfig) {
+        this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
+      } else {
+        if (r.success) {
+          this.notification.create('success', '校验成功', "表单配置无误");
+        }
+      }
       if (!this.errorsPageShow && r.success) {
         // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
         if (this.showSaveButton && r.msg.length > 0) {
@@ -382,13 +393,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       // let tmpHlist: HeteroList[] = [];
       this._heteroList.forEach((h) => {
         let items: Item[] = h.items;
-
         let errorFields = pluginErrorFields[index++];
         PluginsComponent.processErrorField(errorFields, items);
-        // tmpHlist.push(h);
       });
       this.cdr.detectChanges();
-      // this._heteroList = tmpHlist;
     }).catch((e) => {
       this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     });
@@ -421,6 +429,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   addNewPluginItem(h: HeteroList, d: Descriptor) {
     PluginsComponent.addNewItem(h, d, false);
   }
+
+
 }
 
 // 如果不加这个component的话在父组件中添加一个新的item，之前已经输入值的input控件上的值就会消失，确实很奇怪
@@ -433,34 +443,34 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <span [ngClass]="{'has-help-url':helpUrl !== null}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
-                      <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
+                      <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="4">
-                       <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"></nz-input-number>
+                       <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
                       <textarea [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
-                                (input)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
+                                (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
                   </ng-container>
                   <ng-container *ngSwitchCase="3">
                       <!--date-->
-                      <input [disabled]="disabled" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"/>
+                      <input [disabled]="disabled" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="5">
                       <!--ENUM-->
-                       <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" nzAllowClear>
+                       <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label" [nzValue]="e.val"></nz-option>
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="6">
-                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" nzAllowClear>
+                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.options" [nzLabel]="e.name" [nzValue]="e.name"></nz-option>
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
     <nz-input-group [nzSuffix]="suffixTemplate">
-      <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (input)="inputValChange(_pp,$event)"/>
+      <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
     </nz-input-group>
     <ng-template #suffixTemplate>
       <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
@@ -497,8 +507,17 @@ export class ItemPropValComponent implements AfterContentInit {
   passwordVisible = false;
 
   helpUrl: string = null;
+  _disabled = false;
+
+  get disabled(): boolean {
+    return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled;
+  }
+
   @Input()
-  disabled: false;
+  set disabled(val: boolean) {
+    this._disabled = val;
+  }
+
   @Input()
   formControlSpan = 13;
 
@@ -522,8 +541,10 @@ export class ItemPropValComponent implements AfterContentInit {
   }
 
   inputValChange(_pp: ItemPropVal, $event: Event) {
+    // console.log($event);
     delete _pp.error;
     // console.log("inputValChange");
+    // $event.stopPropagation();
   }
 }
 

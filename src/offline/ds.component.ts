@@ -10,7 +10,7 @@ import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, PluginType} from "../common/tis.plugin";
+import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 
 // const THRESHOLD = 10000;
 
@@ -74,30 +74,40 @@ import {Descriptor, HeteroList, PluginType} from "../common/tis.plugin";
 
                       </tis-page-header>
 
-                      <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" [nzTabBarExtraContent]="extraTemplate">
+                      <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" (nzSelectedIndexChange)="selectedIndexChange()" [nzTabBarExtraContent]="extraTemplate">
                           <nz-tab nzTitle="明细">
-                              <tis-plugins #detailPlugin (afterInit)="afterPluginInit($event)" [errorsPageShow]="true"
-                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [plugins]="pluginsMetas"></tis-plugins>
+                              <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
+                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [plugins]="pluginsMetas"></tis-plugins>
                           </nz-tab>
                           <nz-tab *ngIf="facdeDb" [nzTitle]="'门面'">
+                              <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
+                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [plugins]="facadePluginsMetas"></tis-plugins>
                           </nz-tab>
                       </nz-tabset>
                       <ng-template #extraTemplate>
-                          <button *ngIf="supportFacade" nz-button nzType="default" nz-dropdown [nzDropdownMenu]="dbFacadeAdd"  [disabled]="facdeDb != null">添加门面配置<i nz-icon nzType="down"></i></button>
-                          <nz-dropdown-menu #dbFacadeAdd="nzDropdownMenu">
-                              <ul nz-menu>
-                                  <li nz-menu-item *ngFor="let d of facadeSourceDesc">
-                                      <a href="javascript:void(0)" (click)="addDbBtnClick(d)">{{d.displayName}}</a>
-                                  </li>
-                              </ul>
-                          </nz-dropdown-menu>
-                          &nbsp;
-                          <button nz-button (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
-                          &nbsp;
-                          <!--
-                           <button type="button" class="btn btn-secondary btn-sm" (click)="syncDbOnline()">同步配置到线上</button>
-                          -->
-                          <button nz-button nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                          <nz-space>
+                              <nz-space-item *ngIf="supportFacade && !this.facdeDb">
+                                  <button [disabled]="this.updateMode" nz-button nzType="default" nz-dropdown
+                                          [nzDropdownMenu]="dbFacadeAdd" [disabled]="facdeDb != null">添加门面配置<i nz-icon nzType="down"></i></button>
+                                  <nz-dropdown-menu #dbFacadeAdd="nzDropdownMenu">
+                                      <ul nz-menu>
+                                          <li nz-menu-item *ngFor="let d of facadeSourceDesc">
+                                              <!--addDbBtnClick(d) -->
+                                              <a href="javascript:void(0)" (click)="addFacadeDB(d)">{{d.displayName}}</a>
+                                          </li>
+                                      </ul>
+                                  </nz-dropdown-menu>
+                              </nz-space-item>
+                              <nz-space-item>
+                                  <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
+                              </nz-space-item>
+                              <nz-space-item>
+                                  <button nz-button [disabled]="this.updateMode" nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                              </nz-space-item>
+                              <nz-space-item>
+                                  <button *ngIf="updateMode" nz-button (click)="this.updateMode=false">取消</button>
+                              </nz-space-item>
+                          </nz-space>
                       </ng-template>
                   </div>
 
@@ -183,9 +193,12 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   facadeSourceDesc: Array<Descriptor> = [];
 
   pluginsMetas: PluginType[] = [];
+  facadePluginsMetas: PluginType[] = [];
 
   // 可选的数据源
   datasourceDesc: Array<Descriptor> = [];
+  // 是否处在编辑模式
+  updateMode = false;
 
 
   constructor(protected tisService: TISService //
@@ -271,22 +284,35 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb._heteroList = this.dsPluginDesc(pluginDesc);
     addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_detailed,update_false"}])
     addDb.showSaveButton = true;
-    //  addDb.plugins = ['datasource'];
-
-    // modalRef.getContentComponent().dsPluginDesc = pluginDesc;
-    modalRef.afterClose.subscribe((r: DbPojo) => {
-      // console.log(r);
-      if (r) {
-        let newNode: NzTreeNodeOptions[] = [{'key': `${r.dbId}`, 'title': r.dbName, 'children': []}];
+    addDb.afterSave.subscribe((r: PluginSaveResponse) => {
+      if (r && r.saveSuccess && r.hasBiz()) {
+        modalRef.close();
+        let db = r.biz();
+        let newNode: NzTreeNodeOptions[] = [{'key': `${db.id}`, 'title': db.name, 'children': []}];
         this.nodes = newNode.concat(this.nodes);
 
-        let e = {'type': 'db', 'id': `${r.dbId}`};
+        let e = {'type': 'db', 'id': `${db.id}`};
         this.treeNodeClicked = true;
         this.onEvent(e);
 
-        this.notify.success("成功", `数据库${r.dbName}添加成功`, {nzDuration: 6000});
+        this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       }
-    })
+    });
+    //  addDb.plugins = ['datasource'];
+
+    // modalRef.getContentComponent().dsPluginDesc = pluginDesc;
+    // modalRef.afterClose.subscribe((r: DbPojo) => {
+    //   if (r) {
+    //     let newNode: NzTreeNodeOptions[] = [{'key': `${r.dbId}`, 'title': r.dbName, 'children': []}];
+    //     this.nodes = newNode.concat(this.nodes);
+    //
+    //     let e = {'type': 'db', 'id': `${r.dbId}`};
+    //     this.treeNodeClicked = true;
+    //     this.onEvent(e);
+    //
+    //     this.notify.success("成功", `数据库${r.dbName}添加成功`, {nzDuration: 6000});
+    //   }
+    // })
   }
 
   // 添加表按钮点击响应
@@ -391,13 +417,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             if (type === 'db') {
               let detail = biz.detailed;
               let db = this.createDB(id, detail);
-              this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${db.dbName},type_detailed`}];
+              this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${db.dbName},type_detailed,update_true`}];
               // this.detailPlugin.initializePluginItems();
               this.selectedDb = db;
               // console.log(this.selectedDb);
               if (biz.facade) {
                 this.facdeDb = this.createDB(id, biz.facade);
                 this.facdeDb.facade = true;
+                this.facadePluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${this.facdeDb.dbName},type_facade,update_true`}];
               }
 
             } else if (type === 'table') {
@@ -463,14 +490,32 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * 编辑db配置
    */
   editDb(): void {
+    // this.processDb("更新", this.facadeModel, true);
+    this.updateMode = true;
+    // @ts-ignore
+    // let pluginMeta: PluginMeta = this.pluginsMetas[0];
+    // this.pluginsMetas = [Object.assign(pluginMeta, {extraParam: pluginMeta.extraParam + ",update_true"})];
+  }
 
-    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
+  addFacadeDB(pluginDesc: Descriptor): void {
+    this.processDb("添加", true, false, pluginDesc);
+  }
+
+
+  processDb(processLiteria: string, facade: boolean, update: boolean, pluginDesc?: Descriptor): PluginsComponent {
+
+    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `${processLiteria}${facade ? "门面" : ''}数据库`});
     let addDb: PluginsComponent = modalRef.getContentComponent();
     addDb.errorsPageShow = true;
     addDb.formControlSpan = 20;
     addDb.itemChangeable = false;
-    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${this.facadeModel ? "facade" : "detailed"}`}])
-    addDb.shallInitializePluginItems = true;
+    if (pluginDesc) {
+      let hlist = this.dsPluginDesc(pluginDesc);
+      addDb._heteroList = hlist;
+    }
+
+    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${facade ? "facade" : "detailed"}`}])
+    addDb.shallInitializePluginItems = update;
     // addDb._heteroList = this.dsPluginDesc(pluginDesc);
     addDb.showSaveButton = true;
 
@@ -489,6 +534,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.notify.success("成功", "数据库更新成功", {nzDuration: 6000});
       }
     });
+    return addDb;
   }
 
   private get facadeModel(): boolean {
@@ -628,6 +674,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         });
       });
     });
+  }
+
+  afterSave(event: PluginSaveResponse) {
+    this.updateMode = !event.saveSuccess;
+  }
+
+  selectedIndexChange() {
+    this.updateMode = false;
   }
 }
 
