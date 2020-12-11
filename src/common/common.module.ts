@@ -79,7 +79,7 @@ import {NzSpaceModule} from 'ng-zorro-antd/space';
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule,
+    }), NzProgressModule, NzSpaceModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
