@@ -12,7 +12,8 @@ import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, Nz
 import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 
-// const THRESHOLD = 10000;
+const db_model_detailed = "detailed";
+const db_model_facade = "facade";
 
 @Component({
   template: `
@@ -26,7 +27,8 @@ import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from
       <nz-layout>
           <nz-sider [nzWidth]="300">
               <div class="btn-block">
-                  <button style="width: 4em" nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="dbAdd"><i class="fa fa-plus" aria-hidden="true"></i><i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></button>
+                  <button style="width: 4em" nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="dbAdd"><i class="fa fa-plus" aria-hidden="true"></i>
+                      <i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #dbAdd="nzDropdownMenu">
                       <ul nz-menu>
                           <li nz-menu-item *ngFor="let d of datasourceDesc">
@@ -77,11 +79,11 @@ import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from
                       <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" (nzSelectedIndexChange)="selectedIndexChange()" [nzTabBarExtraContent]="extraTemplate">
                           <nz-tab nzTitle="明细">
                               <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
-                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [plugins]="pluginsMetas"></tis-plugins>
+                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [disabled]="!updateMode" [plugins]="pluginsMetas"></tis-plugins>
                           </nz-tab>
                           <nz-tab *ngIf="facdeDb" [nzTitle]="'门面'">
                               <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
-                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [plugins]="facadePluginsMetas"></tis-plugins>
+                                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [disabled]="!updateMode" [plugins]="facadePluginsMetas"></tis-plugins>
                           </nz-tab>
                       </nz-tabset>
                       <ng-template #extraTemplate>
@@ -102,7 +104,7 @@ import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from
                                   <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
                               </nz-space-item>
                               <nz-space-item>
-                                  <button nz-button [disabled]="this.updateMode" nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                                  <button nz-button [disabled]="this.updateMode" nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除{{dbType}}</button>
                               </nz-space-item>
                               <nz-space-item>
                                   <button *ngIf="updateMode" nz-button (click)="this.updateMode=false">取消</button>
@@ -208,6 +210,18 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     , private notify: NzNotificationService
   ) {
     super(tisService, modalService);
+    tisService.currentApp = null;
+  }
+
+  get dbType(): string {
+    switch (this.selectedDbIndex) {
+      case 0:
+        return "明细";
+      case 1:
+        return "门面";
+      default:
+        throw new Error("invalid this.selectedDbIndex:" + this.selectedDbIndex);
+    }
   }
 
 
@@ -246,7 +260,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       let children = [];
       if (db.tables) {
         for (let table of db.tables) {
-          let c: NzTreeNodeOptions = {'key': `${table.id}`, 'title': table.tableLogicName, 'isLeaf': true};
+          let c: NzTreeNodeOptions = {'key': `${table.id}`, 'title': table.name, 'isLeaf': true};
           children.push(c);
         }
       }
@@ -282,37 +296,78 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb.formControlSpan = 20;
     addDb.shallInitializePluginItems = false;
     addDb._heteroList = this.dsPluginDesc(pluginDesc);
-    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_detailed,update_false"}])
+    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}])
     addDb.showSaveButton = true;
     addDb.afterSave.subscribe((r: PluginSaveResponse) => {
       if (r && r.saveSuccess && r.hasBiz()) {
         modalRef.close();
         let db = r.biz();
-        let newNode: NzTreeNodeOptions[] = [{'key': `${db.id}`, 'title': db.name, 'children': []}];
+        let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
         this.nodes = newNode.concat(this.nodes);
 
-        let e = {'type': 'db', 'id': `${db.id}`};
+        let e = {'type': 'db', 'id': `${db.dbId}`};
         this.treeNodeClicked = true;
         this.onEvent(e);
 
         this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       }
     });
-    //  addDb.plugins = ['datasource'];
+  }
 
-    // modalRef.getContentComponent().dsPluginDesc = pluginDesc;
-    // modalRef.afterClose.subscribe((r: DbPojo) => {
+  processDb(processLiteria: string, facade: boolean, update: boolean, pluginDesc?: Descriptor): PluginsComponent {
+
+    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `${processLiteria}${facade ? "门面" : ''}数据库`});
+    let addDb: PluginsComponent = modalRef.getContentComponent();
+    addDb.errorsPageShow = true;
+    addDb.formControlSpan = 20;
+    addDb.itemChangeable = false;
+    if (pluginDesc) {
+      let hlist = this.dsPluginDesc(pluginDesc);
+      addDb._heteroList = hlist;
+    }
+
+    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${facade ? "facade" : db_model_detailed}`}])
+    addDb.shallInitializePluginItems = update;
+    // addDb._heteroList = this.dsPluginDesc(pluginDesc);
+    addDb.showSaveButton = true;
+
+
+    addDb.afterSave.subscribe((r: PluginSaveResponse) => {
+      // console.log(r);
+      if (r && r.saveSuccess && r.hasBiz()) {
+        let dbSuit = r.biz();
+        // let db: DbPojo = Object.assign(new DbPojo(), r);
+        let db = new DbPojo();
+        db.facade = facade;
+        db.dbId = dbSuit.dbId;
+        db.dbName = dbSuit.name;
+        if (facade) {
+          this.facdeDb = db;
+          this.createFacadePluginsMetas(dbSuit.name);
+          this.selectedDbIndex = 1;
+        } else {
+          this.selectedDb = db;
+          this.createDetailedPluginsMetas(dbSuit.name);
+          this.selectedDbIndex = 0;
+        }
+        modalRef.close();
+        // let db = r.biz();
+        this.notify.success("成功", `数据库${dbSuit.name}添加成功`, {nzDuration: 6000});
+      }
+    });
+    // modalRef.afterClose.subscribe((r) => {
     //   if (r) {
-    //     let newNode: NzTreeNodeOptions[] = [{'key': `${r.dbId}`, 'title': r.dbName, 'children': []}];
-    //     this.nodes = newNode.concat(this.nodes);
-    //
-    //     let e = {'type': 'db', 'id': `${r.dbId}`};
-    //     this.treeNodeClicked = true;
-    //     this.onEvent(e);
-    //
-    //     this.notify.success("成功", `数据库${r.dbName}添加成功`, {nzDuration: 6000});
+    //     let db: DbPojo = Object.assign(new DbPojo(), r);
+    //     // console.log(db);
+    //     if (db.facade) {
+    //       this.facdeDb = db;
+    //     } else {
+    //       this.selectedDb = db;
+    //     }
+    //     this.notify.success("成功", "数据库更新成功", {nzDuration: 6000});
     //   }
-    // })
+    // });
+    return addDb;
   }
 
   // 添加表按钮点击响应
@@ -353,7 +408,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         //   "name":"purchase_match_info",
         //   "opTime":1595853047656,
         //   "syncOnline":0,
-        //   "tableLogicName":"purchase_match_info"
         let ntable = r.bizresult;
         // console.log(ntable);
         let dbid = `${ntable.dbId}`;
@@ -417,14 +471,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             if (type === 'db') {
               let detail = biz.detailed;
               let db = this.createDB(id, detail);
-              this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${db.dbName},type_detailed,update_true`}];
+              this.createDetailedPluginsMetas(db.dbName);
               // this.detailPlugin.initializePluginItems();
               this.selectedDb = db;
               // console.log(this.selectedDb);
               if (biz.facade) {
                 this.facdeDb = this.createDB(id, biz.facade);
                 this.facdeDb.facade = true;
-                this.facadePluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${this.facdeDb.dbName},type_facade,update_true`}];
+                this.createFacadePluginsMetas(this.facdeDb.dbName);
               }
 
             } else if (type === 'table') {
@@ -438,6 +492,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         }
       }).catch((e) => {
     });
+  }
+
+  private createDetailedPluginsMetas(dbName: string) {
+    this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${dbName},type_${db_model_detailed},update_true`}];
+  }
+
+  private createFacadePluginsMetas(dbName: string) {
+    this.facadePluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${dbName},type_${db_model_facade},update_true`}];
   }
 
   private createDB(id: string, detail: any) {
@@ -466,25 +528,25 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   /**
    * 添加门面数据库配置
    */
-  addFacadeDb(): void {
-    let dialog: NzModalRef<DbAddComponent> = this.openDialog(DbAddComponent, {nzTitle: "添加门面数据库"});
-    let db = new DbPojo();
-    db.facade = true;
-    db.dbId = this.selectedDb.dbId;
-    let cpt = dialog.getContentComponent();
-    cpt.dbPojo = db;
-
-    let facadeAdd: DbAddComponent = cpt;
-    facadeAdd.successSubmit.subscribe((evt: DbPojo) => {
-      if (evt) {
-        this.facdeDb = evt;
-        this.facdeDb.facade = true;
-        // 将tab切换到facade上
-        this.selectedDbIndex = 1;
-      }
-      dialog.close();
-    });
-  }
+  // addFacadeDb(): void {
+  //   let dialog: NzModalRef<DbAddComponent> = this.openDialog(DbAddComponent, {nzTitle: "添加门面数据库"});
+  //   let db = new DbPojo();
+  //   db.facade = true;
+  //   db.dbId = this.selectedDb.dbId;
+  //   let cpt = dialog.getContentComponent();
+  //   cpt.dbPojo = db;
+  //
+  //   let facadeAdd: DbAddComponent = cpt;
+  //   facadeAdd.successSubmit.subscribe((evt: DbPojo) => {
+  //     if (evt) {
+  //       this.facdeDb = evt;
+  //       this.facdeDb.facade = true;
+  //       // 将tab切换到facade上
+  //       this.selectedDbIndex = 1;
+  //     }
+  //     dialog.close();
+  //   });
+  // }
 
   /**
    * 编辑db配置
@@ -501,41 +563,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     this.processDb("添加", true, false, pluginDesc);
   }
 
-
-  processDb(processLiteria: string, facade: boolean, update: boolean, pluginDesc?: Descriptor): PluginsComponent {
-
-    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `${processLiteria}${facade ? "门面" : ''}数据库`});
-    let addDb: PluginsComponent = modalRef.getContentComponent();
-    addDb.errorsPageShow = true;
-    addDb.formControlSpan = 20;
-    addDb.itemChangeable = false;
-    if (pluginDesc) {
-      let hlist = this.dsPluginDesc(pluginDesc);
-      addDb._heteroList = hlist;
-    }
-
-    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${facade ? "facade" : "detailed"}`}])
-    addDb.shallInitializePluginItems = update;
-    // addDb._heteroList = this.dsPluginDesc(pluginDesc);
-    addDb.showSaveButton = true;
-
-
-    // let dialog = this.openDialog(DbAddComponent, {nzTitle: `更新${this.facadeModel ? "门面" : ''}数据库`});
-    // dialog.getContentComponent().dbPojo = Object.assign(new DbPojo(), this.facadeModel ? this.facdeDb : this.selectedDb);
-    modalRef.afterClose.subscribe((r) => {
-      if (r) {
-        let db: DbPojo = Object.assign(new DbPojo(), r);
-        // console.log(db);
-        if (db.facade) {
-          this.facdeDb = db;
-        } else {
-          this.selectedDb = db;
-        }
-        this.notify.success("成功", "数据库更新成功", {nzDuration: 6000});
-      }
-    });
-    return addDb;
-  }
 
   private get facadeModel(): boolean {
     return (this.selectedDbIndex === 1);
@@ -570,26 +597,46 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       this.notify.error("成功", `请选择要删除的数据节点`, {nzDuration: 6000});
       return;
     }
+    // this.selectedDbIndex ;
     this.modalService.confirm({
       nzTitle: '删除数据库',
-      nzContent: `是否要删除数据库'${this.selectedDb.dbName}'`,
+      nzContent: `是否要删除${this.dbType}数据库'${this.selectedDb.dbName}'`,
       nzOkText: '执行',
       nzCancelText: '取消',
       nzOnOk: () => {
         let action = 'action=offline_datasource_action&';
-        action = action + 'event_submit_do_delete_datasource_db_by_id=y&id=' + this.selectedDb.dbId;
+
+        let dbModel = this.getDbModel();
+        action = action + 'event_submit_do_delete_datasource_db_by_id=y&id=' + this.selectedDb.dbId + '&dbModel=' + dbModel;
         this.httpPost('/offline/datasource.ajax', action)
           .then(result => {
             if (result.success) {
-              this.nodes = this.nodes.filter((n) => n.key !== `${this.selectedDb.dbId}`);
-              this.notify.success("成功", `数据库'${this.selectedDb.dbName}'删除成功`, {nzDuration: 6000});
-              this.selectedDb = null;
-              this.treeNodeClicked = false;
+
+              this.notify.success("成功", `${this.dbType}数据库'${this.selectedDb.dbName}'删除成功`, {nzDuration: 6000});
+
+              if (dbModel === db_model_detailed) {
+                this.nodes = this.nodes.filter((n) => n.key !== `${this.selectedDb.dbId}`);
+                this.selectedDb = null;
+                this.treeNodeClicked = false;
+              } else if (dbModel === db_model_facade) {
+                this.facdeDb = null;
+              }
             }
             this.processResult(result);
           });
       }
     });
+  }
+
+  private getDbModel(): string {
+    switch (this.selectedDbIndex) {
+      case 0:
+        return db_model_detailed;
+      case 1:
+        return db_model_facade
+      default:
+        throw new Error("illegal selectedDbIndex:" + this.selectedDbIndex);
+    }
   }
 
   /**
@@ -685,18 +732,18 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   }
 }
 
-export class Node {
-  id: number;
-  name: string;
-  syncOnline: number;
-  children: Node[];
-  type: string;
-
-  constructor(id: number, name: string, syncOnline: number, children: Node[], type: string) {
-    this.id = id;
-    this.name = name;
-    this.syncOnline = syncOnline;
-    this.children = children;
-    this.type = type;
-  }
-}
+// export class Node {
+//   id: number;
+//   name: string;
+//   syncOnline: number;
+//   children: Node[];
+//   type: string;
+//
+//   constructor(id: number, name: string, syncOnline: number, children: Node[], type: string) {
+//     this.id = id;
+//     this.name = name;
+//     this.syncOnline = syncOnline;
+//     this.children = children;
+//     this.type = type;
+//   }
+// }

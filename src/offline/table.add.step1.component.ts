@@ -72,7 +72,7 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
   }
 
   public tabChange(): void {
-    // this.tablePojo.tableLogicName = this.tablePojo.tableName;
+
   }
 
 

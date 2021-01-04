@@ -91,6 +91,8 @@ export class TISService {
   }
 
   public set currentApp(currApp: CurrentCollection) {
+    // console.log("currentApp");
+    // throw new Error();
     this.currApp = currApp;
   }
 
@@ -128,6 +130,7 @@ export class TISService {
 
   protected appendHeaders(headers: HttpHeaders): HttpHeaders {
     let result = headers;
+    // console.log("currApp:" + this.currApp);
     if (this.currApp) {
       result = result.set('appname', this.currApp.appName);
       result = result.set('appid', '' + this.currApp.appid);

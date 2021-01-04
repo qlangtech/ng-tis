@@ -32,6 +32,7 @@ export class CanActivateCollectionManage implements CanActivateChild {
     if (!collectionName) {
       throw new Error("route param collectionName can not be null");
     }
+   // console.log("======================");
     this.tisService.currentApp = new CurrentCollection(0, collectionName);
     // return this.permissions.canActivate(this.currentUser, route.params.id);
     return this.tisService.httpPost('/coredefine/coredefine.ajax'

@@ -37,6 +37,7 @@ export class PojoComponent extends AppFormComponent {
   }
 
   protected initialize(app: CurrentCollection): void {
+    console.log(app);
     this.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=core_action&emethod=get_pojo_data')
       .then((r) => {

@@ -68,7 +68,7 @@ export class BasicFormComponent {
   // 显示执行结果
   protected processResultWithTimeout(result: TisResponseResult, timeout: number, callback?: () => void): void {
     this.result = result;
-     // console.log(result);
+    // console.log(result);
     if (timeout > 0) {
       setTimeout(() => {
         this.clearProcessResult();
@@ -281,23 +281,37 @@ export interface IDataFlowMainComponent {
 
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
   // private appTisService: AppTISService;
+  private _getCurrentAppCache = false;
 
   protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService, notification?: NzNotificationService) {
     super(tisService, modalService, notification);
     // this.appTisService = tisService;
   }
 
+  @Input()
+  set getCurrentAppCache(val: boolean) {
+    this._getCurrentAppCache = val;
+  }
+
   ngOnInit(): void {
     this.route.params
       .subscribe((params: Params) => {
-        // console.log(params['name']);
+       // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
         // if (this.tisService instanceof AppTISService) {
         let appTisService: TISService = this.tisService;
-        // console.log(appTisService.currentApp);
-        if (!appTisService.currentApp && params['name']) {
-          appTisService.currentApp = new CurrentCollection(0, params['name']);
-          // console.log(this.currentApp);
+        if (!this._getCurrentAppCache) {
+          let collectionName = params['name'];
+          if (!collectionName) {
+            appTisService.currentApp = null;
+          }
+          if (!appTisService.currentApp && collectionName) {
+            appTisService.currentApp = new CurrentCollection(0, collectionName);
+            // console.log(this.currentApp);
+          } else {
+            // appTisService.currentApp = null;
+          }
         }
+        // console.log(appTisService.currentApp);
         this.initialize(appTisService.currentApp);
       });
   }
