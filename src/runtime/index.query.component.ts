@@ -9,7 +9,7 @@ import * as $ from 'jquery';
 import {PojoComponent} from "./pojo.component";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LocalStorageService} from "angular-2-local-storage";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd";
 
 const LocalStoreTags = 'local_Store_Tags';
 
@@ -220,7 +220,6 @@ const LocalStoreTags = 'local_Store_Tags';
       }
 
 
-
       .collapse {
           display: inline-block;
           margin: 4px 0 0 8px;
@@ -300,7 +299,9 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
   }
 
   openPOJOView() {
-    this.openDialog(PojoComponent, {nzTitle: "POJO", nzWidth: 900});
+    let mRef = this.openDialog(PojoComponent, {nzTitle: "POJO", nzWidth: 900});
+    let pojo: PojoComponent = mRef.getContentComponent();
+    pojo.getCurrentAppCache = true;
   }
 
   ngOnInit(): void {

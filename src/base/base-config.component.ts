@@ -11,11 +11,9 @@ import {NzModalService} from "ng-zorro-antd";
       <nz-spin [nzSize]="'large'" [nzSpinning]="this.formDisabled || pluginComponentDisabled">
           <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzTabBarExtraContent]="extraTemplate">
               <nz-tab nzTitle="全局" (nzDeselect)="configDeSelect($event)">
-                  <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
-                  <!--
                   <ng-template nz-tab>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
-               -->
               </nz-tab>
               <nz-tab nzTitle="实时" (nzDeselect)="configDeSelect($event)">
                   <!---->

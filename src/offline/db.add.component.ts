@@ -16,7 +16,6 @@ import {PluginsComponent} from "../common/plugins.component";
 
 @Component({
   template: `
-    {{hlist|json}}
       <tis-plugins (ajaxOccur)="onResponse($event)" [errorsPageShow]="true" [formControlSpan]="20"
       [shallInitializePluginItems]="false" [_heteroList]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
   `
@@ -38,17 +37,6 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
     return !this.dbPojo.facade && this.dbPojo.dbId != null;
   }
 
-  // /**
-  //  * 当前选中的DS plugin 描述信息
-  //  * @param desc
-  //  */
-  // set dsPluginDesc(desc: Descriptor) {
-  //   let h = new HeteroList();
-  //   h.extensionPoint = desc.extendPoint;
-  //   h.descriptors.set(desc.impl, desc);
-  //   PluginsComponent.addNewItem(h, desc, false);
-  //   this.hlist = [h];
-  // }
 
   constructor(tisService: TISService,
               private location: Location

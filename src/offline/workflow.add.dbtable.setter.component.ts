@@ -80,8 +80,8 @@ export class WorkflowAddDbtableSetterComponent
             if (db.tables) {
               for (let table of db.tables) {
                 let c: NzCascaderOption = {
-                  'value': `${table.id}%${table.tableLogicName}`,
-                  'label': table.tableLogicName,
+                  'value': `${table.id}%${table.name}`,
+                  'label': table.name,
                   'isLeaf': true
                 };
                 children.push(c);
@@ -90,7 +90,7 @@ export class WorkflowAddDbtableSetterComponent
             let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
             this.cascaderOptions.push(dbNode);
           }
-          // console.log(this.cascaderOptions);
+           console.log(this.cascaderOptions);
         }
       });
 

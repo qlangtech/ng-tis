@@ -34,7 +34,6 @@ import {Subscription} from "rxjs";
                   <div class="extension-point" [id]="h.identity">
                       <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
                   </div>
-                  items.length:{{h.items.length}}
                   <div *ngFor=" let item of h.items" [ngClass]="{'item-block':shallInitializePluginItems}">
                       <div style="float:right">
                           <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
@@ -46,8 +45,7 @@ import {Subscription} from "rxjs";
                           <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                       </div>
                       <div style="clear: both"></div>
-                      propValsLength:{{item.propVals.length}}
-                      <item-prop-val [disabled]="!showSaveButton" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+                      <item-prop-val [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
                   </div>
                   <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
                       <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
@@ -121,7 +119,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   formControlSpan = 13;
 
   @Input() savePlugin: EventEmitter<any>;
+  // 是否显示保存按钮
   @Input() showSaveButton = false;
+
+  // 内部控件是否为只读
+  @Input() disabled = false;
 
   subscription: Subscription;
 

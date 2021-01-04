@@ -115,8 +115,6 @@ export class TableAddStep2Component extends TableAddStep implements OnInit {
   }
 
   testTableConnection(form: any): void {
-    // console.log(this.step1Form.tableLogicName.value);
-    // console.log(jQuery(form).serialize());
   }
 }
 
