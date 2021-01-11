@@ -3,17 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/index.query.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/index.query.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/pojo.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/pojo.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/tis.service.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,7 +37,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
@@ -206,7 +198,9 @@
       <workItem from="1608604624350" duration="643000" />
       <workItem from="1608625333108" duration="1024000" />
       <workItem from="1609120383230" duration="5381000" />
-      <workItem from="1609296358926" duration="9315000" />
+      <workItem from="1609296358926" duration="10487000" />
+      <workItem from="1609837514827" duration="2931000" />
+      <workItem from="1610332904908" duration="265000" />
     </task>
     <servers />
   </component>

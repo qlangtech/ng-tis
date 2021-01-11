@@ -285,11 +285,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
   // 添加数据库按钮点击响应
   public addDbBtnClick(pluginDesc: Descriptor): void {
-    // console.log(pluginDesc)
-    // let modalRef = this.openDialog(DbAddComponent, {nzTitle: "添加数据库"});
 
-    // <tis-plugins (ajaxOccur)="onResponse($event)" [errorsPageShow]="true" [formControlSpan]="20"
-    //   [shallInitializePluginItems]="false" [_heteroList]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
     let modalRef = this.openDialog(PluginsComponent, {nzTitle: "添加数据库"});
     let addDb: PluginsComponent = modalRef.getContentComponent();
     addDb.errorsPageShow = true;
@@ -355,39 +351,11 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.notify.success("成功", `数据库${dbSuit.name}添加成功`, {nzDuration: 6000});
       }
     });
-    // modalRef.afterClose.subscribe((r) => {
-    //   if (r) {
-    //     let db: DbPojo = Object.assign(new DbPojo(), r);
-    //     // console.log(db);
-    //     if (db.facade) {
-    //       this.facdeDb = db;
-    //     } else {
-    //       this.selectedDb = db;
-    //     }
-    //     this.notify.success("成功", "数据库更新成功", {nzDuration: 6000});
-    //   }
-    // });
     return addDb;
   }
 
   // 添加表按钮点击响应
   public addTableBtnClick(): void {
-    // let node = this.tree.treeModel.getActiveNode();
-    // console.log(node);
-
-    // if (node) {
-    //   let dbName;
-    //   if (node.id < THRESHOLD) {
-    //     dbName = node.data.name;
-    //   } else {
-    //     dbName = node.parent.data.name;
-    //   }
-    //   this.router.navigate(['/t/offline/table-add'], {queryParams: {dbName: dbName}});
-    // } else {
-    //   this.router.navigate(['/t/offline/table-add']);
-    // // }
-    // this.modalService.open(TableAddComponent
-    //   , {windowClass: 'schema-edit-modal', backdrop: 'static'});
     let modalRef = this.openDialog(TableAddComponent, {nzTitle: "添加表"});
     let pm = modalRef.getContentComponent().processMode;
     if (this.selectedDb && this.selectedDb.dbId) {
@@ -430,25 +398,9 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   public activateTable(tableId: number): void {
-    // tableId = THRESHOLD + tableId;
-    // let node = this.tree.treeModel.getNodeById(tableId);
-    // if (node !== null) {
-    //   if (node.parent !== null) {
-    //     node.parent.expandAll();
-    //   }
-    //   node.toggleActivated();
-    // } else {
-    //   alert('can not find table id ' + (tableId - THRESHOLD));
-    // }
   }
 
   public activateDb(dbId: number): void {
-    // let node = this.tree.treeModel.getNodeById(dbId);
-    // if (node !== null) {
-    //   node.toggleActivated();
-    // } else {
-    //   alert('can not find db id ' + (dbId));
-    // }
   }
 
 
@@ -512,41 +464,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     this.processResult(result);
     this.treeInit(result.bizresult);
   }
-
-  // /**
-  //  * 把db配置同步到线上
-  //  */
-  // syncDbOnline(): void {
-  //   let action = 'action=offline_datasource_action&';
-  //   action = action + 'event_submit_do_sync_db=y&id=' + this.selectedDb.dbId + '&dbName=' + this.selectedDb.dbName;
-  //   this.tisService.httpPost('/offline/datasource.ajax', action)
-  //     .then(result => {
-  //       console.log(result);
-  //       this.processResult(result);
-  //     });
-  // }
-  /**
-   * 添加门面数据库配置
-   */
-  // addFacadeDb(): void {
-  //   let dialog: NzModalRef<DbAddComponent> = this.openDialog(DbAddComponent, {nzTitle: "添加门面数据库"});
-  //   let db = new DbPojo();
-  //   db.facade = true;
-  //   db.dbId = this.selectedDb.dbId;
-  //   let cpt = dialog.getContentComponent();
-  //   cpt.dbPojo = db;
-  //
-  //   let facadeAdd: DbAddComponent = cpt;
-  //   facadeAdd.successSubmit.subscribe((evt: DbPojo) => {
-  //     if (evt) {
-  //       this.facdeDb = evt;
-  //       this.facdeDb.facade = true;
-  //       // 将tab切换到facade上
-  //       this.selectedDbIndex = 1;
-  //     }
-  //     dialog.close();
-  //   });
-  // }
 
   /**
    * 编辑db配置

@@ -24,7 +24,9 @@ import {NzModalService} from "ng-zorro-antd";
               </tis-col>
               <tis-col title="接口人" width="14" field="recept"></tis-col>
               <tis-col title="数据流">
-                  <ng-template let-app="r">{{app.dataflowName}}</ng-template>
+                  <ng-template let-app="r">
+                      <a [routerLink]="['/offline/wf_update',app.dataflowName]">{{app.dataflowName}}</a>
+                  </ng-template>
               </tis-col>
               <tis-col title="归属部门" field="dptName">
                   <ng-template let-app='r'>

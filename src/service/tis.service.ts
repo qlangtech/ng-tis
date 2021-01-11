@@ -1,32 +1,16 @@
 import {Injectable} from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
-// import {Http, Headers, RequestOptionsArgs} from '@angular/http';
-
-
-//
 import {CurrentCollection} from '../common/basic.form.component';
 import {Observable, Observer, Subject} from "rxjs";
-//
-// import * as NProgress from "nprogress/nprogress";
 
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {IFieldError} from "../common/tis.plugin";
-import {consoleTestResultHandler} from "tslint/lib/test";
-// import {IFieldError} from "../runtime/tis.plugin";
-// import {Observable} from "rxjs/Observable";
-//
-// import {Subject} from "rxjs/Subject";
-//
-// import {Observer} from "rxjs/Observer";
-
 declare var TIS: any;
 
-
-// @ts-ignore
 // @ts-ignore
 @Injectable()
 export class TISService {
