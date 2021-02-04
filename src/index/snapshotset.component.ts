@@ -15,76 +15,85 @@ declare var jQuery: any;
   template: `
       <tis-page-header [showBreadcrumb]="showBreadcrumb" [title]="'索引配置模版'">
       </tis-page-header>
-      <form method="post" id="contentform" action="/runtime/jarcontent/snapshotset.htm">
+      <nz-tabset>
+          <nz-tab nzTitle="历史版本">
+              <form method="post" id="contentform" action="/runtime/jarcontent/snapshotset.htm">
 
-          <input type="hidden" name="appname" value=""/>
-          <input type="hidden" name="groupid" value=""/>
-          <input type="hidden" name="action" value="snapshot_revsion_action"/>
-          <input type="hidden" name="event_submit_do_select_revsion" value="y"/>
-          <nz-table id="snapshottable" #dataList width="100%" [nzData]="snapshotList" [(nzPageIndex)]="pager.page"
-                    (nzPageIndexChange)="searchData()"
-                    [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
-              <thead>
-              <tr>
-                  <th width="100px">版本</th>
-                  <th width="200px">创建时间</th>
-                  <th width="20%">日志</th>
-                  <th width="100px">比较</th>
-                  <th>详细</th>
-                  <th>parent</th>
-              </tr>
-              </thead>
-              <tbody id="snapshottablebody">
-              <tr *ngFor=" let s of dataList.data" [class.checked]="isSelectedSnapshot(s.snId)" (mouseenter)="rowMouseEnter(s, true)" (mouseleave)="rowMouseEnter(s, false)">
-                  <td align="right" class="snapshotid">
-                      <i *ngIf="isSelectedSnapshot(s.snId)" style="font-weight:300; font-size: x-large ; color:green;" nz-icon nzType="check" nzTheme="outline"></i>
-                      <span>{{s.snId}}</span>
-                      <div *ngIf="this.mouseEnteredSnapshot && this.mouseEnteredSnapshot.snId === s.snId" class="control-bar">
-                          <button nz-button nzType="primary" (click)="openSelectrevsion(s)">
-                              <i nz-icon nzType="select" nzTheme="outline"></i>切换版本
-                          </button>&nbsp;
-                          <button nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
-                          <button nz-button (click)="doPushConfig2Engine(s.snId)" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
-                      </div>
-                  </td>
-                  <td> {{s.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</td>
-                  <td>
-                      <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
-                      {{s.memo}}</td>
-                  <td align="center">
-                      <input class="compare" type="checkbox"
-                             [checked]="s.compareChecked" (click)="compareClick(s)"
-                             name="comparesnapshotid" value="{{s.snId}}"/>
-                      <!--
-                                           <label name="comparesnapshotid" nz-checkbox [(ngModel)]="s.compareChecked" (click)="compareClick(s)" [nzValue]="s.snId"></label>
-                                           -->
-                  </td>
-                  <td>
-                      <snapshot-linker [snapshot]="s"></snapshot-linker>
-                  </td>
-                  <td>{{s.preSnId}}</td>
-              </tr>
+                  <input type="hidden" name="appname" value=""/>
+                  <input type="hidden" name="groupid" value=""/>
+                  <input type="hidden" name="action" value="snapshot_revsion_action"/>
+                  <input type="hidden" name="event_submit_do_select_revsion" value="y"/>
+                  <nz-table id="snapshottable" #dataList width="100%" [nzData]="snapshotList" [(nzPageIndex)]="pager.page"
+                            (nzPageIndexChange)="searchData()"
+                            [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
+                      <thead>
+                      <tr>
+                          <th width="100px">版本</th>
+                          <th width="200px">创建时间</th>
+                          <th width="20%">日志</th>
+                          <th width="100px">比较</th>
+                          <th>详细</th>
+                          <th>parent</th>
+                      </tr>
+                      </thead>
+                      <tbody id="snapshottablebody">
+                      <tr *ngFor=" let s of dataList.data" [class.checked]="isSelectedSnapshot(s.snId)" (mouseenter)="rowMouseEnter(s, true)" (mouseleave)="rowMouseEnter(s, false)">
+                          <td align="right" class="snapshotid">
+                              <i *ngIf="isSelectedSnapshot(s.snId)" style="font-weight:300; font-size: x-large ; color:green;" nz-icon nzType="check" nzTheme="outline"></i>
+                              <span>{{s.snId}}</span>
+                              <div *ngIf="this.mouseEnteredSnapshot && this.mouseEnteredSnapshot.snId === s.snId" class="control-bar">
+                                  <button nz-button nzType="primary" (click)="openSelectrevsion(s)">
+                                      <i nz-icon nzType="select" nzTheme="outline"></i>切换版本
+                                  </button>&nbsp;
+                                  <button nz-button nzType="default" *ngIf="canSnapshotCompare" (click)="twoSnapshotCompare()"><i nz-icon nzType="diff" nzTheme="outline"></i>比较</button> &nbsp;
+                                  <button nz-button (click)="doPushConfig2Engine(s.snId)" *ngIf="!this.showBreadcrumb && isSelectedSnapshot(s.snId)" [nzLoading]="this.formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i> 推送到引擎</button>
+                              </div>
+                          </td>
+                          <td> {{s.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</td>
+                          <td>
+                              <nz-tag [nzColor]="'blue'">{{s.createUserName}}</nz-tag>
+                              {{s.memo}}</td>
+                          <td align="center">
+                              <input class="compare" type="checkbox"
+                                     [checked]="s.compareChecked" (click)="compareClick(s)"
+                                     name="comparesnapshotid" value="{{s.snId}}"/>
+                              <!--
+                                                   <label name="comparesnapshotid" nz-checkbox [(ngModel)]="s.compareChecked" (click)="compareClick(s)" [nzValue]="s.snId"></label>
+                                                   -->
+                          </td>
+                          <td>
+                              <snapshot-linker [snapshot]="s"></snapshot-linker>
+                          </td>
+                          <td>{{s.preSnId}}</td>
+                      </tr>
 
-              </tbody>
-          </nz-table>
-      </form>
+                      </tbody>
+                  </nz-table>
+              </form>
 
-      <nz-modal
-              [(nzVisible)]="openSelectrevsionVisible"
-              [nzTitle]="'提交：切换版本理由是什么？'"
-              [nzContent]="modalContent"
-              [nzFooter]="modalFooter"
-              (nzOnCancel)="this.openSelectrevsionVisible = false"
-      >
-          <ng-template #modalContent>
-              <tis-msg [result]="result"></tis-msg>
-              <textarea nz-input name="memo" [(ngModel)]="snapshotChangeMemo" [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
-          </ng-template>
-          <ng-template #modalFooter>
-              <button nz-button nzType="primary" *ngIf="this.showBreadcrumb" (click)="doselectrevsion(targetSnapshot,true)">保存</button>
-              <button nz-button nzType="primary" *ngIf="!this.showBreadcrumb" (click)="doselectrevsion(targetSnapshot)" [nzLoading]="this.formDisabled">切换&并推送到引擎</button>
-          </ng-template>
-      </nz-modal>
+              <nz-modal
+                      [(nzVisible)]="openSelectrevsionVisible"
+                      [nzTitle]="'提交：切换版本理由是什么？'"
+                      [nzContent]="modalContent"
+                      [nzFooter]="modalFooter"
+                      (nzOnCancel)="this.openSelectrevsionVisible = false"
+              >
+                  <ng-template #modalContent>
+                      <tis-msg [result]="result"></tis-msg>
+                      <textarea nz-input name="memo" [(ngModel)]="snapshotChangeMemo" [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
+                  </ng-template>
+                  <ng-template #modalFooter>
+                      <button nz-button nzType="primary" *ngIf="this.showBreadcrumb" (click)="doselectrevsion(targetSnapshot,true)">保存</button>
+                      <button nz-button nzType="primary" *ngIf="!this.showBreadcrumb" (click)="doselectrevsion(targetSnapshot)" [nzLoading]="this.formDisabled">切换&并推送到引擎</button>
+                  </ng-template>
+              </nz-modal>
+          </nz-tab>
+          <nz-tab nzTitle="插件">
+              <ng-template nz-tab>
+                  <tis-plugins [plugins]="['field-type']" [showSaveButton]="true"></tis-plugins>
+              </ng-template>
+          </nz-tab>
+      </nz-tabset>
   `,
   styles: [`
       .control-bar {

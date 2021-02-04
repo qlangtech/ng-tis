@@ -364,8 +364,6 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
     this.uniqueKey = bizresult.uniqueKey;
     this.shareKey = bizresult.shareKey;
     this.schemaXmlContent = bizresult.schemaXmlContent;
-    // this.setTplAppid(bizresult);
-    // console.log("bizResult");
   }
 
   // 分区建checkbox点击
@@ -560,6 +558,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
 
   private getSchemaFieldType(ft: string): SchemaFieldType {
     const type: SchemaFieldType = this.fieldtypes.get(ft);
+   // console.log(this.fieldtypes);
     // f.rangequery = type.rangeAware;
     // f.split = type.split;
     // f.rangequery = type.rangeAware;

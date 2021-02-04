@@ -72,6 +72,7 @@ import {NzResultModule} from 'ng-zorro-antd/result';
 import {NzProgressModule} from 'ng-zorro-antd/progress';
 import {InitSystemComponent} from "../common/init.system.component";
 import {NzSpaceModule} from 'ng-zorro-antd/space';
+import {NzTabsModule} from 'ng-zorro-antd/tabs';
 
 @NgModule({
   id: 'tiscommonModule',
@@ -79,7 +80,7 @@ import {NzSpaceModule} from 'ng-zorro-antd/space';
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule, NzSpaceModule,
+    }), NzProgressModule, NzSpaceModule, NzTabsModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
