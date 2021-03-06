@@ -51,7 +51,8 @@ import {NzModalService} from "ng-zorro-antd";
                                 </tr>
                             </table>
               -->
-              <nz-descriptions nzTitle="基本信息" nzBordered>
+              <h4>基本信息</h4>
+              <nz-descriptions  nzBordered>
                   <nz-descriptions-item nzTitle="索引名称">search4{{appform.name}}</nz-descriptions-item>
                   <nz-descriptions-item nzTitle="数据流">{{appform.workflow}}</nz-descriptions-item>
                   <nz-descriptions-item nzTitle="所属部门">{{appform.checkedDptName}}</nz-descriptions-item>
@@ -63,7 +64,7 @@ import {NzModalService} from "ng-zorro-antd";
                   </nz-descriptions-item>
               </nz-descriptions>
               <br/>
-              <h6>索引结构</h6>
+              <h4>索引结构</h4>
               <nz-table #fieldlist nzSize="small" [nzData]="fields" [nzShowPagination]="false" [nzFrontPagination]="false">
                   <thead class="thead-default">
                   <tr>
