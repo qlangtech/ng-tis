@@ -229,7 +229,7 @@ export class ItemPropVal {
   }
 
   get primary(): string {
-    if (!this.updateModel && !this.has_set_primaryVal && this.dftVal) {
+    if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
       this._primaryVal = this.dftVal;
       this.has_set_primaryVal = true;
     }

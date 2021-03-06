@@ -90,7 +90,7 @@ declare var jQuery: any;
           </nz-tab>
           <nz-tab nzTitle="插件">
               <ng-template nz-tab>
-                  <tis-plugins [plugins]="['field-type']" [showSaveButton]="true"></tis-plugins>
+                  <tis-plugins [plugins]="['field-type','qp','searchComponent','transformer']" [showSaveButton]="true"></tis-plugins>
               </ng-template>
           </nz-tab>
       </nz-tabset>
