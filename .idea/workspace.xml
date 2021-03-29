@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index/snapshotset.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/snapshotset.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/copy.other.core.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/copy.other.core.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -205,7 +204,11 @@
       <workItem from="1611899446185" duration="2086000" />
       <workItem from="1612421197831" duration="1851000" />
       <workItem from="1613092889253" duration="411000" />
-      <workItem from="1614651386141" duration="731000" />
+      <workItem from="1614651386141" duration="1101000" />
+      <workItem from="1615168634733" duration="1503000" />
+      <workItem from="1615445666449" duration="495000" />
+      <workItem from="1616144253248" duration="642000" />
+      <workItem from="1616554210840" duration="5204000" />
     </task>
     <servers />
   </component>

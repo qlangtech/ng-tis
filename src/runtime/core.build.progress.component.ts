@@ -14,8 +14,12 @@ import {map} from 'rxjs/operators';
   selector: 'tis-progress',
   template: `
       <dd class="progress">
-          <nz-progress *ngIf="t.success" [nzPercent]="100"></nz-progress>
-          <nz-progress *ngIf="!t.waiting && !t.complete" [nzPercent]="t.percent">{{t.percent}}%({{t.processed}}/{{t.all}})</nz-progress>
+          <ng-container *ngIf="t.success">
+              <nz-progress  [nzPercent]="100"></nz-progress>
+          </ng-container>
+          <ng-container *ngIf="!t.waiting && !t.complete">
+              <nz-progress  [nzPercent]="t.percent"></nz-progress>
+          </ng-container>
           <div *ngIf="t.waiting" class="waiting"></div>
           <nz-progress *ngIf="t.faild" [nzPercent]="100" nzStatus="exception"></nz-progress>
       </dd>
@@ -81,7 +85,7 @@ export class ProgressTitleComponent {
                   <nz-descriptions-item nzTitle="状态">
                       <i [ngClass]="progressStat.stateClass" [ngStyle]="{'color':progressStat.stateColor}" aria-hidden="true"></i>
                       <button nz-button nzType="link" (click)="openReltimeLog()">{{progressStat.literalState}}</button>
-                      <span style="color: #000088;font-size: 24px"><i style="color: #bbb8db">耗时:</i>{{consuming | timeconsume }}</span>
+                      <span style="color: #000088;"><i style="color: #bbb8db">耗时:</i>{{consuming | timeconsume }}</span>
                   </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="开始时间">
                       {{progressStat.startTime | date:'yyyy/MM/dd HH:mm:ss'}}
@@ -101,7 +105,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
                       <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
-                          <dt>{{t.name}}</dt>
+                          <dt>{{t.name}} <span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -113,7 +117,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.joinPhase">
                       <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
-                          <dt>{{t.name}}</dt>
+                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -126,7 +130,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.buildPhase">
                       <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">
-                          <dt>{{t.name}}</dt>
+                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -139,7 +143,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">
                       <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">
-                          <dt>{{t.name}}</dt>
+                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -164,6 +168,11 @@ export class ProgressTitleComponent {
   `,
   styles: [
       `
+          .percent-status {
+              font-size: 6px;
+              color: #c5c5c5;
+          }
+
           .stat-header {
               margin-bottom: 10px;
           }
