@@ -13,7 +13,6 @@ import {Subscription} from "rxjs";
   selector: 'tis-plugins',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-
       <ng-container *ngIf="this.showSaveButton">
           <!--编辑-->
           <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
@@ -371,7 +370,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     this.jsonPost(url, postData).then((r) => {
       // 成功了
-      this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
+       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
       if (!verifyConfig) {
         this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
       } else {

@@ -202,6 +202,18 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   // 是否处在编辑模式
   updateMode = false;
 
+  /**
+   * 当前选中的DS plugin 描述信息
+   * @param desc
+   */
+  public static pluginDesc(desc: Descriptor): HeteroList[] {
+    let h = new HeteroList();
+    h.extensionPoint = desc.extendPoint;
+    h.descriptors.set(desc.impl, desc);
+    PluginsComponent.addNewItem(h, desc, false);
+   // console.log(h);
+    return [h];
+  }
 
   constructor(protected tisService: TISService //
     , private router: Router //
@@ -271,17 +283,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     // console.log( this.dbtree );
   }
 
-  /**
-   * 当前选中的DS plugin 描述信息
-   * @param desc
-   */
-  private dsPluginDesc(desc: Descriptor): HeteroList[] {
-    let h = new HeteroList();
-    h.extensionPoint = desc.extendPoint;
-    h.descriptors.set(desc.impl, desc);
-    PluginsComponent.addNewItem(h, desc, false);
-    return [h];
-  }
+
 
   // 添加数据库按钮点击响应
   public addDbBtnClick(pluginDesc: Descriptor): void {
@@ -291,7 +293,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb.errorsPageShow = true;
     addDb.formControlSpan = 20;
     addDb.shallInitializePluginItems = false;
-    addDb._heteroList = this.dsPluginDesc(pluginDesc);
+    addDb._heteroList = DatasourceComponent.pluginDesc(pluginDesc);
     addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}])
     addDb.showSaveButton = true;
     addDb.afterSave.subscribe((r: PluginSaveResponse) => {
@@ -318,7 +320,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb.formControlSpan = 20;
     addDb.itemChangeable = false;
     if (pluginDesc) {
-      let hlist = this.dsPluginDesc(pluginDesc);
+      let hlist = DatasourceComponent.pluginDesc(pluginDesc);
       addDb._heteroList = hlist;
     }
 

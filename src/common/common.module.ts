@@ -73,6 +73,9 @@ import {NzProgressModule} from 'ng-zorro-antd/progress';
 import {InitSystemComponent} from "../common/init.system.component";
 import {NzSpaceModule} from 'ng-zorro-antd/space';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
+import {TableSelectComponent} from "./table.select.component";
+import {NzCascaderModule} from 'ng-zorro-antd/cascader';
+import {SideBarToolBar} from "./basic.form.component";
 
 @NgModule({
   id: 'tiscommonModule',
@@ -80,13 +83,13 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule, NzSpaceModule, NzTabsModule,
+    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
-  declarations: [
+  declarations: [TableSelectComponent, SideBarToolBar,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     TimeConsumePipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
@@ -96,7 +99,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp
   ],
-  exports: [NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+  exports: [SideBarToolBar, TableSelectComponent, NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule

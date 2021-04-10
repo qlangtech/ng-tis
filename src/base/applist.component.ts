@@ -13,7 +13,17 @@ import {NzModalService} from "ng-zorro-antd";
       <form>
           <tis-page-header title="索引实例">
               <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="gotAddIndex()"><i class="fa fa-plus" aria-hidden="true"></i>添加</button>
+                  <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" ><i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                      <ul nz-menu>
+                          <li nz-menu-item>
+                              <a (click)="gotAddIndex()">搜索实例</a>
+                          </li>
+                          <li nz-menu-item>
+                              <a routerLink="/base/dataxadd">Datax</a>
+                          </li>
+                      </ul>
+                  </nz-dropdown-menu>
               </tis-header-tool>
           </tis-page-header>
           <tis-page [rows]="pageList" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">

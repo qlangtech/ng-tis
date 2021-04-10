@@ -23,6 +23,12 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {BaseConfigComponent} from "./base-config.component";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {DepartmentAddComponent} from "./department.add.component";
+import {DataxAddStep1Component} from "./datax.add.step1.component";
+import {DataxAddComponent} from "./datax.add.component";
+import {DataxAddStep2Component} from "./datax.add.step2.component";
+import {DataxAddStep3Component} from "./datax.add.step3.component";
+import {DataxAddStep4Component} from "./datax.add.step4.component";
+import {OfflineModule} from "../offline/offline.module";
 
 
 @NgModule({
@@ -31,7 +37,7 @@ import {DepartmentAddComponent} from "./department.add.component";
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-    , SchemaExpertAppCreateEditComponent
+    , SchemaExpertAppCreateEditComponent , DataxAddStep1Component , DataxAddComponent , DataxAddStep2Component , DataxAddStep3Component , DataxAddStep4Component
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent

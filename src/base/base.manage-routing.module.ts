@@ -12,6 +12,7 @@ import {AddAppStepFlowComponent} from './addapp.step.flow.component';
 import {BaseConfigComponent} from "./base-config.component";
 import {SnapshotsetComponent} from "../index/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
+import {DataxAddComponent} from "./datax.add.component";
 
 
 const basemanageRoutes: Routes = [
@@ -62,7 +63,12 @@ const basemanageRoutes: Routes = [
           {
             path: '',
             component: ApplistComponent
-          }
+          },
+          // datax
+          {
+            path: 'dataxadd',
+            component: DataxAddComponent
+          },
         ]
       }
     ]

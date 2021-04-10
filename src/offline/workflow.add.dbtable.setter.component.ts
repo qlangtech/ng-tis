@@ -35,8 +35,9 @@ import {CascaderOption, NzCascaderOption, NzModalService} from "ng-zorro-antd";
           <form class="clear" nz-form [nzLayout]="'vertical'">
               <div class="item-head"><label>数据库表</label></div>
               <p>
-                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"
-                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>
+<!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
+<!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
+                  <tis-table-select [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>
               </p>
 
               <label>SQL</label>
@@ -57,7 +58,7 @@ import {CascaderOption, NzCascaderOption, NzModalService} from "ng-zorro-antd";
 export class WorkflowAddDbtableSetterComponent
   extends BasicSideBar implements OnInit, AfterContentInit, AfterViewInit {
 
-  cascaderOptions: NzCascaderOption[] = [];
+  // cascaderOptions: NzCascaderOption[] = [];
   cascadervalues: any = {};
   private dto: DumpTable;
   sql = 'select * from usertable;';
@@ -69,30 +70,30 @@ export class WorkflowAddDbtableSetterComponent
 
   ngOnInit(): void {
 
-    let action = 'event_submit_do_get_datasource_info=y&action=offline_datasource_action';
-    this.httpPost('/offline/datasource.ajax', action)
-      .then(result => {
-        if (result.success) {
-          this.cascaderOptions = [];
-          const dbs = result.bizresult.dbs;
-          for (let db of dbs) {
-            let children = [];
-            if (db.tables) {
-              for (let table of db.tables) {
-                let c: NzCascaderOption = {
-                  'value': `${table.id}%${table.name}`,
-                  'label': table.name,
-                  'isLeaf': true
-                };
-                children.push(c);
-              }
-            }
-            let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
-            this.cascaderOptions.push(dbNode);
-          }
-           console.log(this.cascaderOptions);
-        }
-      });
+    // let action = 'event_submit_do_get_datasource_info=y&action=offline_datasource_action';
+    // this.httpPost('/offline/datasource.ajax', action)
+    //   .then(result => {
+    //     if (result.success) {
+    //       this.cascaderOptions = [];
+    //       const dbs = result.bizresult.dbs;
+    //       for (let db of dbs) {
+    //         let children = [];
+    //         if (db.tables) {
+    //           for (let table of db.tables) {
+    //             let c: NzCascaderOption = {
+    //               'value': `${table.id}%${table.name}`,
+    //               'label': table.name,
+    //               'isLeaf': true
+    //             };
+    //             children.push(c);
+    //           }
+    //         }
+    //         let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
+    //         this.cascaderOptions.push(dbNode);
+    //       }
+    //        console.log(this.cascaderOptions);
+    //     }
+    //   });
 
   }
 
@@ -127,17 +128,17 @@ export class WorkflowAddDbtableSetterComponent
 
   }
 
-  onCascaderChanges(evt: any[]) {
-
-    let tabidtuple = evt[1].split('%');
-    let action = `emethod=get_datasource_table_by_id&action=offline_datasource_action&id=${tabidtuple[0]}`;
-    this.httpPost('/offline/datasource.ajax', action)
-      .then((result) => {
-        let r = result.bizresult;
-        this.sql = r.selectSql;
-      });
-
-  }
+  // onCascaderChanges(evt: any[]) {
+  //
+  //   let tabidtuple = evt[1].split('%');
+  //   let action = `emethod=get_datasource_table_by_id&action=offline_datasource_action&id=${tabidtuple[0]}`;
+  //   this.httpPost('/offline/datasource.ajax', action)
+  //     .then((result) => {
+  //       let r = result.bizresult;
+  //       this.sql = r.selectSql;
+  //     });
+  //
+  // }
 
   // 点击保存按钮
   _saveClick() {
