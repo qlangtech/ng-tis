@@ -69,11 +69,11 @@ const coreNodeRoutes: Routes = [
             component: SchemaEditVisualizingModelComponent
           },
           {   // Schema 配置文件一览
-            path: 'build_history/:wfid',
+            path: 'app_build_history',
             component: FullBuildHistoryComponent
           },
           {
-            path: 'build_history/:wfid/:taskid',
+            path: 'app_build_history/:taskid',
             component: BuildProgressComponent
           },
           {   // 插件配置

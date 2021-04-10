@@ -208,13 +208,15 @@ export abstract class BasicSidebarDTO {
           border-bottom: thin solid #999999;
           padding: 0 0 5px 0;
           margin: 0 0 18px 0;
+          height: 40px;
       }
+       .float-right { float: right;}
     `
   ],
   template: `
       <div class="sidebar">
-          <button nz-button nzType="danger" (click)="_deleteNode()">删除</button>
-          <div style="float: right;">
+          <button *ngIf="!deleteDisabled" nz-button nzType="danger" (click)="_deleteNode()">删除</button>
+          <div [ngClass]="{'float-right': true}" >
               <button nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;<button nz-button nzType="default" (click)="_closeSidebar()">关闭</button>
           </div>
       </div>
@@ -223,6 +225,7 @@ export abstract class BasicSidebarDTO {
 })
 export class SideBarToolBar extends BasicFormComponent {
   @Output() save = new EventEmitter<any>();
+  @Input() deleteDisabled = false;
   @Output() delete = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
 
@@ -296,7 +299,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
   ngOnInit(): void {
     this.route.params
       .subscribe((params: Params) => {
-       // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
+        // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
         // if (this.tisService instanceof AppTISService) {
         let appTisService: TISService = this.tisService;
         if (!this._getCurrentAppCache) {

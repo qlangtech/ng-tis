@@ -23,11 +23,23 @@ import {Item} from "../common/tis.plugin";
               </nz-input-group>
           </tis-ipt>
 
-          <tis-ipt #workflow title="数据流" name="workflow" require="true">
-              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="workflow" nzDropdownMatchSelectWidth="true" [(ngModel)]="model.workflow">
-                  <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name"></nz-option>
+          <tis-ipt #workflow title="数据源" name="workflow" require="true">
+              <nz-select nzSize="large" style="width: 6em" [(ngModel)]="model.dsType" nzAllowClear nzPlaceHolder="请选择">
+                  <nz-option nzValue="tab" nzLabel="数据表"></nz-option>
+                  <nz-option nzValue="df" nzLabel="DF"></nz-option>
               </nz-select>
-              <a class="tis-link-btn" [routerLink]="['/','offline','wf_add']">创建数据流</a>
+              &nbsp;
+              <ng-container [ngSwitch]="model.dsType">
+                  <ng-container *ngSwitchCase="'tab'">
+                      <tis-table-select nzStyle="width: calc(100% - 12em)" nzSize="large" [(ngModel)]="model.tabCascadervalues"></tis-table-select>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'df'">
+                      <nz-select nzSize="large" style="width: calc(100% - 12em)" nzPlaceHolder="请选择" name="workflow" nzDropdownMatchSelectWidth="true" [(ngModel)]="model.workflow">
+                          <nz-option *ngFor="let p of usableWorkflow" [nzValue]="p.id+':'+p.name" [nzLabel]="p.name"></nz-option>
+                      </nz-select>
+                      <a class="tis-link-btn" [routerLink]="['/','offline','wf_add']">创建数据流</a>
+                  </ng-container>
+              </ng-container>
           </tis-ipt>
 
           <tis-ipt #dptId title="所属部门" name="dptId" require="true">
@@ -60,6 +72,7 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
   @Output() nextStep = new EventEmitter<any>();
   @Input() dto: ConfirmDTO;
 
+
   constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
@@ -85,11 +98,6 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
   public createIndexStep1Next(): void {
     let dto = new ConfirmDTO();
     dto.appform = this.model;
-    // dto.appform.name = form.name.value;
-    // dto.appform.tisTpl = form.tisTpl.value;
-    // dto.appform.workflow = form.workflow.value;
-    // dto.appform.dptId = form.dptId.value;
-    // dto.appform.recept = form.recept.value;
     this.jsonPost('/runtime/addapp.ajax?action=add_app_action&emethod=validate_app_form'
       , dto.appform)
       .then((r) => {

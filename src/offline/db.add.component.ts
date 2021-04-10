@@ -15,7 +15,7 @@ import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 @Component({
   template: `
       <tis-plugins (ajaxOccur)="onResponse($event)" [errorsPageShow]="true" [formControlSpan]="20"
-                   [shallInitializePluginItems]="false" [_heteroList]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
+                   [shallInitializePluginItems]="false" [_√]="hlist" [showSaveButton]="true" [plugins]="['datasource']"></tis-plugins>
   `
 })
 export class DbAddComponent extends BasicFormComponent implements OnInit {

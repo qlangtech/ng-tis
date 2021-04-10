@@ -122,14 +122,14 @@ export class Option {
 
 // 第一步提交的基本信息包装类
 export class AppDesc {
-  // nodeName: form.nodeName.value, tisTpl: form.tisTpl.value, workflow: form.workflow.value
-  // , dptId: form.dptId.value, recept: form.recept.value
 
+  dsType: string;
   name: string;
   // tisTpl: string;
   workflow: string;
   dptId: string;
   recept: string;
+  tabCascadervalues: any = {};
 
   // 部门列表
   dpts: Option[];

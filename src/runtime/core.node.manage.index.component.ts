@@ -35,7 +35,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                   </li>
 
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./build_history" (click)="gotoFullbuildView($event)"><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
+                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
                   </li>
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
@@ -122,10 +122,10 @@ export class CorenodemanageIndexComponent extends AppFormComponent implements On
 
 
   gotoFullbuildView(e: MouseEvent) {
-    let url = `/offline/datasource.ajax`;
-    this.httpPost(url, 'action=offline_datasource_action&event_submit_do_get_workflowId=y').then((r) => {
-      this.router.navigate(['./build_history', r.bizresult.workflowId], {relativeTo: this.route});
-    });
+    // let url = `/offline/datasource.ajax`;
+    // this.httpPost(url, 'action=offline_datasource_action&event_submit_do_get_workflowId=y').then((r) => {
+      this.router.navigate(['./app_build_history'], {relativeTo: this.route});
+    // });
     e.stopPropagation();
   }
 }

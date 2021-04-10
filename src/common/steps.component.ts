@@ -5,7 +5,8 @@ import {AfterContentInit, Component, Input} from "@angular/core";
 
 enum StepType {
   CreateIndex = "createIndex",
-  CreateIncr = "createIncr"
+  CreateIncr = "createIncr",
+  CreateDatax = "createDatax"
 }
 
 // implements OnInit, AfterContentInit
@@ -47,6 +48,7 @@ export class TisStepsComponent implements AfterContentInit {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量通道添加", ["脚本生成", "构建部署", "状态确认"]));
+    this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "构建部署", "状态确认"]));
   }
 
   ngAfterContentInit() {

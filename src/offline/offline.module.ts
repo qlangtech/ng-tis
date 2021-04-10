@@ -50,7 +50,7 @@ import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
 import {IconDefinition} from "@ant-design/icons-angular";
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
-import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
+// import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
@@ -62,19 +62,19 @@ const icons: IconDefinition[] = [DeleteOutline];
   imports: [ // CommonModule,
     NzCollapseModule,
     NzTabsModule,
-    NzInputModule, NzTableModule,  NzSwitchModule,
-    FormsModule,  BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
+    NzInputModule, NzTableModule, NzSwitchModule,
+    FormsModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzCascaderModule
     , CommonModule, NzFormModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule
-    , NzDividerModule, NzGridModule, NzCheckboxModule
+    , NzDividerModule, NzGridModule
   ],
   providers: [
     {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     {provide: NZ_ICONS, useValue: icons}
   ],
   declarations: [
-    WorkflowComponent, SideBarToolBar, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
+    WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
     , TableAddComponent, TableAddStep1Component, TableAddStep2Component,
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
@@ -83,7 +83,7 @@ const icons: IconDefinition[] = [DeleteOutline];
   ],
   entryComponents: [WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, TableAddComponent, WorkflowAddErMetaComponent
     , WorkflowAddComponent,
-     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
+    WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     , WorkflowAddNestComponent, WorkflowAddErCardinalityComponent
   ]
 })

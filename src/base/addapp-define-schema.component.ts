@@ -197,9 +197,10 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
       let workflow = f.workflow;
       // let tisTpl = f.tisTpl;
       // workflow = 'union';
-      this.httpPost('/runtime/schemaManage.ajax'
-        , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
-        + workflow)
+      this.jsonPost('/runtime/schemaManage.ajax?event_submit_do_get_tpl_fields=y&action=schema_action', f)
+      // this.httpPost('/runtime/schemaManage.ajax'
+      //   , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
+      //   + workflow)
         .then((r) => {
           if (r.success) {
             return r;

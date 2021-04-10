@@ -1,7 +1,7 @@
 import {TisResponseResult} from "../service/tis.service";
 import {PluginsComponent} from "./plugins.component";
 
-export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' ;
+export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' ;
 export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string };
 export declare type PluginType = PluginName | PluginMeta;
 
