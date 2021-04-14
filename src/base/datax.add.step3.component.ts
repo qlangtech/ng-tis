@@ -106,13 +106,13 @@ export class DataxAddStep3Component extends BasicFormComponent implements OnInit
       return;
     }
     if (response.hasBiz()) {
-      let selectableTabs = response.biz();
-      let tabs: Map<string /* table */, ISelectedTabMeta> = this.dto.selectableTabs;
-      selectableTabs.forEach(tab => {
-        tabs.set(tab, {tableName: tab, selectableCols: []});
-      });
+      // let selectableTabs = response.biz();
+      // let tabs: Map<string /* table */, ISelectedTabMeta> = this.dto.selectableTabs;
+      // selectableTabs.forEach(tab => {
+      //   tabs.set(tab, {tableName: tab, selectableCols: []});
+      // });
     }
-    console.log(this.dto);
+    // console.log(this.dto);
     this.nextStep.emit(this.dto);
   }
 }

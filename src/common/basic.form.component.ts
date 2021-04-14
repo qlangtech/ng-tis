@@ -136,7 +136,7 @@ export class BasicFormComponent {
   }
 
   // 发送json表单
-  protected jsonPost(url: string, body: any): Promise<TisResponseResult> {
+  public jsonPost(url: string, body: any): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();

@@ -9,6 +9,8 @@ export declare type PluginType = PluginName | PluginMeta;
 export class AttrDesc {
   key: string;
   ord: number;
+  // 是否是主键
+  pk: boolean;
   /**
    * 当describable为true时descriptors 应该有内容
    * */
@@ -26,6 +28,7 @@ export class AttrDesc {
   public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
     let desVal = new ItemPropVal(updateModel);
     desVal.key = this.key;
+    desVal.pk = this.pk;
     desVal.eprops = this.eprops;
     desVal.required = this.required;
     desVal.type = this.type;
@@ -61,6 +64,15 @@ export class Descriptor {
   extractProps: { string: any };
   veriflable: boolean;
   pkField: string;
+  // subform relevant
+
+  subFormMeta: {
+    behaviorMeta: any,
+    fieldName: string,
+    idList: Array<string>
+    id?: string,
+  }
+  subForm: boolean;
 }
 
 /*Items*/
@@ -71,7 +83,8 @@ export class Item {
   impl = '';
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
   // vals: Map<string /**key*/, ItemPropVal> = new Map();
-  vals = {};
+  // 后一种类型支持subform的类型
+  vals: { string?: ItemPropVal } | { string?: { string?: ItemPropVal } } = {};
   displayName = '';
   private _propVals: ItemPropVal[];
 
@@ -131,7 +144,7 @@ export class Item {
         newVal.descVal = at.createDescribleVal(ii);
       } else {
         newVal._primaryVal = v;
-        newVal.pk = (at.key === this.dspt.pkField);
+        // newVal.pk = (at.key === this.dspt.pkField);
       }
       newVals[at.key] = (newVal);
       this.vals = newVals;
@@ -188,7 +201,7 @@ export class ItemPropVal {
   // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
   descVal: DescribleVal;
   error: string;
-  private _eprops: { string: any };
+  public _eprops: { string: any };
   private dftVal: any;
   placeholder: string;
   _primaryVal = '';
@@ -214,6 +227,10 @@ export class ItemPropVal {
 
   public getEProp(key: string): any {
     return this._eprops[key];
+  }
+
+  public setEProp(key: string, val: any): void {
+    this._eprops[key] = val;
   }
 
   get hasFeedback(): boolean {

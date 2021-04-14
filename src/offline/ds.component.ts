@@ -10,7 +10,7 @@ import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, PluginMeta, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";
@@ -206,12 +206,15 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * 当前选中的DS plugin 描述信息
    * @param desc
    */
-  public static pluginDesc(desc: Descriptor): HeteroList[] {
+  public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
     let h = new HeteroList();
     h.extensionPoint = desc.extendPoint;
     h.descriptors.set(desc.impl, desc);
-    PluginsComponent.addNewItem(h, desc, false);
-   // console.log(h);
+    if (!itemPropSetter) {
+      itemPropSetter = (_, p) => p;
+    }
+    PluginsComponent.addNewItem(h, desc, updateModel, itemPropSetter);
+    // console.log(h);
     return [h];
   }
 
@@ -282,7 +285,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     }
     // console.log( this.dbtree );
   }
-
 
 
   // 添加数据库按钮点击响应
