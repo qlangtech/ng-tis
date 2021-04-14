@@ -3,7 +3,7 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferItem} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
@@ -20,7 +20,7 @@ import {DatasourceComponent} from "../offline/ds.component";
                   <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>
               </tis-header-tool>
           </tis-page-header>
-          <tis-ipt #indexName title="选择表" name="projectName" require="true">
+          <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
               <nz-transfer
                       [nzDataSource]="transferList"
                       [nzDisabled]="false"
@@ -61,8 +61,8 @@ import {DatasourceComponent} from "../offline/ds.component";
                               ></td>
                               <td>{{ data.title }}</td>
                               <td *ngIf="direction === 'right'">
-                                  <nz-tag [nzColor]="'blue'">{{ data.tag }}</nz-tag>
-                                  <button nz-button (click)="tableColsSelect($event,data)" [nzSize]="'small'">列选择</button>
+                                  <nz-tag [nzColor]="'blue'">{{ data.meta  }}</nz-tag>
+                                  <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>
                               </td>
                           </tr>
                           </tbody>
@@ -72,15 +72,7 @@ import {DatasourceComponent} from "../offline/ds.component";
           </tis-ipt>
       </tis-form>
       <ng-template #drawerTemplate let-data let-drawerRef="drawerRef">
-          <sidebar-toolbar [deleteDisabled]="true" (close)="drawerRef.close()" (save)="_saveClick(data, drawerRef)"></sidebar-toolbar>
-          value: {{ data?.selectableCols | json  }}
-          <tis-form formLayout="vertical" [fieldsErr]="errorItem">
-              <tis-page-header [showBreadcrumb]="false" [result]="result">
-              </tis-page-header>
-              <tis-ipt title="同步列" name="selectableCols" require="true">
-                  <nz-checkbox-group *ngIf="data" [(ngModel)]="data.selectableCols"></nz-checkbox-group>
-              </tis-ipt>
-          </tis-form>
+
       </ng-template>
   `
   , styles: [
@@ -112,8 +104,7 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
 
-  hlist: HeteroList[] = [];
-
+  subFormHetero: HeteroList = new HeteroList();
 
   // drawerVisible: boolean;
 
@@ -126,25 +117,36 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
-    if (this.dto.selectableTabs) {
-      console.log(this.dto);
-      // let mtaIt: IterableIterator<ISelectedTabMeta> = this.dto.selectableTabs.values();
-      // let mtaIt: IterableIterator<[string, ISelectedTabMeta]> = this.dto.selectableTabs.entries();
-      this.dto.selectableTabs.forEach((m) => {
-        this.transferList.push({
-          key: m.tableName,
-          title: m.tableName,
-          direction: 'right',
-          //   direction: (this.dto.coreNode.hosts.findIndex((host) => host.hostName === node.hostName) > -1 ? 'right' : 'left'),
-          disabled: false,
-          'tableMeta': m.selectableCols
-        });
-      });
-      // for (let tabName in this.dto.selectableTabs) {
-      //   console.log(tabName);
-      // }
-    }
+    // console.log(this.dto.readerDescriptor);
+    PluginsComponent.initializePluginItems(this, [{
+        name: "dataxReader", require: true
+        , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,dataxName_${this.dto.dataxPipeName}`
+      }],
+      (success: boolean, hList: HeteroList[], _) => {
+        // console.log(success);
+        if (!success) {
+          return;
+        }
+        // this._hList = hList;
+        this.subFormHetero = hList[0];
+        // console.log(this.subFormHetero);
+        let desc: Descriptor = this.subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
+        if (desc.subForm) {
+          desc.subFormMeta.idList.forEach((subformId) => {
+            this.transferList.push({
+              key: subformId,
+              title: subformId,
+              direction: 'left',
+              //   direction: (this.dto.coreNode.hosts.findIndex((host) => host.hostName === node.hostName) > -1 ? 'right' : 'left'),
+              disabled: false,
+              meta: Object.assign({id: `${subformId}`}, desc.subFormMeta)
+            });
+          })
+          console.log(this.transferList);
+          this.transferList = [...this.transferList];
+        }
+      }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -189,66 +191,120 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
    * @param event
    * @param data
    */
-  tableColsSelect(event: MouseEvent, data: any) {
- console.log(data);
+  tableColsSelect(event: MouseEvent, meta: { id: string, behaviorMeta: ISubDetailClickBehaviorMeta, fieldName: string, idList: Array<string> }) {
+
+    let pluginMeta: PluginType[] = [{
+      name: "dataxReader", require: true
+      , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_${meta.fieldName},dataxName_${this.dto.dataxPipeName}`
+    }];
+    // console.log(meta.id);
+    let cachedVals = this.subFormHetero.items[0].vals[meta.id];
+    if (cachedVals) {
+      let heteroList = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0]);
+      heteroList[0].items[0].vals = cachedVals;
+      this.openSubDetailForm(meta.id, pluginMeta, heteroList);
+      event.stopPropagation();
+      return;
+    }
+    let metaParam = PluginsComponent.getPluginMetaParams(pluginMeta);
+    // console.log(this.subFormHetero.descriptorList[0]);
+    // let onClickMeta = meta.behaviorMeta.onClickFillData;
+    // let param = onClickMeta.params.map(key => meta[key]).join(",");
     this.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=datax_action&emethod=get_reader_table_selectable_cols&dataxName=' + this.dto.dataxPipeName + "&tableName=" + data.key)
+      , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
       .then((r) => {
-        this.processResult(r);
+        // this.processResult(r);
         if (!r.success) {
           return;
         }
 
-        let checkOptionsOne: Array<ISelectedCol> = [
-          // { label: 'Apple', value: 'Apple', checked: true },
-        ];
+        let result = r.bizresult;
 
-        // {
-        //   "index":0,
-        //   "key":"customerregister_id",
-        //   "pk":true,
-        //   "type":12
-        // }
+        let hlist: HeteroList[] = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0], (key, propVal) => {
+          if (propVal.pk) {
+            propVal.primary = meta.id;
+          }
+          if (result[key]) {
+            let cols: Array<{ name: string, value: string }> = result[key];
+            let enums = [];
+            cols.forEach((s) => {
+              enums.push({label: s.name, val: s.value})
+            });
+            propVal.setEProp("enum", enums);
+          }
+          return propVal;
+        }, true);
 
-        let tabs: Array<{ index: number, key: string, pk: boolean, type: number }> = r.bizresult;
-        tabs.forEach((tab) => {
-          checkOptionsOne.push({label: tab.key, value: tab.key, pk: tab.pk, checked: true});
-        });
-        let tabMeta: ISelectedTabMeta = this.dto.selectableTabs[data.key];
-        if (!tabMeta) {
-          throw new Error(`table:${data.key} relevant tabMeta can not be null`);
-        }
-        tabMeta.tableName = data.key;
-        tabMeta.selectableCols = checkOptionsOne;
-        // let transferData: ISelectedTabMeta = {
-        //   tableName: data.key,
-        //   selectableCols: checkOptionsOne // r.bizresult
-        // };
-        const drawerRef = this.drawerService.create({
-          nzTitle: `DataX Reader ${data.key}`,
-          nzWidth: '30%',
-          nzContent: this.drawerTemplate,
-          nzContentParams: tabMeta
-        });
-
-        drawerRef.afterOpen.subscribe(() => {
-          console.log('Drawer(Template) open');
-        });
-
-        drawerRef.afterClose.subscribe(() => {
-          console.log('Drawer(Template) close');
-        });
+        this.openSubDetailForm(meta.id, pluginMeta, hlist);
       });
     event.stopPropagation();
   }
 
 
+  private openSubDetailForm(detailId: string, pluginMeta: PluginType[], hlist: HeteroList[]) {
+    const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
+      nzWidth: "35%",
+      nzTitle: `Set ${detailId}`,
+      nzContent: PluginSubFormComponent,
+      nzContentParams: {
+        pluginMeta: pluginMeta,
+        hetero: hlist
+      }
+    });
+    drawerRef.afterClose.subscribe(hetero => {
+      if (!hetero) {
+        return;
+      }
+      this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
+    })
+  }
+
   updateSingleChecked() {
   }
 
-  _saveClick(selectTab: ISelectedTabMeta, drawerRef) {
 
-    drawerRef.close();
+}
+
+// 子记录点击详细显示
+interface ISubDetailClickBehaviorMeta {
+  clickBtnLabel: string;
+  onClickFillData: { string: GetDateMethodMeta };
+}
+
+interface GetDateMethodMeta {
+  method: string;
+  params: Array<string>;
+}
+
+
+@Component({
+  selector: 'nz-drawer-custom-component',
+  template: `
+      <sidebar-toolbar [deleteDisabled]="true" (close)="drawerRef.close()" (save)="_saveClick()"></sidebar-toolbar>
+      <tis-plugins [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
+  `
+})
+export class PluginSubFormComponent {
+  @Input() hetero: HeteroList[];
+  @Input() pluginMeta: PluginType[];
+  savePlugin = new EventEmitter<{ verifyConfig: boolean }>();
+
+  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>) {
+  }
+
+  close(): void {
+    this.drawerRef.close();
+  }
+
+  verifyPluginConfig(e: PluginSaveResponse) {
+    if (e.saveSuccess) {
+      this.drawerRef.close({hetero: this.hetero[0]});
+    }
+  }
+
+  _saveClick() {
+    this.savePlugin.emit({verifyConfig: true})
+    // drawerRef.close();
   }
 }
 

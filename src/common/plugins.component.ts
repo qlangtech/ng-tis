@@ -1,6 +1,6 @@
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -27,25 +27,28 @@ import {Subscription} from "rxjs";
               <div style="clear: both;margin-bottom:3px;"></div>
           </nz-anchor>
       </ng-container>
-      <form nz-form>
-          <nz-collapse [nzBordered]="false">
+      <ng-template #pluginForm let-h="h">
+          <div class="extension-point" [id]="h.identity">
+              <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
+          </div>
+          <div *ngFor=" let item of h.items" [ngClass]="{'item-block':shallInitializePluginItems}">
+              <div style="float:right">
+                  <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
+                  <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
+                      <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
+                  </button>
+              </div>
+              <div>
+                  <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
+              </div>
+              <div style="clear: both"></div>
+              <item-prop-val [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+          </div>
+      </ng-template>
+      <form nz-form [ngSwitch]="shallInitializePluginItems">
+          <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
               <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
-                  <div class="extension-point" [id]="h.identity">
-                      <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
-                  </div>
-                  <div *ngFor=" let item of h.items" [ngClass]="{'item-block':shallInitializePluginItems}">
-                      <div style="float:right">
-                          <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
-                          <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
-                              <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
-                          </button>
-                      </div>
-                      <div>
-                          <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
-                      </div>
-                      <div style="clear: both"></div>
-                      <item-prop-val [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
-                  </div>
+                  <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
                   <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
                       <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
                       <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -58,6 +61,11 @@ import {Subscription} from "rxjs";
                   </ng-container>
               </nz-collapse-panel>
           </nz-collapse>
+          <ng-container *ngSwitchCase="false">
+              <ng-container *ngFor="let h of _heteroList">
+                  <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
+              </ng-container>
+          </ng-container>
       </form>
 
       <!--
@@ -117,7 +125,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   @Input()
   formControlSpan = 13;
 
-  @Input() savePlugin: EventEmitter<any>;
+  @Input() savePlugin: EventEmitter<{ verifyConfig: boolean }>;
   // 是否显示保存按钮
   @Input() showSaveButton = false;
 
@@ -136,13 +144,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param des
    * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
    */
-  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean): void {
+  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean, itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
     // console.log("add new item");
     let nItem = new Item(des);
     // nItem.impl = des.impl;
     nItem.displayName = des.displayName;
     des.attrs.forEach((attr) => {
-      nItem.vals[attr.key] = attr.addNewEmptyItemProp(updateModel);
+      nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
     });
     let nitems: Item[] = [];
     h.items.forEach((r) => {
@@ -152,6 +160,62 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     nitems.push(nItem);
     // console.log(nitems);
     h.items = nitems;
+  }
+
+  public static getPluginMetaParams(pluginMeta: PluginType[]): string {
+    return pluginMeta.map((p) => {
+      let param: any = p;
+      if (param.name) {
+        let t: PluginMeta = param;
+        return `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? ',' + t.extraParam : ''}`
+      } else {
+        return p;
+      }
+    }).join("&plugin=");
+  }
+
+  public static initializePluginItems(ctx: BasicFormComponent, pm: PluginType[]
+    , callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void) {
+    let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
+    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
+
+    ctx.jsonPost(url, {}).then((r) => {
+      let _heteroList: HeteroList[] = [];
+      if (r.success) {
+        // this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
+        let bizArray: HeteroList[] = r.bizresult.plugins;
+        bizArray.forEach((he) => {
+          let h: HeteroList = Object.assign(new HeteroList(), he);
+          let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
+          // console.log(descMap);
+          h.descriptors = descMap;
+          // 遍历item
+          let items: Item[] = [];
+          let i: Item;
+          h.items.forEach((item) => {
+
+            let desc: Descriptor = h.descriptors.get(item.impl);
+            i = Object.assign(new Item(desc), item);
+
+            i.wrapItemVals();
+            items.push(i);
+          });
+
+          h.items = items;
+          _heteroList.push(h);
+        });
+      }
+
+      // console.log(_heteroList);
+      callback(r.success, _heteroList, r.bizresult.showExtensionPoint);
+
+      // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+    }).catch((e) => {
+      // console.log("================ error occur");
+      // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+      callback(false, null, false);
+      throw new Error(e);
+    });
   }
 
   public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
@@ -221,6 +285,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
   }
 
+  @Input()
+  set pluginMeta(metas: PluginType[]) {
+    this.setPluginMeta(metas);
+  }
+
   public setPluginMeta(metas: PluginType[]): void {
     if (!metas || metas.length < 1) {
       return;
@@ -252,8 +321,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   ngAfterContentInit(): void {
     if (this.savePlugin) {
-      this.subscription = this.savePlugin.subscribe((e: any) => {
-        this.savePluginSetting(null, false);
+      this.subscription = this.savePlugin.subscribe((e: { verifyConfig: boolean }) => {
+        this.savePluginSetting(null, e && !!e.verifyConfig);
       });
     }
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
@@ -271,57 +340,58 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems() {
-    let pluginMeta = this.getPluginMetaParams();
-    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
-
-    this.jsonPost(url, {}).then((r) => {
-      this._heteroList = [];
-      if (r.success) {
-        this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
-        let bizArray: HeteroList[] = r.bizresult.plugins;
-        bizArray.forEach((he) => {
-          let h: HeteroList = Object.assign(new HeteroList(), he);
-          let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
-          // console.log(descMap);
-          h.descriptors = descMap;
-          // 遍历item
-          let items: Item[] = [];
-          let i: Item;
-          h.items.forEach((item) => {
-
-            let desc: Descriptor = h.descriptors.get(item.impl);
-            i = Object.assign(new Item(desc), item);
-
-            i.wrapItemVals();
-            items.push(i);
-          });
-
-          h.items = items;
-          this._heteroList.push(h);
-        });
+    PluginsComponent.initializePluginItems(this, this.plugins, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
+      if (success) {
+        this.showExtensionPoint.open = showExtensionPoint;
+        this._heteroList = hList;
         this.afterInit.emit(this._heteroList);
         this.cdr.reattach();
         this.cdr.detectChanges();
       }
-      this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-    }).catch((e) => {
-      // console.log("================ error occur");
-      this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-      throw new Error(e);
+
+      this.ajaxOccur.emit(new PluginSaveResponse(success, false));
     });
+
+    // let pluginMeta = this.getPluginMetaParams();
+    // let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
+    //
+    // this.jsonPost(url, {}).then((r) => {
+    //   this._heteroList = [];
+    //   if (r.success) {
+    //     this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
+    //     let bizArray: HeteroList[] = r.bizresult.plugins;
+    //     bizArray.forEach((he) => {
+    //       let h: HeteroList = Object.assign(new HeteroList(), he);
+    //       let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
+    //       // console.log(descMap);
+    //       h.descriptors = descMap;
+    //       // 遍历item
+    //       let items: Item[] = [];
+    //       let i: Item;
+    //       h.items.forEach((item) => {
+    //
+    //         let desc: Descriptor = h.descriptors.get(item.impl);
+    //         i = Object.assign(new Item(desc), item);
+    //
+    //         i.wrapItemVals();
+    //         items.push(i);
+    //       });
+    //
+    //       h.items = items;
+    //       this._heteroList.push(h);
+    //     });
+    //     this.afterInit.emit(this._heteroList);
+    //     this.cdr.reattach();
+    //     this.cdr.detectChanges();
+    //   }
+    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+    // }).catch((e) => {
+    //   // console.log("================ error occur");
+    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+    //   throw new Error(e);
+    // });
   }
 
-  private getPluginMetaParams() {
-    return this.plugins.map((p) => {
-      let param: any = p;
-      if (param.name) {
-        let t: PluginMeta = param;
-        return `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? ',' + t.extraParam : ''}`
-      } else {
-        return p;
-      }
-    }).join("&plugin=");
-  }
 
   submitForm(value: any): void {
     // for (const key in this._validateForm.controls) {
@@ -351,7 +421,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
-    let pluginMeta = this.getPluginMetaParams();
+    let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
 
     //   this.plugins.map((p) => {
     //   let param: any = p;
@@ -370,7 +440,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     this.jsonPost(url, postData).then((r) => {
       // 成功了
-       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
+      this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
       if (!verifyConfig) {
         this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
       } else {
@@ -428,7 +498,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   addNewPluginItem(h: HeteroList, d: Descriptor) {
-    PluginsComponent.addNewItem(h, d, false);
+    PluginsComponent.addNewItem(h, d, false, (_, propVal) => propVal);
   }
 
 
@@ -477,6 +547,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
     </ng-template>
                   </ng-container>
+                 <ng-container *ngSwitchCase="8">
+                     <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)" [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
+                      <nz-checkbox-group [ngModel]="_pp.getEProp('enum')" (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
+                 </ng-container>
                   <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
               </span>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
@@ -546,6 +620,44 @@ export class ItemPropValComponent implements AfterContentInit {
     delete _pp.error;
     // console.log("inputValChange");
     // $event.stopPropagation();
+  }
+
+  updateAllChecked(itemVal: ItemPropVal) {
+    itemVal.error = undefined;
+    let _eprops: { string: any } = itemVal._eprops;
+    let checkOptionsOne = _eprops["enum"];
+    _eprops['indeterminate'] = false;
+    if (_eprops['allChecked']) {
+      checkOptionsOne = checkOptionsOne.map(item => {
+        return {
+          ...item,
+          checked: true
+        };
+      });
+    } else {
+      checkOptionsOne = checkOptionsOne.map(item => {
+        return {
+          ...item,
+          checked: false
+        };
+      });
+    }
+    _eprops["enum"] = checkOptionsOne;
+  }
+
+  updateSingleChecked(itemVal: ItemPropVal) {
+    itemVal.error = undefined;
+    let _eprops: { string: any } = itemVal._eprops;
+    // let allUnchecked =  _eprops["enum"].every((item) => !item.checked);
+    if (_eprops["enum"].every((item) => !item.checked)) {
+      _eprops['allChecked'] = false;
+      _eprops['indeterminate'] = false;
+    } else if (_eprops["enum"].every((item) => item.checked)) {
+      _eprops['allChecked'] = true;
+      _eprops['indeterminate'] = false;
+    } else {
+      _eprops['indeterminate'] = true;
+    }
   }
 }
 
