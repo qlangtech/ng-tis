@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
@@ -20,12 +35,12 @@ import {DataxDTO} from "./datax.add.component";
               </tis-header-tool>
           </tis-page-header>
           <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
-              <nz-select nzSize="large" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="dto.readerDescriptor">
+              <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [(ngModel)]="dto.readerDescriptor">
                   <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp" [nzLabel]="pp.displayName"></nz-option>
               </nz-select>
           </tis-ipt>
           <tis-ipt #writerType title="Writer类型" name="writerType" require="true">
-              <nz-select nzSize="large" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="dto.writerDescriptor">
+              <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [(ngModel)]="dto.writerDescriptor">
                   <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp" [nzLabel]="pp.displayName"></nz-option>
               </nz-select>
           </tis-ipt>

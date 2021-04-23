@@ -2,14 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copyright/qlangtech.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/datax/datax.main.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/datax/datax.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-pojo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-pojo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index/application.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/application.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,22 +58,23 @@
   <component name="ProjectId" id="1RHE6ETZhgMGO7efkeisNqteJXn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/base" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/datax" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Confirmation" />
+    <property name="settings.editor.selected.configurable" value="copyright.filetypes.TypeScript" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/datax" />
       <recent name="$PROJECT_DIR$/src/base" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/runtime" />
       <recent name="$PROJECT_DIR$/src/common" />
-      <recent name="$PROJECT_DIR$/src/offline" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/common" />
@@ -215,7 +235,11 @@
       <workItem from="1616144253248" duration="642000" />
       <workItem from="1616554210840" duration="6116000" />
       <workItem from="1617161921195" duration="25976000" />
-      <workItem from="1618017504461" duration="50057000" />
+      <workItem from="1618017504461" duration="50587000" />
+      <workItem from="1618444886769" duration="12925000" />
+      <workItem from="1618711511202" duration="14240000" />
+      <workItem from="1618899974981" duration="1258000" />
+      <workItem from="1618908956448" duration="9861000" />
     </task>
     <servers />
   </component>

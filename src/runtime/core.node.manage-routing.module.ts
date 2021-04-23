@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {Injectable, NgModule} from '@angular/core';
 import {CorenodemanageComponent} from './corenodemanage.component';
 
@@ -32,17 +47,19 @@ export class CanActivateCollectionManage implements CanActivateChild {
     if (!collectionName) {
       throw new Error("route param collectionName can not be null");
     }
-   // console.log("======================");
+    // console.log("======================");
     this.tisService.currentApp = new CurrentCollection(0, collectionName);
     // return this.permissions.canActivate(this.currentUser, route.params.id);
     return this.tisService.httpPost('/coredefine/coredefine.ajax'
       , 'action=core_action&emethod=get_index_exist')
       .then((r) => {
-        let canActive: boolean = r.bizresult;
+        let result: { indexExist: boolean, app: any } = r.bizresult;
+        let canActive: boolean = result.indexExist;
         if (!canActive) {
           // this.router.navigate(["/base/appadd"], {queryParams: {step: 2}, relativeTo: this.route});
           return this.router.parseUrl(`/base/appadd?name=${collectionName}`);
         }
+        this.tisService.currentApp.appTyp = result.app.appType;
         return true;
       });
   }
