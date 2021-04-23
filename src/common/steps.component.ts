@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {AfterContentInit, Component, Input} from "@angular/core";
 
 
@@ -48,7 +63,7 @@ export class TisStepsComponent implements AfterContentInit {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量通道添加", ["脚本生成", "构建部署", "状态确认"]));
-    this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "构建部署", "状态确认"]));
+    this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
   }
 
   ngAfterContentInit() {

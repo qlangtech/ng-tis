@@ -1,5 +1,20 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TisResponseResult, TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
@@ -272,6 +287,28 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
+  public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
+    , verifyConfig: boolean, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
+    let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
+
+
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${verifyConfig}`;
+
+    let postData: Array<Item[]> = [];
+    heteroList.forEach((h) => {
+      postData.push(h.items);
+    });
+
+    basicModule.jsonPost(url, postData).then((r) => {
+      processCallback(r);
+    }).catch((e) => {
+      if (errProcessCallback) {
+        errProcessCallback(e);
+      }
+    });
+  }
+
+
   configCheck(event: MouseEvent) {
     this.savePluginSetting(event, true);
   }
@@ -421,24 +458,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
-    let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
+    // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
 
-    //   this.plugins.map((p) => {
-    //   let param: any = p;
-    //   if (param.name) {
-    //     return param.name + (!!param.require ? ':require' : '');
-    //   } else {
-    //     return p;
-    //   }
-    // }).join("&plugin=");
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${this.errorsPageShow}&verify=${verifyConfig}`;
 
-    let postData: Array<Item[]> = [];
-    this._heteroList.forEach((h) => {
-      postData.push(h.items);
-    });
-
-    this.jsonPost(url, postData).then((r) => {
+    PluginsComponent.postHeteroList(this, this.plugins, this._heteroList, verifyConfig, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
       if (!verifyConfig) {
@@ -468,9 +491,51 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         PluginsComponent.processErrorField(errorFields, items);
       });
       this.cdr.detectChanges();
-    }).catch((e) => {
+    }, (err) => {
       this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     });
+
+
+    // let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${this.errorsPageShow}&verify=${verifyConfig}`;
+    //
+    // let postData: Array<Item[]> = [];
+    // this._heteroList.forEach((h) => {
+    //   postData.push(h.items);
+    // });
+    //
+    // this.jsonPost(url, postData).then((r) => {
+    //   // 成功了
+    //   this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
+    //   if (!verifyConfig) {
+    //     this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
+    //   } else {
+    //     if (r.success) {
+    //       this.notification.create('success', '校验成功', "表单配置无误");
+    //     }
+    //   }
+    //   if (!this.errorsPageShow && r.success) {
+    //     // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
+    //     if (this.showSaveButton && r.msg.length > 0) {
+    //       this.notification.create('success', '成功', r.msg[0]);
+    //     }
+    //     return;
+    //   }
+    //
+    //   this.processResult(r);
+    //   this.cdr.detectChanges();
+    //   let pluginErrorFields = r.errorfields;
+    //   // console.log(pluginErrorFields);
+    //   let index = 0;
+    //   // let tmpHlist: HeteroList[] = [];
+    //   this._heteroList.forEach((h) => {
+    //     let items: Item[] = h.items;
+    //     let errorFields = pluginErrorFields[index++];
+    //     PluginsComponent.processErrorField(errorFields, items);
+    //   });
+    //   this.cdr.detectChanges();
+    // }).catch((e) => {
+    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+    // });
 
     if (event) {
       event.stopPropagation();
@@ -512,7 +577,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       <nz-form-item>
           <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">{{_pp.label}}  </nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
-              <span [ngClass]="{'has-help-url':helpUrl !== null}" [ngSwitch]="_pp.type">
+              <span [ngClass]="{'has-help-url':helpUrl !== null || createRouter !== null}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
                       <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
                   </ng-container>
@@ -529,7 +594,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   </ng-container>
                   <ng-container *ngSwitchCase="5">
                       <!--ENUM-->
-                       <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
+                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label" [nzValue]="e.val"></nz-option>
                        </nz-select>
                   </ng-container>
@@ -551,8 +616,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                      <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)" [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
                       <nz-checkbox-group [ngModel]="_pp.getEProp('enum')" (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
                  </ng-container>
-                  <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
               </span>
+              <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
+              <a *ngIf="this.createRouter" class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                   <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
               </nz-select>
@@ -571,7 +637,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           }
 
           .has-help-url {
-              width: calc(100% - 1em)
+              width: calc(100% - 8em);
+              display: inline-block;
           }
     `
   ]
@@ -583,10 +650,14 @@ export class ItemPropValComponent implements AfterContentInit {
 
   helpUrl: string = null;
   _disabled = false;
+  createRouter: CreatorRouter = null;
+
+
 
   get disabled(): boolean {
     return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled;
   }
+
 
   @Input()
   set disabled(val: boolean) {
@@ -598,7 +669,14 @@ export class ItemPropValComponent implements AfterContentInit {
 
   @Input() set pp(item: ItemPropVal) {
     this._pp = item;
-    this.helpUrl = item.getEProp('helpUrl');
+    let hUrl = item.getEProp('helpUrl');
+    if (hUrl) {
+      this.helpUrl = hUrl;
+    }
+    let creator = item.getEProp("creator");
+    if (creator) {
+      this.createRouter = creator;
+    }
   }
 
   ngAfterContentInit(): void {
@@ -659,6 +737,11 @@ export class ItemPropValComponent implements AfterContentInit {
       _eprops['indeterminate'] = true;
     }
   }
+}
+
+interface CreatorRouter {
+  routerLink: string;
+  label: string;
 }
 
 

@@ -1,9 +1,25 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
 import {Item} from "../common/tis.plugin";
+import {TisInputTool} from "../common/form.component";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -19,7 +35,7 @@ import {Item} from "../common/tis.plugin";
           </tis-page-header>
           <tis-ipt #indexName title="索引名称" name="projectName" require="true">
               <nz-input-group nzSize="large" nzAddOnBefore="search4">
-                  <input required type="text" [id]="indexName.name" nz-input [(ngModel)]="model.name" name="name"/>
+                  <input required type="text" [id]="indexName.name" nz-input [(ngModel)]="model.name" (ngModelChange)="indexNameValChange( indexName)" name="name"/>
               </nz-input-group>
           </tis-ipt>
 
@@ -109,5 +125,9 @@ export class AddAppFormComponent extends BasicFormComponent implements OnInit {
           this.errorItem = Item.processFieldsErr(r);
         }
       });
+  }
+
+  indexNameValChange(indexName: TisInputTool) {
+    delete indexName.itemProp.error;
   }
 }

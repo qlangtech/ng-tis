@@ -1,9 +1,24 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferItem} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferChange, TransferItem} from "ng-zorro-antd";
+import {Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
@@ -21,12 +36,12 @@ import {DatasourceComponent} from "../offline/ds.component";
               </tis-header-tool>
           </tis-page-header>
           <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
-              <nz-transfer
-                      [nzDataSource]="transferList"
-                      [nzDisabled]="false"
-                      [nzShowSearch]="true"
-                      [nzShowSelectAll]="true"
-                      [nzRenderList]="[renderList, renderList]"
+              <nz-transfer (nzChange)="transferChange($event)"
+                           [nzDataSource]="transferList"
+                           [nzDisabled]="false"
+                           [nzShowSearch]="true"
+                           [nzShowSelectAll]="true"
+                           [nzRenderList]="[renderList, renderList]"
               >
                   <ng-template
                           #renderList
@@ -98,7 +113,7 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
 
   transferList: TransferItem[] = [];
 
-  savePlugin = new EventEmitter<any>();
+  // savePlugin = new EventEmitter<any>();
 
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
@@ -112,16 +127,9 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
     super(tisService, modalService);
   }
 
-  drawerClose() {
-    //  this.drawerVisible = false;
-  }
-
   ngOnInit(): void {
     // console.log(this.dto.readerDescriptor);
-    PluginsComponent.initializePluginItems(this, [{
-        name: "dataxReader", require: true
-        , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,dataxName_${this.dto.dataxPipeName}`
-      }],
+    PluginsComponent.initializePluginItems(this, this.getPluginMetas(),
       (success: boolean, hList: HeteroList[], _) => {
         // console.log(success);
         if (!success) {
@@ -141,12 +149,19 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
               disabled: false,
               meta: Object.assign({id: `${subformId}`}, desc.subFormMeta)
             });
-          })
-          console.log(this.transferList);
+          });
           this.transferList = [...this.transferList];
+          // console.log(this.transferList);
         }
       }
     );
+  }
+
+  private getPluginMetas(): PluginType[] {
+    return [{
+      name: "dataxReader", require: true
+      , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,dataxName_${this.dto.dataxPipeName}`
+    }];
   }
 
   ngAfterViewInit(): void {
@@ -161,8 +176,12 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
 
   // 执行下一步
   public createStepNext(): void {
-
-    this.savePlugin.emit();
+    PluginsComponent.postHeteroList(this, this.getPluginMetas(), [this.subFormHetero], false, true, (result) => {
+      if (result.success) {
+        this.nextStep.emit(this.dto);
+      }
+    });
+    // this.savePlugin.emit();
 
     // let dto = new DataxDTO();
     // dto.appform = this.readerDesc;
@@ -191,7 +210,7 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
    * @param event
    * @param data
    */
-  tableColsSelect(event: MouseEvent, meta: { id: string, behaviorMeta: ISubDetailClickBehaviorMeta, fieldName: string, idList: Array<string> }) {
+  tableColsSelect(event: MouseEvent, meta: ISubDetailTransferMeta) {
 
     let pluginMeta: PluginType[] = [{
       name: "dataxReader", require: true
@@ -200,11 +219,25 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
     // console.log(meta.id);
     let cachedVals = this.subFormHetero.items[0].vals[meta.id];
     if (cachedVals) {
-      let heteroList = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0]);
-      heteroList[0].items[0].vals = cachedVals;
-      this.openSubDetailForm(meta.id, pluginMeta, heteroList);
-      event.stopPropagation();
-      return;
+      // console.log(cachedVals);
+      let allHasFillEnums = true;
+      for (let fieldKey in meta.behaviorMeta.onClickFillData) {
+        let pv: ItemPropVal = cachedVals[fieldKey];
+        // console.log(pv.getEProp("enum"));
+        let enums: Array<any> = pv.getEProp("enum");
+        if (enums && enums.length < 1) {
+          allHasFillEnums = false;
+          break;
+        }
+      }
+
+      if (allHasFillEnums) {
+        let heteroList = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0]);
+        heteroList[0].items[0].vals = cachedVals;
+        this.openSubDetailForm(meta.id, pluginMeta, heteroList);
+        event.stopPropagation();
+        return;
+      }
     }
     let metaParam = PluginsComponent.getPluginMetaParams(pluginMeta);
     // console.log(this.subFormHetero.descriptorList[0]);
@@ -263,12 +296,40 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
   }
 
 
+  transferChange(event: TransferChange) {
+    let remove = (event.from === 'right');
+    event.list.forEach((item) => {
+      let meta: ISubDetailTransferMeta = item.meta;
+      let itemVals = this.subFormHetero.items[0];
+      if (remove) {
+        delete itemVals.vals[meta.id]
+      } else if (!itemVals.vals[meta.id]) {
+        let hlist: HeteroList[] = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0], (key, propVal) => {
+          if (propVal.pk) {
+            propVal.primary = meta.id;
+          }
+          return propVal;
+        }, true);
+        // console.log(hlist[0].items[0].vals);
+        itemVals.vals[meta.id] = hlist[0].items[0].vals;
+      }
+    });
+  }
 }
 
 // 子记录点击详细显示
 interface ISubDetailClickBehaviorMeta {
   clickBtnLabel: string;
   onClickFillData: { string: GetDateMethodMeta };
+}
+
+// meta: { id: string, behaviorMeta: ISubDetailClickBehaviorMeta, fieldName: string, idList: Array<string> }
+
+interface ISubDetailTransferMeta {
+  id: string;
+  behaviorMeta: ISubDetailClickBehaviorMeta;
+  fieldName: string;
+  idList: Array<string>;
 }
 
 interface GetDateMethodMeta {
@@ -281,7 +342,8 @@ interface GetDateMethodMeta {
   selector: 'nz-drawer-custom-component',
   template: `
       <sidebar-toolbar [deleteDisabled]="true" (close)="drawerRef.close()" (save)="_saveClick()"></sidebar-toolbar>
-      <tis-plugins [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
+      <tis-plugins [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21"
+                   [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
   `
 })
 export class PluginSubFormComponent {

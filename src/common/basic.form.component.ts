@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {TisResponseResult, TISService} from '../service/tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Input, OnInit, Optional, Output, Type} from '@angular/core';
@@ -210,13 +225,16 @@ export abstract class BasicSidebarDTO {
           margin: 0 0 18px 0;
           height: 40px;
       }
-       .float-right { float: right;}
+
+      .float-right {
+          float: right;
+      }
     `
   ],
   template: `
       <div class="sidebar">
           <button *ngIf="!deleteDisabled" nz-button nzType="danger" (click)="_deleteNode()">删除</button>
-          <div [ngClass]="{'float-right': true}" >
+          <div [ngClass]="{'float-right': true}">
               <button nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;<button nz-button nzType="default" (click)="_closeSidebar()">关闭</button>
           </div>
       </div>
@@ -323,9 +341,8 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
 }
 
 export class CurrentCollection {
-  constructor(private id: number, public name: string) {
+  constructor(private id: number, public name: string, public appTyp?: number) {
   }
-
   public get appid() {
     return this.id;
   }

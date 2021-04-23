@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {NgModule} from "@angular/core";
 
 import {CommonModule} from "@angular/common";
@@ -28,7 +43,9 @@ import {DataxAddComponent} from "./datax.add.component";
 import {DataxAddStep2Component} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component, PluginSubFormComponent} from "./datax.add.step4.component";
-import {OfflineModule} from "../offline/offline.module";
+import {DataxAddStep5Component} from "./datax.add.step5.component";
+import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
+import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 
 
 @NgModule({
@@ -37,7 +54,8 @@ import {OfflineModule} from "../offline/offline.module";
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-    , SchemaExpertAppCreateEditComponent , DataxAddStep1Component , DataxAddComponent , DataxAddStep2Component , DataxAddStep3Component , DataxAddStep4Component, PluginSubFormComponent
+    , SchemaExpertAppCreateEditComponent, DataxAddStep1Component, DataxAddComponent, DataxAddStep2Component, DataxAddStep3Component, DataxAddStep4Component, PluginSubFormComponent, DataxAddStep5Component, DataxAddStep6Component
+    , DataxAddStep7Component
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent

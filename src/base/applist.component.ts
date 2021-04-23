@@ -1,3 +1,18 @@
+/**
+ * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
+ * <p>
+ *   This program is free software: you can use, redistribute, and/or modify
+ *   it under the terms of the GNU Affero General Public License, version 3
+ *   or later ("AGPL"), as published by the Free Software Foundation.
+ * <p>
+ *  This program is distributed in the hope that it will be useful, but WITHOUT
+ *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *   FITNESS FOR A PARTICULAR PURPOSE.
+ * <p>
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import {TISService} from '../service/tis.service';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -5,6 +20,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd";
+import {Application} from "../index/application";
 
 
 // 全局配置文件
@@ -13,7 +29,7 @@ import {NzModalService} from "ng-zorro-antd";
       <form>
           <tis-page-header title="索引实例">
               <tis-header-tool>
-                  <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu" ><i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
+                  <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
                           <li nz-menu-item>
@@ -27,17 +43,23 @@ import {NzModalService} from "ng-zorro-antd";
               </tis-header-tool>
           </tis-page-header>
           <tis-page [rows]="pageList" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
-              <tis-col title="索引名称" width="14" (search)="filterByAppName($event)">
+              <tis-col title="实例名称" width="14" (search)="filterByAppName($event)">
                   <ng-template let-app='r'>
                       <button nz-button nzType="link" (click)="gotoApp(app)">{{app.projectName}}</button>
                   </ng-template>
               </tis-col>
-              <tis-col title="接口人" width="14" field="recept"></tis-col>
-              <tis-col title="数据流">
+              <tis-col title="实例类型">
                   <ng-template let-app="r">
+                      <ng-container [ngSwitch]="app.appType">
+                          <nz-tag *ngSwitchCase="1" [nzColor]="'processing'">Solr</nz-tag>
+                          <nz-tag *ngSwitchCase="2" [nzColor]="'processing'">DataX</nz-tag>
+                      </ng-container>
+                      <!--
                       <a [routerLink]="['/offline/wf_update',app.dataflowName]">{{app.dataflowName}}</a>
+                     -->
                   </ng-template>
               </tis-col>
+              <tis-col title="接口人" width="14" field="recept"></tis-col>
               <tis-col title="归属部门" field="dptName">
                   <ng-template let-app='r'>
    <span style="color:#999999;" [ngSwitch]="app.dptName !== null">
@@ -56,7 +78,7 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
 
   // allrowCount: number;
   pager: Pager = new Pager(1, 1);
-  pageList: any[];
+  pageList: Array<Application> = [];
 
   constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService
   ) {
@@ -112,8 +134,12 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     Pager.go(this.router, this.route, 1, {name: data.reset ? null : data.query});
   }
 
-  gotoApp(app) {
+  gotoApp(app: Application) {
     // <a [routerLink]="['/c',app.projectName]">{{app.projectName}}</a>
-    this.router.navigate(['/c', app.projectName]);
+    if (app.appType === 1) {
+      this.router.navigate(['/c', app.projectName]);
+    } else if (app.appType === 2) {
+      this.router.navigate(['/x', app.projectName]);
+    }
   }
 }
