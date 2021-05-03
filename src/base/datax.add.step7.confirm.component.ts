@@ -17,27 +17,54 @@ import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit,
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {PluginSubFormComponent} from "./datax.add.step4.component";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
       <tis-steps type="createDatax" [step]="4"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>
-              </tis-header-tool>
-          </tis-page-header>
-      </tis-form>
+      <tis-page-header [showBreadcrumb]="false" [result]="result">
+          <tis-header-tool>
+              <button nz-button nzType="default">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>
+          </tis-header-tool>
+      </tis-page-header>
+      <h4>生成配置文件</h4>
+      <ul class="item-block child-block">
+          <li *ngFor="let f of genCfgFileList"><i nz-icon nzType="file-text" nzTheme="outline"></i>
+              <button (click)="viewGenFile(f)" nz-button nzType="link">{{f}}</button>
+          </li>
+      </ul>
+      <h4>Reader</h4>
+      <div class="item-block">
+          <tis-plugins [errorsPageShow]="false"
+                       [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
+                       [plugins]="[{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"></tis-plugins>
+      </div>
+      <h4>Writer</h4>
+      <div class="item-block">
+          <tis-plugins [showExtensionPoint]="{open:false}" [errorsPageShow]="false"
+                       [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
+                       [plugins]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"></tis-plugins>
+      </div>
   `
   , styles: [
       `
+            .child-block {
+                list-style-type: none;
+            }
+
+            .child-block li {
+                display: inline-block;
+                width: 20%;
+                padding-right: 8px;
+            }
+
             .editable-cell {
                 position: relative;
                 padding: 5px 12px;
@@ -49,6 +76,12 @@ import {DatasourceComponent} from "../offline/ds.component";
                 border-radius: 4px;
                 padding: 4px 11px;
             }
+
+            .item-block {
+                border: 1px solid #d8d8d8;
+                margin-bottom: 10px;
+                padding: 5px;
+            }
     `
   ]
 })
@@ -58,16 +91,20 @@ export class DataxAddStep7Component extends BasicFormComponent implements OnInit
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxDTO;
 
-  constructor(tisService: TISService, modalService: NzModalService) {
+  genCfgFileList: Array<string> = [];
+
+  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
   ngOnInit(): void {
     // this.dto.dataxPipeName
-     let url = '/coredefine/corenodemanage.ajax';
-     this.httpPost(url, 'action=datax_action&emethod=generate_datax_cfgs&dataxName=' + this.dto.dataxPipeName).then((r) => {
-
-     });
+    let url = '/coredefine/corenodemanage.ajax';
+    this.httpPost(url, 'action=datax_action&emethod=generate_datax_cfgs&dataxName=' + this.dto.dataxPipeName).then((r) => {
+      if (r.success) {
+        this.genCfgFileList = r.bizresult;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -86,14 +123,50 @@ export class DataxAddStep7Component extends BasicFormComponent implements OnInit
         this.processResult(r);
         if (r.success) {
           // console.log(dto);
-         // this.nextStep.emit(this.dto);
+          // this.nextStep.emit(this.dto);
         } else {
           this.errorItem = Item.processFieldsErr(r);
         }
       });
   }
 
+  viewGenFile(fileName: string) {
+
+    this.httpPost("/coredefine/corenodemanage.ajax"
+      , "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName + "&fileName=" + fileName)
+      .then((r) => {
+        this.processResult(r);
+        if (r.success) {
+          const drawerRef = this.drawerService.create<ViewGenerateCfgComponent, {}, {}>({
+            nzHeight: "80%",
+            nzPlacement: "bottom",
+            nzTitle: `DataX Config File '${fileName}' `,
+            nzContent: ViewGenerateCfgComponent,
+            nzContentParams: {fileMeta: r.bizresult}
+          });
+        }
+      });
+  }
 }
+
+@Component({
+  template: `
+      <tis-codemirror [config]="{mode:'text/javascript'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+  `
+})
+export class ViewGenerateCfgComponent {
+
+  @Input()
+  fileMeta: { content?: string } = {};
+
+  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>) {
+  }
+
+  close(): void {
+    this.drawerRef.close();
+  }
+}
+
 
 interface ITableAlias {
   from: string;

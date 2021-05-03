@@ -128,10 +128,10 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
       <nz-spin [nzSpinning]="this.spinning">
           <ng-content select="tis-page-header"></ng-content>
 
-          <form nz-form #form [nzLayout]="this.formLayout">
+          <form  nz-form #form [nzLayout]="this.formLayout">
               <nz-form-item *ngFor="let i of ipts">
-                  <nz-form-label [nzRequired]="i.require" [nzSpan]="isHorizontal ? 6 : null" [nzFor]="i.name">{{i.title}}</nz-form-label>
-                  <nz-form-control [nzSpan]="isHorizontal ? 14 : null" [nzValidateStatus]="i.itemProp.validateStatus"
+                  <nz-form-label [nzRequired]="i.require" [nzSpan]="isHorizontal ? labelSpan : null" [nzFor]="i.name">{{i.title}}</nz-form-label>
+                  <nz-form-control [nzSpan]="isHorizontal ? controlerSpan : null" [nzValidateStatus]="i.itemProp.validateStatus"
                                    [nzHasFeedback]="i.itemProp.hasFeedback" [nzErrorTip]="i.itemProp.error">
                       <!--
                         <ng-template tis-ipt-content [ipt-meta]="i"></ng-template>
@@ -145,6 +145,11 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
   `,
 })
 export class FormComponent implements AfterContentInit, OnInit {
+
+  @Input()
+  labelSpan = 6;
+  @Input()
+  controlerSpan = 14;
   @Input()
   formLayout: 'horizontal' | 'vertical' | 'inline' = 'horizontal';
   @ContentChildren(TisInputTool) ipts: QueryList<TisInputTool>;

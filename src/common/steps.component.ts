@@ -21,7 +21,8 @@ import {AfterContentInit, Component, Input} from "@angular/core";
 enum StepType {
   CreateIndex = "createIndex",
   CreateIncr = "createIncr",
-  CreateDatax = "createDatax"
+  CreateDatax = "createDatax",
+  CreateWorkderOfDataX = "CreateWorkderOfDataX"
 }
 
 // implements OnInit, AfterContentInit
@@ -64,6 +65,7 @@ export class TisStepsComponent implements AfterContentInit {
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量通道添加", ["脚本生成", "构建部署", "状态确认"]));
     this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.CreateWorkderOfDataX, new CaptionSteps("DataX执行器添加", ["K8S基本信息", "K8S资源规格", "确认"]));
   }
 
   ngAfterContentInit() {

@@ -28,6 +28,7 @@ import {BaseConfigComponent} from "./base-config.component";
 import {SnapshotsetComponent} from "../index/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
+import {DataxWorkerComponent} from "./datax.worker.component";
 
 
 const basemanageRoutes: Routes = [
@@ -84,6 +85,10 @@ const basemanageRoutes: Routes = [
             path: 'dataxadd',
             component: DataxAddComponent
           },
+          {
+            path: 'datax-worker',
+            component: DataxWorkerComponent
+          }
         ]
       }
     ]
