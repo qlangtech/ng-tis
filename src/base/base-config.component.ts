@@ -27,7 +27,7 @@ import {NzModalService} from "ng-zorro-antd";
           <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzTabBarExtraContent]="extraTemplate">
               <nz-tab nzTitle="全局" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['k8s-images','params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="实时" (nzDeselect)="configDeSelect($event)">
@@ -43,7 +43,8 @@ import {NzModalService} from "ng-zorro-antd";
               </nz-tab>
               <nz-tab nzTitle="DataX" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs','flat_table_builder','index_build_container','ds_dump']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs','flat_table_builder','index_build_container','ds_dump']"
+                                   (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
           </nz-tabset>

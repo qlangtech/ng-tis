@@ -121,8 +121,6 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
 
   subFormHetero: HeteroList = new HeteroList();
 
-  // drawerVisible: boolean;
-
   constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }

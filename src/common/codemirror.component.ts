@@ -23,6 +23,7 @@ import {Editor, EditorConfiguration, EditorFromTextArea, fromTextArea} from 'cod
 
 import "node_modules/codemirror/lib/codemirror.js";
 import "node_modules/codemirror/mode/sql/sql.js";
+import "node_modules/codemirror/mode/javascript/javascript.js";
 import "node_modules/codemirror/mode/clike/clike.js";
 import "node_modules/codemirror/mode/xml/xml.js";
 import "node_modules/codemirror/mode/solr/solr.js";

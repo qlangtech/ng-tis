@@ -577,7 +577,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       <nz-form-item>
           <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">{{_pp.label}}  </nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
-              <span [ngClass]="{'has-help-url':helpUrl !== null || createRouter !== null}" [ngSwitch]="_pp.type">
+              <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
                       <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
                   </ng-container>
@@ -618,7 +618,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                  </ng-container>
               </span>
               <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
-              <a *ngIf="this.createRouter" class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
+              <a *ngIf="this.createRouter && !this.disabled" target="_blank"  class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                   <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
               </nz-select>

@@ -78,6 +78,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                   <nz-dropdown-menu #baseManage="nzDropdownMenu">
                       <ul nz-menu nzSelectable>
                           <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
+                          <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
                           <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
                           <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
                           <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>

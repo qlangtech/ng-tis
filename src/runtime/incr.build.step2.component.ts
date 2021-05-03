@@ -15,12 +15,16 @@
 
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 import {IndexIncrStatus} from "./incr.build.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NzModalService} from "ng-zorro-antd";
+
+
+
+
 
 
 @Component({
@@ -188,24 +192,6 @@ export class IncrBuildStep2Component extends AppFormComponent implements AfterCo
         this.nextStep.emit(this.dto);
       }
     });
-    // 服务端生成了taskid
-    // this.tisService.wsconnect('ws://' + window.location.host
-    //   + '/tjs/download/tasklogfeedback?taskid=' + 1)
-    //   .subscribe((response: MessageEvent): void => {
-    //     // let status = JSON.parse(response.data);
-    //     // // console.log(status);
-    //     // // console.info(status.dumpPhase);
-    //     // this.liveExecLog.dumpPhase = status.dumpPhase;
-    //     // this.liveExecLog.joinPhase = status.joinPhase;
-    //     // this.liveExecLog.buildPhase = status.buildPhase;
-    //     // this.liveExecLog.indexBackFlowPhaseStatus
-    //     //   = status.indexBackFlowPhaseStatus;
-    //     // if (this.isSpinning){
-    //     //   this.isSpinning = false;
-    //     // }
-    //   });
-    //
-    // this.nextStep.emit(this.dto);
   }
 
   public createIndexStepPre() {
