@@ -84,8 +84,8 @@ import {NzModalService} from "ng-zorro-antd";
               </div>
           </tis-ipt>
           <tis-ipt title="弹性扩缩容" name="hpa" require>
-              <div>
-                  <nz-switch [nzDisabled]="disabled" nzCheckedChildren="开" nzUnCheckedChildren="关" formControlName="supportHpa"></nz-switch>
+              <div *ngIf="!disabled">
+                  <nz-switch  nzCheckedChildren="开" nzUnCheckedChildren="关" formControlName="supportHpa"></nz-switch>
               </div>
               <div *ngIf="specForm?.get('supportHpa').value" class="resource-spec">
                   <div>

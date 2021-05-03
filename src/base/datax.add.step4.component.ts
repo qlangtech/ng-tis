@@ -339,7 +339,7 @@ interface GetDateMethodMeta {
 @Component({
   selector: 'nz-drawer-custom-component',
   template: `
-      <sidebar-toolbar [deleteDisabled]="true" (close)="drawerRef.close()" (save)="_saveClick()"></sidebar-toolbar>
+      <sidebar-toolbar [deleteDisabled]="true" (close)="close()" (save)="_saveClick()"></sidebar-toolbar>
       <tis-plugins [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21"
                    [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
   `
@@ -349,16 +349,16 @@ export class PluginSubFormComponent {
   @Input() pluginMeta: PluginType[];
   savePlugin = new EventEmitter<{ verifyConfig: boolean }>();
 
-  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>) {
+  constructor(public  drawer: NzDrawerRef<{ hetero: HeteroList }>) {
   }
 
   close(): void {
-    this.drawerRef.close();
+    this.drawer.close();
   }
 
   verifyPluginConfig(e: PluginSaveResponse) {
     if (e.saveSuccess) {
-      this.drawerRef.close({hetero: this.hetero[0]});
+      this.drawer.close({hetero: this.hetero[0]});
     }
   }
 
