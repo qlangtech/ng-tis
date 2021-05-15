@@ -46,7 +46,7 @@ export interface Status {
   replicas: number;
 }
 
-export interface IncrDeployment {
+export interface RCDeployment {
   cpuLimit: CpuLimit;
   cpuRequest: CpuRequest;
   creationTimestamp: number;

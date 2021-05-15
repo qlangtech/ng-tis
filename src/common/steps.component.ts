@@ -13,7 +13,8 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, Component, Input} from "@angular/core";
+import {AfterContentInit, Component, EventEmitter, Input, Output} from "@angular/core";
+import {NzModalService} from "ng-zorro-antd";
 
 
 // const typeCreateIndex = "createIndex";
@@ -71,8 +72,52 @@ export class TisStepsComponent implements AfterContentInit {
   ngAfterContentInit() {
 
   }
+}
 
+@Component({
+  selector: 'tis-steps-tools-bar',
+  template: `
+      <tis-page-header [showBreadcrumb]="false">
+          <tis-header-tool>
+              <ng-container *ngIf="cancel.observers.length>0">
+                  <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button> &nbsp;
+              </ng-container>
+              <ng-container *ngIf="goBack.observers.length>0">
+                  <button nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步</button> &nbsp;
+              </ng-container>
+              <ng-container *ngIf="goOn.observers.length>0">
+                  <button nz-button nzType="primary" (click)="goOn.emit($event)"><i nz-icon nzType="step-forward" nzTheme="outline"></i>下一步</button>
+              </ng-container>
+              <ng-content select="final-exec-controller"></ng-content>
+          </tis-header-tool>
+      </tis-page-header>
+  `,
+  styles: [
+      `
+    `
+  ]
+})
+export class TisStepsToolbarComponent implements AfterContentInit {
 
+  @Output() cancel = new EventEmitter<any>();
+  @Output() goBack = new EventEmitter<any>();
+  @Output() goOn = new EventEmitter<any>();
+
+  constructor(private modal: NzModalService) {
+  }
+
+  ngAfterContentInit() {
+  }
+
+  cancelSteps() {
+    this.modal.confirm({
+      nzTitle: '<i>确认</i>',
+      nzContent: '<b>您是否确定要退出此流程</b>',
+      nzOnOk: () => {
+        this.cancel.emit();
+      }
+    });
+  }
 }
 
 class CaptionSteps {

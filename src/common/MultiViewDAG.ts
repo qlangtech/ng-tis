@@ -41,15 +41,29 @@ export class MultiViewDAG {
     // console.log({next: nextCpt, pre: preCpt});
 
     if (nextCpt !== null) {
-      componentRef.instance.nextStep.subscribe((e: any) => {
-          this.loadComponent(nextCpt, e);
+      componentRef.instance.nextStep.subscribe((e: IntendDirect | any) => {
+          if (e.dto) {
+            if (!e.cpt) {
+              throw new Error("prop cpt can not be null");
+            }
+            this.loadComponent(e.cpt, e.dto);
+          } else {
+            this.loadComponent(nextCpt, e);
+          }
         }
       );
     }
 
     if (preCpt !== null) {
-      componentRef.instance.preStep.subscribe((e: any) => {
-          this.loadComponent(preCpt, e);
+      componentRef.instance.preStep.subscribe((e: IntendDirect | any) => {
+          if (e.dto) {
+            if (!e.cpt) {
+              throw new Error("prop cpt can not be null");
+            }
+            this.loadComponent(e.cpt, e.dto);
+          } else {
+            this.loadComponent(preCpt, e);
+          }
         }
       );
     }
@@ -63,4 +77,13 @@ export class MultiViewDAG {
     this.stepViewPlaceholder.clear();
     return this.stepViewPlaceholder.createComponent(componentFactory);
   }
+}
+
+/**
+ * 由各个分步骤对应的component内部决定下一步应该到哪儿去，而不是由最顶层导演决定（因为情况是复杂的嘛）
+ */
+export interface IntendDirect {
+  dto: any;
+  // 下一步的component
+  cpt: Type<any>;
 }

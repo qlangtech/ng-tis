@@ -34,7 +34,8 @@ import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
-import {Option} from "./addapp-pojo";
+
+
 
 @Component({
   template: `
@@ -43,8 +44,6 @@ import {Option} from "./addapp-pojo";
       </nz-spin>`
 })
 export class DataxAddComponent extends AppFormComponent implements AfterViewInit, OnInit {
-
-  private _incrScript: string;
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
   private multiViewDAG: MultiViewDAG;
@@ -62,9 +61,6 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
 
 
   ngOnInit(): void {
-
-    //  let configFST: Map<any, { next: any, pre: any }> = new Map();
-
     // 配置步骤前后跳转状态机
     let configFST: Map<any, { next: any, pre: any }> = new Map();
     configFST.set(DataxAddStep1Component, {next: DataxAddStep2Component, pre: null});
@@ -74,11 +70,12 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep5Component, {next: DataxAddStep6Component, pre: DataxAddStep4Component});
     configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
     configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
-    // console.log(this.containerRef);
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-    this.multiViewDAG.loadComponent(DataxAddStep7Component, new DataxDTO());
+    this.multiViewDAG.loadComponent(DataxAddStep1Component, new DataxDTO());
   }
 }
+
+
 
 /**
  * 被选中的列
@@ -108,5 +105,13 @@ export class DataxDTO {
   selectableTabs: Map<string /* table */, ISelectedTabMeta> = new Map();
   readerDescriptor: Descriptor;
   writerDescriptor: Descriptor;
+
+  processMeta: DataXCreateProcessMeta;
+}
+
+export interface DataXCreateProcessMeta {
+  readerMultiTableSelectable: boolean;
+  // DataX Reader 是否有明确的表名
+  explicitTable: boolean;
 }
 

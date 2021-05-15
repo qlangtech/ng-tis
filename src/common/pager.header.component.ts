@@ -82,7 +82,7 @@ export class PageHeaderLeftComponent {
               <tis-msg [result]="result"></tis-msg>
               <div [ngClass]="headTitleClass">
                   <div class="head-tool-block">
-                      <button *ngIf="needRefesh" nz-button (click)="blockRefesh()"><i nz-icon nzType="redo" nzTheme="outline"></i></button>
+                      <button *ngIf="refesh.observers.length>0" nz-button (click)="blockRefesh()"><i nz-icon nzType="redo" nzTheme="outline"></i></button>
                       <ng-content></ng-content>
                   </div>
                   <a *ngIf="back" href="javascript:void(0)" (click)="comeback()">
@@ -136,7 +136,7 @@ export class PageHeaderComponent implements AfterContentInit {
   @ContentChildren(TisHeaderTool) tools: QueryList<TisHeaderTool>;
   @Output() refesh = new EventEmitter<any>();
 
-  @Input() needRefesh = false;
+ // @Input() needRefesh = false;
   @Input() back: string;
   @Input()
   result: { success: boolean, msg: any[], errormsg: any[] };

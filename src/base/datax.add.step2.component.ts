@@ -21,6 +21,7 @@ import {NzModalService} from "ng-zorro-antd";
 import {Descriptor, Item} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -28,12 +29,13 @@ import {DataxDTO} from "./datax.add.component";
   // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createDatax" [step]="1"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="execNextStep()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
+<!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+<!--          <tis-header-tool>-->
+<!--              <button nz-button nzType="primary" (click)="execNextStep()">下一步</button>-->
+<!--          </tis-header-tool>-->
+<!--      </tis-page-header>-->
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()"></tis-steps-tools-bar>
+      <tis-form class="" [fieldsErr]="errorItem">
           <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
               <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [(ngModel)]="dto.readerDescriptor">
                   <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp" [nzLabel]="pp.displayName"></nz-option>
@@ -52,16 +54,15 @@ import {DataxDTO} from "./datax.add.component";
     `
   ]
 })
-export class DataxAddStep2Component extends BasicFormComponent implements OnInit {
+export class DataxAddStep2Component extends BasicDataXAddComponent implements OnInit {
   errorItem: Item = Item.create([]);
   // model = new Application(
   //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
   // );
   model = new AppDesc();
 
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
+
+
 
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
@@ -96,11 +97,15 @@ export class DataxAddStep2Component extends BasicFormComponent implements OnInit
       .then((r) => {
         this.processResult(r);
         if (r.success) {
-          // console.log(dto);
+          this.dto.processMeta = r.bizresult;
           this.nextStep.emit(this.dto);
         } else {
           this.errorItem = Item.processFieldsErr(r);
         }
       });
   }
+
+
+
+
 }

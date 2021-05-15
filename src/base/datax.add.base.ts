@@ -13,33 +13,29 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd";
+import {EventEmitter, Input, Output} from "@angular/core";
+import {DataxDTO} from "./datax.add.component";
 
 
-@Component({
-  template: `
-      <div style="margin-top: 20px" nz-row [nzGutter]="16">
-          <div class="line-chart-block" nz-col nzSpan="12">
-              <line-chart queryType="solrQuery"></line-chart>
-          </div>
-          <div class="line-chart-block"  nz-col nzSpan="12">
-              <line-chart queryType="docUpdate"></line-chart>
-          </div>
-      </div>
-  `,
-  styles: [
-      `
-          .line-chart-block {
-          }
-    `
-  ]
-})
-export class MonitorComponent extends BasicFormComponent {
+export class BasicDataXAddComponent extends BasicFormComponent {
+  @Input() protected dto: DataxDTO;
+  @Output() protected nextStep = new EventEmitter<any>();
+  @Output() protected preStep = new EventEmitter<any>();
+
   constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
+
+  cancel() {
+  }
+
+  goback() {
+    this.preStep.next(this.dto);
+  }
 }
+
+

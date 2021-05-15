@@ -28,7 +28,7 @@ import {NzModalService} from "ng-zorro-antd";
 import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
 import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {Descriptor, HeteroList, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
@@ -48,8 +48,10 @@ import {DataxWorkerDTO} from "./datax.worker.component";
               <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStep1Next(k8sReplicsSpec)">下一步</button>
           </tis-header-tool>
       </tis-page-header>
-      <k8s-replics-spec #k8sReplicsSpec [labelSpan]="3">
+      <div class="item-block">
+      <k8s-replics-spec [rcSpec]="dto.rcSpec" [errorItem]="errorItem" #k8sReplicsSpec [labelSpan]="3">
       </k8s-replics-spec>
+      </div>
   `
 })
 export class DataxWorkerAddStep2Component extends AppFormComponent implements AfterViewInit, OnInit {
@@ -59,21 +61,25 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
 
+  errorItem: Item;
+
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
   }
 
   createStep1Next(k8sReplicsSpec: K8SReplicsSpecComponent) {
+    // console.log(k8sReplicsSpec.k8sControllerSpec);
+    let rcSpec = k8sReplicsSpec.k8sControllerSpec;
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker'
       , {
-        k8sSpec: k8sReplicsSpec.k8sControllerSpec,
+        k8sSpec: rcSpec,
       })
       .then((r) => {
         if (r.success) {
+          this.dto.rcSpec = rcSpec;
           this.nextStep.emit(this.dto);
-          // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-          // let desc = Array.from(rList.values());
-          // this.hlist = DatasourceComponent.pluginDesc(desc[0])
+        } else {
+          this.errorItem = Item.processFieldsErr(r);
         }
       });
   }

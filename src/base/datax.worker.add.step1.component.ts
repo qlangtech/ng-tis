@@ -48,9 +48,11 @@ import {DataxWorkerDTO} from "./datax.worker.component";
               <button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
           </tis-header-tool>
       </tis-page-header>
-      <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'datax-worker', require: true}]"
-                   (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                   [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      <div class="item-block">
+          <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'datax-worker', require: true}]"
+                       (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
+                       [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      </div>
   `
 })
 export class DataxWorkerAddStep1Component extends BasicFormComponent implements AfterViewInit, OnInit {
@@ -100,7 +102,6 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
   }
 
   afterSaveReader(e: PluginSaveResponse) {
-    console.log("ddddd");
     if (e.saveSuccess) {
       this.nextStep.emit(this.dto);
     }

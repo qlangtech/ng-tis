@@ -26,6 +26,8 @@ import {TISService} from "../service/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {DataxIndexComponent} from "./datax.index.component";
 import {DataxMainComponent} from "./datax.main.component";
+import {BuildProgressComponent} from "../runtime/core.build.progress.component";
+import {MonitorComponent} from "../runtime/monitor.component";
 
 @Injectable()
 export class DataxCanActivateCollectionManage implements CanActivateChild {
@@ -70,14 +72,21 @@ const dataxNodeRoutes: Routes = [
         children: [
           {   // Schema 配置文件一览
             path: 'app_build_history',
-            component: FullBuildHistoryComponent
+            component: FullBuildHistoryComponent,
+            data: {datax: true}
+          },
+          {
+            path: 'app_build_history/:taskid',
+            component: BuildProgressComponent,
+            data: {datax: true}
           },
           {
             path: 'operationlog',
             component: OperationLogComponent
-          }
-          ,
-          {
+          }, {
+            path: 'monitor',
+            component: MonitorComponent
+          }, {
             path: '',
             component: DataxMainComponent
           }

@@ -22,7 +22,7 @@ import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {WSMessage} from "./core.build.progress.component";
-import {K8sPodState} from "./misc/incr.deployment";
+import {K8sPodState} from "./misc/RCDeployment";
 
 @Component({
   template: `
@@ -40,34 +40,34 @@ import {K8sPodState} from "./misc/incr.deployment";
               </nz-tab>
               <nz-tab nzTitle="规格">
                   <nz-descriptions nzTitle="配置" nzBordered>
-                      <nz-descriptions-item nzTitle="Docker Image">{{dto.incrDeployment.dockerImage}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="创建时间">{{dto.incrDeployment.creationTimestamp | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="Docker Image">{{dto.rcDeployment.dockerImage}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="创建时间">{{dto.rcDeployment.creationTimestamp | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
                   </nz-descriptions>
                   <nz-descriptions nzTitle="当前状态" nzBordered>
-                      <nz-descriptions-item nzTitle="availableReplicas">{{dto.incrDeployment.status.availableReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="fullyLabeledReplicas">{{dto.incrDeployment.status.fullyLabeledReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="observedGeneration">{{dto.incrDeployment.status.observedGeneration}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="readyReplicas">{{dto.incrDeployment.status.readyReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="replicas">{{dto.incrDeployment.status.replicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="availableReplicas">{{dto.rcDeployment.status.availableReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="fullyLabeledReplicas">{{dto.rcDeployment.status.fullyLabeledReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="observedGeneration">{{dto.rcDeployment.status.observedGeneration}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="readyReplicas">{{dto.rcDeployment.status.readyReplicas}}</nz-descriptions-item>
+                      <nz-descriptions-item nzTitle="replicas">{{dto.rcDeployment.status.replicas}}</nz-descriptions-item>
                   </nz-descriptions>
                   <nz-descriptions nzTitle="资源分配" nzBordered>
                       <nz-descriptions-item nzTitle="CPU">
                           <nz-tag>request</nz-tag>
-                          {{dto.incrDeployment.cpuRequest.val + dto.incrDeployment.cpuRequest.unit}}
+                          {{dto.rcDeployment.cpuRequest.val + dto.rcDeployment.cpuRequest.unit}}
                           <nz-tag>limit</nz-tag>
-                          {{dto.incrDeployment.cpuLimit.val + dto.incrDeployment.cpuLimit.unit}}</nz-descriptions-item>
+                          {{dto.rcDeployment.cpuLimit.val + dto.rcDeployment.cpuLimit.unit}}</nz-descriptions-item>
                       <nz-descriptions-item nzTitle="Memory">
                           <nz-tag>request</nz-tag>
-                          {{dto.incrDeployment.memoryRequest.val + dto.incrDeployment.memoryRequest.unit}}
+                          {{dto.rcDeployment.memoryRequest.val + dto.rcDeployment.memoryRequest.unit}}
                           <nz-tag>limit</nz-tag>
-                          {{dto.incrDeployment.memoryLimit.val + dto.incrDeployment.memoryLimit.unit}}</nz-descriptions-item>
+                          {{dto.rcDeployment.memoryLimit.val + dto.rcDeployment.memoryLimit.unit}}</nz-descriptions-item>
                   </nz-descriptions>
                   <nz-descriptions nzTitle="环境变量" nzBordered>
-                      <nz-descriptions-item *ngFor=" let e of  dto.incrDeployment.envs | keyvalue" [nzTitle]="e.key">{{e.value}}</nz-descriptions-item>
+                      <nz-descriptions-item *ngFor=" let e of  dto.rcDeployment.envs | keyvalue" [nzTitle]="e.key">{{e.value}}</nz-descriptions-item>
                   </nz-descriptions>
 
                   <h4 class="ant-descriptions-title pods">Pods</h4>
-                  <nz-table #pods nzSize="small" nzBordered="true" nzShowPagination="false" [nzData]="this?.dto.incrDeployment.pods">
+                  <nz-table #pods nzSize="small" nzBordered="true" nzShowPagination="false" [nzData]="this?.dto.rcDeployment.pods">
                       <thead>
                       <tr>
                           <th width="20%">名称</th>

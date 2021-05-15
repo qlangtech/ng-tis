@@ -30,10 +30,10 @@ import {map} from 'rxjs/operators';
   template: `
       <dd class="progress">
           <ng-container *ngIf="t.success">
-              <nz-progress  [nzPercent]="100"></nz-progress>
+              <nz-progress [nzPercent]="100"></nz-progress>
           </ng-container>
           <ng-container *ngIf="!t.waiting && !t.complete">
-              <nz-progress  [nzPercent]="t.percent"></nz-progress>
+              <nz-progress [nzPercent]="t.percent"></nz-progress>
           </ng-container>
           <div *ngIf="t.waiting" class="waiting"></div>
           <nz-progress *ngIf="t.faild" [nzPercent]="100" nzStatus="exception"></nz-progress>
@@ -267,6 +267,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   isSpinning = false;
   termVisible = false;
   progressStat: ProgressStat = new ProgressStat();
+  dataxProcess = false;
 
   // private count: number = 1;
   constructor(tisService: TISService, modalService: NzModalService
@@ -285,36 +286,24 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 
   ngAfterViewInit(): void {
-    // this.invalidate();
-    // this.child.keyEventInput.subscribe( e => {
-    //   console.log('keyboard event:' + e.domEvent.keyCode + ', ' + e.key);
-    //
-    //   const ev = e.domEvent;
-    //   const printable = !ev.altKey && !ev.ctrlKey && !ev.metaKey;
-    //
-    //   if (ev.keyCode === 13) {
-    //     this.child.write('\r\n$ ');
-    //   } else if (ev.keyCode === 8) {
-    //     // Do not delete the prompt
-    //     if (this.child.underlying.buffer.cursorX > 2) {
-    //       this.child.write('\b \b');
-    //     }
-    //   } else if (printable) {
-    //     this.child.write(e.key);
-    //   }
-    // });
   }
 
   ngOnInit(): void {
 
     let rdata = this.route.snapshot.data;
     this.showBreadcrumb = !!rdata['showBreadcrumb'];
+    this.dataxProcess = !!rdata['datax'];
     this.route.params
       .subscribe((params: Params) => {
         this.isSpinning = true;
         let taskid: number = parseInt(params['taskid'], 10);
 
         let wfid = params['wfid'];
+        if (this.dataxProcess) {
+          this.buildTask = new BuildTask();
+          this.buildTask.startPhase = 1;
+          this.buildTask.endPhase = 1;
+        }
         if (wfid) {
           this.httpPost('/coredefine/full_build_history.ajax'
             , `emethod=get_workflow&action=core_action&wfid=${wfid}&taskid=${taskid}`).then((r) => {
@@ -355,6 +344,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
       if (this.componentDestroy) {
         return;
       }
+      //console.log(response.data);
       switch (response.logtype) {
         case "stat":
           this.progressStat = Object.assign(new ProgressStat(), response.data);
@@ -413,8 +403,6 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   openReltimeLog() {
     this.termVisible = true;
     this.msgSubject.next(new WSMessage("full"));
-    // this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=full`)
-    //   .subscribe((response: MessageEvent): void => {});
   }
 
   termClose() {

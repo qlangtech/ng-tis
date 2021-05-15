@@ -40,6 +40,9 @@ import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
+import {K8SRCSpec} from "../common/k8s.replics.spec.component";
+import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
+import {IndexIncrStatus, K8SControllerStatus} from "../runtime/incr.build.component";
 
 @Component({
   template: `
@@ -70,15 +73,33 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
     configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep2Component, pre: DataxWorkerAddStep0Component});
     configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep1Component});
-    configFST.set(DataxWorkerAddStep3Component, {next: null, pre: DataxWorkerAddStep2Component});
-   // configFST.set(DataxWorkerAddStep0Component, {next: DataxAddStep2Component, pre: null});
+    configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
+    configFST.set(DataxWorkerRunningComponent, {next: DataxWorkerAddStep0Component, pre: DataxWorkerAddStep3Component});
+    // configFST.set(DataxWorkerAddStep0Component, {next: DataxAddStep2Component, pre: null});
     // console.log(this.containerRef);
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-    this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, new DataxWorkerDTO());
+    this.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=datax_action&emethod=get_datax_worker_meta`)
+      .then((r) => {
+        if (r.success) {
+          let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult);
+          if (dataXWorkerStatus.k8sReplicationControllerCreated) {
+            this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
+          } else {
+            this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, new DataxWorkerDTO());
+          }
+        }
+      });
+
   }
 }
 
+export class DataXJobWorkerStatus extends K8SControllerStatus {
+
+}
+
 export class DataxWorkerDTO {
+  rcSpec: K8SRCSpec;
 }
 
 

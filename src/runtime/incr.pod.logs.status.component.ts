@@ -22,7 +22,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subject} from "rxjs";
 import {WSMessage} from "./core.build.progress.component";
 import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
-import {K8sPodState} from "./misc/incr.deployment";
+import {K8sPodState} from "./misc/RCDeployment";
 
 
 @Component({
