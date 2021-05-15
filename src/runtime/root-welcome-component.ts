@@ -80,6 +80,15 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                           </nz-card>
                       </div>
                   </div>
+                  <div nz-row [nzGutter]="8">
+                      <div nz-col nzSpan="8">
+                          <nz-card [nzHoverable]="true" (click)="routerTo('/base/plugin-manage')">
+                              <div class="tis-card-content">
+                                  <h1><i nz-icon nzType="tool" nzTheme="outline"></i>插件管理</h1>
+                              </div>
+                          </nz-card>
+                      </div>
+                  </div>
               </nz-content>
               <nz-sider [nzWidth]="400">
                   <nz-list [nzDataSource]="_latestSelected" nzBordered [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex">
@@ -109,7 +118,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                   <nz-card nzTitle="相关">
                       <nz-descriptions [nzColumn]="1">
                           <nz-descriptions-item [nzTitle]="githubRef"><a target="_blank" href="https://github.com/qlangtech/tis-solr">https://github.com/qlangtech/tis-solr</a></nz-descriptions-item>
-                       <ng-template #githubRef> <i nz-icon nzType="github" nzTheme="outline"></i></ng-template>
+                          <ng-template #githubRef><i nz-icon nzType="github" nzTheme="outline"></i></ng-template>
                       </nz-descriptions>
                   </nz-card>
               </div>
@@ -156,7 +165,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
               padding: 10px;
           }
 
-          .tis-card-content h1 {
+          .tis-card-content h1, h2 {
               text-align: center;
               position: relative;
               top: 50%;

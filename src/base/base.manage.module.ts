@@ -51,6 +51,8 @@ import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
+import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
+import {PluginManageComponent} from "./plugin.manage.component";
 
 
 @NgModule({
@@ -61,6 +63,7 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent, DataxAddStep1Component, DataxAddComponent, DataxAddStep2Component, DataxAddStep3Component, DataxAddStep4Component, PluginSubFormComponent, DataxAddStep5Component, DataxAddStep6Component
     , DataxAddStep7Component, ViewGenerateCfgComponent, DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component
+    , DataxWorkerRunningComponent , PluginManageComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent

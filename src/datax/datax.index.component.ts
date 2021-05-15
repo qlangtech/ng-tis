@@ -41,7 +41,7 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                       <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
                   </li>
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>监控</a>
+                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>
                   </li>
 <!--
                   <li nz-menu-item nzMatchRouter>

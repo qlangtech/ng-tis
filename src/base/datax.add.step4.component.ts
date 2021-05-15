@@ -22,6 +22,7 @@ import {Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveRespons
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 // 设置所选table的表以及 表的列
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -29,12 +30,13 @@ import {DatasourceComponent} from "../offline/ds.component";
   // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createDatax" [step]="1"></tis-steps>
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-form [formLayout]="'vertical'" [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
+          <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+          <!--              <tis-header-tool>-->
+          <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+          <!--              </tis-header-tool>-->
+          <!--          </tis-page-header>-->
           <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
               <nz-transfer (nzChange)="transferChange($event)"
                            [nzDataSource]="transferList"
@@ -95,15 +97,12 @@ import {DatasourceComponent} from "../offline/ds.component";
     `
   ]
 })
-export class DataxAddStep4Component extends BasicFormComponent implements OnInit, AfterViewInit {
+export class DataxAddStep4Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
   // model = new Application(
   //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
   // );
   model = new AppDesc();
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
 
 
   @ViewChild('drawerTemplate', {static: false}) drawerTemplate?: TemplateRef<{
@@ -220,8 +219,12 @@ export class DataxAddStep4Component extends BasicFormComponent implements OnInit
       // console.log(cachedVals);
       let allHasFillEnums = true;
       for (let fieldKey in meta.behaviorMeta.onClickFillData) {
+        // console.log(fieldKey);
         let pv: ItemPropVal = cachedVals[fieldKey];
         // console.log(pv.getEProp("enum"));
+        if (!pv) {
+          throw new Error(`fieldKey:${fieldKey} relevant ItemPropVal can not be null`);
+        }
         let enums: Array<any> = pv.getEProp("enum");
         if (enums && enums.length < 1) {
           allHasFillEnums = false;

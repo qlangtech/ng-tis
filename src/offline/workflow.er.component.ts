@@ -171,7 +171,7 @@ const MODE_DEFAULT = "default";
   selector: `offline-er`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <div id="tool-bar">
+      <div  class="tool-bar">
           <!--
          {{this._editMode}}
          <button nz-button (click)="changeStyle(true)">changeStyle</button>
@@ -187,11 +187,11 @@ const MODE_DEFAULT = "default";
   `,
   styles: [
       `
-          #tool-bar {
-              background-color: #eeeeee;
-              padding: 5px;
-              border-bottom: 1px solid #a6a6a6;
-          }
+          /*#tool-bar {*/
+          /*    background-color: #eeeeee;*/
+          /*    padding: 5px;*/
+          /*    border-bottom: 1px solid #a6a6a6;*/
+          /*}*/
     `]
 })
 // 设置表之间的ER实体关系

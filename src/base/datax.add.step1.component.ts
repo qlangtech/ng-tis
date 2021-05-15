@@ -19,9 +19,10 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO, Option} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
-import {DataxDTO} from "./datax.add.component";
+import { DataxDTO} from "./datax.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -29,27 +30,28 @@ import {DatasourceComponent} from "../offline/ds.component";
   // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createDatax" [step]="0"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false">
-              <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
-          <!--          <tis-ipt #indexName title="实例名称" name="projectName" require="true">-->
-          <!--              <input nzSize="large" required type="text" [id]="indexName.name" nz-input [(ngModel)]="dto.profile.projectName" name="name"/>-->
-          <!--          </tis-ipt>-->
-          <!--          <tis-ipt #dptId title="所属部门" name="dptId" require="true">-->
-          <!--              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="dto.profile.dptId">-->
-          <!--                  <nz-option *ngFor="let pp of dpts" [nzValue]="pp.value" [nzLabel]="pp.name"></nz-option>-->
-          <!--              </nz-select>-->
-          <!--              <a class="tis-link-btn" [routerLink]="['/','base','departmentlist']">部门管理</a>-->
-          <!--          </tis-ipt>-->
+      <!--      <tis-form [fieldsErr]="errorItem">-->
+      <!--          <tis-page-header [showBreadcrumb]="false">-->
+      <!--              <tis-header-tool>-->
+      <!--                  <button nz-button  (click)="createIndexStep1Next()">取消</button> &nbsp;  <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>-->
+      <!--              </tis-header-tool>-->
+      <!--          </tis-page-header>-->
+      <!--          <tis-ipt #indexName title="实例名称" name="projectName" require="true">-->
+      <!--              <input nzSize="large" required type="text" [id]="indexName.name" nz-input [(ngModel)]="dto.profile.projectName" name="name"/>-->
+      <!--          </tis-ipt>-->
+      <!--          <tis-ipt #dptId title="所属部门" name="dptId" require="true">-->
+      <!--              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="dto.profile.dptId">-->
+      <!--                  <nz-option *ngFor="let pp of dpts" [nzValue]="pp.value" [nzLabel]="pp.name"></nz-option>-->
+      <!--              </nz-select>-->
+      <!--              <a class="tis-link-btn" [routerLink]="['/','base','departmentlist']">部门管理</a>-->
+      <!--          </tis-ipt>-->
 
-          <!--          <tis-ipt #recept title="接口人" name="recept" require="true">-->
-          <!--              <input nzSize="large" nz-input [id]="recept.name" [(ngModel)]="dto.profile.recept" name="recept"-->
-          <!--                     placeholder="小明">-->
-          <!--          </tis-ipt>-->
-      </tis-form>
+      <!--          <tis-ipt #recept title="接口人" name="recept" require="true">-->
+      <!--              <input nzSize="large" nz-input [id]="recept.name" [(ngModel)]="dto.profile.recept" name="recept"-->
+      <!--                     placeholder="小明">-->
+      <!--          </tis-ipt>-->
+      <!--      </tis-form>-->
+      <tis-steps-tools-bar (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
       <div style="width: 80%;margin: 0 auto;">
           <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
                        (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
@@ -61,12 +63,11 @@ import {DatasourceComponent} from "../offline/ds.component";
     `
   ]
 })
-export class DataxAddStep1Component extends BasicFormComponent implements OnInit {
+export class DataxAddStep1Component extends BasicDataXAddComponent implements OnInit {
   errorItem: Item = Item.create([]);
   // model = new AppDesc();
 
   @Output() nextStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
   savePlugin = new EventEmitter<any>();
   hlist: HeteroList[] = [];
   // 部门列表
@@ -112,4 +113,6 @@ export class DataxAddStep1Component extends BasicFormComponent implements OnInit
       this.nextStep.next(this.dto);
     }
   }
+
+
 }

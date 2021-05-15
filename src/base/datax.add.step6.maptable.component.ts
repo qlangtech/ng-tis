@@ -22,20 +22,22 @@ import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.pl
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
       <tis-steps type="createDatax" [step]="3"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
-      </tis-form>
+<!--      <tis-form [fieldsErr]="errorItem">-->
+<!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+<!--              <tis-header-tool>-->
+<!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+<!--              </tis-header-tool>-->
+<!--          </tis-page-header>-->
+<!--      </tis-form>-->
 
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <nz-table #basicTable [nzData]="tabAliasList" [nzShowPagination]="false">
           <thead>
           <tr>
@@ -74,11 +76,9 @@ import {DatasourceComponent} from "../offline/ds.component";
     `
   ]
 })
-export class DataxAddStep6Component extends BasicFormComponent implements OnInit, AfterViewInit {
+export class DataxAddStep6Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
+
   editId: string | null = null;
   tabAliasList: Array<ITableAlias> = [];
 
@@ -123,7 +123,6 @@ export class DataxAddStep6Component extends BasicFormComponent implements OnInit
         }
       });
   }
-
 }
 
 interface ITableAlias {

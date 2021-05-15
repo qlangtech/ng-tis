@@ -575,7 +575,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item>
-          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">{{_pp.label}}  </nz-form-label>
+          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i  *ngIf="descContent" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -618,7 +618,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                  </ng-container>
               </span>
               <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
-              <a *ngIf="this.createRouter && !this.disabled" target="_blank"  class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
+              <a *ngIf="this.createRouter && !this.disabled" target="_blank" class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
+              <nz-alert *ngIf="descContent && descContentShow" nzType="info" [nzDescription]="descContent" nzCloseable></nz-alert>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                   <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
               </nz-select>
@@ -651,7 +652,8 @@ export class ItemPropValComponent implements AfterContentInit {
   helpUrl: string = null;
   _disabled = false;
   createRouter: CreatorRouter = null;
-
+  descContent: string = null;
+  descContentShow = false;
 
 
   get disabled(): boolean {
@@ -673,10 +675,20 @@ export class ItemPropValComponent implements AfterContentInit {
     if (hUrl) {
       this.helpUrl = hUrl;
     }
+
+    let descContent = item.getEProp('help');
+    if (descContent) {
+      this.descContent = descContent;
+    }
+
     let creator = item.getEProp("creator");
     if (creator) {
       this.createRouter = creator;
     }
+  }
+
+  toggleDescContentShow() {
+    this.descContentShow = !this.descContentShow;
   }
 
   ngAfterContentInit(): void {
@@ -737,6 +749,8 @@ export class ItemPropValComponent implements AfterContentInit {
       _eprops['indeterminate'] = true;
     }
   }
+
+
 }
 
 interface CreatorRouter {

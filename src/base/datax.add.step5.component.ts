@@ -22,19 +22,21 @@ import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.pl
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
       <tis-steps type="createDatax" [step]="2"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
-      </tis-form>
+<!--      <tis-form [fieldsErr]="errorItem">-->
+<!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+<!--              <tis-header-tool>-->
+<!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+<!--              </tis-header-tool>-->
+<!--          </tis-page-header>-->
+<!--      </tis-form>-->
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
                    [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
   `
@@ -43,14 +45,11 @@ import {DatasourceComponent} from "../offline/ds.component";
     `
   ]
 })
-export class DataxAddStep5Component extends BasicFormComponent implements OnInit, AfterViewInit {
+export class DataxAddStep5Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
 
   model = new AppDesc();
   @ViewChild('pluginComponent', {static: false}) pluginComponent: PluginsComponent;
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
 
   savePlugin = new EventEmitter<any>();
 
@@ -75,20 +74,6 @@ export class DataxAddStep5Component extends BasicFormComponent implements OnInit
   public createStepNext(): void {
 
     this.savePlugin.emit();
-
-    // let dto = new DataxDTO();
-    // dto.appform = this.readerDesc;
-    // this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=validate_reader_writer'
-    //   , this.dto)
-    //   .then((r) => {
-    //     this.processResult(r);
-    //     if (r.success) {
-    //       // console.log(dto);
-    //       this.nextStep.emit(this.dto);
-    //     } else {
-    //       this.errorItem = Item.processFieldsErr(r);
-    //     }
-    //   });
   }
 
   afterSaveReader(response: PluginSaveResponse) {
@@ -105,4 +90,6 @@ export class DataxAddStep5Component extends BasicFormComponent implements OnInit
     // console.log(this.dto);
     this.nextStep.emit(this.dto);
   }
+
+
 }

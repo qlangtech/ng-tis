@@ -73,6 +73,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   breadcrumb: string[];
 
   showBreadcrumb = false;
+  dataxProcess = false;
 
   constructor(tisService: TISService, modalService: NzModalService
     , private router: Router, private route: ActivatedRoute
@@ -85,8 +86,10 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
-     let b = data['showBreadcrumb'];
-     this.showBreadcrumb = !!b;
+      let b = data['showBreadcrumb'];
+      let datax = data['datax'];
+      this.showBreadcrumb = !!b;
+      this.dataxProcess = !!datax;
     });
     this.route.params
       .subscribe((params: Params) => {
@@ -114,11 +117,17 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   }
 
   public triggerFullBuild(): void {
-    let processStrategy = {
-      url: "/coredefine/coredefine.ajax",
-      post: "action=core_action&emethod=trigger_fullbuild_task",
-      sucMsg: '全量索引构建已经触发'
-    };
+    let processStrategy = this.dataxProcess ?
+      {
+        url: "/coredefine/coredefine.ajax",
+        post: "action=datax_action&emethod=trigger_fullbuild_task",
+        sucMsg: 'DataX任务已经触发'
+      } : {
+        url: "/coredefine/coredefine.ajax",
+        post: "action=core_action&emethod=trigger_fullbuild_task",
+        sucMsg: '全量索引构建已经触发'
+      };
+
 
     if (this.appNotAware) {
       // 单纯数据流触发

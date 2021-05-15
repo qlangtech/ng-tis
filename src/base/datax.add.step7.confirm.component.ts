@@ -23,17 +23,24 @@ import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
 import {PluginSubFormComponent} from "./datax.add.step4.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
       <tis-steps type="createDatax" [step]="4"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <tis-header-tool>
-              <button nz-button nzType="default">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>
-          </tis-header-tool>
-      </tis-page-header>
+      <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+      <!--          <tis-header-tool>-->
+      <!--              <button nz-button nzType="default">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>-->
+      <!--          </tis-header-tool>-->
+      <!--      </tis-page-header>-->
+
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()">
+          <final-exec-controller>
+              <button nz-button nzType="primary" (click)="createStepNext()"><i nz-icon nzType="rocket" nzTheme="outline"></i>创建</button>
+          </final-exec-controller>
+      </tis-steps-tools-bar>
       <h4>生成配置文件</h4>
       <ul class="item-block child-block">
           <li *ngFor="let f of genCfgFileList"><i nz-icon nzType="file-text" nzTheme="outline"></i>
@@ -85,11 +92,9 @@ import {PluginSubFormComponent} from "./datax.add.step4.component";
     `
   ]
 })
-export class DataxAddStep7Component extends BasicFormComponent implements OnInit, AfterViewInit {
+export class DataxAddStep7Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
+
 
   genCfgFileList: Array<string> = [];
 

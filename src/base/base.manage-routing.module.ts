@@ -29,6 +29,7 @@ import {SnapshotsetComponent} from "../index/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
+import {PluginManageComponent} from "./plugin.manage.component";
 
 
 const basemanageRoutes: Routes = [
@@ -45,6 +46,11 @@ const basemanageRoutes: Routes = [
           {
             path: 'basecfg',
             component: BaseConfigComponent
+          }
+          ,
+          {
+            path: 'plugin-manage',
+            component: PluginManageComponent
           }
           ,
           {   // 添加索引

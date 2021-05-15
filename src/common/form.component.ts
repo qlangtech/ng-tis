@@ -128,7 +128,7 @@ export class TisInputTool implements OnInit, AfterContentInit, AfterViewInit, Af
       <nz-spin [nzSpinning]="this.spinning">
           <ng-content select="tis-page-header"></ng-content>
 
-          <form  nz-form #form [nzLayout]="this.formLayout">
+          <form nz-form #form [nzLayout]="this.formLayout">
               <nz-form-item *ngFor="let i of ipts">
                   <nz-form-label [nzRequired]="i.require" [nzSpan]="isHorizontal ? labelSpan : null" [nzFor]="i.name">{{i.title}}</nz-form-label>
                   <nz-form-control [nzSpan]="isHorizontal ? controlerSpan : null" [nzValidateStatus]="i.itemProp.validateStatus"
@@ -158,6 +158,9 @@ export class FormComponent implements AfterContentInit, OnInit {
   _fieldsErr: Item = Item.create([]);
   @Input() set fieldsErr(val: Item) {
     // console.log("fieldsErr");
+    if (!val) {
+      return;
+    }
     this._fieldsErr = val;
     if (this.ipts) {
       this.ngAfterContentInit();

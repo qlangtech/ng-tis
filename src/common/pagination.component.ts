@@ -185,7 +185,7 @@ export class TdContentDirective implements OnInit {
   selector: 'tis-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-table #tabrows [nzData]="rows" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
+      <nz-table #tabrows [nzData]="rows" [nzShowPagination]="false" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                 (nzPageIndexChange)="searchData()"
                 [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
           <thead>

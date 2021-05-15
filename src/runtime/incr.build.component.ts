@@ -29,7 +29,7 @@ import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.compone
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
-import {IncrDeployment, K8sPodState} from "./misc/incr.deployment";
+import {RCDeployment, K8sPodState} from "./misc/RCDeployment";
 
 
 @Component({
@@ -54,7 +54,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
           let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
           hander(incrStatus);
         }
-      }); // incrScriptMainFileContent
+      });
   }
 
 
@@ -116,26 +116,27 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
 }
 
-export class IndexIncrStatus {
+export class K8SControllerStatus  {
+  public k8sReplicationControllerCreated: boolean;
+  public rcDeployment: RCDeployment;
+}
+
+export class IndexIncrStatus extends K8SControllerStatus {
   public incrScriptCreated: boolean;
   public incrScriptMainFileContent: string;
   public k8sPluginInitialized: boolean;
-  public k8sReplicationControllerCreated: boolean;
-
-  public incrDeployment: IncrDeployment;
-
   public incrProcess: IncrProcess;
 
   /**
    * 增量处理节点启动有异常
    */
   public get incrProcessLaunchHasError(): boolean {
-    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.incrDeployment && !!this.incrDeployment.status && this.incrDeployment.status.readyReplicas > 0;
+    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.rcDeployment && !!this.rcDeployment.status && this.rcDeployment.status.readyReplicas > 0;
   }
 
   public getFirstPod(): K8sPodState {
-    for (let i = 0; i < this.incrDeployment.pods.length; i++) {
-      return this.incrDeployment.pods[i];
+    for (let i = 0; i < this.rcDeployment.pods.length; i++) {
+      return this.rcDeployment.pods[i];
       break;
     }
     return null;

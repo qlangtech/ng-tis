@@ -22,6 +22,9 @@ import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.pl
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
+import {IntendDirect} from "../common/MultiViewDAG";
+import {DataxAddStep5Component} from "./datax.add.step5.component";
+import {BasicDataXAddComponent} from "./datax.add.base";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -30,30 +33,30 @@ import {DatasourceComponent} from "../offline/ds.component";
   // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createDatax" [step]="1"></tis-steps>
-      <tis-form [fieldsErr]="errorItem">
-          <tis-page-header [showBreadcrumb]="false" [result]="result">
-              <tis-header-tool>
-                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>
-              </tis-header-tool>
-          </tis-page-header>
-      </tis-form>
-      <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+<!--      <tis-form [fieldsErr]="errorItem">-->
+<!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+<!--              <tis-header-tool>-->
+<!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+<!--              </tis-header-tool>-->
+<!--          </tis-page-header>-->
+<!--      </tis-form>-->
+
+      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+      <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
+                   [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
   `
   , styles: [
       `
     `
   ]
 })
-export class DataxAddStep3Component extends BasicFormComponent implements OnInit, AfterViewInit {
+export class DataxAddStep3Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
   // model = new Application(
   //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
   // );
   model = new AppDesc();
   @ViewChild('pluginComponent', {static: false}) pluginComponent: PluginsComponent;
-  @Output() nextStep = new EventEmitter<any>();
-  @Output() preStep = new EventEmitter<any>();
-  @Input() dto: DataxDTO;
 
   savePlugin = new EventEmitter<any>();
 
@@ -127,7 +130,12 @@ export class DataxAddStep3Component extends BasicFormComponent implements OnInit
       //   tabs.set(tab, {tableName: tab, selectableCols: []});
       // });
     }
-    // console.log(this.dto);
-    this.nextStep.emit(this.dto);
+    if (this.dto.processMeta.readerMultiTableSelectable) {
+      this.nextStep.emit(this.dto);
+    } else {
+      let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep5Component};
+      this.nextStep.emit(next);
+    }
   }
+
 }
