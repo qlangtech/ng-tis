@@ -144,7 +144,7 @@ export class Item {
     let newVal: ItemPropVal;
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
-      if (!v) {
+      if (v === undefined || v === null) {
         return;
       }
       newVal = at.addNewEmptyItemProp(true);

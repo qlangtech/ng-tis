@@ -34,7 +34,7 @@ import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
-
+import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 
 
 @Component({
@@ -70,11 +70,25 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep5Component, {next: DataxAddStep6Component, pre: DataxAddStep4Component});
     configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
     configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
+
+    configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-    this.multiViewDAG.loadComponent(DataxAddStep1Component, new DataxDTO());
+    // this.multiViewDAG.loadComponent(DataxAddStep1Component, new DataxDTO());
+
+    let dto = new DataxDTO();
+    dto.dataxPipeName = "tt";
+    let desc = new Descriptor();
+    desc.impl = "com.qlangtech.tis.plugin.datax.DataxMySQLReader";
+    desc.displayName = "MySQL";
+    dto.readerDescriptor = desc;
+    this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
+
+    // let dto = new DataxDTO();
+    // dto.dataxPipeName = "tt";
+    // this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, new DataxDTO());
   }
 }
-
 
 
 /**
@@ -100,18 +114,35 @@ class DataxProfile {
 }
 
 export class DataxDTO {
-  dataxPipeName = 'baisuitest';
+  dataxPipeName: string;
   profile: DataxProfile = new DataxProfile();
   selectableTabs: Map<string /* table */, ISelectedTabMeta> = new Map();
   readerDescriptor: Descriptor;
   writerDescriptor: Descriptor;
 
   processMeta: DataXCreateProcessMeta;
+
+  get readerImpl(): string {
+    if (!this.readerDescriptor) {
+      return null;
+    }
+    return this.readerDescriptor.impl;
+  }
+
+  get writerImpl(): string {
+    if (!this.writerDescriptor) {
+      return null;
+    }
+    return this.writerDescriptor.impl;
+  }
 }
 
 export interface DataXCreateProcessMeta {
-  readerMultiTableSelectable: boolean;
+  readerRDBMS: boolean;
   // DataX Reader 是否有明确的表名
   explicitTable: boolean;
+
+  // writer 是否符合关系型数据库要求
+  writerRDBMS: boolean;
 }
 

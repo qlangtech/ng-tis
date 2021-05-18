@@ -28,29 +28,36 @@ import {BasicDataXAddComponent} from "./datax.add.base";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="1"></tis-steps>
-<!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-<!--          <tis-header-tool>-->
-<!--              <button nz-button nzType="primary" (click)="execNextStep()">下一步</button>-->
-<!--          </tis-header-tool>-->
-<!--      </tis-page-header>-->
-      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()"></tis-steps-tools-bar>
-      <tis-form class="" [fieldsErr]="errorItem">
-          <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
-              <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [(ngModel)]="dto.readerDescriptor">
-                  <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp" [nzLabel]="pp.displayName"></nz-option>
-              </nz-select>
-          </tis-ipt>
-          <tis-ipt #writerType title="Writer类型" name="writerType" require="true">
-              <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [(ngModel)]="dto.writerDescriptor">
-                  <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp" [nzLabel]="pp.displayName"></nz-option>
-              </nz-select>
-          </tis-ipt>
-      </tis-form>
+      <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+      <!--          <tis-header-tool>-->
+      <!--              <button nz-button nzType="primary" (click)="execNextStep()">下一步</button>-->
+      <!--          </tis-header-tool>-->
+      <!--      </tis-page-header>-->
+      <nz-spin [nzSpinning]="this.formDisabled">
+          <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()">
+              <tis-page-header-left>
+                  dddd
+              </tis-page-header-left>
+          </tis-steps-tools-bar>
+          <tis-form [fieldsErr]="errorItem">
+              <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
+                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [ngModel]="dto.readerImpl" (ngModelChange)="changeReaderDesc($event)">
+                      <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>
+                  </nz-select>
+              </tis-ipt>
+              <tis-ipt #writerType title="Writer类型" name="writerType" require="true">
+                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [ngModel]="dto.writerImpl" (ngModelChange)="changeWriterDesc($event)">
+                      <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>
+                  </nz-select>
+              </tis-ipt>
+          </tis-form>
+      </nz-spin>
       <!-- Content here -->
   `
   , styles: [
-    `
+      `
     `
   ]
 })
@@ -60,8 +67,6 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
   //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
   // );
   model = new AppDesc();
-
-
 
 
   // 可选的数据源
@@ -83,15 +88,15 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc);
           let wList = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc);
           this.readerDesc = Array.from(rList.values());
-          this.writerDesc =  Array.from(wList.values());
+          this.writerDesc = Array.from(wList.values());
         }
       });
   }
 
   // 执行下一步
   public execNextStep(): void {
-   // let dto = new DataxDTO();
-   // dto.appform = this.readerDesc;
+    // let dto = new DataxDTO();
+    // dto.appform = this.readerDesc;
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=validate_reader_writer'
       , this.dto)
       .then((r) => {
@@ -106,6 +111,20 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
   }
 
 
+  changeReaderDesc(desIml: any): void {
+    // console.log(event);
+    this.readerDesc.forEach((desc) => {
+      if (desc.impl === desIml) {
+        this.dto.readerDescriptor = desc;
+      }
+    });
+  }
 
-
+  changeWriterDesc(desIml: any): void {
+    this.writerDesc.forEach((desc) => {
+      if (desc.impl === desIml) {
+        this.dto.writerDescriptor = desc;
+      }
+    });
+  }
 }

@@ -14,13 +14,17 @@
  */
 
 import {ComponentFactoryResolver, ComponentRef, Type, ViewContainerRef} from "@angular/core";
-import {AddAppFlowDirective} from "../base/addapp.directive";
 
 /**
  * 多步骤跳转VIEW逻辑实现
  */
 export class MultiViewDAG {
-  constructor(private configFST: Map<any, { next: any, pre: any }>, private _componentFactoryResolver: ComponentFactoryResolver, private  stepViewPlaceholder: ViewContainerRef) {
+
+  // 历史回退使用
+  history: Array<Type<any>> = [];
+
+  constructor(private configFST: Map<any, { next: any, pre: any }>, private _componentFactoryResolver: ComponentFactoryResolver
+    , private  stepViewPlaceholder: ViewContainerRef) {
     if (!stepViewPlaceholder) {
       throw new Error("param stepViewPlaceholder can not be empty");
     }
@@ -46,8 +50,10 @@ export class MultiViewDAG {
             if (!e.cpt) {
               throw new Error("prop cpt can not be null");
             }
+            this.history.push(e.cpt);
             this.loadComponent(e.cpt, e.dto);
           } else {
+            this.history.push(nextCpt);
             this.loadComponent(nextCpt, e);
           }
         }
@@ -55,15 +61,15 @@ export class MultiViewDAG {
     }
 
     if (preCpt !== null) {
-      componentRef.instance.preStep.subscribe((e: IntendDirect | any) => {
-          if (e.dto) {
-            if (!e.cpt) {
-              throw new Error("prop cpt can not be null");
+      componentRef.instance.preStep.subscribe((e: any) => {
+          let lastCpt = this.history.pop();
+          if (lastCpt) {
+            lastCpt = this.history.pop();
+            if (lastCpt) {
+              preCpt = lastCpt;
             }
-            this.loadComponent(e.cpt, e.dto);
-          } else {
-            this.loadComponent(preCpt, e);
           }
+          this.loadComponent(preCpt, e);
         }
       );
     }

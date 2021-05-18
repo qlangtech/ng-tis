@@ -13,8 +13,9 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, Component, EventEmitter, Input, Output} from "@angular/core";
-import {NzModalService} from "ng-zorro-antd";
+import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList} from "@angular/core";
+import {NzModalService, NzSelectComponent} from "ng-zorro-antd";
+import {PageHeaderLeftComponent} from "./pager.header.component";
 
 
 // const typeCreateIndex = "createIndex";
@@ -102,6 +103,8 @@ export class TisStepsToolbarComponent implements AfterContentInit {
   @Output() cancel = new EventEmitter<any>();
   @Output() goBack = new EventEmitter<any>();
   @Output() goOn = new EventEmitter<any>();
+
+  @ContentChildren(PageHeaderLeftComponent) headerLeftSelect: QueryList<PageHeaderLeftComponent>;
 
   constructor(private modal: NzModalService) {
   }

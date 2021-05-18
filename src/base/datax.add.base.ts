@@ -26,6 +26,10 @@ export class BasicDataXAddComponent extends BasicFormComponent {
   @Output() protected nextStep = new EventEmitter<any>();
   @Output() protected preStep = new EventEmitter<any>();
 
+  public get componentName(): string {
+    return this.constructor.name;
+  }
+
   constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }

@@ -32,18 +32,20 @@ import {BasicDataXAddComponent} from "./datax.add.base";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="1"></tis-steps>
-<!--      <tis-form [fieldsErr]="errorItem">-->
-<!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-<!--              <tis-header-tool>-->
-<!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-<!--              </tis-header-tool>-->
-<!--          </tis-page-header>-->
-<!--      </tis-form>-->
-
-      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
-      <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                   [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      <!--      <tis-form [fieldsErr]="errorItem">-->
+      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+      <!--              <tis-header-tool>-->
+      <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+      <!--              </tis-header-tool>-->
+      <!--          </tis-page-header>-->
+      <!--      </tis-form>-->
+      <nz-spin [nzSpinning]="this.formDisabled">
+          <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+          <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
+                       [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      </nz-spin>
   `
   , styles: [
       `
@@ -52,9 +54,8 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 })
 export class DataxAddStep3Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
-  // model = new Application(
-  //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
-  // );
+
+
   model = new AppDesc();
   @ViewChild('pluginComponent', {static: false}) pluginComponent: PluginsComponent;
 
@@ -71,7 +72,28 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
-    this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
+    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_reader_plugin_info&dataxName=${this.dto.dataxPipeName}`
+      , this.dto.readerDescriptor)
+      .then((r) => {
+        // this.processResult(r);
+        if (r.success) {
+          this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
+          if (r.bizresult) {
+            let desc: Descriptor = this.dto.readerDescriptor;
+            let i: Item = Object.assign(new Item(desc), r.bizresult);
+            i.wrapItemVals();
+            this.hlist[0].items[0] = i;
+            console.log(i);
+          }
+          // console.log(dto);
+          // this.nextStep.emit(this.dto);
+        }
+        // else {
+        //   this.errorItem = Item.processFieldsErr(r);
+        // }
+      });
+
+    // this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
     // console.log(this.hlist);
   }
 
@@ -130,7 +152,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
       //   tabs.set(tab, {tableName: tab, selectableCols: []});
       // });
     }
-    if (this.dto.processMeta.readerMultiTableSelectable) {
+    if (this.dto.processMeta.readerRDBMS) {
       this.nextStep.emit(this.dto);
     } else {
       let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep5Component};
