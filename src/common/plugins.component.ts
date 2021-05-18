@@ -189,6 +189,27 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }).join("&plugin=");
   }
 
+  public static wrapperHeteroList(he: HeteroList): HeteroList {
+    let h: HeteroList = Object.assign(new HeteroList(), he);
+    let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
+    // console.log(descMap);
+    h.descriptors = descMap;
+    // 遍历item
+    let items: Item[] = [];
+    let i: Item;
+    h.items.forEach((item) => {
+
+      let desc: Descriptor = h.descriptors.get(item.impl);
+      i = Object.assign(new Item(desc), item);
+
+      i.wrapItemVals();
+      items.push(i);
+    });
+
+    h.items = items;
+    return h;
+  }
+
   public static initializePluginItems(ctx: BasicFormComponent, pm: PluginType[]
     , callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void) {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
@@ -200,23 +221,23 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
         let bizArray: HeteroList[] = r.bizresult.plugins;
         bizArray.forEach((he) => {
-          let h: HeteroList = Object.assign(new HeteroList(), he);
-          let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
-          // console.log(descMap);
-          h.descriptors = descMap;
-          // 遍历item
-          let items: Item[] = [];
-          let i: Item;
-          h.items.forEach((item) => {
-
-            let desc: Descriptor = h.descriptors.get(item.impl);
-            i = Object.assign(new Item(desc), item);
-
-            i.wrapItemVals();
-            items.push(i);
-          });
-
-          h.items = items;
+          let h: HeteroList = PluginsComponent.wrapperHeteroList(he); // Object.assign(new HeteroList(), he);
+          // let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
+          // // console.log(descMap);
+          // h.descriptors = descMap;
+          // // 遍历item
+          // let items: Item[] = [];
+          // let i: Item;
+          // h.items.forEach((item) => {
+          //
+          //   let desc: Descriptor = h.descriptors.get(item.impl);
+          //   i = Object.assign(new Item(desc), item);
+          //
+          //   i.wrapItemVals();
+          //   items.push(i);
+          // });
+          //
+          // h.items = items;
           _heteroList.push(h);
         });
       }
@@ -575,7 +596,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item>
-          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i  *ngIf="descContent" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
+          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i *ngIf="descContent" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">

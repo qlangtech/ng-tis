@@ -53,6 +53,7 @@ import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {PluginManageComponent} from "./plugin.manage.component";
+import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 
 
 @NgModule({
@@ -62,7 +63,7 @@ import {PluginManageComponent} from "./plugin.manage.component";
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
     , SchemaExpertAppCreateEditComponent, DataxAddStep1Component, DataxAddComponent, DataxAddStep2Component, DataxAddStep3Component, DataxAddStep4Component, PluginSubFormComponent, DataxAddStep5Component, DataxAddStep6Component
-    , DataxAddStep7Component, ViewGenerateCfgComponent, DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component
+    , DataxAddStep7Component, ViewGenerateCfgComponent, DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component , DataxAddStep6ColsMetaSetterComponent
     , DataxWorkerRunningComponent , PluginManageComponent
   ],
   entryComponents: [ApplistComponent

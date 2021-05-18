@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import {TisResponseResult} from "../service/tis.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NzTableSize} from "ng-zorro-antd";
 
 export class Pager {
 
@@ -185,7 +186,7 @@ export class TdContentDirective implements OnInit {
   selector: 'tis-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-table #tabrows [nzData]="rows" [nzShowPagination]="false" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
+      <nz-table #tabrows [nzBordered]="bordered" [nzData]="rows" [nzSize]="this.tabSize" [nzShowPagination]="showPagination" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                 (nzPageIndexChange)="searchData()"
                 [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
           <thead>
@@ -297,7 +298,10 @@ export class TdContentDirective implements OnInit {
 export class PaginationComponent implements AfterContentInit, OnInit {
   @ContentChildren(TisColumn) cols: QueryList<TisColumn>;
   @Input('rows') rows: any[] = [];
+  @Input() showPagination = true;
   @Input('spinning') isSpinning = false;
+  @Input() bordered = false;
+  @Input() tabSize: NzTableSize;
   private _cls: TisColumn[] = [];
   @Output('go-page') pageEmitter = new EventEmitter<number>();
   p: Pager = new Pager();

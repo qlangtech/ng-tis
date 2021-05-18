@@ -18,8 +18,8 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO, Option} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
-import { DataxDTO} from "./datax.add.component";
+import {HeteroList, Item, ItemPropVal, PluginSaveResponse} from "../common/tis.plugin";
+import {DataxDTO} from "./datax.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {DatasourceComponent} from "../offline/ds.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -29,6 +29,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="0"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false">-->
@@ -51,11 +52,13 @@ import {BasicDataXAddComponent} from "./datax.add.base";
       <!--                     placeholder="小明">-->
       <!--          </tis-ipt>-->
       <!--      </tis-form>-->
-      <tis-steps-tools-bar (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
-      <div style="width: 80%;margin: 0 auto;">
-          <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
-                       (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
-      </div>
+      <nz-spin [nzSpinning]="this.formDisabled">
+          <tis-steps-tools-bar (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
+          <div style="width: 80%;margin: 0 auto;">
+              <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
+                           (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+          </div>
+      </nz-spin>
       <!-- Content here -->
   `
   , styles: [
@@ -70,22 +73,31 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   @Output() nextStep = new EventEmitter<any>();
   savePlugin = new EventEmitter<any>();
   hlist: HeteroList[] = [];
-  // 部门列表
-  dpts: Option[] = [];
+
 
   constructor(tisService: TISService, modalService: NzModalService) {
     super(tisService, modalService);
   }
 
   ngOnInit(): void {
+    let dataxNameParam = '';
+    if (this.dto.dataxPipeName) {
+      dataxNameParam = `&dataxName=${this.dto.dataxPipeName}`;
+    }
+
     this.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=datax_action&emethod=datax_processor_desc')
+      , 'action=datax_action&emethod=datax_processor_desc' + dataxNameParam)
       .then((r) => {
         if (r.success) {
-          let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-          let desc = Array.from(rList.values());
-          this.hlist = DatasourceComponent.pluginDesc(desc[0])
-          // this.dpts = r.bizresult.bizlinelist;
+          // let rList = PluginsComponent.wrapDescriptors(r.bizresult.descriptors);
+          // let desc = Array.from(rList.values());
+          let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult);
+          if (hlist.items.length < 1) {
+            PluginsComponent.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
+          }
+//          DatasourceComponent.pluginDesc(desc[0])
+          this.hlist = [hlist]; // DatasourceComponent.pluginDesc(desc[0])
+         // console.log(this.hlist);
         }
       });
   }
@@ -110,7 +122,21 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
 
   afterSaveReader(event: PluginSaveResponse) {
     if (event.saveSuccess) {
-      this.nextStep.next(this.dto);
+
+      if (event.hasBiz()) {
+        let pluginIdentityNames: Array<string> = event.biz();
+        for (let i = 0; ; i++) {
+          this.dto.dataxPipeName = pluginIdentityNames[i];
+          break;
+        }
+        if (!this.dto.dataxPipeName) {
+          throw new Error("have not set dataxPipeName properly");
+        }
+        this.nextStep.next(this.dto);
+      } else {
+        throw new Error("have not set biz result");
+      }
+
     }
   }
 

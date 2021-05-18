@@ -20,22 +20,27 @@ import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
 import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
+import {DataXCreateProcessMeta, DataxDTO, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
+import {IntendDirect} from "../common/MultiViewDAG";
+import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
+import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
+import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="2"></tis-steps>
-<!--      <tis-form [fieldsErr]="errorItem">-->
-<!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-<!--              <tis-header-tool>-->
-<!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-<!--              </tis-header-tool>-->
-<!--          </tis-page-header>-->
-<!--      </tis-form>-->
+      <!--      <tis-form [fieldsErr]="errorItem">-->
+      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+      <!--              <tis-header-tool>-->
+      <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+      <!--              </tis-header-tool>-->
+      <!--          </tis-page-header>-->
+      <!--      </tis-form>-->
       <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
                    [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
@@ -70,6 +75,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
   ngAfterViewInit(): void {
   }
+
   // 执行下一步
   public createStepNext(): void {
 
@@ -81,15 +87,23 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
       return;
     }
     if (response.hasBiz()) {
-      // let selectableTabs = response.biz();
-      // let tabs: Map<string /* table */, ISelectedTabMeta> = this.dto.selectableTabs;
-      // selectableTabs.forEach(tab => {
-      //   tabs.set(tab, {tableName: tab, selectableCols: []});
-      // });
     }
-    // console.log(this.dto);
-    this.nextStep.emit(this.dto);
+
+    let processMeta: DataXCreateProcessMeta = this.dto.processMeta;
+    // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
+    let n: IntendDirect = null;
+    if (processMeta.writerRDBMS) {
+      if (processMeta.readerRDBMS) {
+        // 表映射设置
+        n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+      } else {
+        n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
+      }
+    } else {
+      // 直接确认
+      n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
+      // this.nextStep.emit(n);
+    }
+    this.nextStep.emit(n);
   }
-
-
 }

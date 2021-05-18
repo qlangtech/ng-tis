@@ -17,7 +17,7 @@ import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit,
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferChange, TransferItem} from "ng-zorro-antd";
+import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
 import {Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
@@ -29,6 +29,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 @Component({
   // templateUrl: '/runtime/addapp.htm'
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="1"></tis-steps>
       <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-form [formLayout]="'vertical'" [fieldsErr]="errorItem">
@@ -78,6 +79,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
                               ></td>
                               <td>{{ data.title }}</td>
                               <td *ngIf="direction === 'right'">
+                                  {{ data.meta|json }}
                                   <nz-tag [nzColor]="'blue'">{{ data.meta  }}</nz-tag>
                                   <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>
                               </td>
@@ -125,30 +127,41 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
-    // console.log(this.dto.readerDescriptor);
     PluginsComponent.initializePluginItems(this, this.getPluginMetas(),
       (success: boolean, hList: HeteroList[], _) => {
-        // console.log(success);
         if (!success) {
           return;
         }
-        // this._hList = hList;
+        // console.log(hList);
         this.subFormHetero = hList[0];
-        // console.log(this.subFormHetero);
+        let item: Item = null;
+        let subForm: { string?: ItemPropVal } = null;
+        /**==========================
+         * 子表单
+         ==========================*/
+        let subFieldForms: Map<string, { string?: ItemPropVal }> = new Map();
+        for (let itemIdx = 0; itemIdx < this.subFormHetero.items.length; itemIdx++) {
+          item = this.subFormHetero.items[itemIdx];
+          for (let tabKey in item.vals) {
+            subForm = item.vals[tabKey];
+           // console.log(subForm);
+            subFieldForms.set(tabKey, subForm);
+          }
+          break;
+        }
         let desc: Descriptor = this.subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
         if (desc.subForm) {
           desc.subFormMeta.idList.forEach((subformId) => {
+            let direction: TransferDirection = (subFieldForms.get(subformId) === undefined ? 'left' : 'right');
             this.transferList.push({
               key: subformId,
               title: subformId,
-              direction: 'left',
-              //   direction: (this.dto.coreNode.hosts.findIndex((host) => host.hostName === node.hostName) > -1 ? 'right' : 'left'),
+              direction: direction,
               disabled: false,
               meta: Object.assign({id: `${subformId}`}, desc.subFormMeta)
             });
           });
           this.transferList = [...this.transferList];
-          // console.log(this.transferList);
         }
       }
     );
@@ -225,6 +238,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!pv) {
           throw new Error(`fieldKey:${fieldKey} relevant ItemPropVal can not be null`);
         }
+        // console.log(pv);
         let enums: Array<any> = pv.getEProp("enum");
         if (enums && enums.length < 1) {
           allHasFillEnums = false;

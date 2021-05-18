@@ -29,6 +29,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="4"></tis-steps>
       <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--          <tis-header-tool>-->
@@ -47,6 +48,9 @@ import {BasicDataXAddComponent} from "./datax.add.base";
               <button (click)="viewGenFile(f)" nz-button nzType="link">{{f}}</button>
           </li>
       </ul>
+      <h4>基本信息</h4>
+      <div class="item-block">
+      </div>
       <h4>Reader</h4>
       <div class="item-block">
           <tis-plugins [errorsPageShow]="false"
@@ -84,11 +88,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
                 padding: 4px 11px;
             }
 
-            .item-block {
-                border: 1px solid #d8d8d8;
-                margin-bottom: 10px;
-                padding: 5px;
-            }
+
     `
   ]
 })

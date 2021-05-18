@@ -28,6 +28,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
+      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="3"></tis-steps>
 <!--      <tis-form [fieldsErr]="errorItem">-->
 <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->

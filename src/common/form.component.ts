@@ -157,7 +157,7 @@ export class FormComponent implements AfterContentInit, OnInit {
   @Input() spinning = false;
   _fieldsErr: Item = Item.create([]);
   @Input() set fieldsErr(val: Item) {
-    // console.log("fieldsErr");
+     console.log(val);
     if (!val) {
       return;
     }
