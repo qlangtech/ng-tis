@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FETCH_HEAD" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.base.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
@@ -12,15 +15,42 @@
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/department.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pager.header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pager.header.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.main.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.main.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.plugin.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.plugin.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/index.query.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/index.query.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user/user.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.list.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -68,6 +98,10 @@
       <recent name="$PROJECT_DIR$/src/runtime" />
       <recent name="$PROJECT_DIR$/src/common" />
     </key>
+    <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/common/tis.plugin.ts" />
+      <recent name="$PROJECT_DIR$/src/common/item.pojo.ts" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/common" />
     </key>
@@ -84,7 +118,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="npm.ng:serve-jit">
+  <component name="RunManager" selected="npm.build">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -137,10 +171,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build:aot" />
-        <item itemvalue="npm.build" />
         <item itemvalue="npm.ng:serve" />
       </list>
     </recent_temporary>
@@ -239,7 +273,9 @@
       <workItem from="1620620195210" duration="19196000" />
       <workItem from="1621041728919" duration="4363000" />
       <workItem from="1621142528394" duration="15702000" />
-      <workItem from="1621299171811" duration="15636000" />
+      <workItem from="1621299171811" duration="16015000" />
+      <workItem from="1621345331092" duration="102581000" />
+      <workItem from="1622069930429" duration="13966000" />
     </task>
     <servers />
   </component>
@@ -294,11 +330,9 @@
         <option value="$PROJECT_DIR$/src/base/addapp.step.flow.component.js.map" />
         <option value="$PROJECT_DIR$/src/base/base-config.component.js" />
         <option value="$PROJECT_DIR$/src/base/addapp-confirm.component.js" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js.map" />
         <option value="$PROJECT_DIR$/src/base/addapp-pojo.js" />
         <option value="$PROJECT_DIR$/src/base/global.update.param.js" />
         <option value="$PROJECT_DIR$/src/base/operation.log.component.js.map" />
-        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js" />
         <option value="$PROJECT_DIR$/src/base/addapp-select-nodes.component.js.map" />
         <option value="$PROJECT_DIR$/src/base/operation.log.component.js" />
         <option value="$PROJECT_DIR$/src/base/applist.component.js" />
@@ -327,7 +361,6 @@
         <option value="$PROJECT_DIR$/src/polyfills.js" />
         <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
         <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js.map" />
         <option value="$PROJECT_DIR$/src/common/steps.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
@@ -336,39 +369,36 @@
         <option value="$PROJECT_DIR$/src/common/msg.component.js" />
         <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js" />
         <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/tis.plugin.js.map" />
         <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
         <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
         <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js" />
         <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/steps.component.js" />
         <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
         <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js" />
-        <option value="$PROJECT_DIR$/src/common/tis.plugin.js" />
         <option value="$PROJECT_DIR$/src/common/plugins.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
         <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
         <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js.map" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
         <option value="$PROJECT_DIR$/src/common/plugins.component.js" />
         <option value="$PROJECT_DIR$/src/common/msg.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/service/tis.service.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.service.js" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
         <option value="$PROJECT_DIR$/src/index/application.js.map" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
         <option value="$PROJECT_DIR$/src/index/application.module.js" />
+        <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/basic.service.js" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
         <option value="$PROJECT_DIR$/src/service/tis.service.js" />
+        <option value="$PROJECT_DIR$/src/service/tis.service.js.map" />
         <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
         <option value="$PROJECT_DIR$/src/index/snapshotset.component.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.service.js" />
         <option value="$PROJECT_DIR$/src/index/snapshotset.component.js" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js" />
         <option value="$PROJECT_DIR$/src/index/application.js" />
         <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
@@ -445,6 +475,70 @@
         <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/tis.plugin.js.map" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
+        <option value="$PROJECT_DIR$/src/common/k8s.replics.spec.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/tis.plugin.js" />
+        <option value="$PROJECT_DIR$/src/common/k8s.replics.spec.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.running.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step5.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step1.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.base.js" />
+        <option value="$PROJECT_DIR$/src/base/plugin.manage.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step4.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.base.js.map" />
+        <option value="$PROJECT_DIR$/src/base/department.add.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step2.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step2.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step4.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js" />
+        <option value="$PROJECT_DIR$/src/base/department.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step3.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/plugin.manage.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.js" />
+        <option value="$PROJECT_DIR$/src/base/base.manage.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.running.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step1.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step3.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step5.component.js.map" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.js" />
+        <option value="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
       </list>
     </option>
   </component>
@@ -501,7 +595,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/runtime/index.query.component.ts</url>
-          <line>574</line>
+          <line>575</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -517,6 +611,17 @@
           <url>file://$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts</url>
           <line>34</line>
           <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts</url>
+          <line>66</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
+          <line>279</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

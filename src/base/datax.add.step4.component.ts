@@ -15,84 +15,97 @@
 
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
 import {DatasourceComponent} from "../offline/ds.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ExecModel} from "./datax.add.step7.confirm.component";
 
 // 设置所选table的表以及 表的列
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   // templateUrl: '/runtime/addapp.htm'
+  selector: "datax-reader-table-select",
   template: `
-      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
-      <tis-steps type="createDatax" [step]="1"></tis-steps>
-      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
-      <tis-form [formLayout]="'vertical'" [fieldsErr]="errorItem">
-          <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-          <!--              <tis-header-tool>-->
-          <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-          <!--              </tis-header-tool>-->
-          <!--          </tis-page-header>-->
-          <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
-              <nz-transfer (nzChange)="transferChange($event)"
-                           [nzDataSource]="transferList"
-                           [nzDisabled]="false"
-                           [nzShowSearch]="true"
-                           [nzShowSelectAll]="true"
-                           [nzRenderList]="[renderList, renderList]"
-              >
-                  <ng-template
-                          #renderList
-                          let-items
-                          let-direction="direction"
-                          let-stat="stat"
-                          let-disabled="disabled"
-                          let-onItemSelectAll="onItemSelectAll"
-                          let-onItemSelect="onItemSelect"
+      <tis-steps *ngIf="createModel" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+      <nz-spin [nzSpinning]="this.formDisabled">
+          <ng-container [ngSwitch]="createModel">
+              <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="true" [title]="'Reader 选择导入表'" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+              <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="false">
+                  <final-exec-controller *ngIf="!inReadonly">
+                      <button nz-button [nzType]="'primary'" (click)="createStepNext()">保存</button>
+                  </final-exec-controller>
+              </tis-steps-tools-bar>
+          </ng-container>
+          <tis-form [formLayout]="formLayout" [fieldsErr]="errorItem" [labelSpan]="3" [controlerSpan]="19">
+              <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+              <!--              <tis-header-tool>-->
+              <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+              <!--              </tis-header-tool>-->
+              <!--          </tis-page-header>-->
+              <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
+                  <nz-transfer (nzChange)="transferChange($event)"
+                               [nzDataSource]="transferList"
+                               [nzDisabled]="inReadonly"
+                               [nzShowSearch]="true"
+                               [nzShowSelectAll]="true"
+                               [nzRenderList]="[renderList, renderList]"
                   >
-                      <nz-table #t [nzData]="convertItems(items)" nzSize="small">
-                          <thead>
-                          <tr>
-                              <th
-                                      nzShowCheckbox
-                                      [nzDisabled]="disabled"
-                                      [nzChecked]="stat.checkAll"
-                                      [nzIndeterminate]="stat.checkHalf"
-                                      (nzCheckedChange)="onItemSelectAll($event)"
-                              ></th>
-                              <th>表名</th>
-                              <th *ngIf="direction === 'right'">操作</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
-                              <td
-                                      nzShowCheckbox
-                                      [nzChecked]="data.checked"
-                                      [nzDisabled]="disabled || data.disabled"
-                                      (nzCheckedChange)="onItemSelect(data)"
-                              ></td>
-                              <td>{{ data.title }}</td>
-                              <td *ngIf="direction === 'right'">
-                                  {{ data.meta|json }}
-                                  <nz-tag [nzColor]="'blue'">{{ data.meta  }}</nz-tag>
-                                  <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>
-                              </td>
-                          </tr>
-                          </tbody>
-                      </nz-table>
-                  </ng-template>
-              </nz-transfer>
-          </tis-ipt>
-      </tis-form>
-      <ng-template #drawerTemplate let-data let-drawerRef="drawerRef">
+                      <ng-template
+                              #renderList
+                              let-items
+                              let-direction="direction"
+                              let-stat="stat"
+                              let-disabled="disabled"
+                              let-onItemSelectAll="onItemSelectAll"
+                              let-onItemSelect="onItemSelect"
+                      >
+                          <nz-table #t [nzData]="convertItems(items)" nzSize="small">
+                              <thead>
+                              <tr>
+                                  <th
+                                          nzShowCheckbox
+                                          [nzDisabled]="disabled"
+                                          [nzChecked]="stat.checkAll"
+                                          [nzIndeterminate]="stat.checkHalf"
+                                          (nzCheckedChange)="onItemSelectAll($event)"
+                                  ></th>
+                                  <th>表名</th>
+                                  <th *ngIf="direction === 'right'">操作</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">
+                                  <td
+                                          nzShowCheckbox
+                                          [nzChecked]="data.checked"
+                                          [nzDisabled]="disabled || data.disabled"
+                                          (nzCheckedChange)="onItemSelect(data)"
+                                  ></td>
+                                  <td>{{ data.title }}</td>
+                                  <td *ngIf="direction === 'right'">
+                                      <ng-container [ngSwitch]="subFormSetted( data.meta)">
+                                          <nz-tag *ngSwitchCase="true" [nzColor]="'#87d068'"><i nz-icon nzType="check" nzTheme="outline"></i>已设置</nz-tag>
+                                          <nz-tag *ngSwitchCase="false" [nzColor]="'#999999'"><i nz-icon nzType="warning" nzTheme="outline"></i>未设置</nz-tag>
+                                      </ng-container>
+                                      <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>
+                                  </td>
+                              </tr>
+                              </tbody>
+                          </nz-table>
+                      </ng-template>
+                  </nz-transfer>
+              </tis-ipt>
+          </tis-form>
+          <ng-template #drawerTemplate let-data let-drawerRef="drawerRef">
 
-      </ng-template>
+          </ng-template>
+      </nz-spin>
   `
   , styles: [
       `
@@ -101,11 +114,16 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 })
 export class DataxAddStep4Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
-  // model = new Application(
-  //   '', 'Lucene6.0', -1, new Crontab(), -1, ''
-  // );
-  model = new AppDesc();
+  @Input()
+  execModel: ExecModel = ExecModel.Create;
+  @Input()
+  inReadonly = false;
+  /**==========================
+   * 子表单,保存历史记录
+   ==========================*/
+  subFieldForms: Map<string /*tableName*/, { string?: ItemPropVal }> = new Map();
 
+  formLayout = "vertical";
 
   @ViewChild('drawerTemplate', {static: false}) drawerTemplate?: TemplateRef<{
     $implicit: { value: string };
@@ -113,6 +131,15 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   }>;
 
   transferList: TransferItem[] = [];
+
+  get createModel(): boolean {
+    return this.execModel === ExecModel.Create;
+  }
+
+  @Input()
+  set dtoooo(dto: DataxDTO) {
+    this.dto = dto;
+  }
 
   // savePlugin = new EventEmitter<any>();
 
@@ -122,37 +149,56 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   subFormHetero: HeteroList = new HeteroList();
 
-  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router, route: ActivatedRoute) {
+    super(tisService, modalService, r, route);
+  }
+
+  subFormSetted(meta: ISubDetailTransferMeta): boolean {
+    if (this.subFieldForms.get(meta.id) !== undefined) {
+      return true;
+    }
+    return !!meta.setted;
   }
 
   ngOnInit(): void {
+    this.formLayout = this.createModel ? "vertical" : "horizontal";
+    super.ngOnInit();
+  }
+
+  protected initialize(app: CurrentCollection): void {
+
     PluginsComponent.initializePluginItems(this, this.getPluginMetas(),
       (success: boolean, hList: HeteroList[], _) => {
         if (!success) {
           return;
         }
-        // console.log(hList);
         this.subFormHetero = hList[0];
+        // console.log(this.subFormHetero);
         let item: Item = null;
         let subForm: { string?: ItemPropVal } = null;
-        /**==========================
-         * 子表单
-         ==========================*/
-        let subFieldForms: Map<string, { string?: ItemPropVal }> = new Map();
+        let desc: Descriptor = this.subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
+
         for (let itemIdx = 0; itemIdx < this.subFormHetero.items.length; itemIdx++) {
           item = this.subFormHetero.items[itemIdx];
           for (let tabKey in item.vals) {
+            // @ts-ignore
             subForm = item.vals[tabKey];
-           // console.log(subForm);
-            subFieldForms.set(tabKey, subForm);
+            // console.log(subForm);
+            this.subFieldForms.set(tabKey, subForm);
           }
+          // item.vals = {};
           break;
         }
-        let desc: Descriptor = this.subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
+
+        // console.log(this.subFieldForms);
+        //  let itemVals = this.subFormHetero.items[0];
+        //  this.subFieldForms.forEach((val, key) => {
+        //
+        //  });
+
         if (desc.subForm) {
           desc.subFormMeta.idList.forEach((subformId) => {
-            let direction: TransferDirection = (subFieldForms.get(subformId) === undefined ? 'left' : 'right');
+            let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
             this.transferList.push({
               key: subformId,
               title: subformId,
@@ -186,9 +232,13 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createStepNext(): void {
+    // console.log(this.subFormHetero);
+    // console.log(this.tisService.currentApp);
     PluginsComponent.postHeteroList(this, this.getPluginMetas(), [this.subFormHetero], false, true, (result) => {
       if (result.success) {
         this.nextStep.emit(this.dto);
+      } else {
+        this.result = result;
       }
     });
     // this.savePlugin.emit();
@@ -227,7 +277,11 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_${meta.fieldName},dataxName_${this.dto.dataxPipeName}`
     }];
     // console.log(meta.id);
-    let cachedVals = this.subFormHetero.items[0].vals[meta.id];
+    let ip = this.subFormHetero.items[0].vals[meta.id];
+    if (ip instanceof ItemPropVal) {
+      throw new Error("illegal type");
+    }
+    let cachedVals: { [key: string]: ItemPropVal } = ip;
     if (cachedVals) {
       // console.log(cachedVals);
       let allHasFillEnums = true;
@@ -249,7 +303,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       if (allHasFillEnums) {
         let heteroList = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0]);
         heteroList[0].items[0].vals = cachedVals;
-        this.openSubDetailForm(meta.id, pluginMeta, heteroList);
+        this.openSubDetailForm(meta, pluginMeta, heteroList);
         event.stopPropagation();
         return;
       }
@@ -261,38 +315,62 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
     this.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
       .then((r) => {
-        // this.processResult(r);
         if (!r.success) {
           return;
         }
-
+        let subForm: { string?: ItemPropVal } = this.subFieldForms.get(meta.id);
+        // console.log(meta.id);
+        // console.log(this.subFieldForms);
         let result = r.bizresult;
-
-        let hlist: HeteroList[] = DatasourceComponent.pluginDesc(this.subFormHetero.descriptorList[0], (key, propVal) => {
+        let desc = this.subFormHetero.descriptorList[0];
+        let hlist: HeteroList[] = DatasourceComponent.pluginDesc(desc, (key, propVal: ItemPropVal) => {
           if (propVal.pk) {
             propVal.primary = meta.id;
+            return propVal;
           }
+          let rawProp: ItemPropVal;
+          let rawVal: any;
+          let colItemChecked: (optVal) => boolean = (_) => false;
+          if (subForm && (rawProp = subForm[key]) !== undefined && (rawVal = rawProp.primary) !== undefined) {
+            if (!(typeof rawVal === 'object')) {
+              propVal.primary = rawVal;
+            } else {
+              let fieldDesc: AttrDesc = desc.attrs.find((attr) => {
+                return key === attr.key
+              });
+              if (!fieldDesc) {
+                throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
+              }
+              // MULTI_SELECTABLE: please reference to com.qlangtech.tis.plugin.annotation.FormFieldType
+              if (fieldDesc.isMultiSelectableType && result[key]) {
+                // console.log(rawVal);
+                if (!Array.isArray(rawVal)) {
+                  throw new Error(`rawProp must be a type of Array,but now is :${typeof rawVal}`);
+                }
+                let selectedItems: Array<any> = rawVal;
+                colItemChecked = (optVal) => (selectedItems.indexOf(optVal) > -1);
+              }
+            }
+          }
+
           if (result[key]) {
-            let cols: Array<{ name: string, value: string }> = result[key];
-            let enums = [];
-            cols.forEach((s) => {
-              enums.push({label: s.name, val: s.value})
-            });
-            propVal.setEProp("enum", enums);
+            // TODO:
+            propVal.setPropValEnums(result[key], colItemChecked);
           }
           return propVal;
         }, true);
 
-        this.openSubDetailForm(meta.id, pluginMeta, hlist);
+        this.openSubDetailForm(meta, pluginMeta, hlist);
       });
     event.stopPropagation();
   }
 
 
-  private openSubDetailForm(detailId: string, pluginMeta: PluginType[], hlist: HeteroList[]) {
+  private openSubDetailForm(meta: ISubDetailTransferMeta, pluginMeta: PluginType[], hlist: HeteroList[]) {
+    let detailId: string = meta.id;
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
-      nzWidth: "35%",
-      nzTitle: `Set ${detailId}`,
+      nzWidth: "40%",
+      nzTitle: `设置 ${detailId}`,
       nzContent: PluginSubFormComponent,
       nzContentParams: {
         pluginMeta: pluginMeta,
@@ -303,8 +381,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       if (!hetero) {
         return;
       }
+      meta.setted = true;
+
+      // let ip = hetero.hetero.items[0].vals;
+      // if (ip instanceof ItemPropVal) {
+      //   throw new Error("illegal type");
+      // }
+
+      // @ts-ignore
       this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
-    })
+    });
   }
 
   updateSingleChecked() {
@@ -326,7 +412,9 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           return propVal;
         }, true);
         // console.log(hlist[0].items[0].vals);
+        // @ts-ignore
         itemVals.vals[meta.id] = hlist[0].items[0].vals;
+        console.log(itemVals);
       }
     });
   }
@@ -345,6 +433,8 @@ interface ISubDetailTransferMeta {
   behaviorMeta: ISubDetailClickBehaviorMeta;
   fieldName: string;
   idList: Array<string>;
+  // 是否已经设置子表单
+  setted: boolean;
 }
 
 interface GetDateMethodMeta {
@@ -354,10 +444,10 @@ interface GetDateMethodMeta {
 
 
 @Component({
-  selector: 'nz-drawer-custom-component',
+  // selector: 'nz-drawer-custom-component',
   template: `
       <sidebar-toolbar [deleteDisabled]="true" (close)="close()" (save)="_saveClick()"></sidebar-toolbar>
-      <tis-plugins [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21"
+      <tis-plugins [getCurrentAppCache]="true" [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)" [savePlugin]="savePlugin" [formControlSpan]="21"
                    [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
   `
 })

@@ -14,27 +14,66 @@
  */
 
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd";
 import {EventEmitter, Input, Output} from "@angular/core";
 import {DataxDTO} from "./datax.add.component";
+import {ActivatedRoute, Router} from "@angular/router";
+import {StepType} from "../common/steps.component";
 
 
-export class BasicDataXAddComponent extends BasicFormComponent {
-  @Input() protected dto: DataxDTO;
-  @Output() protected nextStep = new EventEmitter<any>();
-  @Output() protected preStep = new EventEmitter<any>();
+export abstract class BasicDataXAddComponent extends AppFormComponent {
 
-  public get componentName(): string {
-    return this.constructor.name;
+  @Output()
+  protected nextStep = new EventEmitter<any>();
+  @Output()
+  protected preStep = new EventEmitter<any>();
+  @Input()
+  public dto: DataxDTO;
+
+  public _offsetStep = -1;
+
+  protected constructor(tisService: TISService, modalService: NzModalService, protected r: Router, route: ActivatedRoute) {
+    super(tisService, route, modalService);
   }
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  public get stepType(): StepType {
+    return this.dto.processModel; //  ? StepType.UpdateDataxReader : StepType.CreateDatax;
   }
+
+  protected initialize(app: CurrentCollection): void {
+  }
+
+  public offsetStep(step: number) {
+    if (this._offsetStep > -1) {
+      return this._offsetStep;
+    }
+    switch (this.dto.processModel) {
+      case StepType.UpdateDataxReader:
+        this._offsetStep = step - 1;
+        break;
+      case StepType.UpdateDataxWriter:
+        this._offsetStep = step - 2;
+        break;
+      default:
+        this._offsetStep = step;
+    }
+    return this._offsetStep;
+  }
+
+  // public get componentName(): string {
+  //   return this.constructor.name;
+  // }
+  // tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService
+
 
   cancel() {
+    if (this.dto.processModel === StepType.CreateDatax) {
+      this.r.navigate(['/base/applist'], {relativeTo: this.route});
+    } else {
+      this.r.navigate(['/x', this.dto.dataxPipeName, "config"], {relativeTo: this.route});
+    }
   }
 
   goback() {

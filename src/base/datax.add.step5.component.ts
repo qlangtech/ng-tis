@@ -15,7 +15,7 @@
 
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
 import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
@@ -27,13 +27,14 @@ import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
+import {DataxAddStep3Component} from "./datax.add.step3.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
-      <tis-steps type="createDatax" [step]="2"></tis-steps>
+      <tis-steps [type]="stepType" [step]="offsetStep(2)"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--              <tis-header-tool>-->
@@ -41,9 +42,12 @@ import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-
       <!--              </tis-header-tool>-->
       <!--          </tis-page-header>-->
       <!--      </tis-form>-->
-      <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
-      <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
-                   [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      <nz-spin [nzSpinning]="this.formDisabled">
+          <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0"  (goBack)="goback()" (goOn)="createStepNext()">
+          </tis-steps-tools-bar>
+          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
+                       [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      </nz-spin>
   `
   , styles: [
       `
@@ -64,13 +68,20 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
   hlist: HeteroList[] = [];
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
+    super(tisService, modalService, r, route);
   }
 
-  ngOnInit(): void {
-    this.hlist = DatasourceComponent.pluginDesc(this.dto.writerDescriptor);
+  protected initialize(app: CurrentCollection): void {
+    // this.hlist = DatasourceComponent.pluginDesc(this.dto.writerDescriptor);
     // console.log(this.hlist);
+    DataxAddStep3Component.initializeDataXRW(this, "writer", this.dto)
+      .then((i: { "desc": Descriptor, "item": Item }) => {
+        this.hlist = DatasourceComponent.pluginDesc(i.desc);
+        if (i.item) {
+          this.hlist[0].items[0] = i.item;
+        }
+      });
   }
 
   ngAfterViewInit(): void {

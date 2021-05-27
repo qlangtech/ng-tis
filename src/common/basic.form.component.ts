@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Input, OnInit, Optional, Output, Type} from '@angular/core';
 
@@ -24,6 +24,7 @@ import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd";
+import {TisResponseResult} from "./tis.plugin";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -301,12 +302,10 @@ export interface IDataFlowMainComponent {
 }
 
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
-  // private appTisService: AppTISService;
   private _getCurrentAppCache = false;
 
   protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService, notification?: NzNotificationService) {
     super(tisService, modalService, notification);
-    // this.appTisService = tisService;
   }
 
   @Input()
@@ -315,6 +314,9 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
   }
 
   ngOnInit(): void {
+    let queryParams = this.route.snapshot.queryParams;
+    let execId = queryParams['execId'];
+    this.tisService.execId = execId;
     this.route.params
       .subscribe((params: Params) => {
         // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
@@ -322,6 +324,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
         let appTisService: TISService = this.tisService;
         if (!this._getCurrentAppCache) {
           let collectionName = params['name'];
+         // console.log(collectionName);
           if (!collectionName) {
             appTisService.currentApp = null;
           }
@@ -343,6 +346,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
 export class CurrentCollection {
   constructor(private id: number, public name: string, public appTyp?: number) {
   }
+
   public get appid() {
     return this.id;
   }

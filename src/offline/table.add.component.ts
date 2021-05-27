@@ -14,7 +14,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 
 import {ActivatedRoute} from '@angular/router';
@@ -22,6 +22,7 @@ import {ActivatedRoute} from '@angular/router';
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
 import {DbPojo} from "./db.add.component";
+import {TisResponseResult} from "../common/tis.plugin";
 
 @Component({
   // templateUrl: '/offline/tableaddstep.htm'

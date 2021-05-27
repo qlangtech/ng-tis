@@ -14,12 +14,12 @@
  */
 
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
-import {TisResponseResult, TISService} from "../service/tis.service";
+import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AttrDesc, DescribleVal, Descriptor, HeteroList, ItemPropVal, Item, IFieldError, PluginType, PluginSaveResponse, ValOption, PluginName, PluginMeta} from "./tis.plugin";
+import {AttrDesc, HeteroList, IFieldError, PluginType, PluginSaveResponse, ValOption, PluginName, PluginMeta, DescribleVal, Item, TisResponseResult, Descriptor, ItemPropVal} from "./tis.plugin";
 import {NzAnchorLinkComponent, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subscription} from "rxjs";
 
@@ -159,10 +159,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param des
    * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
    */
-  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean, itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-    // console.log("add new item");
+  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
+    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
     let nItem = new Item(des);
-    // nItem.impl = des.impl;
     nItem.displayName = des.displayName;
     des.attrs.forEach((attr) => {
       nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
@@ -171,9 +170,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     h.items.forEach((r) => {
       nitems.push(r);
     });
-
+    // console.log(nItem);
     nitems.push(nItem);
-    // console.log(nitems);
     h.items = nitems;
   }
 
@@ -200,12 +198,49 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     h.items.forEach((item) => {
 
       let desc: Descriptor = h.descriptors.get(item.impl);
-      i = Object.assign(new Item(desc), item);
 
-      i.wrapItemVals();
+      if (desc.subForm) {
+        i = new Item(desc); // Object.assign(, {"displayName": item.displayName}, {"vals": subFormVals});
+        i.displayName = item.displayName;
+        let rawVal = item.vals;
+        // delete item.vals;
+        let subFrom;
+        let subFormVals: { [tabname: string]: { [propKey: string]: ItemPropVal } } = {};
+        for (let subFieldPk in rawVal) {
+          subFrom = rawVal[subFieldPk];
+          let ii = new Item(desc);
+          ii.vals = subFrom;
+          ii.wrapItemVals();
+          // console.log(i.itemVals);
+          // @ts-ignore
+          subFormVals[subFieldPk] = ii.vals;
+          // console.log({pk: subFieldPk, subForm: subFrom});
+          // console.log([typeof subFieldPk, subFieldPk, subFormVals]);
+          // // @ts-ignore subFieldPk
+          // i.vals["kkkk"] = new ItemPropVal(); // ii.itemVals;
+          // console.log(i);
+        }
+        i.vals = subFormVals;
+
+
+        // let a = {"aaa": new ItemPropVal()};
+        //
+        // let vvals: { [key: string]: ItemPropVal } | { string?: { string?: ItemPropVal } } = {};
+        //
+        // vvals = a;
+        //
+        // i.vals = a;
+        // for (let key in i) {
+        //   console.log({key: key, 'val': i[key]});
+        // }
+        // console.log(i);
+      } else {
+        i = Object.assign(new Item(desc), item);
+        i.wrapItemVals();
+      }
       items.push(i);
     });
-
+    // console.log(items[0].itemVals);
     h.items = items;
     return h;
   }
@@ -218,26 +253,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     ctx.jsonPost(url, {}).then((r) => {
       let _heteroList: HeteroList[] = [];
       if (r.success) {
-        // this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
         let bizArray: HeteroList[] = r.bizresult.plugins;
         bizArray.forEach((he) => {
           let h: HeteroList = PluginsComponent.wrapperHeteroList(he); // Object.assign(new HeteroList(), he);
-          // let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
-          // // console.log(descMap);
-          // h.descriptors = descMap;
-          // // 遍历item
-          // let items: Item[] = [];
-          // let i: Item;
-          // h.items.forEach((item) => {
-          //
-          //   let desc: Descriptor = h.descriptors.get(item.impl);
-          //   i = Object.assign(new Item(desc), item);
-          //
-          //   i.wrapItemVals();
-          //   items.push(i);
-          // });
-          //
-          // h.items = items;
           _heteroList.push(h);
         });
       }
@@ -252,30 +270,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       callback(false, null, false);
       throw new Error(e);
     });
-  }
-
-  public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
-    let item: Item = null;
-    let fieldsErrs: Array<IFieldError> = null;
-
-    if (errorFields) {
-      for (let index = 0; index < errorFields.length; index++) {
-        fieldsErrs = errorFields[index];
-        item = items[index];
-        let itemProp: ItemPropVal;
-        fieldsErrs.forEach((fieldErr) => {
-          itemProp = item.vals[fieldErr.name];
-          itemProp.error = fieldErr.content;
-
-          if (!itemProp.primaryVal) {
-            if (fieldErr.errorfields.length !== 1) {
-              throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
-            }
-            PluginsComponent.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
-          }
-        });
-      }
-    }
   }
 
   public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
@@ -509,7 +503,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       this._heteroList.forEach((h) => {
         let items: Item[] = h.items;
         let errorFields = pluginErrorFields[index++];
-        PluginsComponent.processErrorField(errorFields, items);
+        Item.processErrorField(errorFields, items);
       });
       this.cdr.detectChanges();
     }, (err) => {
@@ -759,14 +753,16 @@ export class ItemPropValComponent implements AfterContentInit {
   updateSingleChecked(itemVal: ItemPropVal) {
     itemVal.error = undefined;
     let _eprops: { string: any } = itemVal._eprops;
-    // let allUnchecked =  _eprops["enum"].every((item) => !item.checked);
     if (_eprops["enum"].every((item) => !item.checked)) {
+      // 全部都没有选中
       _eprops['allChecked'] = false;
       _eprops['indeterminate'] = false;
     } else if (_eprops["enum"].every((item) => item.checked)) {
+      // 全部都选中了
       _eprops['allChecked'] = true;
       _eprops['indeterminate'] = false;
     } else {
+      // 部分选中
       _eprops['indeterminate'] = true;
     }
   }

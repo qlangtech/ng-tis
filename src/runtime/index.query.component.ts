@@ -14,7 +14,7 @@
  */
 
 import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
-import {TisResponseResult, TISService} from "../service/tis.service";
+import {TISService} from "../service/tis.service";
 import {EditorConfiguration} from "codemirror";
 import {BasicFormComponent} from "../common/basic.form.component";
 
@@ -25,6 +25,7 @@ import {PojoComponent} from "./pojo.component";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LocalStorageService} from "angular-2-local-storage";
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {TisResponseResult} from "../common/tis.plugin";
 
 const LocalStoreTags = 'local_Store_Tags';
 

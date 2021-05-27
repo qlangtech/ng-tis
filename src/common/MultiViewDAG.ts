@@ -22,6 +22,7 @@ export class MultiViewDAG {
 
   // 历史回退使用
   history: Array<Type<any>> = [];
+  private current: Type<any> = null;
 
   constructor(private configFST: Map<any, { next: any, pre: any }>, private _componentFactoryResolver: ComponentFactoryResolver
     , private  stepViewPlaceholder: ViewContainerRef) {
@@ -30,10 +31,14 @@ export class MultiViewDAG {
     }
   }
 
+  public get lastCpt(): Type<any> {
+    return this.current;
+  }
+
   // 通过跳转状态机加载Component
   public loadComponent(cpt: Type<any>, dto: any) {
     // var cpt = AddAppFormComponent;
-
+    this.current = cpt;
     let componentRef = this.setComponentView(cpt);
     let nextCpt = this.configFST.get(cpt).next;
     let preCpt = this.configFST.get(cpt).pre;

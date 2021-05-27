@@ -25,7 +25,7 @@ import {NavigateBarComponent} from "../runtime/navigate.bar.component";
 import {RouterModule} from "@angular/router";
 import {OperationLogComponent} from "../base/operation.log.component";
 import {SafePipe} from "./safe.pipe";
-import {PageHeaderComponent, PageHeaderLeftComponent, TisHeaderTool, TisHeaderToolContent} from "./pager.header.component";
+import {FinalExecControllerComponent, PageHeaderComponent, PageHeaderLeftComponent, TisHeaderTool, TisHeaderToolContent} from "./pager.header.component";
 import {TisMsgComponent} from "./msg.component";
 import {FormComponent, InputContentDirective, TisInputProp, TisInputTool} from "./form.component";
 import {CodemirrorComponent} from "./codemirror.component";
@@ -92,6 +92,13 @@ import {TableSelectComponent} from "./table.select.component";
 import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import {SideBarToolBar} from "./basic.form.component";
 import {K8SReplicsSpecComponent} from "./k8s.replics.spec.component";
+import {DataxAddStep7Component, ViewGenerateCfgComponent} from "../base/datax.add.step7.confirm.component";
+import {DataxAddStep4Component, PluginSubFormComponent} from "../base/datax.add.step4.component";
+import {DataxAddComponent} from "../base/datax.add.component";
+import {DataxAddStep1Component} from "../base/datax.add.step1.component";
+import {DataxAddStep5Component} from "../base/datax.add.step5.component";
+import {DataxAddStep3Component} from "../base/datax.add.step3.component";
+import {DataxAddStep6Component} from "../base/datax.add.step6.maptable.component";
 
 @NgModule({
   id: 'tiscommonModule',
@@ -99,7 +106,7 @@ import {K8SReplicsSpecComponent} from "./k8s.replics.spec.component";
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule,
+    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
@@ -109,21 +116,19 @@ import {K8SReplicsSpecComponent} from "./k8s.replics.spec.component";
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     TimeConsumePipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
-    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent,
+    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent ,
     CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent,
-    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent
+    CodemirrorComponent, PluginsComponent, FinalExecControllerComponent,
+    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component , DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent
   ],
   exports: [K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent, NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule,
+    NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule, ViewGenerateCfgComponent,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule, TisStepsToolbarComponent,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
-    , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule],
+    , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule, NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, DataxAddStep5Component, DataxAddStep3Component],
   entryComponents: [CompareEachOtherComponent],
 })
 export class TisCommonModule {
-  constructor() {
-  }
 }

@@ -31,7 +31,7 @@ import {IndexIncrStatus} from "../runtime/incr.build.component";
 @Component({
   template: `
       <nz-spin size="large" [nzSpinning]="this.formDisabled">
-          <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
+          <nz-tabset  nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="基本">
                   <ng-template nz-tab>
                       <!--

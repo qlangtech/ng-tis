@@ -13,18 +13,21 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList} from "@angular/core";
+import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList} from "@angular/core";
 import {NzModalService, NzSelectComponent} from "ng-zorro-antd";
 import {PageHeaderLeftComponent} from "./pager.header.component";
+import {TisResponseResult} from "./tis.plugin";
 
 
 // const typeCreateIndex = "createIndex";
 
-enum StepType {
+export enum StepType {
   CreateIndex = "createIndex",
   CreateIncr = "createIncr",
   CreateDatax = "createDatax",
-  CreateWorkderOfDataX = "CreateWorkderOfDataX"
+  CreateWorkderOfDataX = "CreateWorkderOfDataX",
+  UpdateDataxWriter = "UpdateDataxWriter",
+  UpdateDataxReader = 'UpdateDataxReader'
 }
 
 // implements OnInit, AfterContentInit
@@ -43,7 +46,6 @@ enum StepType {
           .caption {
               color: #71c4ff;
               font-size: 22px;
-              letter-spacing: 10px;
           }
 
           .tis-steps {
@@ -52,7 +54,7 @@ enum StepType {
     `
   ]
 })
-export class TisStepsComponent implements AfterContentInit {
+export class TisStepsComponent implements AfterContentInit, OnInit {
   processMap = new Map<string, CaptionSteps>();
   stepLiteria = ["第一步", "第二步", "第三步", "第四步", "第五步", "第六步", "第七步", "第八步", "第九步"]
   @Input()
@@ -61,13 +63,17 @@ export class TisStepsComponent implements AfterContentInit {
   @Input()
   step = 0;
 
-
   constructor() {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量通道添加", ["脚本生成", "构建部署", "状态确认"]));
     this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.UpdateDataxReader, new CaptionSteps("DataX Reader 更 新", ["Reader设置", "Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.UpdateDataxWriter, new CaptionSteps("DataX Writer 更 新", ["Writer设置", "表映射", "确认"]));
     this.processMap.set(StepType.CreateWorkderOfDataX, new CaptionSteps("DataX执行器添加", ["K8S基本信息", "K8S资源规格", "确认"]));
+  }
+
+  ngOnInit(): void {
   }
 
   ngAfterContentInit() {
@@ -78,15 +84,16 @@ export class TisStepsComponent implements AfterContentInit {
 @Component({
   selector: 'tis-steps-tools-bar',
   template: `
-      <tis-page-header [showBreadcrumb]="false">
+      <tis-page-header [result]="result"  [showBreadcrumb]="false">
+          <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
           <tis-header-tool>
               <ng-container *ngIf="cancel.observers.length>0">
                   <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button> &nbsp;
               </ng-container>
-              <ng-container *ngIf="goBack.observers.length>0">
+              <ng-container *ngIf="goBackBtnShow && goBack.observers.length>0">
                   <button nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步</button> &nbsp;
               </ng-container>
-              <ng-container *ngIf="goOn.observers.length>0">
+              <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
                   <button nz-button nzType="primary" (click)="goOn.emit($event)"><i nz-icon nzType="step-forward" nzTheme="outline"></i>下一步</button>
               </ng-container>
               <ng-content select="final-exec-controller"></ng-content>
@@ -95,14 +102,29 @@ export class TisStepsComponent implements AfterContentInit {
   `,
   styles: [
       `
+          tis-page-header-left {
+              color: #b7d6ff;
+              padding-left: 10px;
+              border-left: 6px solid rgba(140, 170, 255, 0.31);
+          }
     `
   ]
 })
 export class TisStepsToolbarComponent implements AfterContentInit {
 
+  @Input()
+  goOnBtnShow = true;
+  @Input()
+  goBackBtnShow = true;
+
+  @Input()
+  result: TisResponseResult;
+
   @Output() cancel = new EventEmitter<any>();
   @Output() goBack = new EventEmitter<any>();
   @Output() goOn = new EventEmitter<any>();
+
+  @Input() title: string;
 
   @ContentChildren(PageHeaderLeftComponent) headerLeftSelect: QueryList<PageHeaderLeftComponent>;
 

@@ -43,6 +43,9 @@ import {TisCommonModule} from "../common/common.module";
 import {DataxRoutingModule} from "./datax-routing.module";
 import {DataxIndexComponent} from "./datax.index.component";
 import {DataxMainComponent} from "./datax.main.component";
+import {DataxConfigComponent} from "./datax.config.component";
+import {BasiManageModule} from "../base/base.manage.module";
+ // import {DataxAddStep7Component} from "../base/datax.add.step7.confirm.component";
 
 // import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 
@@ -53,7 +56,7 @@ import {DataxMainComponent} from "./datax.main.component";
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
     , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
   ],
-  declarations: [DataxIndexComponent, DataxMainComponent],
+  declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}

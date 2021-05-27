@@ -54,7 +54,7 @@ import {NzModalService} from "ng-zorro-antd";
   `],
   template: `
 
-      <tis-page-header [showBreadcrumb]="false" title="插件配置" [result]="result" [needRefesh]='false'>
+      <tis-page-header [showBreadcrumb]="false" title="插件配置" [result]="result" >
       </tis-page-header>
 
       <ul class="nav nav-tabs">

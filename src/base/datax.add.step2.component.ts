@@ -18,29 +18,25 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {Descriptor, Item} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Descriptor, Item} from "../common/tis.plugin";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
-      <tis-steps type="createDatax" [step]="1"></tis-steps>
+      <tis-steps type="createDatax" [step]="0"></tis-steps>
       <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--          <tis-header-tool>-->
       <!--              <button nz-button nzType="primary" (click)="execNextStep()">下一步</button>-->
       <!--          </tis-header-tool>-->
       <!--      </tis-page-header>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()">
-              <tis-page-header-left>
-                  dddd
-              </tis-page-header-left>
-          </tis-steps-tools-bar>
+          <tis-steps-tools-bar [title]="'Reader & Writer类型'" (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()"></tis-steps-tools-bar>
           <tis-form [fieldsErr]="errorItem">
               <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
                   <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [ngModel]="dto.readerImpl" (ngModelChange)="changeReaderDesc($event)">
@@ -73,27 +69,37 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
 
-
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
-  }
-
-
-  ngOnInit(): void {
-
-    this.httpPost('/coredefine/corenodemanage.ajax'
+  public static getDataXReaderWriterEnum(baseForm: BasicFormComponent): Promise<DataXReaderWriterEnum> {
+    return baseForm.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=datax_action&emethod=get_supported_reader_writer_types')
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc);
           let wList = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc);
-          this.readerDesc = Array.from(rList.values());
-          this.writerDesc = Array.from(wList.values());
+          // this.readerDesc = Array.from(rList.values());
+          // this.writerDesc = Array.from(wList.values());
+          return {"readerDescs": Array.from(rList.values()), "writerDescs": Array.from(wList.values())};
         }
       });
   }
 
-  // 执行下一步
+
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
+    super(tisService, modalService, r, route);
+  }
+
+
+  ngOnInit(): void {
+
+    DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+      this.readerDesc = rwEnum.readerDescs;
+      this.writerDesc = rwEnum.writerDescs;
+    });
+    //  return {"readerDescs": this.readerDesc, "writerDescs": this.writerDesc};
+  }
+
+
+// 执行下一步
   public execNextStep(): void {
     // let dto = new DataxDTO();
     // dto.appform = this.readerDesc;
@@ -127,4 +133,9 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
       }
     });
   }
+}
+
+export interface DataXReaderWriterEnum {
+  readerDescs: Array<Descriptor>;
+  writerDescs: Array<Descriptor>;
 }

@@ -16,18 +16,17 @@
 import {Injectable, NgModule} from '@angular/core';
 
 import {ActivatedRoute, ActivatedRouteSnapshot, CanActivateChild, Router, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
-import {SnapshotsetComponent} from '../index/snapshotset.component';
 
 import {OperationLogComponent} from "../base/operation.log.component";
 import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
-import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
-import {Observable} from "rxjs";
 import {TISService} from "../service/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {DataxIndexComponent} from "./datax.index.component";
 import {DataxMainComponent} from "./datax.main.component";
 import {BuildProgressComponent} from "../runtime/core.build.progress.component";
 import {MonitorComponent} from "../runtime/monitor.component";
+import {DataxConfigComponent} from "./datax.config.component";
+import {DataxAddComponent} from "../base/datax.add.component";
 
 @Injectable()
 export class DataxCanActivateCollectionManage implements CanActivateChild {
@@ -75,6 +74,11 @@ const dataxNodeRoutes: Routes = [
             component: FullBuildHistoryComponent,
             data: {datax: true}
           },
+          {   // Schema 配置文件一览
+            path: 'update',
+            component: DataxAddComponent,
+            data: {datax: true}
+          },
           {
             path: 'app_build_history/:taskid',
             component: BuildProgressComponent,
@@ -83,7 +87,12 @@ const dataxNodeRoutes: Routes = [
           {
             path: 'operationlog',
             component: OperationLogComponent
-          }, {
+          },
+          {
+            path: 'config',
+            component: DataxConfigComponent
+          },
+          {
             path: 'monitor',
             component: MonitorComponent
           }, {

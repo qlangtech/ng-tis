@@ -18,8 +18,8 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {Item} from "../common/tis.plugin";
 import {TisInputTool} from "../common/form.component";
+import {Item} from "../common/tis.plugin";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({

@@ -26,7 +26,7 @@ import {NzModalService} from "ng-zorro-antd";
   template: `
       <div class="container">
 
-          <tis-page-header title="用户" [needRefesh]='false'>
+          <tis-page-header title="用户">
               <button class="btn btn-primary" (click)="usradd()"><i class="fa fa-plus" aria-hidden="true"></i>添加</button>
           </tis-page-header>
 

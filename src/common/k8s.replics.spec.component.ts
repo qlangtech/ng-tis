@@ -175,6 +175,7 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
     if (!this.errorItem) {
       return false;
     }
+    // @ts-ignore
     let itemPP: ItemPropVal = this.errorItem.vals[control];
     return itemPP && itemPP.hasFeedback;
   }
@@ -183,6 +184,7 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
     if (!this.errorItem) {
       return '';
     }
+    // @ts-ignore
     let itemPP: ItemPropVal = this.errorItem.vals[control];
     if (!itemPP) {
       return '';

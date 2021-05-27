@@ -39,13 +39,10 @@ import {BaseConfigComponent} from "./base-config.component";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {DepartmentAddComponent} from "./department.add.component";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddComponent} from "./datax.add.component";
+// import {DataxAddComponent} from "./datax.add.component";
 import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {DataxAddStep3Component} from "./datax.add.step3.component";
-import {DataxAddStep4Component, PluginSubFormComponent} from "./datax.add.step4.component";
-import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
-import {DataxAddStep7Component, ViewGenerateCfgComponent} from "./datax.add.step7.confirm.component";
+
+// import { ViewGenerateCfgComponent} from "./datax.add.step7.confirm.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
@@ -62,9 +59,9 @@ import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-    , SchemaExpertAppCreateEditComponent, DataxAddStep1Component, DataxAddComponent, DataxAddStep2Component, DataxAddStep3Component, DataxAddStep4Component, PluginSubFormComponent, DataxAddStep5Component, DataxAddStep6Component
-    , DataxAddStep7Component, ViewGenerateCfgComponent, DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component , DataxAddStep6ColsMetaSetterComponent
-    , DataxWorkerRunningComponent , PluginManageComponent
+    , SchemaExpertAppCreateEditComponent, DataxAddStep2Component
+    , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component, DataxAddStep6ColsMetaSetterComponent
+    , DataxWorkerRunningComponent, PluginManageComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
