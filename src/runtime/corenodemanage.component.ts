@@ -31,7 +31,7 @@ import {NzModalRef, NzModalService} from "ng-zorro-antd";
 @Component({
   template: `
       <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
-          <tis-page-header [showBreadcrumb]="false" [needRefesh]='true' (refesh)="get_view_data()">
+          <tis-page-header [showBreadcrumb]="false"  (refesh)="get_view_data()">
           </tis-page-header>
           <nz-row [nzGutter]="16">
               <nz-col [nzSpan]="3">

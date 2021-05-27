@@ -157,7 +157,6 @@ export class FormComponent implements AfterContentInit, OnInit {
   @Input() spinning = false;
   _fieldsErr: Item = Item.create([]);
   @Input() set fieldsErr(val: Item) {
-     console.log(val);
     if (!val) {
       return;
     }
@@ -196,6 +195,7 @@ export class FormComponent implements AfterContentInit, OnInit {
     if (!item) {
       return TisInputTool.emptyItemPropVal;
     } else {
+      // @ts-ignore
       return item;
     }
   }

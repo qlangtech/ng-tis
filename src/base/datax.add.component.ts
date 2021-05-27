@@ -13,47 +13,102 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {AddAppFlowDirective} from "../base/addapp.directive";
 
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzSafeAny} from "ng-zorro-antd";
 import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {Descriptor} from "../common/tis.plugin";
+import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
+import {WorkflowAddComponent} from "../offline/workflow.add.component";
+import {DataxConfigComponent} from "../datax/datax.config.component";
+import {StepType} from "../common/steps.component";
+import {Descriptor} from "../common/tis.plugin";
 
 
 @Component({
   template: `
       <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
           <ng-template #container></ng-template>
-      </nz-spin>`
+      </nz-spin>
+      <ng-template #proessErr>当前是更新流程不能进入该页面
+      </ng-template>
+      {{multiViewDAG.lastCpt?.name}}
+  `
 })
 export class DataxAddComponent extends AppFormComponent implements AfterViewInit, OnInit {
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
-  private multiViewDAG: MultiViewDAG;
+  @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
+  multiViewDAG: MultiViewDAG;
+
+  // protected r: Router, protected route: ActivatedRoute
+  constructor(tisService: TISService, protected r: Router, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver) {
     super(tisService, route, modalService);
   }
 
+  goToDataXCfgManager(app: CurrentCollection): void {
+    this.r.navigate(['/x', app.name, 'config'], {relativeTo: this.route});
+  }
+
   protected initialize(app: CurrentCollection): void {
+    // console.log("ddd");
+    let paramsMap = this.route.snapshot.queryParamMap;
+    let execId = paramsMap.get("execId");
+    this.route.fragment.subscribe((r) => {
+      let cpt: Type<any> = DataxAddStep1Component;
+      switch (r) {
+        case "reader":
+          cpt = DataxAddStep3Component;
+          if (!execId) {
+            throw new Error("param execId can not be null");
+          }
+          DataxConfigComponent.getDataXMeta(this, app, execId).then((dto) => {
+            dto.processModel = StepType.UpdateDataxReader;
+            this.multiViewDAG.loadComponent(cpt, dto);
+          })
+          return;
+        case "writer":
+          cpt = DataxAddStep5Component;
+          if (!execId) {
+            throw new Error("param execId");
+          }
+          DataxConfigComponent.getDataXMeta(this, app, execId).then((dto) => {
+            dto.processModel = StepType.UpdateDataxWriter;
+            this.multiViewDAG.loadComponent(cpt, dto);
+          })
+          return;
+        default:
+          if (app) {
+            this.modalService.warning({
+              nzTitle: "错误",
+              nzContent: this.proessErrRef,
+              nzOkText: "进入DataX配置编辑",
+              nzOnOk: () => {
+                this.goToDataXCfgManager(app);
+              }
+            });
+            return;
+          }
+          this.multiViewDAG.loadComponent(cpt, new DataxDTO());
+      }
+    })
   }
 
   ngAfterViewInit() {
@@ -74,19 +129,22 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
 
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-    // this.multiViewDAG.loadComponent(DataxAddStep1Component, new DataxDTO());
+    /**=====================================================
+     * <<<<<<<<<for test
+     =======================================================*/
+    // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+    //   let dto = new DataxDTO();
+    //   dto.dataxPipeName = "tt";
+    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true};
+    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
+    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
+    //   this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, dto);
+    // });
+    /**=====================================================
+     * for test end>>>>>>>>
+     =======================================================*/
+    super.ngOnInit();
 
-    let dto = new DataxDTO();
-    dto.dataxPipeName = "tt";
-    let desc = new Descriptor();
-    desc.impl = "com.qlangtech.tis.plugin.datax.DataxMySQLReader";
-    desc.displayName = "MySQL";
-    dto.readerDescriptor = desc;
-    this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
-
-    // let dto = new DataxDTO();
-    // dto.dataxPipeName = "tt";
-    // this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, new DataxDTO());
   }
 }
 
@@ -121,6 +179,11 @@ export class DataxDTO {
   writerDescriptor: Descriptor;
 
   processMeta: DataXCreateProcessMeta;
+  // 流程是否处于更新模式
+  processModel: StepType = StepType.CreateDatax;
+
+  constructor(public execId?: string) {
+  }
 
   get readerImpl(): string {
     if (!this.readerDescriptor) {

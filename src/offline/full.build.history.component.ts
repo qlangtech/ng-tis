@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 
@@ -23,9 +23,10 @@ import {NzModalService} from "ng-zorro-antd";
 
 // const breadcrumbArry = ['数据流', '/offline/wf', 'totalpay', '/offline/wf_update/totalpay'];
 @Component({
+  selector: "full-build-history",
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
-      <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" [needRefesh]='true' (refesh)="refesh()">
+      <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" (refesh)="refesh()">
           <button (click)="triggerFullBuild()" nz-button nzType="primary">触发构建</button> &nbsp;
       </tis-page-header>
       <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
@@ -73,6 +74,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   breadcrumb: string[];
 
   showBreadcrumb = false;
+  @Input()
   dataxProcess = false;
 
   constructor(tisService: TISService, modalService: NzModalService
@@ -88,8 +90,10 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     this.route.data.subscribe((data) => {
       let b = data['showBreadcrumb'];
       let datax = data['datax'];
+      if (datax) {
+        this.dataxProcess = !!datax;
+      }
       this.showBreadcrumb = !!b;
-      this.dataxProcess = !!datax;
     });
     this.route.params
       .subscribe((params: Params) => {

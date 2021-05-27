@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -25,14 +25,14 @@ import {DbAddComponent, DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";
 
 @Component({
   template: `
-      <tis-page-header title="数据源管理" [needRefesh]='false'>
+      <tis-page-header title="数据源管理">
 
           <!--
           <a routerLink="/offline/datasourcecommits" routerLinkActive="active">datasource变更历史</a>
@@ -222,6 +222,9 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    * @param desc
    */
   public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
+    if (!desc) {
+     throw new Error("param desc can not be null");
+    }
     let h = new HeteroList();
     h.extensionPoint = desc.extendPoint;
     h.descriptors.set(desc.impl, desc);

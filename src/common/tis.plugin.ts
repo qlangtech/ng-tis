@@ -13,199 +13,10 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TisResponseResult} from "../service/tis.service";
-import {PluginsComponent} from "./plugins.component";
-
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' ;
 export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string };
 export declare type PluginType = PluginName | PluginMeta;
 
-
-export class AttrDesc {
-  key: string;
-  ord: number;
-  // 是否是主键
-  pk: boolean;
-  /**
-   * 当describable为true时descriptors 应该有内容
-   * */
-  descriptors: Map<string /*impl*/, Descriptor>;
-  describable: boolean;
-  type: number;
-  options: Array<ValOption>;
-  required: boolean;
-  eprops: { String: any };
-
-  /**
-   *
-   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
-   */
-  public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
-    let desVal = new ItemPropVal(updateModel);
-    desVal.key = this.key;
-    desVal.pk = this.pk;
-    desVal.eprops = Object.assign({}, this.eprops);
-    desVal.required = this.required;
-    desVal.type = this.type;
-    // 当type为6时，options应该有内容
-    desVal.options = this.options;
-    if (this.describable) {
-      desVal.descVal = this.createDescribleVal(new Item(null));
-    }
-    return desVal;
-  }
-
-  public createDescribleVal(v: Item): DescribleVal {
-    let descVal = new DescribleVal(v.dspt);
-    descVal.displayName = v.displayName;
-    // descVal.impl = v.impl;
-    descVal.vals = v.vals;
-    this.descriptors.forEach((entry) => {
-      descVal.descriptors.set(entry.impl, entry);
-    });
-    // for (let impl in this.descriptors.) {
-    //
-    // }
-    return descVal;
-  }
-}
-
-
-export class Descriptor {
-  impl: string;
-  displayName: string;
-  extendPoint: string;
-  attrs: AttrDesc[];
-  extractProps: { string: any };
-  veriflable: boolean;
-  pkField: string;
-  // subform relevant
-
-  subFormMeta: {
-    behaviorMeta: any,
-    fieldName: string,
-    idList: Array<string>
-    id?: string,
-  }
-  subForm: boolean;
-}
-
-/*Items*/
-/**
- * 对应一个plugin的输入项
- */
-export class Item {
-  impl = '';
-  //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
-  // vals: Map<string /**key*/, ItemPropVal> = new Map();
-  // 后一种类型支持subform的类型
-  vals: { string?: ItemPropVal } | { string?: { string?: ItemPropVal } } = {};
-  displayName = '';
-  private _propVals: ItemPropVal[];
-
-  /**
-   * 创建一个新的Item
-   *
-   * @param fieldNames
-   */
-  public static create(fieldNames: string[]): Item {
-    let item = new Item(null);
-    fieldNames.forEach((fname) => {
-      item.vals[fname] = new ItemPropVal();
-    });
-    return item;
-  }
-
-  public static processFieldsErr(result: TisResponseResult): Item {
-    let errFields = result.errorfields;
-    if (errFields && errFields.length > 0) {
-      let pluginsErr = errFields[0];
-      if (pluginsErr.length > 0) {
-        let pluginErr: Array<IFieldError> = pluginsErr[0];
-        let errKeys = pluginErr.map((r) => r.name);
-        let item: Item = Item.create(errKeys);
-        PluginsComponent.processErrorField(pluginsErr, [item]);
-        return item;
-      }
-    }
-    return Item.create([]);
-  }
-
-  constructor(public dspt: Descriptor) {
-    if (dspt) {
-      this.impl = dspt.impl;
-    }
-  }
-
-
-  public wrapItemVals(): void {
-    let newVals = {};
-    let ovals /**map*/ = this.vals;
-    let newVal: ItemPropVal;
-    this.dspt.attrs.forEach((at) => {
-      let v = ovals[at.key];
-      if (v === undefined || v === null) {
-        return;
-      }
-      newVal = at.addNewEmptyItemProp(true);
-      if (at.describable) {
-        let d = at.descriptors.get(v.impl);
-        if (!d) {
-          throw new Error(`impl:${v.impl} can not find relevant descriptor`);
-        }
-        let ii: Item = Object.assign(new Item(d), v);
-        ii.wrapItemVals();
-        // console.log(ii);
-        newVal.descVal = at.createDescribleVal(ii);
-      } else {
-        newVal._primaryVal = v;
-        // newVal.pk = (at.key === this.dspt.pkField);
-      }
-      newVals[at.key] = (newVal);
-      this.vals = newVals;
-    });
-  }
-
-  public clearPropVals(dspClear = true): void {
-    delete this._propVals;
-    if (dspClear) {
-      this.dspt = null;
-    }
-  }
-
-  public get propVals(): ItemPropVal[] {
-    if (this._propVals) {
-      return this._propVals;
-    }
-    if (!this.dspt) {
-      this._propVals = [];
-      return this._propVals;
-      // throw new Error(`dspt can not find relevant descriptor`);
-    }
-    this._propVals = [];
-    // ItemPropVal
-    // let vals: ItemPropVal[] = [];
-    this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
-      let ip: ItemPropVal = this.vals[attr.key];
-      if (!ip) {
-        // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
-        ip = attr.addNewEmptyItemProp(true);
-        this.vals[attr.key] = ip;
-      }
-      // console.log(ip);
-      this._propVals.push(ip);
-    });
-    return this._propVals;
-  }
-}
-
-export class DescribleVal
-  extends Item {
-  // impl: string;
-  // displayName: string;
-  // vals: string[] | DescribleVal[];
-  descriptors: Map<string /* impl */, Descriptor> = new Map();
-}
 
 // 某一插件某一属性行
 export class ItemPropVal {
@@ -231,6 +42,17 @@ export class ItemPropVal {
     this.placeholder = this._eprops['placeholder'] || '';
   }
 
+
+  public setPropValEnums(cols: Array<{ name: string, value: string }>, colItemChecked?: (optVal) => boolean) {
+    if (!colItemChecked) {
+      colItemChecked = (_) => true;
+    }
+    let enums = [];
+    cols.forEach((s) => {
+      enums.push({label: s.name, val: s.value, checked: colItemChecked(s.value)})
+    });
+    this.setEProp("enum", enums);
+  }
 
   constructor(public updateModel = false) {
   }
@@ -273,6 +95,257 @@ export class ItemPropVal {
     return !(this.descVal);
   }
 }
+
+export class Descriptor {
+  impl: string;
+  displayName: string;
+  extendPoint: string;
+  attrs: AttrDesc[];
+  extractProps: { string: any };
+  veriflable: boolean;
+  pkField: string;
+  // subform relevant
+
+  subFormMeta: {
+    behaviorMeta: any,
+    fieldName: string,
+    idList: Array<string>
+    id?: string,
+  }
+  subForm: boolean;
+}
+
+export interface TisResponseResult {
+  bizresult?: any;
+  success: boolean;
+  errormsg?: string[];
+  action_error_page_show?: boolean;
+  msg?: Array<any>;
+  errorfields?: Array<Array<Array<IFieldError>>>;
+}
+
+/**
+ * 对应一个plugin的输入项
+ */
+export class Item {
+  impl = '';
+  //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
+  // vals: Map<string /**key*/, ItemPropVal> = new Map();
+  // 后一种类型支持subform的类型
+  public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } = {};
+  displayName = '';
+  private _propVals: ItemPropVal[];
+
+  // public get itemVals(): { string?: ItemPropVal } | { string?: { string?: ItemPropVal } } {
+  //   return this.vals;
+  // }
+  //
+  // public set itemVals(v: { string?: ItemPropVal } | { string?: { string?: ItemPropVal } }) {
+  //   this.vals = v;
+  // }
+
+  /**
+   * 创建一个新的Item
+   *
+   * @param fieldNames
+   */
+  public static create(fieldNames: string[]): Item {
+    let item = new Item(null);
+    fieldNames.forEach((fname) => {
+      item.vals[fname] = new ItemPropVal();
+    });
+    return item;
+  }
+
+  public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
+    let item: Item = null;
+    let fieldsErrs: Array<IFieldError> = null;
+
+    if (errorFields) {
+      for (let index = 0; index < errorFields.length; index++) {
+        fieldsErrs = errorFields[index];
+        item = items[index];
+        let itemProp: ItemPropVal;
+        fieldsErrs.forEach((fieldErr) => {
+          let ip = item.vals[fieldErr.name];
+          if (ip instanceof ItemPropVal) {
+            itemProp = ip;
+            itemProp.error = fieldErr.content;
+
+            if (!itemProp.primaryVal) {
+              if (fieldErr.errorfields.length !== 1) {
+                throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
+              }
+              Item.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
+            }
+          } else {
+            throw new Error("illegal type");
+          }
+        });
+      }
+    }
+  }
+
+  public static processFieldsErr(result: TisResponseResult): Item {
+    let errFields = result.errorfields;
+    if (errFields && errFields.length > 0) {
+      let pluginsErr = errFields[0];
+      if (pluginsErr.length > 0) {
+        let pluginErr: Array<IFieldError> = pluginsErr[0];
+        let errKeys = pluginErr.map((r) => r.name);
+        let item: Item = Item.create(errKeys);
+        Item.processErrorField(pluginsErr, [item]);
+        return item;
+      }
+    }
+    return Item.create([]);
+  }
+
+  constructor(public dspt: Descriptor) {
+    if (dspt) {
+      this.impl = dspt.impl;
+    }
+  }
+
+
+  public wrapItemVals(): void {
+    let newVals = {};
+    let ovals: any /**map*/ = this.vals;
+    let newVal: ItemPropVal;
+    this.dspt.attrs.forEach((at) => {
+      let v = ovals[at.key];
+      if (v === undefined || v === null) {
+        return;
+      }
+      newVal = at.addNewEmptyItemProp(true);
+      if (at.describable) {
+        let d = at.descriptors.get(v.impl);
+        if (!d) {
+          throw new Error(`impl:${v.impl} can not find relevant descriptor`);
+        }
+        let ii: Item = Object.assign(new Item(d), v);
+        ii.wrapItemVals();
+        // console.log(ii);
+        newVal.descVal = at.createDescribleVal(ii);
+      } else {
+        if (at.isMultiSelectableType) {
+          if (!Array.isArray(v)) {
+            console.log(v);
+            throw new Error("expect val type is array but is not");
+          }
+          let cols: Array<{ name: string, value: string }> = v.map((r) => {
+            return {name: r, value: r}
+          });
+          newVal.setPropValEnums(cols);
+        } else {
+          newVal._primaryVal = v;
+        }
+
+
+        // newVal.pk = (at.key === this.dspt.pkField);
+      }
+      newVals[at.key] = (newVal);
+    });
+    this.vals = newVals;
+    // console.log(this.vals);
+  }
+
+  public clearPropVals(dspClear = true): void {
+    delete this._propVals;
+    if (dspClear) {
+      this.dspt = null;
+    }
+  }
+
+  public get propVals(): ItemPropVal[] {
+    if (this._propVals) {
+      return this._propVals;
+    }
+    if (!this.dspt) {
+      this._propVals = [];
+      return this._propVals;
+    }
+    this._propVals = [];
+    this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
+      let ip: ItemPropVal | { [key: string]: ItemPropVal } = this.vals[attr.key];
+      if (!ip) {
+        // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
+        ip = attr.addNewEmptyItemProp(true);
+        this.vals[attr.key] = ip;
+      }
+      // console.log(ip);
+      if (ip instanceof ItemPropVal) {
+        this._propVals.push(ip);
+      } else {
+        throw new Error("illegal ip type");
+      }
+    });
+    return this._propVals;
+  }
+}
+
+export class DescribleVal
+  extends Item {
+  // impl: string;
+  // displayName: string;
+  // vals: string[] | DescribleVal[];
+  descriptors: Map<string /* impl */, Descriptor> = new Map();
+}
+
+export class AttrDesc {
+  key: string;
+  ord: number;
+  // 是否是主键
+  pk: boolean;
+  /**
+   * 当describable为true时descriptors 应该有内容
+   * */
+  descriptors: Map<string /*impl*/, Descriptor>;
+  describable: boolean;
+  type: number;
+  options: Array<ValOption>;
+  required: boolean;
+  eprops: { String: any };
+
+  // MULTI_SELECTABLE
+  public get isMultiSelectableType(): boolean {
+    return this.type === 8;
+  }
+
+  /**
+   *
+   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+   */
+  public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
+    let desVal = new ItemPropVal(updateModel);
+    desVal.key = this.key;
+    desVal.pk = this.pk;
+    desVal.eprops = Object.assign({}, this.eprops);
+    desVal.required = this.required;
+    desVal.type = this.type;
+    // 当type为6时，options应该有内容
+    desVal.options = this.options;
+    if (this.describable) {
+      desVal.descVal = this.createDescribleVal(new Item(null));
+    }
+    return desVal;
+  }
+
+  public createDescribleVal(v: Item): DescribleVal {
+    let descVal = new DescribleVal(v.dspt);
+    descVal.displayName = v.displayName;
+    // descVal.impl = v.impl;
+    descVal.vals = v.vals;
+    this.descriptors.forEach((entry) => {
+      descVal.descriptors.set(entry.impl, entry);
+    });
+    // for (let impl in this.descriptors.) {
+    //
+    // }
+    return descVal;
+  }
+}
+
 
 /*HeteroList*/
 export class HeteroList {

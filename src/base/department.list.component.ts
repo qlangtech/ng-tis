@@ -26,7 +26,7 @@ import {DepartmentAddComponent} from "./department.add.component";
 @Component({
   // templateUrl: '/runtime/bizdomainlist.htm'
   template: `
-      <tis-page-header title="业务线" [needRefesh]='false'>
+      <tis-page-header title="业务线" >
           <button nz-button nzType="primary" (click)="openAddDptDialog()"><i class="fa fa-plus" aria-hidden="true"></i>添加</button>
       </tis-page-header>
       <tis-page [rows]="bizline" [spinning]="this.formDisabled">

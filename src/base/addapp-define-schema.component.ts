@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 // import {Observable} from 'rxjs/Observable';
 // import {of} from 'rxjs/observable/of';
 // import {SchemaExpertDirective} from './addapp.schema.expert.editor.directive';
@@ -22,6 +22,7 @@ import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from
 import {BasicFormComponent} from '../common/basic.form.component';
 import {AppDesc, ConfirmDTO, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from './addapp-pojo';
 import {NzModalService} from "ng-zorro-antd";
+import {TisResponseResult} from "../common/tis.plugin";
 // import {eventNames} from "cluster";
 // import {Application, Crontab}    from '../index/application';
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html

@@ -18,14 +18,14 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 import {TableAddStep} from './table.add.step';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {TablePojo} from './table.add.component';
 import {NzModalService} from "ng-zorro-antd";
-import {Item} from "../common/tis.plugin";
+import {Item, TisResponseResult} from "../common/tis.plugin";
 
 declare var jQuery: any;
 

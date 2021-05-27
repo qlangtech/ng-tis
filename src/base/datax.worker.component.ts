@@ -28,7 +28,6 @@ import {NzModalService} from "ng-zorro-antd";
 import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
 import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {Descriptor} from "../common/tis.plugin";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
@@ -43,6 +42,7 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {K8SRCSpec} from "../common/k8s.replics.spec.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {IndexIncrStatus, K8SControllerStatus} from "../runtime/incr.build.component";
+import {Descriptor} from "../common/tis.plugin";
 
 @Component({
   template: `

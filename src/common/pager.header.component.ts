@@ -61,6 +61,15 @@ export class TisHeaderTool {
 export class PageHeaderLeftComponent {
 }
 
+@Component({
+  selector: 'final-exec-controller',
+  template: `<ng-content></ng-content>`
+})
+export class FinalExecControllerComponent {
+}
+
+
+
 
 // implements OnInit, AfterContentInit
 @Component({

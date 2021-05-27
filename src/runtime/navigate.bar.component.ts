@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {TisResponseResult, TISService} from "../service/tis.service";
+import {TISService} from "../service/tis.service";
 // import {Application} from "../index/application";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -32,6 +32,7 @@ import * as $ from 'jquery';
 import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
 import {InitSystemComponent} from "../common/init.system.component";
+import {TisResponseResult} from "../common/tis.plugin";
 
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 

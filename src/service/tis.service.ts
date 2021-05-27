@@ -18,12 +18,12 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import {CurrentCollection} from '../common/basic.form.component';
 import {Observable, Observer, Subject} from "rxjs";
-
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
-import {IFieldError} from "../common/tis.plugin";
+import {TisResponseResult} from "../common/tis.plugin";
+
 declare var TIS: any;
 
 // @ts-ignore
@@ -35,10 +35,11 @@ export class TISService {
   // https://medium.com/@lwojciechowski/websockets-with-angular2-and-rxjs-8b6c5be02fac
   // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
+  public execId: string;
 
   constructor(protected http: HttpClient
               // , private modalService: NgbModal
-    , private notification: NzNotificationService) {
+    , public notification: NzNotificationService) {
   }
 
   // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
@@ -91,7 +92,8 @@ export class TISService {
 
   public set currentApp(currApp: CurrentCollection) {
     // console.log("currentApp");
-    // throw new Error();
+   // let err = new Error();
+   // console.log(err.stack);
     this.currApp = currApp;
   }
 
@@ -129,10 +131,13 @@ export class TISService {
 
   protected appendHeaders(headers: HttpHeaders): HttpHeaders {
     let result = headers;
-    // console.log("currApp:" + this.currApp);
+    // console.log(this.currApp);
     if (this.currApp) {
       result = result.set('appname', this.currApp.appName);
       result = result.set('appid', '' + this.currApp.appid);
+    }
+    if (this.execId) {
+      result = result.set("execId", this.execId);
     }
     return result;
     // return headers;
@@ -211,15 +216,6 @@ export class TISService {
     return Promise.reject(error.message || error);
   }
 
-}
-
-export interface TisResponseResult {
-  bizresult?: any;
-  success: boolean;
-  errormsg?: string[];
-  action_error_page_show?: boolean;
-  msg?: Array<any>;
-  errorfields?: Array<Array<Array<IFieldError>>>;
 }
 
 // @Injectable()

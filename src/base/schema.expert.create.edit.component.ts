@@ -17,12 +17,13 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
-import {TisResponseResult, TISService} from '../service/tis.service';
+import {TISService} from '../service/tis.service';
 import {Subject} from 'rxjs/Subject';
 
 import {SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
+import {TisResponseResult} from "../common/tis.plugin";
 // import {EditorConfiguration} from "codemirror";
 
 

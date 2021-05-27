@@ -23,13 +23,13 @@ import {DataxDTO} from "./datax.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {DatasourceComponent} from "../offline/ds.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
+import {ActivatedRoute, Router} from "@angular/router";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
       <tis-steps type="createDatax" [step]="0"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false">-->
@@ -53,7 +53,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
       <!--          </tis-ipt>-->
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
+          <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
           <div style="width: 80%;margin: 0 auto;">
               <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
                            (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
@@ -75,8 +75,8 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   hlist: HeteroList[] = [];
 
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
+    super(tisService, modalService, r, route);
   }
 
   ngOnInit(): void {
@@ -97,7 +97,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
           }
 //          DatasourceComponent.pluginDesc(desc[0])
           this.hlist = [hlist]; // DatasourceComponent.pluginDesc(desc[0])
-         // console.log(this.hlist);
+          // console.log(this.hlist);
         }
       });
   }

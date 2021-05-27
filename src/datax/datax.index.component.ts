@@ -32,22 +32,16 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
                       <a [routerLink]="['./']">
                           <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>主控台</a>
                   </li>
-<!---->
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>
                   </li>
 
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>全量构建</a>
+                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>构建</a>
                   </li>
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>
-                  </li>
-<!--
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./membership"><i class="fa fa-users fa-2x" aria-hidden="true"></i>权限</a>
-                  </li>
--->
+<!--                  <li nz-menu-item nzMatchRouter>-->
+<!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->
+<!--                  </li>-->
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
                   </li>
@@ -120,13 +114,4 @@ export class DataxIndexComponent extends AppFormComponent implements OnInit {
   // get appSelectable(): boolean {
   //  // return this.tisService.isAppSelectable();
   // }
-
-
-  gotoFullbuildView(e: MouseEvent) {
-    // let url = `/offline/datasource.ajax`;
-    // this.httpPost(url, 'action=offline_datasource_action&event_submit_do_get_workflowId=y').then((r) => {
-      this.router.navigate(['./app_build_history'], {relativeTo: this.route});
-    // });
-    e.stopPropagation();
-  }
 }

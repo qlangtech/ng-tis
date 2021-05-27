@@ -15,7 +15,7 @@
 
 import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO} from "./addapp-pojo";
 import {NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
 import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
@@ -25,6 +25,7 @@ import {DatasourceComponent} from "../offline/ds.component";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -32,8 +33,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-      <ng-container *ngIf="componentName">{{componentName}}</ng-container>
-      <tis-steps type="createDatax" [step]="1"></tis-steps>
+      <tis-steps [type]="stepType" [step]="offsetStep(1)"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--              <tis-header-tool>-->
@@ -42,9 +42,9 @@ import {BasicDataXAddComponent} from "./datax.add.base";
       <!--          </tis-page-header>-->
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+          <tis-steps-tools-bar [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0" (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
           <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                       [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+                       [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName }]" #pluginComponent></tis-plugins>
       </nz-spin>
   `
   , styles: [
@@ -67,42 +67,50 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
 
   hlist: HeteroList[] = [];
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
-  }
+  public static initializeDataXRW(baseForm: BasicFormComponent, rw: "reader" | "writer", dto: DataxDTO): Promise<{ "desc": Descriptor, "item"?: Item }> {
 
-  ngOnInit(): void {
-    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_reader_plugin_info&dataxName=${this.dto.dataxPipeName}`
-      , this.dto.readerDescriptor)
+    let desc: Descriptor = (rw === 'reader') ? dto.readerDescriptor : dto.writerDescriptor;
+
+    return baseForm.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_${rw}_plugin_info&dataxName=${dto.dataxPipeName}&`, desc)
       .then((r) => {
-        // this.processResult(r);
         if (r.success) {
-          this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
           if (r.bizresult) {
-            let desc: Descriptor = this.dto.readerDescriptor;
             let i: Item = Object.assign(new Item(desc), r.bizresult);
             i.wrapItemVals();
-            this.hlist[0].items[0] = i;
-            console.log(i);
+            return {"desc": desc, "item": i};
           }
-          // console.log(dto);
-          // this.nextStep.emit(this.dto);
         }
-        // else {
-        //   this.errorItem = Item.processFieldsErr(r);
-        // }
+        return {"desc": desc};
       });
-
-    // this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
-    // console.log(this.hlist);
   }
+
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
+    super(tisService, modalService, r, route);
+  }
+
+
+  protected initialize(app: CurrentCollection): void {
+    DataxAddStep3Component.initializeDataXRW(this, "reader", this.dto)
+      .then((i: { "desc": Descriptor, "item": Item }) => {
+        this.hlist = DatasourceComponent.pluginDesc(i.desc);
+        if (i.item) {
+          this.hlist[0].items[0] = i.item;
+        }
+      });
+  }
+
+  // ngOnInit(): void {
+  //   super.ngOnInit();
+  //
+  // }
+
 
   ngAfterViewInit(): void {
     // this.pluginComponent.errorsPageShow = true;
     // this.pluginComponent.formControlSpan = 20;
     // // this.pluginComponent.shallInitializePluginItems = false;
     // this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
-    this.pluginComponent.setPluginMeta([{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}])
+    //  this.pluginComponent.setPluginMeta([{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}])
     // this.pluginComponent.showSaveButton = false;
     // this.pluginComponent.afterSave.subscribe((r: PluginSaveResponse) => {
     //   if (r && r.saveSuccess && r.hasBiz()) {

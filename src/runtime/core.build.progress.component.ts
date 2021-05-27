@@ -170,15 +170,19 @@ export class ProgressTitleComponent {
           </nz-collapse>
       </nz-spin>
       <nz-drawer
-              [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+              [nzWrapClassName]="'get-gen-cfg-file'"
+              [nzBodyStyle]="{  overflow: 'auto' }"
               [nzMaskClosable]="false"
               [nzWidth]="'70%'"
               [nzVisible]="termVisible"
-              nzTitle="执行日志"
+              [nzTitle]="drawerTitle"
               (nzOnClose)="termClose()"
       >
           <ng-terminal #term></ng-terminal>
       </nz-drawer>
+      <ng-template #drawerTitle>
+          执行日志<button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>
+      </ng-template>
 
   `,
   styles: [
@@ -344,7 +348,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
       if (this.componentDestroy) {
         return;
       }
-      //console.log(response.data);
+      // console.log(response.data);
       switch (response.logtype) {
         case "stat":
           this.progressStat = Object.assign(new ProgressStat(), response.data);
@@ -407,6 +411,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
   termClose() {
     this.termVisible = false;
+  }
+
+  downloadLogFile() {
   }
 }
 
