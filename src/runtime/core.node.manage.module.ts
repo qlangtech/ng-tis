@@ -49,7 +49,7 @@ import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {ChartsModule} from 'ng2-charts';
 
 // import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
-import {IncrPodLogsStatusComponent} from "./incr.pod.logs.status.component";
+ // import {IncrPodLogsStatusComponent} from "./incr.pod.logs.status.component";
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzIconModule, NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
 import {NzTableModule} from 'ng-zorro-antd/table';
@@ -75,11 +75,13 @@ import {LineChartComponent} from "./line.chart.component";
     , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
     , IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent
-    , IncrPodLogsStatusComponent
   ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}
+  ],
+  exports: [
+  //  IncrPodLogsStatusComponent
   ],
   entryComponents: [TriggerDumpComponent, PojoComponent,
     SyncConfigComponent,

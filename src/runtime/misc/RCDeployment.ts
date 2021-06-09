@@ -61,6 +61,52 @@ export interface RCDeployment {
 
 export interface K8sPodState {
   name: string;
-  phase: string;
-  startTime: string;
+  phase?: string;
+  startTime?: string;
+  restartCount?: number;
+}
+
+export enum LogType {
+  INCR_DEPLOY_STATUS_CHANGE = "incrdeploy-change",
+  DATAX_WORKER_POD_LOG = "datax-worker-pod-log"
+}
+
+export interface RcHpaStatus {
+  conditions: Array<HpaConditionEvent>;
+  currentMetrics: Array<HpaMetrics>;
+  autoscalerStatus: HpaAutoscalerStatus;
+  autoscalerSpec: HpaAutoscalerSpec;
+}
+
+export interface HpaConditionEvent {
+  type: string;
+  status: string;
+  lastTransitionTime: string;
+  reason: string;
+  message: string;
+}
+
+export interface HpaAutoscalerStatus {
+  currentCPUUtilizationPercentage: number;
+  currentReplicas: number;
+  desiredReplicas: number;
+  lastScaleTime: number;
+}
+
+export interface HpaAutoscalerSpec {
+  maxReplicas: number;
+  minReplicas: number;
+  targetCPUUtilizationPercentage: number;
+}
+
+export interface HpaMetrics {
+  type: string;
+
+  resource: UsingResource;
+}
+
+export interface UsingResource {
+  name: string;
+  currentAverageUtilization: any;
+  currentAverageValue: any;
 }

@@ -26,9 +26,9 @@ import {Item, ItemPropVal} from "./tis.plugin";
   selector: `k8s-replics-spec`,
   template: `
       <tis-form [fieldsErr]="this.errorItem" [labelSpan]="this.labelSpan" [controlerSpan]="this.controlSpan" [formGroup]="specForm">
-          <tis-ipt #pods title="Pods" name="pods-mock" require>
+          <tis-ipt #pods title="Pods" name="pods" require>
               <nz-input-group nzCompact [nzAddOnAfter]="podUnit" style="width:200px">
-                  <nz-input-number [nzDisabled]="disabled" name="pods" formControlName="pods" class="input-number"  [nzStep]="1" [ngModel]="1"></nz-input-number>
+                  <nz-input-number [nzDisabled]="disabled" name="pods" formControlName="pods" class="input-number"  [nzStep]="1" ></nz-input-number>
               </nz-input-group>
           </tis-ipt>
           <tis-ipt title="CPU" name="cpu" require>
@@ -88,8 +88,8 @@ import {Item, ItemPropVal} from "./tis.plugin";
               </div>
           </tis-ipt>
           <tis-ipt title="弹性扩缩容" name="hpa" require>
-              <div *ngIf="!disabled">
-                  <nz-switch nzCheckedChildren="开" nzUnCheckedChildren="关" formControlName="supportHpa"></nz-switch>
+              <div >
+                  <nz-switch [nzDisabled]="disabled" nzCheckedChildren="开" nzUnCheckedChildren="关" formControlName="supportHpa"></nz-switch>
               </div>
               <div *ngIf="specForm?.get('supportHpa').value" class="resource-spec">
                   <div [ngClass]="{'ant-form-item-has-error':hasErr('cpuAverageUtilization')}">
@@ -110,6 +110,12 @@ import {Item, ItemPropVal} from "./tis.plugin";
                       </nz-input-group>
                       <div *ngIf="hasErr('maxHpaPod')" class="ant-form-item-explain">{{controlErr('maxHpaPod')}}</div>
                   </div>
+              </div>
+              <div *ngIf="specForm?.get('supportHpa').value" style="padding-top: 5px">
+                  <nz-alert nzType="info" [nzMessage]="suggestMsg"></nz-alert>
+                  <ng-template #suggestMsg>
+                      在启用<strong>弹性扩缩容</strong>之前，请先在K8S集群中部署<strong>metrics-server</strong>,不然<strong>弹性扩缩容</strong>无法正常工作，具体请参照<a target="_blank" href="https://github.com/kubernetes-sigs/metrics-server">https://github.com/kubernetes-sigs/metrics-server</a>
+                  </ng-template>
               </div>
           </tis-ipt>
       </tis-form>
@@ -159,7 +165,7 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
       minHpaPod: [1],
       maxHpaPod: [1],
       cpuAverageUtilization: [10, [Validators.max(100), Validators.min(1)]],
-      'pods': [1, [Validators.required]],
+      pods: [1, [Validators.required]],
       cuprequest: [500, [Validators.required]],
       cuprequestunit: ['m', [Validators.required]],
       cuplimitunit: ['cores', [Validators.required]],
@@ -204,10 +210,10 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
   }
 
   ngOnInit(): void {
-    console.log(this.rcSpec);
+
     if (!this.rcSpec) {
       this.rcSpec = {
-        'pods': 3,
+        'pods': 1,
         supportHpa: true, minHpaPod: 1, maxHpaPod: 3, cpuAverageUtilization: 10,  cuprequest: 500,
         cuprequestunit: 'm',
         cuplimitunit: 'cores',
@@ -218,6 +224,7 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
         memorylimitunit: 'G'
       };
     }
+   // console.log(this.rcSpec);
     this.specForm.setValue(this.rcSpec);
     // this.specForm.setErrors({"cuprequest": "dddddddd"});
     // console.log(this.specForm.errors);

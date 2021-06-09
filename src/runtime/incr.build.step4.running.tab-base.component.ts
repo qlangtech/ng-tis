@@ -15,7 +15,7 @@
 
 import {AfterContentInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
@@ -23,7 +23,6 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
-import {WSMessage} from "./core.build.progress.component";
 import {NgTerminal} from "ng-terminal";
 
 

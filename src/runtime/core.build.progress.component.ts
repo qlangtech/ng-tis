@@ -13,15 +13,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Params} from "@angular/router";
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
 
 
 import {NgTerminal} from "ng-terminal";
-import {NzDrawerRef, NzDrawerService, NzModalService} from "ng-zorro-antd";
-import {Observable, Subject} from "rxjs";
+import {NzDrawerRef, NzModalService} from "ng-zorro-antd";
+import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
 
 
@@ -414,12 +414,6 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 
   downloadLogFile() {
-  }
-}
-
-export class WSMessage {
-  constructor(public logtype: string, public data?: any) {
-
   }
 }
 

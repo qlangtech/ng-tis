@@ -20,12 +20,20 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
+import {DataXJobWorkerStatus} from "../base/datax.worker.component";
 
 // const breadcrumbArry = ['数据流', '/offline/wf', 'totalpay', '/offline/wf_update/totalpay'];
 @Component({
   selector: "full-build-history",
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
+      <div *ngIf="dataxProcess && dataXWorkerStatus">
+          <span>{{dataXWorkerStatus.k8sReplicationControllerCreated ? '分布式K8S执行' : '本地执行'}}</span>
+          <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon> </nz-alert>
+          <ng-template #unableToUseK8SController>
+              当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启 <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
+          </ng-template>
+      </div>
       <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" (refesh)="refesh()">
           <button (click)="triggerFullBuild()" nz-button nzType="primary">触发构建</button> &nbsp;
       </tis-page-header>
@@ -76,6 +84,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   showBreadcrumb = false;
   @Input()
   dataxProcess = false;
+  dataXWorkerStatus: DataXJobWorkerStatus;
 
   constructor(tisService: TISService, modalService: NzModalService
     , private router: Router, private route: ActivatedRoute
@@ -87,14 +96,16 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
 
   ngOnInit(): void {
-    this.route.data.subscribe((data) => {
-      let b = data['showBreadcrumb'];
-      let datax = data['datax'];
-      if (datax) {
-        this.dataxProcess = !!datax;
-      }
-      this.showBreadcrumb = !!b;
-    });
+
+    let data = this.route.snapshot.data;
+    let b = data['showBreadcrumb'];
+    let datax = data['datax'];
+    if (datax) {
+      this.dataxProcess = !!datax;
+    }
+    this.showBreadcrumb = !!b;
+
+
     this.route.params
       .subscribe((params: Params) => {
         this.wfid = parseInt(params['wfid'], 10);
@@ -109,7 +120,17 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
             this.pager = Pager.create(r);
             this.buildHistory = r.bizresult.rows;
 
-            this.cd.reattach();
+            if (this.dataxProcess) {
+              this.httpPost('/coredefine/corenodemanage.ajax'
+                , `action=datax_action&emethod=get_datax_worker_meta&disableRcdeployment=true`).then((rr) => {
+                if (rr.success) {
+                  this.dataXWorkerStatus = rr.bizresult;
+                }
+                this.cd.reattach();
+              });
+            } else {
+              this.cd.reattach();
+            }
           });
         });
       });

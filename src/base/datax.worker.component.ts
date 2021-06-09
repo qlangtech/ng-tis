@@ -46,6 +46,8 @@ import {Descriptor} from "../common/tis.plugin";
 
 @Component({
   template: `
+      <tis-page-header title="DataX分布式执行器">
+      </tis-page-header>
       <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
           <ng-template #container></ng-template>
       </nz-spin>`

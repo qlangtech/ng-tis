@@ -94,6 +94,10 @@ const basemanageRoutes: Routes = [
           {
             path: 'datax-worker',
             component: DataxWorkerComponent
+          },
+          {
+            path: 'datax-worker/:targetTab',
+            component: DataxWorkerComponent
           }
         ]
       }
