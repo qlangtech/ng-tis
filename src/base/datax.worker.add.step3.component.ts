@@ -22,7 +22,7 @@ import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {AddAppFlowDirective} from "../base/addapp.directive";
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {PluginSaveResponse} from "../common/tis.plugin";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataXJobWorkerStatus, DataxWorkerDTO} from "./datax.worker.component";
@@ -57,8 +57,8 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
-    super(tisService, route, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, route, modalService, notification);
   }
 
   ngOnInit(): void {
@@ -74,6 +74,7 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
       })
       .then((r) => {
         if (r.success) {
+          this.successNotify("已经成功在K8S集群中启动DataX执行器");
           let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult);
           // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
           // let desc = Array.from(rList.values());

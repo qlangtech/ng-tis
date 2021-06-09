@@ -15,14 +15,13 @@
 
 import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
-import {WSMessage} from "./core.build.progress.component";
-import {K8sPodState} from "./misc/RCDeployment";
+import {K8sPodState, LogType} from "./misc/RCDeployment";
 
 @Component({
   template: `
@@ -158,7 +157,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   dto: IndexIncrStatus = new IndexIncrStatus();
-   msgSubject: Subject<WSMessage>;
+  msgSubject: Subject<WSMessage>;
 
   // 实时流量配置
   constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {
@@ -196,20 +195,10 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   public startMonitorMqTagsStatus(logtype: string) {
     // console.log(this.currentApp);
-    this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${this.currentApp.name}`)
-      .pipe(map((response: MessageEvent) => {
-        let json = JSON.parse(response.data);
-        // console.log(json);
-        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
-          return new WSMessage('mq_tags_status', json);
-        } else if (json.logType && json.logType === "INCR") {
-          return new WSMessage('incr', json);
-        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
-          return new WSMessage('incrdeploy-change', json);
-        }
-        return null;
-      }));
+    this.msgSubject = this.getWSMsgSubject(logtype);
   }
+
+
 
   ngOnDestroy(): void {
     this.componentDestroy = true;

@@ -20,7 +20,6 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {AddAppFlowDirective} from "../base/addapp.directive";
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
 import {IncrBuildStep1Component} from "./incr.build.step1.component";
 import {IncrBuildStep2Component} from "./incr.build.step2.component";

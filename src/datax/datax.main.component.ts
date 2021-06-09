@@ -55,9 +55,9 @@ import {ChartDataSets, ChartOptions} from "chart.js";
                   </nz-card>
               </nz-col>
               <nz-col [nzSpan]="20">
-                  <nz-card [nzTitle]="'统计视图'" [nzExtra]="extraTemplate">
+                  <nz-card [nzTitle]="'执行(成功/失败)统计'" [nzExtra]="extraTemplate">
                       <div style="height: 250px">
-                          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                          <canvas *ngIf="barChartData.length>0" baseChart [datasets]="barChartData" [labels]="barChartLabels"
                                   [options]="barChartOptions" [legend]="false" [chartType]="'bar'">
                           </canvas>
                       </div>
@@ -166,17 +166,20 @@ export class DataxMainComponent extends AppFormComponent {
         // let rows = [{timeLab: "5/12", successCount: 1, errCount: 1}, {timeLab: "5/13", successCount: 3, errCount: 1}]; // data.bizresult;
         this.allStatis = data.bizresult.statis;
         let rows = data.bizresult.data;
-        let successData: ChartDataSets = {label: "success", backgroundColor: '#398400'};
-        successData.data = [];
-        let faildData: ChartDataSets = {label: "faild", backgroundColor: '#af0f16'};
-        faildData.data = [];
+        let successData: ChartDataSets = {label: "success", backgroundColor: '#398400', data: []};
+        //  successData.data = [];
+        let faildData: ChartDataSets = {label: "faild", backgroundColor: '#af0f16', data: []};
+        // faildData.data = [];
         let labels: Array<any> = [];
         this.barChartLabels = [];
         rows.forEach((r: any) => {
+          //
           successData.data.push(r.successCount);
+          //
           faildData.data.push(r.errCount);
           labels.push(r.timeLab);
         });
+        // console.log([successData, faildData]);
         this.barChartData = [successData, faildData];
         this.barChartLabels = labels;
       }

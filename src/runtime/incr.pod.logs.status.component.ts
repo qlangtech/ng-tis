@@ -13,17 +13,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {ActivatedRoute} from "@angular/router";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subject} from "rxjs";
-import {WSMessage} from "./core.build.progress.component";
 import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
-import {K8sPodState} from "./misc/RCDeployment";
-
+import {K8sPodState, LogType} from "./misc/RCDeployment";
 
 @Component({
   selector: 'incr-pod-logs-status',
@@ -67,12 +65,15 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
   @Input()
   incrStatus: IndexIncrStatus;
   logMonitorTimeout = false;
+  @Input()
   selectedPod: K8sPodState;
+  @Input()
+  logType: LogType = LogType.INCR_DEPLOY_STATUS_CHANGE;
 
   _transactionProcessing = false;
 
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private router: Router) {
     super(tisService, route, modalService, notification);
   }
 
@@ -96,7 +97,8 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
       }
       // console.log(response);
       switch (response.logtype) {
-        case "incrdeploy-change":
+        case LogType.DATAX_WORKER_POD_LOG:
+        case LogType.INCR_DEPLOY_STATUS_CHANGE:
 
           if (response.data.msg.timeout) {
             this.logMonitorTimeout = true;
@@ -123,9 +125,13 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
   }
 
   private sendIncrdeployChange() {
-    this.selectedPod = this.incrStatus.getFirstPod();
     if (this.selectedPod) {
-      this.msgSubject.next(new WSMessage(`incrdeploy-change:${this.selectedPod.name}`));
+      this.msgSubject.next(new WSMessage(`${this.logType}:${this.selectedPod.name}`));
+    } else {
+      this.selectedPod = this.incrStatus.getFirstPod();
+      if (this.selectedPod) {
+        this.msgSubject.next(new WSMessage(`${this.logType}:${this.selectedPod.name}`));
+      }
     }
   }
 
@@ -135,21 +141,40 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
    */
   relauchIncrProcess() {
     this._transactionProcessing = true;
-    this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_relaunch_incr_process=y&action=core_action")
-      .then((r) => {
-        if (r.success) {
-          this.successNotify(`已经成功触发重启增量实例${this.currentApp.appName}`);
+    switch (this.logType) {
+      case LogType.DATAX_WORKER_POD_LOG:
+        this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name)
+          .then((r) => {
 
-          setTimeout(() => {
-            IncrBuildComponent.getIncrStatusThenEnter(this, (incrStat: IndexIncrStatus) => {
-              this.incrStatus = incrStat;
-              this.sendIncrdeployChange();
+            if (r.success) {
+              this.successNotify(`已经成功触发重启DataX Worker实例${this.selectedPod.name}`);
+              setTimeout(() => {
+                // console.log("navigate");
+                this.router.navigate(["/base/datax-worker", "profile"], {relativeTo: this.route});
+                this._transactionProcessing = false;
+              }, 3000);
+            } else {
               this._transactionProcessing = false;
-            }, false);
-          }, 3000);
-        } else {
-          this._transactionProcessing = false;
-        }
-      });
+            }
+          });
+        return;
+      case LogType.INCR_DEPLOY_STATUS_CHANGE:
+        this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_relaunch_incr_process=y&action=core_action")
+          .then((r) => {
+            if (r.success) {
+              this.successNotify(`已经成功触发重启增量实例${this.currentApp.appName}`);
+
+              setTimeout(() => {
+                IncrBuildComponent.getIncrStatusThenEnter(this, (incrStat: IndexIncrStatus) => {
+                  this.incrStatus = incrStat;
+                  this.sendIncrdeployChange();
+                  this._transactionProcessing = false;
+                }, false);
+              }, 3000);
+            } else {
+              this._transactionProcessing = false;
+            }
+          });
+    }
   }
 }

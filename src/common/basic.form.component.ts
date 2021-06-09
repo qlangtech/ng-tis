@@ -15,8 +15,7 @@
 
 import {TISService} from '../service/tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import {Component, EventEmitter, Input, OnInit, Optional, Output, Type} from '@angular/core';
-
+import {Component, EventEmitter, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
@@ -25,6 +24,9 @@ import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd";
 import {TisResponseResult} from "./tis.plugin";
+import {Subject} from "rxjs";
+import {map} from "rxjs/operators";
+import {LogType} from "../runtime/misc/RCDeployment";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -48,6 +50,19 @@ export class BasicFormComponent {
   }
 
   constructor(protected tisService: TISService, protected modalService?: NzModalService, protected notification?: NzNotificationService) {
+  }
+
+  protected confirm(content: string, onOK: () => void): void {
+    if (!this.modalService) {
+      throw new Error(" have not inject prop 'modalService' ");
+    }
+    this.modalService.confirm({
+      nzTitle: '确认',
+      nzContent: content,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: onOK
+    });
   }
 
   protected successNotify(msg: string, duration?: number) {
@@ -301,6 +316,12 @@ export interface IDataFlowMainComponent {
   readonly joinNodeMap: Map<string /*id*/, JoinNode>;
 }
 
+export class WSMessage {
+  constructor(public logtype: string, public data?: any) {
+
+  }
+}
+
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
   private _getCurrentAppCache = false;
 
@@ -324,7 +345,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
         let appTisService: TISService = this.tisService;
         if (!this._getCurrentAppCache) {
           let collectionName = params['name'];
-         // console.log(collectionName);
+          // console.log(collectionName);
           if (!collectionName) {
             appTisService.currentApp = null;
           }
@@ -341,6 +362,25 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
   }
 
   protected abstract initialize(app: CurrentCollection): void ;
+
+  protected getWSMsgSubject(logtype: string): Subject<WSMessage> {
+    let app = this.currentApp;
+    return <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${app ? app.name : ''}`)
+      .pipe(map((response: MessageEvent) => {
+        let json = JSON.parse(response.data);
+        // console.log(json);
+        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
+          return new WSMessage('mq_tags_status', json);
+        } else if (json.logType && json.logType === "INCR") {
+          return new WSMessage('incr', json);
+        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
+          return new WSMessage(LogType.INCR_DEPLOY_STATUS_CHANGE, json);
+        } else if (json.logType && json.logType === "DATAX_WORKER_POD_LOG") {
+          return new WSMessage(LogType.DATAX_WORKER_POD_LOG, json);
+        }
+        return null;
+      }));
+  }
 }
 
 export class CurrentCollection {
