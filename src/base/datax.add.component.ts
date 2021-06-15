@@ -38,6 +38,7 @@ import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {DataxConfigComponent} from "../datax/datax.config.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";
+import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 
 
 @Component({
@@ -127,19 +128,22 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
 
     configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+    // use for elasticsearch writer cols set
+    configFST.set(AddAppDefSchemaComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+
 
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
     /**=====================================================
      * <<<<<<<<<for test
      =======================================================*/
-    // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
-    //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "tt";
-    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true};
-    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
-    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, dto);
-    // });
+    DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+      let dto = new DataxDTO();
+      dto.dataxPipeName = "tt";
+      dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+      dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
+      dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
+      this.multiViewDAG.loadComponent(AddAppDefSchemaComponent, dto);
+    });
     /**=====================================================
      * for test end>>>>>>>>
      =======================================================*/
@@ -207,5 +211,7 @@ export interface DataXCreateProcessMeta {
 
   // writer 是否符合关系型数据库要求
   writerRDBMS: boolean;
+  // reader 中是否可以选择多个表，例如像elastic这样的writer中对于column的设置比较复杂，需要在writer plugin页面中完成，所以就不能支持在reader中选择多个表了
+  writerSupportMultiTab: boolean;
 }
 

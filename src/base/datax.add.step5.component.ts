@@ -29,6 +29,7 @@ import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {ActivatedRoute, Router} from "@angular/router";
+import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -43,7 +44,7 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--          </tis-page-header>-->
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0"  (goBack)="goback()" (goOn)="createStepNext()">
+          <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
           </tis-steps-tools-bar>
           <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
                        [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
@@ -101,20 +102,39 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     }
 
     let processMeta: DataXCreateProcessMeta = this.dto.processMeta;
-    // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
     let n: IntendDirect = null;
-    if (processMeta.writerRDBMS) {
-      if (processMeta.readerRDBMS) {
-        // 表映射设置
+
+    // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
+    if (processMeta.readerRDBMS) {
+      if (processMeta.writerRDBMS) {
         n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+      } else {
+        // 直接确认
+        n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
+      }
+    } else {
+
+
+      if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
+        // ES的Schema编辑是特别定制的
+        n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
       } else {
         n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
       }
-    } else {
-      // 直接确认
-      n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
-      // this.nextStep.emit(n);
     }
+
+    // if (processMeta.writerRDBMS) {
+    //   if (processMeta.readerRDBMS) {
+    //     // 表映射设置
+    //     n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+    //   } else {
+    //     n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
+    //   }
+    // } else {
+    //   // 直接确认
+    //   n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
+    //   // this.nextStep.emit(n);
+    // }
     this.nextStep.emit(n);
   }
 }

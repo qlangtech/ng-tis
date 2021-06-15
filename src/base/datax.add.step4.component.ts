@@ -35,7 +35,8 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
       <tis-steps *ngIf="createModel" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
       <nz-spin [nzSpinning]="this.formDisabled">
           <ng-container [ngSwitch]="createModel">
-              <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="true" [title]="'Reader 选择导入表'" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+              <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="true" [title]="'Reader 选择导入表'"
+                                   (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
               <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="false">
                   <final-exec-controller *ngIf="!inReadonly">
                       <button nz-button [nzType]="'primary'" (click)="createStepNext()">保存</button>
