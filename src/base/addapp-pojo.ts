@@ -1,5 +1,3 @@
-
-
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
  * <p>
@@ -17,19 +15,13 @@
 
 // 小白模式pojo
 export class StupidModal {
+  dataxName: string;
   fieldtypes: Array<SchemaFieldType> = [];
   schemaXmlContent: string;
   fields: Array<SchemaField> = [];
   uniqueKey: string;
   shareKey: string;
   tplAppId: number;
-
-  public markFieldErr(err: FieldErrorInfo): void {
-    let field = this.fields.find((f) => f.id === err.id);
-    if (field) {
-      field.errInfo = err;
-    }
-  }
 
   public static deseriablize(r: StupidModal): StupidModal {
     let stupidModal = Object.assign(new StupidModal(), r);
@@ -51,6 +43,14 @@ export class StupidModal {
     });
     return stupidModal;
   }
+
+  public markFieldErr(err: FieldErrorInfo): void {
+    let field = this.fields.find((f) => f.id === err.id);
+    if (field) {
+      field.errInfo = err;
+    }
+  }
+
 
 }
 
@@ -100,8 +100,14 @@ export interface FieldErrorInfo {
   fieldPropRequiredError?: boolean;
 }
 
+export enum EnginType {
+  Solr = 'solr',
+  ES = 'es'
+}
+
 // 从schema编辑页面跳转到确认页面使用的包装对象
 export class ConfirmDTO {
+
 // {appform: {tisTpl: any, workflow: any}, expertModel: boolean, expert: {xml: string}, stupid: {model:StupidModal}}
   // 使用的模板索引的appid
   tplAppId: number;

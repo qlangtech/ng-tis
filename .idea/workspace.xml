@@ -3,24 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datax/datax.main.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.main.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-pojo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-pojo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -252,7 +240,11 @@
       <workItem from="1621345331092" duration="102581000" />
       <workItem from="1622069930429" duration="16518000" />
       <workItem from="1622519388823" duration="1928000" />
-      <workItem from="1623037992480" duration="31498000" />
+      <workItem from="1623037992480" duration="32009000" />
+      <workItem from="1623290834446" duration="9257000" />
+      <workItem from="1623552611917" duration="1213000" />
+      <workItem from="1623556167210" duration="18000" />
+      <workItem from="1623571810484" duration="7898000" />
     </task>
     <servers />
   </component>
@@ -594,13 +586,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>279</line>
+          <line>280</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.worker.running.component.ts</url>
           <line>15</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>

@@ -20,15 +20,18 @@ import {TISService} from '../service/tis.service';
 // import {SchemaExpertDirective} from './addapp.schema.expert.editor.directive';
 import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from './schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {AppDesc, ConfirmDTO, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from './addapp-pojo';
-import {NzModalService} from "ng-zorro-antd";
+import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
+import {NzModalService, NzTabsCanDeactivateFn} from "ng-zorro-antd";
 import {TisResponseResult} from "../common/tis.plugin";
+import {DataxDTO} from "./datax.add.component";
 // import {eventNames} from "cluster";
 // import {Application, Crontab}    from '../index/application';
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 // schema 高级编辑模式入口：http://tis:8080/runtime/schema_manage.htm?aid=1
 // 高级模式: http://tis:8080/runtime/schemaXml.ajax?aid=$aid&event_submit_do_get_xml_content=y&action=schema_action
 // 小白模式: http://tis:8080/runtime/schemaManage.ajax?aid=$aid&event_submit_do_get_fields=y&action=schema_action
+
+
 @Component({
   selector: 'schema-define',
   styles: [`
@@ -56,27 +59,27 @@ import {TisResponseResult} from "../common/tis.plugin";
   ],
   template: `
       <tis-steps type="createIndex" [step]="1"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false" [result]="result"></tis-page-header>
+      <tis-page-header [showBreadcrumb]="false" [result]="result">
+          <button nz-button nzType="default" (click)="gotoProfileDefineStep()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>
+          <button nz-button nzType="primary" (click)="createIndexConfirm()"><i nz-icon nzType="forward" nzTheme="outline"></i>下一步</button>
+      </tis-page-header>
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
           <form method="post">
 
-              <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate">
-                  <nz-tab [nzTitle]="foolTitleTemplate" (nzClick)="toggleModel(false)">
-                      <visualizing-schema-editor [bizResult]="stupidModal"></visualizing-schema-editor>
+              <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate" [nzCanDeactivate]="canDeactivate">
+                  <nz-tab [nzTitle]="foolTitleTemplate">
+                      <visualizing-schema-editor [engineType]="this.engineType" [bizResult]="stupidModal"></visualizing-schema-editor>
                   </nz-tab>
-                  <nz-tab [nzTitle]="expertTitleTemplate" (nzClick)="toggleModel(true)">
+                  <nz-tab [nzTitle]="expertTitleTemplate">
                       <ng-template nz-tab>
-                          <expert-schema-editor [schemaXmlContent]="stupidModal.schemaXmlContent"
+                          <expert-schema-editor [engineType]="this.engineType" [schemaXmlContent]="stupidModal.schemaXmlContent"
                                                 (saveSuccess)="expertSchemaEditorSuccess($event)"
-                                                (initComplete)="expertSchemaEditorInitComplete($event)">
-                          </expert-schema-editor>
+                                                (initComplete)="expertSchemaEditorInitComplete($event)"></expert-schema-editor>
                       </ng-template>
                   </nz-tab>
               </nz-tabset>
 
               <ng-template #extraTemplate>
-                  <button nz-button nzType="default" (click)="gotoProfileDefineStep()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>
-                  <button nz-button nzType="primary" (click)="createIndexConfirm()"><i nz-icon nzType="forward" nzTheme="outline"></i>下一步</button>
               </ng-template>
 
               <ng-template #foolTitleTemplate>
@@ -97,8 +100,20 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
   stupidModal: StupidModal;
 
+  engineType: { type: EnginType, payload?: string } = {type: EnginType.Solr};
+  _dto: ConfirmDTO;
+  _dataxDto: DataxDTO;
+
   // 第一步中传递过来的提交信息
-  @Input() dto: ConfirmDTO;
+  @Input() set dto(val: ConfirmDTO | DataxDTO) {
+    if (val instanceof ConfirmDTO) {
+      // this.engineType = {type: EnginType.Solr};
+      this._dto = val;
+    } else {
+      this.engineType = {type: EnginType.ES, payload: val.dataxPipeName};
+      this._dataxDto = val;
+    }
+  }
 
   @ViewChild(SchemaExpertAppCreateEditComponent, {static: false}) private schemaExpertEditor: SchemaExpertAppCreateEditComponent;
 
@@ -112,10 +127,21 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   }
 
 
+  canDeactivate: NzTabsCanDeactivateFn = (fromIndex: number, toIndex: number) => {
+    switch (fromIndex) {
+      case 0:
+        return this.toggleModel(true)
+      case 1:
+        return this.toggleModel(false)
+      default:
+        throw new Error("fromIndex is error:" + fromIndex);
+    }
+  };
+
   // 下一步： 到索引创建确认页面
   public createIndexConfirm(): void {
     // 进行页面表单校验
-    let dto = this.dto;
+    let dto = this._dto;
     dto.expertModel = this.expertModel;
     if (this.expertModel === true) {
       // 当前处在专家模式状态
@@ -159,7 +185,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   //   // return result.valid;
   // }
   // 切换视图状态
-  public toggleModel(_expertModel: boolean): void {
+  public toggleModel(_expertModel: boolean): Promise<boolean> {
     // 判断当前状态和想要变化的状态是否一致
     if (this.formDisabled || this.expertModel === _expertModel) {
       return;
@@ -168,15 +194,23 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     this.clearProcessResult();
     try {
       if (_expertModel === true) {
-        this.schemaVisualtEditor.saveAndMergeXml().then((schemaXmlContent: string) => {
-          this.stupidModal.schemaXmlContent = schemaXmlContent;
+        return this.schemaVisualtEditor.saveAndMergeXml().then((schemaXmlContent: { success: boolean, schema: string }) => {
+          this.stupidModal.schemaXmlContent = schemaXmlContent.schema;
           this.formDisabled = false;
+          return schemaXmlContent.success;
+        }, (_) => {
+          this.formDisabled = false;
+          return false;
         })
       } else {
         // 点击小白模式
-        this.schemaExpertEditor.doSaveContent().then((modal: StupidModal) => {
-          this.stupidModal = modal;
+        return this.schemaExpertEditor.doSaveContent().then((modal) => {
+          this.stupidModal = modal.stupid;
           this.formDisabled = false;
+          return modal.success;
+        }, (_) => {
+          this.formDisabled = false;
+          return false;
         });
       }
     } catch (e) {
@@ -203,36 +237,50 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
   ngOnInit(): void {
     // FIXME: modify it
-    if (!this.dto.stupid) {
-      // 从app定义第一步进入
-      let f = this.dto.appform;
-      let workflow = f.workflow;
-      // let tisTpl = f.tisTpl;
-      // workflow = 'union';
-      this.jsonPost('/runtime/schemaManage.ajax?event_submit_do_get_tpl_fields=y&action=schema_action', f)
-      // this.httpPost('/runtime/schemaManage.ajax'
-      //   , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
-      //   + workflow)
-        .then((r) => {
-          if (r.success) {
-            return r;
-          } else {
-            this.processResult(r);
-          }
-        })
-        .then(
-          (r: TisResponseResult) => {
-            //   this.setBizResult(r.bizresult);
-            this.stupidModal = StupidModal.deseriablize(r.bizresult);
-            // console.log(this.stupidModal);
-            this.setTplAppid(this.stupidModal);
+    switch (this.engineType.type) {
+      case EnginType.ES:
+
+        this.httpPost('/runtime/schemaManage.ajax'
+          , "event_submit_do_get_es_tpl_fields=y&action=schema_action&dataxName=" + this._dataxDto.dataxPipeName)
+          .then((r) => {
+            if (r.success) {
+              this.stupidModal = StupidModal.deseriablize(r.bizresult);
+            }
           });
-    } else {
-      let d: ConfirmDTO = this.dto
-      // 是从确认页面返回进入的,傻瓜化模式
-      if (d.stupid) {
-        this.stupidModal = d.stupid.model;
-      }
+
+        break;
+      case EnginType.Solr:
+        if (!this._dto.stupid) {
+          // 从app定义第一步进入
+          let f = this._dto.appform;
+          let workflow = f.workflow;
+          // let tisTpl = f.tisTpl;
+          // workflow = 'union';
+          this.jsonPost('/runtime/schemaManage.ajax?event_submit_do_get_tpl_fields=y&action=schema_action', f)
+          // this.httpPost('/runtime/schemaManage.ajax'
+          //   , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
+          //   + workflow)
+            .then((r) => {
+              if (r.success) {
+                return r;
+              } else {
+                this.processResult(r);
+              }
+            })
+            .then(
+              (r: TisResponseResult) => {
+                //   this.setBizResult(r.bizresult);
+                this.stupidModal = StupidModal.deseriablize(r.bizresult);
+                // console.log(this.stupidModal);
+                this.setTplAppid(this.stupidModal);
+              });
+        } else {
+          let d: ConfirmDTO = this._dto
+          // 是从确认页面返回进入的,傻瓜化模式
+          if (d.stupid) {
+            this.stupidModal = d.stupid.model;
+          }
+        }
     }
   }
 
@@ -240,57 +288,13 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   private setTplAppid(o: StupidModal): void {
     // console.info('tplAppId:' + o.tplAppId);
     if (o.tplAppId) {
-      this.dto.tplAppId = o.tplAppId;
+      this._dto.tplAppId = o.tplAppId;
     }
   }
 
-
-  // 向上添加新列
-  // public upAddColumn(f: any) {
-  //   // 添加一个空对象
-  //   this.fields.push({});
-  //   var insertIndex = 0;
-  //   for (let i = 0; i < this.fields.length; i++) {
-  //     if (f.id < this.fields[i].id && f.id < this.fields[i + 1].id) {
-  //         continue;
-  //     }
-  //     insertIndex = i;
-  //   }
-  //
-  // }
-
-
-  // public testAdd(): void {
-  //   // console.info('testadd');
-  //   this.fields.push({
-  //     'split': true,
-  //     'rangequery': false,
-  //     'indexed': false,
-  //     'stored': false,
-  //     'nodeName': 'goods_id',
-  //     'tokenizerType': 'string',
-  //     'id': 99,
-  //     'fieldtype': 'string',
-  //     'multiValue': false,
-  //     'required': false
-  //   });
-  // }
-
-
   public gotoProfileDefineStep(): void {
 
-    this.preStep.emit(this.dto);
-  }
-
-  // schema 编辑提交
-  public schemaEditSubmit(): void {
-
-  }
-
-  expertModelSelect() {
-    // setTimeout(() => {
-    //   this.stupidModal = Object.assign(new StupidModal(), this.stupidModal);
-    // })
+    this.preStep.emit(this._dto);
   }
 }
 

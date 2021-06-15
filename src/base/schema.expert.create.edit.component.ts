@@ -14,13 +14,12 @@
  */
 
 // import {SchemaEditComponent} from '../corecfg/schema.edit.component';
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
 import {TISService} from '../service/tis.service';
-import {Subject} from 'rxjs/Subject';
 
-import {SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
+import {EnginType, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
 import {TisResponseResult} from "../common/tis.plugin";
@@ -61,6 +60,7 @@ import {TisResponseResult} from "../common/tis.plugin";
   ]
 })
 export class SchemaExpertAppCreateEditComponent extends BasicEditComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() engineType: { type: EnginType, payload?: any } = {type: EnginType.Solr};
   @Output() saveSuccess = new EventEmitter<any>();
   @Output() initComplete = new EventEmitter<{ success: boolean, bizresult: any }>();
   // private schemapojo: StupidModal = new StupidModal();
@@ -111,12 +111,22 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
   }
 
   // 此方法会在父组件中调用
-  public doSaveContent(): Promise<StupidModal> {
+  public doSaveContent(): Promise<{ success: boolean, stupid: StupidModal }> {
     // super.doSaveContent(this.editform.nativeElement);
-    return this.jsonPost('/runtime/schema.ajax?action=schema_action&emethod=toggle_stupid_model'
-      , {content: this._schemaXmlContent})
+    let postBody: any = {content: this._schemaXmlContent};
+
+    switch (this.engineType.type) {
+      case EnginType.Solr:
+        break;
+      case EnginType.ES: {
+        postBody.dataxName = this.engineType.payload;
+        break;
+      }
+    }
+    return this.jsonPost(`/runtime/schema.ajax?action=schema_action&emethod=toggle_${this.engineType.type}_stupid_model`
+      , postBody)
       .then((r: TisResponseResult) => {
-        return StupidModal.deseriablize(r.bizresult);
+        return {success: r.success, stupid: StupidModal.deseriablize(r.bizresult)};
       });
 
   }
@@ -172,7 +182,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
           </thead>
           <tbody>
           <ng-container *ngFor="let f of fieldlist.data let i = index">
-              <tr [class.editor-up]="f.editorOpen"  class="editable-row">
+              <tr [class.editor-up]="f.editorOpen" class="editable-row">
                   <td nzShowExpand (nzExpandChange)="editorOpenClick(f)">
                       <span>{{f.index}}</span>
                       <!--
@@ -186,8 +196,8 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                       <i *ngIf="f.sharedKey" class="fa fa-share-alt" aria-hidden="true"></i>
                   </td>
                   <td [class.has-danger]="f.errInfo.fieldNameError">
-                      <div >
-                          <div class="editable-cell" *ngIf="this.editField !== f && f.name !== null; else editTpl">
+                      <div>
+                          <div class="editable-cell" *ngIf="this.editField !== f && f.name !== null && f.name !== undefined; else editTpl">
                               <div class="editable-cell-value-wrap" (click)="startEdit(f, $event)">
                                   {{f.name}}
                               </div>
@@ -197,8 +207,8 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                                      placeholder="请输入字段名称" (focus)="fieldEditGetFocus(f)" [(ngModel)]="f.name" name="{{'name'+f.id}}"/>
                           </ng-template>
                       </div>
-                  </td >
-                  <td [class.has-danger]="f.errInfo.fieldTypeError" >
+                  </td>
+                  <td [class.has-danger]="f.errInfo.fieldTypeError">
                       <nz-select class="type-select" [(ngModel)]="f.fieldtype" nzPlaceHolder="请选择" [nzDropdownMatchSelectWidth]="true" (ngModelChange)="fieldTypeChange(f)">
                           <nz-option [nzValue]="pp.name" [nzLabel]="pp.name" *ngFor="let pp of ftypes"></nz-option>
                       </nz-select>
@@ -300,7 +310,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
 })
 export class SchemaVisualizingEditComponent extends BasicEditComponent implements OnInit, AfterViewInit {
 
-
+  @Input() engineType: { type: EnginType, payload?: string } = {type: EnginType.Solr};
   widthConfig = ['50px', '250px', '200px', '100px', '100px', '100px', '200px'];
   scrollConfig = {x: '1150px', y: '700px'};
   private fieldtypesArray: Array<SchemaFieldType>;
@@ -325,11 +335,15 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
   /**
    * 将可视化内容同步到SchemaXml上
    */
-  public saveAndMergeXml(): Promise<string> {
-
-    return this.jsonPost('/runtime/schema.ajax?action=schema_action&emethod=toggle_expert_model'
+  public saveAndMergeXml(): Promise<{ success: boolean, schema: string }> {
+    // console.log(this.engineType);
+    if (this.engineType.payload) {
+      this.stupidModel.dataxName = this.engineType.payload;
+    }
+    return this.jsonPost(`/runtime/schema.ajax?action=schema_action&emethod=toggle_${this.engineType.type}_expert_model`
       , this.stupidModel).then(
       (r: { success: boolean, bizresult: { inputDisabled: string[], schema: string } }) => {
+        // console.log(r.success);
         // 处理执行结果
         // if (r.success) {
         // this.formAppendParam.push({name: 'inputDisabled', val: r.bizresult.inputDisabled.toString()});
@@ -339,7 +353,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
         // return model;
         // }
         //  this.initComplete.emit(r);
-        return r.bizresult.schema;
+        return {success: r.success, schema: r.bizresult.schema};
       });
   }
 
@@ -574,7 +588,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
 
   private getSchemaFieldType(ft: string): SchemaFieldType {
     const type: SchemaFieldType = this.fieldtypes.get(ft);
-   // console.log(this.fieldtypes);
+    // console.log(this.fieldtypes);
     // f.rangequery = type.rangeAware;
     // f.split = type.split;
     // f.rangequery = type.rangeAware;
