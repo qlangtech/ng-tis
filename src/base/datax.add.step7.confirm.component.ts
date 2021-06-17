@@ -16,7 +16,7 @@
 import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
-import {NzDrawerRef, NzDrawerService, NzModalService} from "ng-zorro-antd";
+import {NzDrawerRef, NzDrawerService, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -144,8 +144,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     this.dto = dto;
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router, route: ActivatedRoute) {
-    super(tisService, modalService, r, route);
+  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(tisService, modalService, r, route, notification);
   }
 
   get createModel(): boolean {
@@ -212,6 +212,10 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
         if (r.success) {
           // console.log(dto);
           // this.nextStep.emit(this.dto);
+          this.successNotify(`DataX 实例:'${this.dto.dataxPipeName}'已创建成功`, 2000)
+            .onClose.subscribe(() => {
+            this.r.navigate(["/x", this.dto.dataxPipeName], {relativeTo: this.route});
+          })
         } else {
           this.errorItem = Item.processFieldsErr(r);
         }

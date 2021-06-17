@@ -136,14 +136,14 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     /**=====================================================
      * <<<<<<<<<for test
      =======================================================*/
-    DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
-      let dto = new DataxDTO();
-      dto.dataxPipeName = "tt";
-      dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
-      dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
-      dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-      this.multiViewDAG.loadComponent(AddAppDefSchemaComponent, dto);
-    });
+    // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+    //   let dto = new DataxDTO();
+    //   dto.dataxPipeName = "tt";
+    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
+    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
+    //   this.multiViewDAG.loadComponent(AddAppDefSchemaComponent, dto);
+    // });
     /**=====================================================
      * for test end>>>>>>>>
      =======================================================*/

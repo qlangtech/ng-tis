@@ -173,6 +173,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!success) {
           return;
         }
+        console.log(this.subFormHetero);
         this.subFormHetero = hList[0];
         // console.log(this.subFormHetero);
         let item: Item = null;
@@ -217,7 +218,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   private getPluginMetas(): PluginType[] {
     return [{
       name: "dataxReader", require: true
-      , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,dataxName_${this.dto.dataxPipeName}`
+      , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,dataxName_${this.dto.dataxPipeName},maxReaderTableCount_${this.dto.writerDescriptor.extractProps['supportMultiTable'] ? 9999 : 1}`
     }];
   }
 
@@ -285,7 +286,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
     let cachedVals: { [key: string]: ItemPropVal } = ip;
     if (cachedVals) {
       // console.log(cachedVals);
-      let allHasFillEnums = true;
+      let allHasFillEnums = false;
       for (let fieldKey in meta.behaviorMeta.onClickFillData) {
         // console.log(fieldKey);
         let pv: ItemPropVal = cachedVals[fieldKey];
@@ -295,10 +296,11 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         }
         // console.log(pv);
         let enums: Array<any> = pv.getEProp("enum");
-        if (enums && enums.length < 1) {
-          allHasFillEnums = false;
+        if (enums && enums.length > 0) {
+          allHasFillEnums = true;
           break;
         }
+        // console.log("allHasFillEnums：" + allHasFillEnums + " enums.length" + enums.length);
       }
 
       if (allHasFillEnums) {

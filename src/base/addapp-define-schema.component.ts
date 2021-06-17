@@ -24,6 +24,7 @@ import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
 import {NzModalService, NzTabsCanDeactivateFn} from "ng-zorro-antd";
 import {TisResponseResult} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
+import {StepType} from "../common/steps.component";
 // import {eventNames} from "cluster";
 // import {Application, Crontab}    from '../index/application';
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -58,7 +59,7 @@ import {DataxDTO} from "./datax.add.component";
     `
   ],
   template: `
-      <tis-steps type="createIndex" [step]="1"></tis-steps>
+      <tis-steps [type]="stepInfo.type" [step]="stepInfo.step"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <button nz-button nzType="default" (click)="gotoProfileDefineStep()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>
           <button nz-button nzType="primary" (click)="createIndexConfirm()"><i nz-icon nzType="forward" nzTheme="outline"></i>下一步</button>
@@ -100,6 +101,8 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
   stupidModal: StupidModal;
 
+  stepInfo: { type: StepType, step: number } = {type: StepType.CreateIndex, step: 1};
+
   engineType: { type: EnginType, payload?: string } = {type: EnginType.Solr};
   _dto: ConfirmDTO;
   _dataxDto: DataxDTO;
@@ -112,6 +115,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     } else {
       this.engineType = {type: EnginType.ES, payload: val.dataxPipeName};
       this._dataxDto = val;
+      this.stepInfo = {type: StepType.CreateDatax, step: 3};
     }
   }
 
@@ -128,6 +132,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
 
   canDeactivate: NzTabsCanDeactivateFn = (fromIndex: number, toIndex: number) => {
+    // console.log(fromIndex);
     switch (fromIndex) {
       case 0:
         return this.toggleModel(true)
@@ -142,6 +147,21 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
   public createIndexConfirm(): void {
     // 进行页面表单校验
     let dto = this._dto;
+    let requestUrl = '/runtime/addapp.ajax?action=schema_action';
+    switch (this.engineType.type) {
+      case EnginType.Solr:
+        break;
+      case EnginType.ES: {
+        dto = new ConfirmDTO();
+        requestUrl = '/coredefine/corenodemanage.ajax?action=datax_action';
+        dto.dataxName = this.engineType.payload;
+        if (!this.engineType.payload) {
+          throw new Error("engineType.payload can not be null");
+        }
+        break;
+      }
+    }
+
     dto.expertModel = this.expertModel;
     if (this.expertModel === true) {
       // 当前处在专家模式状态
@@ -152,14 +172,21 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     }
 
     this.jsonPost(
-      '/runtime/addapp.ajax?action=schema_action&emethod=goto_app_create_confirm'
+      `${requestUrl}&emethod=goto_${this.engineType.type}_app_create_confirm`
       , (dto)).then((r) => {
       this.processResult(r);
       if (r.success) {
+        switch (this.engineType.type) {
+          case EnginType.ES: {
+            this.nextStep.emit(this._dataxDto);
+            break;
+          }
+          case EnginType.Solr: {
+            this.nextStep.emit(dto);
+            break;
+          }
+        }
 
-        // dto.coreNode = r.bizresult;
-        // 提交到服务端之后统一要保存
-        this.nextStep.emit(dto);
       } else {
         this.expertSchemaEditorInitComplete(r);
       }
@@ -197,6 +224,9 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
         return this.schemaVisualtEditor.saveAndMergeXml().then((schemaXmlContent: { success: boolean, schema: string }) => {
           this.stupidModal.schemaXmlContent = schemaXmlContent.schema;
           this.formDisabled = false;
+          if (schemaXmlContent.success) {
+            this.expertModel = _expertModel;
+          }
           return schemaXmlContent.success;
         }, (_) => {
           this.formDisabled = false;
@@ -207,6 +237,9 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
         return this.schemaExpertEditor.doSaveContent().then((modal) => {
           this.stupidModal = modal.stupid;
           this.formDisabled = false;
+          if (modal.success) {
+            this.expertModel = _expertModel;
+          }
           return modal.success;
         }, (_) => {
           this.formDisabled = false;
@@ -217,7 +250,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
       this.formDisabled = false;
       throw e;
     }
-    this.expertModel = _expertModel;
+
   }
 
   // 接收专家模式下编辑成功之后消息
@@ -286,15 +319,20 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
 
 
   private setTplAppid(o: StupidModal): void {
-    // console.info('tplAppId:' + o.tplAppId);
     if (o.tplAppId) {
       this._dto.tplAppId = o.tplAppId;
     }
   }
 
   public gotoProfileDefineStep(): void {
-
-    this.preStep.emit(this._dto);
+    switch (this.engineType.type) {
+      case EnginType.ES:
+        this.preStep.emit(this._dataxDto);
+        return;
+      case EnginType.Solr:
+        this.preStep.emit(this._dto);
+        return;
+    }
   }
 }
 

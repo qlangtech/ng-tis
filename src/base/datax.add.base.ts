@@ -16,7 +16,7 @@
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {EventEmitter, Input, Output} from "@angular/core";
 import {DataxDTO} from "./datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -34,8 +34,8 @@ export abstract class BasicDataXAddComponent extends AppFormComponent {
 
   public _offsetStep = -1;
 
-  protected constructor(tisService: TISService, modalService: NzModalService, protected r: Router, route: ActivatedRoute) {
-    super(tisService, route, modalService);
+  protected constructor(tisService: TISService, modalService: NzModalService, protected r: Router, route: ActivatedRoute, notification?: NzNotificationService) {
+    super(tisService, route, modalService, notification);
   }
 
   public get stepType(): StepType {

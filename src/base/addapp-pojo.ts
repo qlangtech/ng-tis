@@ -107,7 +107,7 @@ export enum EnginType {
 
 // 从schema编辑页面跳转到确认页面使用的包装对象
 export class ConfirmDTO {
-
+  dataxName: string;
 // {appform: {tisTpl: any, workflow: any}, expertModel: boolean, expert: {xml: string}, stupid: {model:StupidModal}}
   // 使用的模板索引的appid
   tplAppId: number;
