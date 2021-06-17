@@ -104,6 +104,13 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     let processMeta: DataXCreateProcessMeta = this.dto.processMeta;
     let n: IntendDirect = null;
 
+    if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
+      // ES的Schema编辑是特别定制的
+      n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
+      this.nextStep.emit(n);
+      return;
+    }
+
     // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
     if (processMeta.readerRDBMS) {
       if (processMeta.writerRDBMS) {
@@ -113,16 +120,15 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
         n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
       }
     } else {
-
-
-      if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
-        // ES的Schema编辑是特别定制的
-        n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
-      } else {
-        n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
-      }
+      n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
+      // if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
+      //   // ES的Schema编辑是特别定制的
+      //   n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
+      // } else {
+      //
+      // }
     }
-
+    this.nextStep.emit(n);
     // if (processMeta.writerRDBMS) {
     //   if (processMeta.readerRDBMS) {
     //     // 表映射设置
@@ -135,6 +141,6 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     //   n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
     //   // this.nextStep.emit(n);
     // }
-    this.nextStep.emit(n);
+
   }
 }

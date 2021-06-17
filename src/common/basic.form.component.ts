@@ -22,7 +22,7 @@ import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
-import {NzNotificationService} from "ng-zorro-antd";
+import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd";
 import {TisResponseResult} from "./tis.plugin";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
@@ -65,8 +65,8 @@ export class BasicFormComponent {
     });
   }
 
-  protected successNotify(msg: string, duration?: number) {
-    this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
+  protected successNotify(msg: string, duration?: number): NzNotificationRef {
+    return this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
   protected errNotify(msg: string, duration?: number) {

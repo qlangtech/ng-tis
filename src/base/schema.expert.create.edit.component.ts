@@ -14,12 +14,12 @@
  */
 
 // import {SchemaEditComponent} from '../corecfg/schema.edit.component';
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
 import {TISService} from '../service/tis.service';
 
-import {EnginType, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
+import {EnginType, FieldErrorInfo, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "./addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
 import {TisResponseResult} from "../common/tis.plugin";
@@ -217,13 +217,13 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                       </nz-select>
                   </td>
                   <td [class.has-danger-left]="f.errInfo.fieldPropRequiredError">
-                      <label nz-checkbox [(ngModel)]="f.indexed" (ngModelChange)="indexedCheckChange($event.target,f)"></label>
+                      <label nz-checkbox [(ngModel)]="f.indexed" [ngModelOptions]="{standalone: true}" ></label>
                   </td>
                   <td [class.has-danger-center]="f.errInfo.fieldPropRequiredError">
-                      <label nz-checkbox [(ngModel)]="f.stored" (ngModelChange)="storedCheckChange($event.target,f)"></label>
+                      <label nz-checkbox [(ngModel)]="f.stored" [ngModelOptions]="{standalone: true}" ></label>
                   </td>
                   <td [class.has-danger-right]="f.errInfo.fieldPropRequiredError">
-                      <label nz-checkbox [(ngModel)]="f.docval" (ngModelChange)="docvalCheckChange($event.target,f)"></label>
+                      <label nz-checkbox [(ngModel)]="f.docval" [ngModelOptions]="{standalone: true}" ></label>
                   </td>
                   <td>
                       <button nz-button nzType="link" (click)="deleteColumn(f)">
@@ -322,7 +322,7 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
 
   editField: SchemaField | null;
 
-  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, route: ActivatedRoute, private cd: ChangeDetectorRef) {
     super(tisService, modalService, route);
   }
 
@@ -336,22 +336,25 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
    * 将可视化内容同步到SchemaXml上
    */
   public saveAndMergeXml(): Promise<{ success: boolean, schema: string }> {
-    // console.log(this.engineType);
+    let model = this.stupidModel;
     if (this.engineType.payload) {
-      this.stupidModel.dataxName = this.engineType.payload;
+      model.dataxName = this.engineType.payload;
     }
+
     return this.jsonPost(`/runtime/schema.ajax?action=schema_action&emethod=toggle_${this.engineType.type}_expert_model`
-      , this.stupidModel).then(
+      , model).then(
       (r: { success: boolean, bizresult: { inputDisabled: string[], schema: string } }) => {
         // console.log(r.success);
         // 处理执行结果
-        // if (r.success) {
-        // this.formAppendParam.push({name: 'inputDisabled', val: r.bizresult.inputDisabled.toString()});
-        // this.processConfigResult(r.bizresult.schema);
-        // let model = this.stupidModel;
-        // model.schemaXmlContent = r.bizresult.schema;
-        // return model;
-        // }
+        if (!r.success) {
+          let biz: any = r.bizresult;
+          let errs: Array<FieldErrorInfo> = biz;
+          errs.forEach((err) => {
+            model.markFieldErr(err);
+          });
+          this.fields = [...model.fields];
+          this.cd.detectChanges();
+        }
         //  this.initComplete.emit(r);
         return {success: r.success, schema: r.bizresult.schema};
       });
@@ -444,17 +447,17 @@ export class SchemaVisualizingEditComponent extends BasicEditComponent implement
   }
 
   // 是否存储，是否docvalue选择
-  public storedCheckChange(input: any, f: { stored: boolean }) {
-    f.stored = input.checked;
-  }
-
-  public docvalCheckChange(input: any, f: { docval: boolean }) {
-    f.docval = input.checked;
-  }
-
-  public indexedCheckChange(input: any, f: { indexed: boolean }) {
-    f.indexed = input.checked;
-  }
+  // public storedCheckChange(input: any, f: { stored: boolean }) {
+  //   f.stored = input.checked;
+  // }
+  //
+  // public docvalCheckChange(input: any, f: { docval: boolean }) {
+  //   f.docval = input.checked;
+  // }
+  //
+  // public indexedCheckChange(input: any, f: { indexed: boolean }) {
+  //   f.indexed = input.checked;
+  // }
 
   public get ftypes(): any[] {
     return this.fieldtypesArray;

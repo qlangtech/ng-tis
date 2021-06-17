@@ -223,7 +223,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
    */
   public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
     if (!desc) {
-     throw new Error("param desc can not be null");
+      throw new Error("param desc can not be null");
     }
     let h = new HeteroList();
     h.extensionPoint = desc.extendPoint;
@@ -270,6 +270,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
           let dbs = result.bizresult.dbs;
           let descList = PluginsComponent.wrapDescriptors(result.bizresult.pluginDesc);
           this.datasourceDesc = Array.from(descList.values());
+          this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
           this.treeInit(dbs);
           setTimeout(() => {
             let queryParams = this.activateRoute.snapshot.queryParams;
