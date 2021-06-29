@@ -173,7 +173,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!success) {
           return;
         }
-        console.log(this.subFormHetero);
+
         this.subFormHetero = hList[0];
         // console.log(this.subFormHetero);
         let item: Item = null;
@@ -183,21 +183,25 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         for (let itemIdx = 0; itemIdx < this.subFormHetero.items.length; itemIdx++) {
           item = this.subFormHetero.items[itemIdx];
           for (let tabKey in item.vals) {
+            /**==========================
+             *START: 删除历史脏数据保护措施
+             ==========================*/
+            if (desc.subForm) {
+              if (desc.subFormMeta.idList.findIndex((existKey) => tabKey === existKey) < 0) {
+                delete item.vals[tabKey];
+                continue;
+              }
+            }
+            /**==========================
+             * END : 删除历史脏数据保护措施
+             ==========================*/
             // @ts-ignore
             subForm = item.vals[tabKey];
             // console.log(subForm);
             this.subFieldForms.set(tabKey, subForm);
           }
-          // item.vals = {};
           break;
         }
-
-        // console.log(this.subFieldForms);
-        //  let itemVals = this.subFormHetero.items[0];
-        //  this.subFieldForms.forEach((val, key) => {
-        //
-        //  });
-
         if (desc.subForm) {
           desc.subFormMeta.idList.forEach((subformId) => {
             let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');

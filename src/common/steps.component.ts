@@ -74,6 +74,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   ngAfterContentInit() {
@@ -85,7 +86,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   selector: 'tis-steps-tools-bar',
   template: `
       <tis-page-header [result]="result"  [showBreadcrumb]="false">
-          <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
+          <tis-page-header-left  *ngIf="this.title">{{title}}</tis-page-header-left>
           <tis-header-tool>
               <ng-container *ngIf="cancel.observers.length>0">
                   <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button> &nbsp;
