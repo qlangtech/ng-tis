@@ -18,23 +18,16 @@ import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {AddAppFlowDirective} from "../base/addapp.directive";
-
-import {NzIconService} from 'ng-zorro-antd/icon';
-import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService, NzSafeAny} from "ng-zorro-antd";
-import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
+import {DataxAddStep2Component} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
-import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {DataxConfigComponent} from "../datax/datax.config.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";

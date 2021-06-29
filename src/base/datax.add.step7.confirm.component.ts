@@ -297,7 +297,7 @@ class GenerateCfgs {
 
 @Component({
   template: `
-      <tis-codemirror [config]="{mode:'text/javascript',lineNumbers: true}" [size]="{width:'100%',height:800}" [ngModel]="fileMeta.content"></tis-codemirror>
+      <tis-codemirror [config]="{mode:'application/ld+json',lineNumbers: true}" [size]="{width:'100%',height:800}" [ngModel]="fileMeta.content"></tis-codemirror>
   `
   , styles: [`
   `]

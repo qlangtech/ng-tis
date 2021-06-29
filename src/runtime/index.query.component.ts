@@ -359,7 +359,7 @@ export class IndexQueryComponent extends BasicFormComponent implements OnInit {
 
   get codeMirrirOpts(): EditorConfiguration {
     return {
-      mode: 'solr',
+      mode: 'text/x-solr',
       lineNumbers: false,
       placeholder: 'solr query param'
     };

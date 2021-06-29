@@ -36,17 +36,26 @@ import {Descriptor, Item} from "../common/tis.plugin";
       <!--          </tis-header-tool>-->
       <!--      </tis-page-header>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Reader & Writer类型'" (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()"></tis-steps-tools-bar>
+          <tis-steps-tools-bar [result]="this.result" [title]="'Reader & Writer类型'" (cancel)="cancel()" (goBack)="goback()" (goOn)="execNextStep()"></tis-steps-tools-bar>
           <tis-form [fieldsErr]="errorItem">
               <tis-ipt #readerType title="Reader类型" name="readerType" require="true">
-                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [ngModel]="dto.readerImpl" (ngModelChange)="changeReaderDesc($event)">
-                      <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>
-                  </nz-select>
+<!--                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [ngModel]="dto.readerImpl" (ngModelChange)="changeReaderDesc($event)">-->
+<!--                      <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>-->
+<!--                  </nz-select>-->
+
+                  <nz-radio-group [ngModel]="dto.readerImpl" nzSize="large" (ngModelChange)="changeReaderDesc($event)" nzButtonStyle="solid">
+                      <label *ngFor="let pp of readerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
+                  </nz-radio-group>
               </tis-ipt>
               <tis-ipt #writerType title="Writer类型" name="writerType" require="true">
-                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [ngModel]="dto.writerImpl" (ngModelChange)="changeWriterDesc($event)">
-                      <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>
-                  </nz-select>
+<!--                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [ngModel]="dto.writerImpl" (ngModelChange)="changeWriterDesc($event)">-->
+<!--                      <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>-->
+<!--                  </nz-select>-->
+
+
+                  <nz-radio-group [ngModel]="dto.writerImpl" nzSize="large" (ngModelChange)="changeWriterDesc($event)" nzButtonStyle="solid">
+                      <label *ngFor="let pp of writerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
+                  </nz-radio-group>
               </tis-ipt>
           </tis-form>
       </nz-spin>

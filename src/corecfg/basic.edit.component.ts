@@ -96,7 +96,8 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
 
   get codeMirrirOpts(): EditorConfiguration {
     return {
-      mode: {name: 'xml', alignCDATA: true},
+     // mode: {name: 'xml', alignCDATA: true},
+      mode: {name: 'application/ld+json', alignCDATA: true},
       lineNumbers: true
     };
   }

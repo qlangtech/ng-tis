@@ -26,8 +26,8 @@ import {GlobalUpdateParamComponent} from "./global.update.param";
 import {AddAppFormComponent} from "./addapp-form.component";
 import {AddAppStepFlowComponent} from "./addapp.step.flow.component";
 import {AddAppFlowDirective} from "./addapp.directive";
-import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
-import {SchemaExpertAppCreateEditComponent} from "./schema.expert.create.edit.component";
+// import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
+// import {SchemaExpertAppCreateEditComponent} from "./schema.expert.create.edit.component";
 import {AddAppConfirmComponent} from "./addapp-confirm.component";
 import {TisCommonModule} from "../common/common.module";
 
@@ -38,7 +38,7 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {BaseConfigComponent} from "./base-config.component";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {DepartmentAddComponent} from "./department.add.component";
-import {DataxAddStep1Component} from "./datax.add.step1.component";
+// import {DataxAddStep1Component} from "./datax.add.step1.component";
 // import {DataxAddComponent} from "./datax.add.component";
 import {DataxAddStep2Component} from "./datax.add.step2.component";
 
@@ -58,15 +58,15 @@ import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-
   imports: [CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
-    , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-    , SchemaExpertAppCreateEditComponent, DataxAddStep2Component
+    , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective,  AddAppConfirmComponent, AddappSelectNodesComponent
+    ,  DataxAddStep2Component
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component, DataxAddStep6ColsMetaSetterComponent
     , DataxWorkerRunningComponent, PluginManageComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
-    , GlobalUpdateParamComponent, AddAppFormComponent, AddAppDefSchemaComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-    , SchemaExpertAppCreateEditComponent],
+    , GlobalUpdateParamComponent, AddAppFormComponent,  AddAppConfirmComponent, AddappSelectNodesComponent
+    ],
   // providers: [TISService,ScriptService]
   exports: [AddAppFlowDirective]
 })

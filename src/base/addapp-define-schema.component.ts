@@ -15,9 +15,7 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TISService} from '../service/tis.service';
-// import {Observable} from 'rxjs/Observable';
-// import {of} from 'rxjs/observable/of';
-// import {SchemaExpertDirective} from './addapp.schema.expert.editor.directive';
+
 import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from './schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
@@ -25,8 +23,6 @@ import {NzModalService, NzTabsCanDeactivateFn} from "ng-zorro-antd";
 import {TisResponseResult} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
 import {StepType} from "../common/steps.component";
-// import {eventNames} from "cluster";
-// import {Application, Crontab}    from '../index/application';
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 // schema 高级编辑模式入口：http://tis:8080/runtime/schema_manage.htm?aid=1
 // 高级模式: http://tis:8080/runtime/schemaXml.ajax?aid=$aid&event_submit_do_get_xml_content=y&action=schema_action
@@ -115,7 +111,7 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     } else {
       this.engineType = {type: EnginType.ES, payload: val.dataxPipeName};
       this._dataxDto = val;
-      this.stepInfo = {type: StepType.CreateDatax, step: 3};
+      this.stepInfo = {type: val.processModel, step: 3};
     }
   }
 
