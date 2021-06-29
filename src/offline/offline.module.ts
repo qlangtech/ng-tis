@@ -67,7 +67,7 @@ import {DeleteOutline} from "@ant-design/icons-angular/icons";
 // import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
-import {NzSwitchModule} from 'ng-zorro-antd/switch';
+// import {NzSwitchModule} from 'ng-zorro-antd/switch';
 
 const icons: IconDefinition[] = [DeleteOutline];
 
@@ -76,7 +76,7 @@ const icons: IconDefinition[] = [DeleteOutline];
   imports: [ // CommonModule,
     NzCollapseModule,
     NzTabsModule,
-    NzInputModule, NzTableModule, NzSwitchModule,
+    NzInputModule, NzTableModule,
     FormsModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzCascaderModule

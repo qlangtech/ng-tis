@@ -109,9 +109,9 @@ import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule,
+    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule ,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
-    NgTerminalModule,
+    NgTerminalModule, NzPageHeaderModule ,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],

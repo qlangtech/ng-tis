@@ -3,16 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/corecfg/basic.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/basic.edit.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/index.query.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/index.query.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -135,9 +127,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.build" />
-        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build:aot" />
         <item itemvalue="npm.ng:serve" />
       </list>
@@ -250,7 +242,7 @@
       <workItem from="1623556167210" duration="18000" />
       <workItem from="1623571810484" duration="24379000" />
       <workItem from="1624246818250" duration="3611000" />
-      <workItem from="1624937286232" duration="2759000" />
+      <workItem from="1624937286232" duration="3941000" />
     </task>
     <servers />
   </component>
@@ -468,7 +460,6 @@
         <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
@@ -491,7 +482,6 @@
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
