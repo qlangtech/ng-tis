@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -127,8 +129,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.ng:serve-jit" />
+        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.build:aot" />
         <item itemvalue="npm.ng:serve" />
@@ -242,7 +244,7 @@
       <workItem from="1623556167210" duration="18000" />
       <workItem from="1623571810484" duration="24379000" />
       <workItem from="1624246818250" duration="3611000" />
-      <workItem from="1624937286232" duration="3941000" />
+      <workItem from="1624937286232" duration="9234000" />
     </task>
     <servers />
   </component>
@@ -577,7 +579,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>285</line>
+          <line>281</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

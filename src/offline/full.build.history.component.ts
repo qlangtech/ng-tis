@@ -28,7 +28,7 @@ import {DataXJobWorkerStatus} from "../base/datax.worker.component";
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
       <div *ngIf="dataxProcess && dataXWorkerStatus">
-          <span>{{dataXWorkerStatus.k8sReplicationControllerCreated ? '分布式K8S执行' : '本地执行'}}</span>
+          <nz-tag *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated" nzColor="processing">分布式K8S执行</nz-tag>
           <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon> </nz-alert>
           <ng-template #unableToUseK8SController>
               当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启 <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>

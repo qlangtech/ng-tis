@@ -14,6 +14,8 @@
  */
 
 import {ComponentFactoryResolver, ComponentRef, Type, ViewContainerRef} from "@angular/core";
+import {Tis} from "../environments/environment";
+
 
 /**
  * 多步骤跳转VIEW逻辑实现
@@ -32,7 +34,7 @@ export class MultiViewDAG {
   }
 
   public get lastCpt(): Type<any> {
-    return this.current;
+    return Tis.environment.production ? null : this.current;
   }
 
   // 通过跳转状态机加载Component

@@ -44,11 +44,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
               </tis-steps-tools-bar>
           </ng-container>
           <tis-form [formLayout]="formLayout" [fieldsErr]="errorItem" [labelSpan]="3" [controlerSpan]="19">
-              <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-              <!--              <tis-header-tool>-->
-              <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-              <!--              </tis-header-tool>-->
-              <!--          </tis-page-header>-->
+
               <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">
                   <nz-transfer (nzChange)="transferChange($event)"
                                [nzDataSource]="transferList"

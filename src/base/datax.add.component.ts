@@ -34,6 +34,7 @@ import {Descriptor} from "../common/tis.plugin";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 
 
+
 @Component({
   template: `
       <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
@@ -41,7 +42,7 @@ import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
       </nz-spin>
       <ng-template #proessErr>当前是更新流程不能进入该页面
       </ng-template>
-      {{multiViewDAG.lastCpt?.name}}
+      {{ multiViewDAG.lastCpt?.name}}
   `
 })
 export class DataxAddComponent extends AppFormComponent implements AfterViewInit, OnInit {
