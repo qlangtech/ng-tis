@@ -51,22 +51,24 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {PluginManageComponent} from "./plugin.manage.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
+import {MarkdownModule} from "ngx-markdown";
+import {PluginUpdateCenterComponent} from "./plugin.update.center.component";
 
 
 @NgModule({
   id: 'basemanage',
-  imports: [CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
+  imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
-    , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective,  AddAppConfirmComponent, AddappSelectNodesComponent
-    ,  DataxAddStep2Component
+    , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
+    , DataxAddStep2Component
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component, DataxAddStep6ColsMetaSetterComponent
-    , DataxWorkerRunningComponent, PluginManageComponent
+    , DataxWorkerRunningComponent, PluginManageComponent , PluginUpdateCenterComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
-    , GlobalUpdateParamComponent, AddAppFormComponent,  AddAppConfirmComponent, AddappSelectNodesComponent
-    ],
+    , GlobalUpdateParamComponent, AddAppFormComponent, AddAppConfirmComponent, AddappSelectNodesComponent
+  ],
   // providers: [TISService,ScriptService]
   exports: [AddAppFlowDirective]
 })

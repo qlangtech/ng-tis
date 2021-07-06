@@ -77,8 +77,9 @@ export enum ExecModel {
               <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
                            [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
                            [plugins]="[{name: 'dataxReader', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
-
+<!--
               <datax-reader-table-select *ngIf="dto.processMeta && dto.processMeta.readerRDBMS" [execModel]="readModel" [dtoooo]="dto" [inReadonly]="true"></datax-reader-table-select>
+-->
           </div>
           <h3>Writer</h3>
           <div class="item-block">

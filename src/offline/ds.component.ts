@@ -309,7 +309,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   // 添加数据库按钮点击响应
   public addDbBtnClick(pluginDesc: Descriptor): void {
 
-    let modalRef = this.openDialog(PluginsComponent, {nzTitle: "添加数据库"});
+    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `添加${pluginDesc.displayName}数据库`});
     let addDb: PluginsComponent = modalRef.getContentComponent();
     addDb.errorsPageShow = true;
     addDb.formControlSpan = 20;

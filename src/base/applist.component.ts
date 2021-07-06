@@ -27,16 +27,16 @@ import {Application} from "../index/application";
 @Component({
   template: `
       <form>
-          <tis-page-header title="索引实例">
+          <tis-page-header title="实例">
               <tis-header-tool>
                   <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
                           <li nz-menu-item>
-                              <a (click)="gotAddIndex()">搜索实例</a>
+                              <a (click)="gotAddIndex()">Solr实例</a>
                           </li>
                           <li nz-menu-item>
-                              <a routerLink="/base/dataxadd">Datax</a>
+                              <a routerLink="/base/dataxadd">Datax实例</a>
                           </li>
                       </ul>
                   </nz-dropdown-menu>
