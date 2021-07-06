@@ -50,7 +50,16 @@ const basemanageRoutes: Routes = [
           ,
           {
             path: 'plugin-manage',
-            component: PluginManageComponent
+            children: [
+              {
+                path: '',
+                component: PluginManageComponent
+              },
+              {
+                path: ':tab',
+                component: PluginManageComponent
+              }
+            ]
           }
           ,
           {   // 添加索引

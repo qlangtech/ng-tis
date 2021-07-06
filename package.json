@@ -57,7 +57,8 @@
     "rxjs-compat": "^6.5.3",
     "tinycolor2": "^1.4.1",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "ngx-markdown": "~9.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.23",
@@ -87,7 +88,7 @@
     "rollup-plugin-uglify": "^1.0.2",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "^3.7.5"
+    "typescript": "~3.7.5"
   },
   "repository": {}
 }

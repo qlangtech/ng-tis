@@ -60,7 +60,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
           <ng-container *ngSwitchCase="true">
               <li nz-menu-item>
                   <a nz-dropdown [nzDropdownMenu]="myIndex">
-                      我的索引
+                      我的实例
                       <i nz-icon nzType="down"></i>
                   </a>
                   <nz-dropdown-menu #myIndex="nzDropdownMenu">

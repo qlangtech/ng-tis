@@ -29,6 +29,7 @@ import {TISService} from "../service/tis.service";
 import {TisCommonModule} from "../common/common.module";
 import {CorenodemanageComponent} from "./corenodemanage.component";
 import {RootWelcomeComponent} from "./root-welcome-component";
+import { MarkdownModule } from 'ngx-markdown';
 
 
 // export function offlineModuleFactory() {
@@ -54,6 +55,7 @@ registerLocaleData(zh);
   id: 'tisRoot',
   imports: [BrowserModule, FormsModule, TisCommonModule,
     BrowserAnimationsModule,
+    MarkdownModule.forRoot(),
     RouterModule.forRoot([
       {  // 索引一览
         path: '',

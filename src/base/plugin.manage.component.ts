@@ -18,80 +18,124 @@ import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from "../common/pagination.component";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
+
+enum PluginTab {
+  avail = 'avaliable',
+  installed = 'installed',
+  updateCenter = 'update-center'
+}
 
 // 查看操作日志
 @Component({
   template: `
-
       <tis-page-header title="插件管理" [showBreadcrumb]="true">
       </tis-page-header>
-      <nz-tabset [nzTabBarExtraContent]="extraTemplate">
-          <nz-tab nzTitle="可安装">
-              <ng-template nz-tab>
-                  <div class="tool-bar">
-                      <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary" (click)="installPlugin()"><i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装</button>
-                  </div>
-                  <tis-page [rows]="avaliablePlugs">
-                      <tis-col title="Install" width="5">
-                          <ng-template let-item="r">
-                              <label nz-checkbox
-                                     [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
-                          </ng-template>
-                      </tis-col>
-                      <tis-col title="Name">
-                          <ng-template let-item="r">
-                              <a target="_blank" [href]="item.wiki">{{item.name}}</a>
-                              <div class="excerpt">
-                                  {{ item.excerpt }}
-                              </div>
-                          </ng-template>
-                      </tis-col>
-                      <tis-col title="Version">
-                          <ng-template let-item="r">
-                              {{ item.version }}
-                          </ng-template>
-                      </tis-col>
-                  </tis-page>
-              </ng-template>
-          </nz-tab>
-          <nz-tab nzTitle="已安装" (nzClick)="openInstalledPlugins()">
-              <ng-template nz-tab>
-                  <div class="tool-bar">
-                      <button [nzSize]="'small'" [disabled]="!canUnInstall" nz-button nzType="primary" (click)="installPlugin()"><i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装</button>
-                  </div>
-                  <tis-page [rows]="installedPlugs">
-                      <tis-col title="Install" width="5">
-                          <ng-template let-item="r">
-                              <label nz-checkbox
-                                     [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
-                          </ng-template>
-                      </tis-col>
-                      <tis-col title="Name">
-                          <ng-template let-item="r">
-                              <a target="_blank" [href]="item.website">{{item.name}}</a>
-                              <div class="excerpt">
-                                  {{ item.excerpt }}
-                              </div>
-                          </ng-template>
-                      </tis-col>
-                      <tis-col title="Version">
-                          <ng-template let-item="r">
-                              {{ item.version }}
-                          </ng-template>
-                      </tis-col>
-                  </tis-page>
-              </ng-template>
-          </nz-tab>
-      </nz-tabset>
-      <ng-template #extraTemplate>
-      </ng-template>
+      <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
+              <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
+                  <ng-template nz-tab>
+                      <nz-affix class="tool-bar" [nzOffsetTop]="20">
+                          <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary" (click)="installPlugin()">
+                              <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
+                          </button>
+                      </nz-affix>
+                      <tis-page [rows]="avaliablePlugs">
+                          <tis-col title="安装" width="5">
+                              <ng-template let-item="r">
+                                  <label nz-checkbox
+                                         [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="名称">
+                              <ng-template let-item="r">
+                                  <a href="javascript:void(0)">{{item.name}}</a>
+                                  <div class="item-block">
+                                      <markdown [data]="item.excerpt" class="excerpt"></markdown>
+                                      <div class="tis-tags" *ngIf="item.dependencies.length >0">
+                                          <span>依赖:</span>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
+                                      </div>
+                                      <div class="tis-tags">
+                                          <span>作者:</span>
+                                          <nz-tag>TIS官方</nz-tag>
+                                          <span>费用:</span>
+                                          <nz-tag [nzColor]="'green'">免费</nz-tag>
+                                          <span>打包时间:</span>
+                                          <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                      </div>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="包大小">
+                              <ng-template let-item="r">
+                                  {{item.sizeLiteral}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="版本">
+                              <ng-template let-item="r">
+                                  {{ item.version }}
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
+                  </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="已安装" (nzClick)="openInstalledPlugins()">
+                  <ng-template nz-tab>
+                      <tis-page [rows]="installedPlugs">
+                          <tis-col title="名称">
+                              <ng-template let-item="r">
+                                  <a href="javascript:void(0)">{{item.name}}</a>
+                                  <div class="item-block">
+                                      <markdown [data]="item.excerpt" class="excerpt"></markdown>
+                                      <div class="tis-tags" *ngIf="item.dependencies.length >0">
+                                          <span>依赖:</span>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
+                                      </div>
+                                      <div class="tis-tags">
+                                          <span>作者:</span>
+                                          <nz-tag >TIS官方</nz-tag>
+                                          <span>费用:</span>
+                                          <nz-tag [nzColor]="'green'">免费</nz-tag>
+                                          <span>打包时间:</span>
+                                          <nz-tag >{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                      </div>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Version">
+                              <ng-template let-item="r">
+                                  {{ item.version }}
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
+                  </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="安装状态" (nzClick)="openUpdateCenter()">
+                  <ng-template nz-tab>
+                      <update-center (loading)="updateCenterLoading($event)"></update-center>
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
+          <ng-template #extraTemplate>
+          </ng-template>
+      </nz-spin>
   `, styles: [
       `
+            .tis-tags {
+                margin-bottom: 5px;
+            }
+
+            .tis-tags span {
+                display: inline-block;
+                margin-right: 5px;
+                color: #b7b7b7;
+            }
+
             .excerpt {
-                color: #909090;
-                padding: 5px 0 5px 20px;
+                color: #5e5e5e;
+                padding: 5px 0 5px 0px;
             }
     `
   ]
@@ -101,6 +145,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   pager: Pager = new Pager(1, 1);
   avaliablePlugs: Array<any> = [];
   installedPlugs: Array<PluginInfo> = [];
+  selectedIndex = 0;
 
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
@@ -115,55 +160,42 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   ngOnInit(): void {
-    // showBreadcrumb
-    let sn = this.route.snapshot;
 
-    this.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=plugin_action&emethod=get_available_plugins`)
-      .then((r) => {
-        this.pager = Pager.create(r);
-        // this.logs = r.bizresult.rows;
-        this.avaliablePlugs = r.bizresult.rows;
-      });
+    this.route.params.subscribe((params: Params) => {
+      let tab = params["tab"];
+      switch (tab) {
+        case PluginTab.updateCenter:
+          this.selectedIndex = 2;
+          break;
+        case PluginTab.installed: {
+          this.selectedIndex = 1;
+          this.httpPost('/coredefine/corenodemanage.ajax'
+            , 'action=plugin_action&emethod=get_installed_plugins')
+            .then((r) => {
+              if (r.success) {
+                this.installedPlugs = r.bizresult;
+              }
+            });
+          break;
+        }
+        case PluginTab.avail:
+        default: {
+          this.selectedIndex = 0;
+          this.httpPost('/coredefine/corenodemanage.ajax'
+            , `action=plugin_action&emethod=get_available_plugins`)
+            .then((r) => {
+              this.pager = Pager.create(r);
+              // this.logs = r.bizresult.rows;
+              this.avaliablePlugs = r.bizresult.rows;
+            });
+        }
+      }
 
-    // this.showBreadcrumb = sn.data["showBreadcrumb"];
-    // this.route.queryParams.subscribe((param) => {
-    //   this.httpPost('/runtime/operation_log.ajax'
-    //     , `action=operation_log_action&emethod=get_init_data&page=${param['page']}`)
-    //     .then((r) => {
-    //       this.pager = Pager.create(r);
-    //       this.logs = r.bizresult.rows;
-    //     });
-    // });
+    });
+
+
   }
 
-  // public get showDetail(): boolean {
-  //   return this.detail != null;
-  // }
-
-
-  // 显示详细信息
-  // public operationDetail(opId: number): void {
-  //   this.httpPost(
-  //     '/runtime/operation_detail.ajax?action=operation_log_action&event_submit_do_get_detail=y&opid=' + opId, '')
-  //     .then(result => {
-  //       this.detailLog = result.bizresult.opDesc;
-  //       this.logVisible = true;
-  //     });
-  // }
-
-  // public get detail(): string {
-  //   return this.detailLog;
-  // }
-
-  // goPage(pageNum: number) {
-  //   Pager.go(this.router, this.route, pageNum);
-  // }
-  //
-  // logViewClose() {
-  //   this.logVisible = false;
-  //   this.detailLog = null;
-  // }
   goPage(event: number) {
 
   }
@@ -183,20 +215,30 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       , willInstall)
       .then((r) => {
         if (r.success) {
-
+          this.goto(PluginTab.updateCenter)
         }
       });
 
   }
 
   openInstalledPlugins() {
-    this.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=plugin_action&emethod=get_installed_plugins')
-      .then((r) => {
-        if (r.success) {
-          this.installedPlugs = r.bizresult;
-        }
-      });
+    this.goto(PluginTab.installed);
+  }
+
+  openUpdateCenter() {
+    this.goto(PluginTab.updateCenter);
+  }
+
+  openAvailable() {
+    this.goto(PluginTab.avail);
+  }
+
+  private goto(subpath: string) {
+    this.router.navigate(["/base/plugin-manage", subpath], {relativeTo: this.route});
+  }
+
+  updateCenterLoading(load: boolean) {
+    this.formDisabled = load;
   }
 }
 

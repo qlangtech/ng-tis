@@ -38,21 +38,24 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="gotoIndexList()">
                               <div class="tis-card-content">
-                                  <h1>索引实例</h1>
+                                  <div class="compose">
+                                      <h1 style="margin: 0px">实例</h1>
+                                      dataX,Solr
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/wf')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
+                                  <h1 class="compose"><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/ds')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
+                                  <h1 class="compose"><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
                               </div>
                           </nz-card>
                       </div>
@@ -61,21 +64,21 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/basecfg')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
+                                  <h1 class="compose"><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
+                                  <h1 class="compose"><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="user" nzTheme="outline"></i>会员</h1>
+                                  <h1 class="compose"><i nz-icon nzType="user" nzTheme="outline"></i>会员</h1>
                               </div>
                           </nz-card>
                       </div>
@@ -84,7 +87,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/plugin-manage')">
                               <div class="tis-card-content">
-                                  <h1><i nz-icon nzType="tool" nzTheme="outline"></i>插件管理</h1>
+                                  <h1 class="compose"><i nz-icon nzType="tool" nzTheme="outline"></i>插件管理</h1>
                               </div>
                           </nz-card>
                       </div>
@@ -159,13 +162,14 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 
           .tis-card-content {
               height: 150px;
+              text-align: center;
           }
 
           #main-entry {
               padding: 10px;
           }
 
-          .tis-card-content h1, h2 {
+          .tis-card-content .compose {
               text-align: center;
               position: relative;
               top: 50%;
