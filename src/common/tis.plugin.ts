@@ -83,6 +83,7 @@ export class ItemPropVal {
   }
 
   get primary(): string {
+    // console.log(this);
     if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
       this._primaryVal = this.dftVal;
       this.has_set_primaryVal = true;
@@ -214,6 +215,7 @@ export class Item {
     let newVal: ItemPropVal;
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
+      // console.log(at.key + ":" + v);
       if (v === undefined || v === null) {
         return;
       }
@@ -230,7 +232,7 @@ export class Item {
       } else {
         if (at.isMultiSelectableType) {
           if (!Array.isArray(v)) {
-            console.log(v);
+            // console.log(v);
             throw new Error("expect val type is array but is not");
           }
           let cols: Array<{ name: string, value: string }> = v.map((r) => {
