@@ -75,9 +75,20 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
       .then((r) => {
         if (r.success) {
           if (r.bizresult) {
-            let i: Item = Object.assign(new Item(desc), r.bizresult);
-            i.wrapItemVals();
-            return {"desc": desc, "item": i};
+
+            let d = PluginsComponent.wrapDescriptors(r.bizresult.desc);
+            d.forEach((entry) => {
+              desc = entry;
+            });
+
+            if (r.bizresult.item) {
+              // 只有在更新流程才会进入
+              let i: Item = Object.assign(new Item(desc), r.bizresult.item);
+              i.wrapItemVals();
+              return {"desc": desc, "item": i};
+            } else {
+              return {"desc": desc};
+            }
           }
         }
         return {"desc": desc};
