@@ -118,7 +118,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   // 是否显示扩展点详细
   // @Input()
   // disabled = false;
-
   @Input()
   showExtensionPoint: { open: boolean } = {open: false};
 
@@ -152,28 +151,73 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
   @Output() afterSave = new EventEmitter<PluginSaveResponse>();
   private _plugins: PluginType[] = [];
-
   /**
-   *
-   * @param h
-   * @param des
-   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+   * 当前选中的DS plugin 描述信息
+   * @param desc
    */
-  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
-    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-    let nItem = new Item(des);
-    nItem.displayName = des.displayName;
-    des.attrs.forEach((attr) => {
-      nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
-    });
-    let nitems: Item[] = [];
-    h.items.forEach((r) => {
-      nitems.push(r);
-    });
-    // console.log(nItem);
-    nitems.push(nItem);
-    h.items = nitems;
+  public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
+    if (!desc) {
+      throw new Error("param desc can not be null");
+    }
+    let h = new HeteroList();
+    h.extensionPoint = desc.extendPoint;
+    h.descriptors.set(desc.impl, desc);
+    if (!itemPropSetter) {
+      itemPropSetter = (_, p) => p;
+    }
+    Descriptor.addNewItem(h, desc, updateModel, itemPropSetter);
+    // console.log(h);
+    return [h];
   }
+
+  public static openPluginInstanceAddDialog(b: BasicFormComponent, pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void) {
+    let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
+    let addDb: PluginsComponent = modalRef.getContentComponent();
+    addDb.errorsPageShow = true;
+    addDb.formControlSpan = 20;
+    addDb.shallInitializePluginItems = false;
+    addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc);
+    addDb.setPluginMeta([pluginTp])
+    addDb.showSaveButton = true;
+    addDb.afterSave.subscribe((r: PluginSaveResponse) => {
+      if (r && r.saveSuccess && r.hasBiz()) {
+        modalRef.close();
+        let db = r.biz();
+
+        onSuccess(db);
+
+        // let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
+        // this.nodes = newNode.concat(this.nodes);
+        //
+        // let e = {'type': 'db', 'id': `${db.dbId}`};
+        // this.treeNodeClicked = true;
+        // this.onEvent(e);
+        //
+        // this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
+      }
+    });
+  }
+  // /**
+  //  *
+  //  * @param h
+  //  * @param des
+  //  * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+  //  */
+  // public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
+  //   , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
+  //   let nItem = new Item(des);
+  //   nItem.displayName = des.displayName;
+  //   des.attrs.forEach((attr) => {
+  //     nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
+  //   });
+  //   let nitems: Item[] = [];
+  //   h.items.forEach((r) => {
+  //     nitems.push(r);
+  //   });
+  //   // console.log(nItem);
+  //   nitems.push(nItem);
+  //   h.items = nitems;
+  // }
 
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
     return pluginMeta.map((p) => {
@@ -578,7 +622,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   addNewPluginItem(h: HeteroList, d: Descriptor) {
-    PluginsComponent.addNewItem(h, d, false, (_, propVal) => propVal);
+    Descriptor.addNewItem(h, d, false, (_, propVal) => propVal);
   }
 
 

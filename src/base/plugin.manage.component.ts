@@ -34,7 +34,7 @@ enum PluginTab {
       </tis-page-header>
       <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
-              <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
+              <nz-tab nzTitle="可安装"  (nzClick)="openAvailable()">
                   <ng-template nz-tab>
                       <nz-affix class="tool-bar" [nzOffsetTop]="20">
                           <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary" (click)="installPlugin()">

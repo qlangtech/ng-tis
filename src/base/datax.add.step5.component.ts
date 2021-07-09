@@ -78,7 +78,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     // console.log(this.hlist);
     DataxAddStep3Component.initializeDataXRW(this, "writer", this.dto)
       .then((i: { "desc": Descriptor, "item": Item }) => {
-        this.hlist = DatasourceComponent.pluginDesc(i.desc);
+        this.hlist = PluginsComponent.pluginDesc(i.desc);
        // console.log(this.hlist);
         if (i.item) {
           this.hlist[0].items[0] = i.item;

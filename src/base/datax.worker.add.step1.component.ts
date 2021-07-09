@@ -48,6 +48,7 @@ import {DataxWorkerDTO} from "./datax.worker.component";
               <button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
           </tis-header-tool>
       </tis-page-header>
+     
       <nz-spin [nzSpinning]="this.formDisabled" class="item-block">
           <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'datax-worker', require: true}]"
                        (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
@@ -96,7 +97,7 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
           let desc = Array.from(rList.values());
-          this.hlist = DatasourceComponent.pluginDesc(desc[0])
+          this.hlist = PluginsComponent.pluginDesc(desc[0])
         }
       });
   }
@@ -106,6 +107,7 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
       this.nextStep.emit(this.dto);
     }
   }
+
 
 
 }
