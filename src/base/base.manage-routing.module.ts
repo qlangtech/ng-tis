@@ -45,7 +45,16 @@ const basemanageRoutes: Routes = [
           },
           {
             path: 'basecfg',
-            component: BaseConfigComponent
+            children: [
+              {
+                path: '',
+                component: BaseConfigComponent
+              },
+              {
+                path: ':tab',
+                component: BaseConfigComponent
+              }
+            ]
           }
           ,
           {

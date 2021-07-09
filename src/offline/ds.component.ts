@@ -217,24 +217,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   // 是否处在编辑模式
   updateMode = false;
 
-  /**
-   * 当前选中的DS plugin 描述信息
-   * @param desc
-   */
-  public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
-    if (!desc) {
-      throw new Error("param desc can not be null");
-    }
-    let h = new HeteroList();
-    h.extensionPoint = desc.extendPoint;
-    h.descriptors.set(desc.impl, desc);
-    if (!itemPropSetter) {
-      itemPropSetter = (_, p) => p;
-    }
-    PluginsComponent.addNewItem(h, desc, updateModel, itemPropSetter);
-    // console.log(h);
-    return [h];
-  }
+
 
   constructor(protected tisService: TISService //
     , private router: Router //
@@ -309,18 +292,10 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   // 添加数据库按钮点击响应
   public addDbBtnClick(pluginDesc: Descriptor): void {
 
-    let modalRef = this.openDialog(PluginsComponent, {nzTitle: `添加${pluginDesc.displayName}数据库`});
-    let addDb: PluginsComponent = modalRef.getContentComponent();
-    addDb.errorsPageShow = true;
-    addDb.formControlSpan = 20;
-    addDb.shallInitializePluginItems = false;
-    addDb._heteroList = DatasourceComponent.pluginDesc(pluginDesc);
-    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}])
-    addDb.showSaveButton = true;
-    addDb.afterSave.subscribe((r: PluginSaveResponse) => {
-      if (r && r.saveSuccess && r.hasBiz()) {
-        modalRef.close();
-        let db = r.biz();
+    PluginsComponent.openPluginInstanceAddDialog(this, pluginDesc
+      , {name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}
+      , `添加${pluginDesc.displayName}数据库`
+      , (db) => {
         let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
         this.nodes = newNode.concat(this.nodes);
 
@@ -329,9 +304,32 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.onEvent(e);
 
         this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
-      }
-    });
+      });
+
+    // let modalRef = this.openDialog(PluginsComponent, {nzTitle: `添加${pluginDesc.displayName}数据库`});
+    // let addDb: PluginsComponent = modalRef.getContentComponent();
+    // addDb.errorsPageShow = true;
+    // addDb.formControlSpan = 20;
+    // addDb.shallInitializePluginItems = false;
+    // addDb._heteroList = DatasourceComponent.pluginDesc(pluginDesc);
+    // addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}])
+    // addDb.showSaveButton = true;
+    // addDb.afterSave.subscribe((r: PluginSaveResponse) => {
+    //   if (r && r.saveSuccess && r.hasBiz()) {
+    //     modalRef.close();
+    //     let db = r.biz();
+    //     let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
+    //     this.nodes = newNode.concat(this.nodes);
+    //
+    //     let e = {'type': 'db', 'id': `${db.dbId}`};
+    //     this.treeNodeClicked = true;
+    //     this.onEvent(e);
+    //
+    //     this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
+    //   }
+    // });
   }
+
 
   processDb(processLiteria: string, facade: boolean, update: boolean, pluginDesc?: Descriptor): PluginsComponent {
 
@@ -341,7 +339,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb.formControlSpan = 20;
     addDb.itemChangeable = false;
     if (pluginDesc) {
-      let hlist = DatasourceComponent.pluginDesc(pluginDesc);
+      let hlist = PluginsComponent.pluginDesc(pluginDesc);
       addDb._heteroList = hlist;
     }
 

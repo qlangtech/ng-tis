@@ -103,7 +103,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   protected initialize(app: CurrentCollection): void {
     DataxAddStep3Component.initializeDataXRW(this, "reader", this.dto)
       .then((i: { "desc": Descriptor, "item": Item }) => {
-        this.hlist = DatasourceComponent.pluginDesc(i.desc);
+        this.hlist = PluginsComponent.pluginDesc(i.desc);
         if (i.item) {
           this.hlist[0].items[0] = i.item;
         }

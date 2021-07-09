@@ -18,7 +18,7 @@ import {TISService} from "../service/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {AppDesc, ConfirmDTO, Option} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {HeteroList, Item, ItemPropVal, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {DatasourceComponent} from "../offline/ds.component";
@@ -52,6 +52,7 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--                     placeholder="小明">-->
       <!--          </tis-ipt>-->
       <!--      </tis-form>-->
+      <button nz-button (click)="openTestDialog()">add</button>
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
           <div style="width: 80%;margin: 0 auto;">
@@ -93,7 +94,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
           // let desc = Array.from(rList.values());
           let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult);
           if (hlist.items.length < 1) {
-            PluginsComponent.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
+            Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
           }
 //          DatasourceComponent.pluginDesc(desc[0])
           this.hlist = [hlist]; // DatasourceComponent.pluginDesc(desc[0])
@@ -141,4 +142,16 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   }
 
 
+  openTestDialog() {
+    // PluginsComponent.openPluginInstanceAddDialog(this,);
+    let impl = 'com.qlangtech.tis.plugin.datax.DataXGlobalConfig';
+    let url = "/coredefine/corenodemanage.ajax";
+    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&impl=" + impl).then((r) => {
+      let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+      desc.forEach((d) => {
+        PluginsComponent.openPluginInstanceAddDialog(this, d, {name: "params-cfg", require: true, extraParam: "append_true"}, "添加" + d.displayName, (biz) => {
+        });
+      });
+    });
+  }
 }

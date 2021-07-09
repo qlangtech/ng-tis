@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' ;
+export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' ;
 export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string };
 export declare type PluginType = PluginName | PluginMeta;
 
@@ -98,6 +98,8 @@ export class ItemPropVal {
 }
 
 export class Descriptor {
+
+
   impl: string;
   displayName: string;
   extendPoint: string;
@@ -114,6 +116,28 @@ export class Descriptor {
     id?: string,
   }
   subForm: boolean;
+
+  /**
+   *
+   * @param h
+   * @param des
+   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+   */
+  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
+    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
+    let nItem = new Item(des);
+    nItem.displayName = des.displayName;
+    des.attrs.forEach((attr) => {
+      nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
+    });
+    let nitems: Item[] = [];
+    h.items.forEach((r) => {
+      nitems.push(r);
+    });
+    // console.log(nItem);
+    nitems.push(nItem);
+    h.items = nitems;
+  }
 }
 
 export interface TisResponseResult {
