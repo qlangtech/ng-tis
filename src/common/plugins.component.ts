@@ -151,6 +151,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
   @Output() afterSave = new EventEmitter<PluginSaveResponse>();
   private _plugins: PluginType[] = [];
+
   /**
    * 当前选中的DS plugin 描述信息
    * @param desc
@@ -197,6 +198,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
     });
   }
+
   // /**
   //  *
   //  * @param h
@@ -644,8 +646,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                        <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
-                      <textarea [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
-                                (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
+                      <ng-container [ngSwitch]="_pp.getEProp('style')">
+                          <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'" (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary" [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}" [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
+                          <textarea *ngSwitchDefault [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
+                                    (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
+                      </ng-container>
                   </ng-container>
                   <ng-container *ngSwitchCase="3">
                       <!--date-->
@@ -677,7 +682,19 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                  </ng-container>
               </span>
               <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
-              <a *ngIf="this.createRouter && !this.disabled" target="_blank" class="tis-link-btn" [routerLink]="createRouter.routerLink">{{createRouter.label}}</a>
+              <ng-container *ngIf="this.createRouter && !this.disabled">
+                  <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                      <ul nz-menu>
+                          <li nz-menu-item>
+                              <a target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
+                          </li>
+                          <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                              <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
+                          </li>
+                      </ul>
+                  </nz-dropdown-menu>
+              </ng-container>
               <nz-alert *ngIf="descContent && descContentShow" nzType="info" [nzDescription]="descContent" nzCloseable></nz-alert>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                   <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
@@ -690,6 +707,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       </nz-form-item>  `,
   styles: [
       `
+          .assist-btn i {
+              margin-left: 2px;
+          }
+
           .sub-prop {
               clear: both;
               margin-left: 50px;
@@ -697,13 +718,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           }
 
           .has-help-url {
-              width: calc(100% - 8em);
+              width: calc(100% - 10em);
               display: inline-block;
           }
     `
   ]
 })
-export class ItemPropValComponent implements AfterContentInit {
+export class ItemPropValComponent extends BasicFormComponent implements AfterContentInit {
   _pp: ItemPropVal;
 
   passwordVisible = false;
@@ -714,12 +735,6 @@ export class ItemPropValComponent implements AfterContentInit {
   descContent: string = null;
   descContentShow = false;
 
-
-  get disabled(): boolean {
-    return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled;
-  }
-
-
   @Input()
   set disabled(val: boolean) {
     this._disabled = val;
@@ -727,6 +742,15 @@ export class ItemPropValComponent implements AfterContentInit {
 
   @Input()
   formControlSpan = 13;
+
+  constructor(tisService: TISService, modalService: NzModalService) {
+    super(tisService, modalService);
+  }
+
+  get disabled(): boolean {
+    return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled;
+  }
+
 
   @Input() set pp(item: ItemPropVal) {
     this._pp = item;
@@ -744,6 +768,33 @@ export class ItemPropValComponent implements AfterContentInit {
     if (creator) {
       this.createRouter = creator;
     }
+  }
+
+  openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
+    // PluginsComponent.openPluginInstanceAddDialog(this,);
+    let descName = targetPlugin.descName;
+    //  console.log(_pp.options);
+    let url = "/coredefine/corenodemanage.ajax";
+    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero).then((r) => {
+      let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+      desc.forEach((d) => {
+
+        let pluginTp: PluginType = {name: targetPlugin.hetero, require: true};
+        if (targetPlugin.extraParam) {
+          pluginTp.extraParam = targetPlugin.extraParam;
+        }
+
+        PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
+          let ids: Array<string> = biz;
+          ids.forEach((id) => {
+            let n = new ValOption();
+            n.name = id;
+            n.impl = d.impl;
+            _pp.options = [n, ..._pp.options]
+          });
+        });
+      });
+    });
   }
 
   toggleDescContentShow() {
@@ -817,6 +868,13 @@ export class ItemPropValComponent implements AfterContentInit {
 interface CreatorRouter {
   routerLink: string;
   label: string;
+  plugin: Array<TargetPlugin>;
+}
+
+interface TargetPlugin {
+  hetero: PluginName;
+  extraParam: string;
+  descName: string;
 }
 
 

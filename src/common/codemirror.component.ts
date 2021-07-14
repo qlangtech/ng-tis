@@ -27,6 +27,8 @@ import "node_modules/codemirror/mode/javascript/javascript.js";
 import "node_modules/codemirror/mode/clike/clike.js";
 import "node_modules/codemirror/mode/xml/xml.js";
 import "node_modules/codemirror/mode/solr/solr.js";
+import "node_modules/codemirror/mode/yaml/yaml.js";
+import "node_modules/codemirror/mode/velocity/velocity.js";
 // ControlValueAccessor
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 

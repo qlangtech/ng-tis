@@ -52,7 +52,6 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--                     placeholder="小明">-->
       <!--          </tis-ipt>-->
       <!--      </tis-form>-->
-      <button nz-button (click)="openTestDialog()">add</button>
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
           <div style="width: 80%;margin: 0 auto;">
@@ -142,16 +141,16 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   }
 
 
-  openTestDialog() {
-    // PluginsComponent.openPluginInstanceAddDialog(this,);
-    let impl = 'com.qlangtech.tis.plugin.datax.DataXGlobalConfig';
-    let url = "/coredefine/corenodemanage.ajax";
-    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&impl=" + impl).then((r) => {
-      let desc = PluginsComponent.wrapDescriptors(r.bizresult);
-      desc.forEach((d) => {
-        PluginsComponent.openPluginInstanceAddDialog(this, d, {name: "params-cfg", require: true, extraParam: "append_true"}, "添加" + d.displayName, (biz) => {
-        });
-      });
-    });
-  }
+  // openTestDialog() {
+  //   // PluginsComponent.openPluginInstanceAddDialog(this,);
+  //   let impl = 'com.qlangtech.tis.plugin.datax.DataXGlobalConfig';
+  //   let url = "/coredefine/corenodemanage.ajax";
+  //   this.httpPost(url, "action=plugin_action&emethod=get_descriptor&impl=" + impl).then((r) => {
+  //     let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+  //     desc.forEach((d) => {
+  //       PluginsComponent.openPluginInstanceAddDialog(this, d, {name: "params-cfg", require: true, extraParam: "append_true"}, "添加" + d.displayName, (biz) => {
+  //       });
+  //     });
+  //   });
+  // }
 }
