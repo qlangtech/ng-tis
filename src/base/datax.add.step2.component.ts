@@ -44,7 +44,7 @@ import {Descriptor, Item} from "../common/tis.plugin";
 <!--                  </nz-select>-->
 
                   <nz-radio-group [ngModel]="dto.readerImpl" nzSize="large" (ngModelChange)="changeReaderDesc($event)" nzButtonStyle="solid">
-                      <label *ngFor="let pp of readerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
+                      <label class="source-lab" *ngFor="let pp of readerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
                   </nz-radio-group>
               </tis-ipt>
               <tis-ipt #writerType title="Writer类型" name="writerType" require="true">
@@ -54,7 +54,7 @@ import {Descriptor, Item} from "../common/tis.plugin";
 
 
                   <nz-radio-group [ngModel]="dto.writerImpl" nzSize="large" (ngModelChange)="changeWriterDesc($event)" nzButtonStyle="solid">
-                      <label *ngFor="let pp of writerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
+                      <label class="source-lab" *ngFor="let pp of writerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
                   </nz-radio-group>
               </tis-ipt>
           </tis-form>
@@ -63,6 +63,10 @@ import {Descriptor, Item} from "../common/tis.plugin";
   `
   , styles: [
       `
+            .source-lab{
+                margin-top: 5px;
+                margin-left: 5px;
+            }
     `
   ]
 })
