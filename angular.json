@@ -34,12 +34,16 @@
               "node_modules/font-awesome/css/font-awesome.css",
               "src/theme.less",
               "node_modules/codemirror/lib/codemirror.css",
-              "node_modules/nprogress/nprogress.css"
+              "node_modules/nprogress/nprogress.css",
+              "node_modules/prismjs/themes/prism.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "node_modules/nprogress/nprogress.js",
-              "node_modules/marked/lib/marked.js"
+              "node_modules/marked/lib/marked.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-yaml.js",
+              "node_modules/prismjs/components/prism-json.js"
             ]
           },
           "configurations": {

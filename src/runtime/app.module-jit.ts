@@ -29,7 +29,7 @@ import {TISService} from "../service/tis.service";
 import {TisCommonModule} from "../common/common.module";
 import {CorenodemanageComponent} from "./corenodemanage.component";
 import {RootWelcomeComponent} from "./root-welcome-component";
-import { MarkdownModule } from 'ngx-markdown';
+import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
 
 
 // export function offlineModuleFactory() {
@@ -49,13 +49,34 @@ import { MarkdownModule } from 'ngx-markdown';
 // }
 
 registerLocaleData(zh);
+
+export function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+
+  renderer.link = (href: string | null, title: string | null, text: string) => {
+    return `<a href="${href}" target="_blank">${text}</a>`;
+  };
+  // renderer.code = (code: string, language: string | undefined, isEscaped: boolean) => {
+  //   return '<code></code>';
+  // };
+
+  return {
+    renderer: renderer
+  };
+}
+
 // https://github.com/angular/angular/issues/11075 loadChildren 子模块不支持aot编译的问题讨论
 // router 的配置
 @NgModule({
   id: 'tisRoot',
   imports: [BrowserModule, FormsModule, TisCommonModule,
     BrowserAnimationsModule,
-    MarkdownModule.forRoot(),
+    MarkdownModule.forRoot({
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: markedOptionsFactory
+      }
+    }),
     RouterModule.forRoot([
       {  // 索引一览
         path: '',
