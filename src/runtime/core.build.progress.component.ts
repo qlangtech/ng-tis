@@ -181,7 +181,8 @@ export class ProgressTitleComponent {
           <ng-terminal #term></ng-terminal>
       </nz-drawer>
       <ng-template #drawerTitle>
-          执行日志<button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>
+          执行日志
+          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>
       </ng-template>
 
   `,
@@ -337,6 +338,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         if (json.logType && json.logType === "FULL") {
           return new WSMessage('full', json);
         } else if (json.consuming) {
+          // server side pojo: ExtendWorkFlowBuildHistory
           return new WSMessage('stat', json);
         } else {
           return new WSMessage('build_status_metrics', json);
@@ -375,7 +377,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
           break;
         case "full":
           // console.log(response.data);
-          this.terminal.write(response.data.msg + "\r\n");
+          if (response.data.msg) {
+            this.terminal.write(response.data.msg + "\r\n");
+          }
           break;
         default:
           throw new Error(`logttype:${response.logtype} is illegal`);

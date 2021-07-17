@@ -57,7 +57,7 @@ import {Subscription} from "rxjs";
                   <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
               </div>
               <div style="clear: both"></div>
-              <item-prop-val [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+              <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
           </div>
       </ng-template>
       <form nz-form [ngSwitch]="shallInitializePluginItems">
@@ -636,7 +636,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item>
-          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i *ngIf="descContent" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
+          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -695,7 +695,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       </ul>
                   </nz-dropdown-menu>
               </ng-container>
-              <nz-alert *ngIf="descContent && descContentShow" nzType="info" [nzDescription]="descContent" nzCloseable></nz-alert>
+              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
+              <ng-template #helpTpl>
+                  <markdown class="tis-markdown" [data]="descContent"></markdown>
+              </ng-template>
               <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                   <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
               </nz-select>
@@ -707,6 +710,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       </nz-form-item>  `,
   styles: [
       `
+          .field-help {
+              cursor: pointer;
+              display: inline-block;
+              width: 20px;
+              height: 16px;
+          }
+
           .assist-btn i {
               margin-left: 2px;
           }
@@ -727,6 +737,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 export class ItemPropValComponent extends BasicFormComponent implements AfterContentInit {
   _pp: ItemPropVal;
 
+  _pluginImpl: string;
+
   passwordVisible = false;
 
   helpUrl: string = null;
@@ -734,6 +746,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   createRouter: CreatorRouter = null;
   descContent: string = null;
   descContentShow = false;
+  asyncHelp = false;
+
 
   @Input()
   set disabled(val: boolean) {
@@ -741,9 +755,14 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   @Input()
+  set pluginImpl(val: string) {
+    this._pluginImpl = val;
+  }
+
+  @Input()
   formControlSpan = 13;
 
-  constructor(tisService: TISService, modalService: NzModalService) {
+  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef) {
     super(tisService, modalService);
   }
 
@@ -758,6 +777,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     if (hUrl) {
       this.helpUrl = hUrl;
     }
+
+    this.asyncHelp = item.getEProp('asyncHelp');
 
     let descContent = item.getEProp('help');
     if (descContent) {
@@ -798,6 +819,18 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   toggleDescContentShow() {
+    if (this.asyncHelp) {
+      if (!this.descContent && !this.descContentShow) {
+        let url = "/coredefine/corenodemanage.ajax";
+        this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}`).then((r) => {
+          this.descContent = r.bizresult;
+          this.descContentShow = true;
+         // console.log(this.descContentShow);
+          this.cdr.detectChanges();
+        });
+        return;
+      }
+    }
     this.descContentShow = !this.descContentShow;
   }
 

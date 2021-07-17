@@ -15,6 +15,22 @@
 
 /* You can add global styles to this file, and also import other style files */
 
+.tis-markdown code {
+  color: #e30000;
+}
+
+.tis-markdown table {
+  border: 1px solid #989898;
+}
+.tis-markdown th {
+  padding: 4px;
+  border: 1px solid #989898;
+}
+.tis-markdown td {
+  padding: 4px;
+  border: 1px solid #989898;
+}
+
 .get-gen-cfg-file .ant-drawer-body {
   overflow: hidden;
   padding: 2px;

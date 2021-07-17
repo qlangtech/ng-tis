@@ -27,14 +27,17 @@ import {DataXJobWorkerStatus} from "../base/datax.worker.component";
   selector: "full-build-history",
   // templateUrl: '/coredefine/full_build_history.htm'
   template: `
-      <div *ngIf="dataxProcess && dataXWorkerStatus">
-          <nz-tag *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated" nzColor="processing">分布式K8S执行</nz-tag>
-          <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon> </nz-alert>
+      <div style="margin-top: 8px;" *ngIf="dataxProcess && dataXWorkerStatus">
+          <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
           <ng-template #unableToUseK8SController>
               当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启 <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
           </ng-template>
       </div>
       <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" (refesh)="refesh()">
+          <tis-page-header-left *ngIf="dataxProcess && dataXWorkerStatus">
+              <nz-tag *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated" nzColor="processing">
+                  <a target="_blank" [routerLink]="'/base/datax-worker'"><i nz-icon nzType="link" nzTheme="outline"></i>分布式K8S执行</a></nz-tag>
+          </tis-page-header-left>
           <button (click)="triggerFullBuild()" nz-button nzType="primary">触发构建</button> &nbsp;
       </tis-page-header>
       <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">

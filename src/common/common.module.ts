@@ -102,16 +102,18 @@ import {DataxAddStep3Component} from "../base/datax.add.step3.component";
 import {DataxAddStep6Component} from "../base/datax.add.step6.maptable.component";
 import {IncrPodLogsStatusComponent} from "../runtime/incr.pod.logs.status.component";
 import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
+import {MarkdownModule} from "ngx-markdown";
 
 @NgModule({
   id: 'tiscommonModule',
   imports: [
+    MarkdownModule.forChild(),
     LocalStorageModule.forRoot({
       prefix: 'my-app',
       storageType: 'localStorage'
-    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule ,
+    }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
-    NgTerminalModule, NzPageHeaderModule ,
+    NgTerminalModule, NzPageHeaderModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule],
