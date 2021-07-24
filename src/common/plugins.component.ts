@@ -646,7 +646,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                        <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
-                      <ng-container [ngSwitch]="_pp.getEProp('style')">
+                      <ng-container [ngSwitch]="disabled ? '' : _pp.getEProp('style') ">
                           <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'" (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary" [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}" [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
                           <textarea *ngSwitchDefault [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
                                     (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
@@ -825,7 +825,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}`).then((r) => {
           this.descContent = r.bizresult;
           this.descContentShow = true;
-         // console.log(this.descContentShow);
+          // console.log(this.descContentShow);
           this.cdr.detectChanges();
         });
         return;

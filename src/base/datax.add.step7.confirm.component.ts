@@ -59,10 +59,13 @@ export enum ExecModel {
                   <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()">生成DataX配置文件</button>
               </div>
           </ng-container>
-          <h3>配置文件</h3>
+          <h3>脚本文件</h3>
           <ul class="item-block child-block">
               <li *ngFor="let f of genCfgFileList">
-                  <button (click)="viewGenFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="file-text" nzTheme="outline"></i>{{f}}</button>
+                  <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="file-text" nzTheme="outline"></i>{{f}}</button>
+              </li>
+              <li *ngFor="let f of createDDLFileList">
+                  <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="console-sql" nzTheme="outline"></i>{{f}}</button>
               </li>
               <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
           </ul>
@@ -77,9 +80,9 @@ export enum ExecModel {
               <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
                            [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
                            [plugins]="[{name: 'dataxReader', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
-<!--
-              <datax-reader-table-select *ngIf="dto.processMeta && dto.processMeta.readerRDBMS" [execModel]="readModel" [dtoooo]="dto" [inReadonly]="true"></datax-reader-table-select>
--->
+              <!--
+                            <datax-reader-table-select *ngIf="dto.processMeta && dto.processMeta.readerRDBMS" [execModel]="readModel" [dtoooo]="dto" [inReadonly]="true"></datax-reader-table-select>
+              -->
           </div>
           <h3>Writer</h3>
           <div class="item-block">
@@ -136,6 +139,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   execModel: ExecModel = ExecModel.Create;
   inUpdate = false;
   genCfgFileList: Array<string> = [];
+  createDDLFileList: Array<string> = [];
   lastestGenFileTime: number;
 
   readModel = ExecModel.Reader;
@@ -178,6 +182,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       if (r.success) {
         let cfgs: GenerateCfgs = r.bizresult;
         this.genCfgFileList = cfgs.dataxFiles;
+        this.createDDLFileList = cfgs.createDDLFiles;
         this.lastestGenFileTime = cfgs.genTime;
         return r.bizresult;
       }
@@ -223,24 +228,33 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       });
   }
 
-  viewGenFile(fileName: string) {
+  viewDataXCfg(fileName: string) {
+    this.viewGenFile(fileName, {'formatMode': 'application/ld+json', 'titlePrefix': 'DataX Config File ', 'type': GenCfgFileType.datax});
+  }
+
+  viewCreateDDLFile(createDDLName: string) {
+    this.viewGenFile(createDDLName, {'formatMode': 'text/x-sql', 'titlePrefix': 'Table create DDL file For Writer ', 'type': GenCfgFileType.createDDL});
+  }
+
+  private viewGenFile(fileName: string, opt: GenCfgFileOpt) {
 
     this.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName + "&fileName=" + fileName)
+      , "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName + "&fileName=" + fileName + "&fileType=" + opt.type)
       .then((r) => {
         this.processResult(r);
         if (r.success) {
           const drawerRef = this.drawerService.create<ViewGenerateCfgComponent, {}, {}>({
             nzHeight: "80%",
             nzPlacement: "bottom",
-            nzTitle: `DataX Config File '${fileName}' `,
+            nzTitle: `${opt.titlePrefix} '${fileName}' `,
             nzContent: ViewGenerateCfgComponent,
             nzWrapClassName: 'get-gen-cfg-file',
-            nzContentParams: {fileMeta: r.bizresult}
+            nzContentParams: {fileMeta: r.bizresult, formatMode: opt.formatMode}
           });
         }
       });
   }
+
 
   reGenerate() {
     this.generate_datax_cfgs(false).then((r: GenerateCfgs) => {
@@ -289,16 +303,30 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     //     }
     //   });
   }
+
+
+}
+
+enum GenCfgFileType {
+  datax = 'datax',
+  createDDL = 'createTableDDL'
+}
+
+interface GenCfgFileOpt {
+  titlePrefix: string;
+  formatMode: string;
+  type: GenCfgFileType;
 }
 
 class GenerateCfgs {
   dataxFiles: Array<string>;
+  createDDLFiles: Array<string>;
   genTime: number;
 }
 
 @Component({
   template: `
-      <tis-codemirror [config]="{mode:'application/ld+json',lineNumbers: true}" [size]="{width:'100%',height:800}" [ngModel]="fileMeta.content"></tis-codemirror>
+      <tis-codemirror [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [ngModel]="fileMeta.content"></tis-codemirror>
   `
   , styles: [`
   `]
@@ -307,6 +335,9 @@ export class ViewGenerateCfgComponent {
 
   @Input()
   fileMeta: { content?: string } = {};
+
+  @Input()
+  formatMode: string;
 
   constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>) {
   }
