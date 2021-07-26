@@ -20,7 +20,9 @@ import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd";
-import {Application} from "../index/application";
+import {Application, AppType} from "../index/application";
+import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
+import {LocalStorageService} from "angular-2-local-storage";
 
 
 // 全局配置文件
@@ -33,7 +35,7 @@ import {Application} from "../index/application";
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
                           <li nz-menu-item>
-                              <a (click)="gotAddIndex()">Solr实例</a>
+                              <a routerLink="/base/appadd" >Solr实例</a>
                           </li>
                           <li nz-menu-item>
                               <a routerLink="/base/dataxadd">Datax实例</a>
@@ -80,7 +82,8 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   pager: Pager = new Pager(1, 1);
   pageList: Array<Application> = [];
 
-  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService
+
+  constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService, private _localStorageService: LocalStorageService
   ) {
     super(tisService, modalService);
   }
@@ -135,11 +138,14 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   }
 
   gotoApp(app: Application) {
+   // console.log(app);
     // <a [routerLink]="['/c',app.projectName]">{{app.projectName}}</a>
-    if (app.appType === 1) {
-      this.router.navigate(['/c', app.projectName]);
-    } else if (app.appType === 2) {
-      this.router.navigate(['/x', app.projectName]);
-    }
+    // if (app.appType === AppType.Solr) {
+    //   this.router.navigate(['/c', app.projectName]);
+    // } else if (app.appType === AppType.DataX) {
+    //   this.router.navigate(['/x', app.projectName]);
+    // }
+    // _localStorageService: LocalStorageService, r: Router, app: Application
+    LatestSelectedIndex.routeToApp(this._localStorageService, this.router, app);
   }
 }

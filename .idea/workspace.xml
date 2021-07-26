@@ -3,8 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index/application.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index/application.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,11 +49,7 @@
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/base" />
-      <recent name="$PROJECT_DIR$/src/datax" />
-      <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$/src/runtime" />
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/common" />
     </key>
     <key name="es6.move.members.recent.items">
@@ -58,7 +58,11 @@
       <recent name="$PROJECT_DIR$/src/common/tis.plugin.ts" />
       <recent name="$PROJECT_DIR$/src/common/item.pojo.ts" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/base" />
+      <recent name="$PROJECT_DIR$/src/datax" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/runtime" />
       <recent name="$PROJECT_DIR$/src/common" />
     </key>
   </component>
@@ -252,7 +256,8 @@
       <workItem from="1626346481855" duration="460000" />
       <workItem from="1626413069137" duration="7249000" />
       <workItem from="1626475718470" duration="5081000" />
-      <workItem from="1627106251573" duration="2752000" />
+      <workItem from="1627106251573" duration="3153000" />
+      <workItem from="1627187498279" duration="11169000" />
     </task>
     <servers />
   </component>
@@ -302,11 +307,9 @@
         <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
         <option value="$PROJECT_DIR$/src/common/tis.plugin.js" />
-        <option value="$PROJECT_DIR$/src/common/k8s.replics.spec.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
         <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
-        <option value="$PROJECT_DIR$/src/common/k8s.replics.spec.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
         <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/form.component.js" />
@@ -332,8 +335,6 @@
         <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
         <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/common.module.js" />
-        <option value="$PROJECT_DIR$/src/common/msg.component.js" />
-        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js" />
         <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
         <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
@@ -345,10 +346,8 @@
         <option value="$PROJECT_DIR$/src/common/plugins.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
         <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
-        <option value="$PROJECT_DIR$/src/common/LatestSelectedIndex.js.map" />
         <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
         <option value="$PROJECT_DIR$/src/common/plugins.component.js" />
-        <option value="$PROJECT_DIR$/src/common/msg.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
         <option value="$PROJECT_DIR$/src/index/application.js.map" />

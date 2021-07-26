@@ -26,7 +26,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
 import {LocalStorageService} from "angular-2-local-storage";
 import {NavigateBarComponent} from "./navigate.bar.component";
-import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
+import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
+import {Application} from "../index/application";
 
 @Component({
   template: `
@@ -96,7 +97,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
               <nz-sider [nzWidth]="400">
                   <nz-list [nzDataSource]="_latestSelected" nzBordered [nzItemLayout]="'horizontal'" [nzHeader]="recentusedindex">
                       <nz-list-item *ngFor="let item of _latestSelected">
-                          <span nz-typography><mark>{{item}}</mark></span>
+                          <span nz-typography><mark>{{item.name}}</mark></span>
                           <button nz-button nzType="link" (click)="enterIndex(item)">进入</button>
                       </nz-list-item>
                   </nz-list>
@@ -104,7 +105,17 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
                       <nz-page-header class="recent-using-tool" [nzGhost]="false">
                           <nz-page-header-title>最近使用</nz-page-header-title>
                           <nz-page-header-extra>
-                              <button nz-button (click)="gotoAppAdd()" nzType="primary" [nzSize]="'small'">添加</button>
+                              <button nz-button [nzSize]="'small'" nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
+                              <nz-dropdown-menu #menu="nzDropdownMenu">
+                                  <ul nz-menu>
+                                      <li nz-menu-item>
+                                          <a routerLink="/base/appadd" >Solr实例</a>
+                                      </li>
+                                      <li nz-menu-item>
+                                          <a routerLink="/base/dataxadd">Datax实例</a>
+                                      </li>
+                                  </ul>
+                              </nz-dropdown-menu>
                           </nz-page-header-extra>
                       </nz-page-header>
                   </ng-template>
@@ -204,7 +215,7 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
   ]
 })
 export class RootWelcomeComponent implements OnInit {
-  _latestSelected: string[] = [];
+  _latestSelected: Array<SelectedIndex> = [];
   companyIntrShow = false;
 
   constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService) {
@@ -212,7 +223,7 @@ export class RootWelcomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let popularSelected: LatestSelectedIndex = NavigateBarComponent.popularSelectedIndex(this._localStorageService);
+    let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this._localStorageService);
     this._latestSelected = popularSelected.popularLatestSelected;
   }
 
@@ -231,7 +242,11 @@ export class RootWelcomeComponent implements OnInit {
     this.routerTo('/base/appadd');
   }
 
-  enterIndex(item: string) {
-    this.r.navigate(['/c', item]);
+  enterIndex(item: SelectedIndex) {
+   // this.r.navigate(['/c', item]);
+    let app = new Application();
+    app.projectName = item.name;
+    app.appType = item.appType;
+    LatestSelectedIndex.routeToApp(null, this.r, app);
   }
 }
