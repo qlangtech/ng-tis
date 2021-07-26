@@ -25,13 +25,18 @@ export class Application {
   //             public recept: string /*接口人*/) {
   // }
   appId: number;
-  appType: number;
+  appType: AppType;
   createTime: number;
   dptId: number;
   dptName: string;
   projectName: string;
   recept: string;
   updateTime: number;
+}
+
+export enum AppType {
+  DataX = 2,
+  Solr = 1
 }
 
 export class Crontab {

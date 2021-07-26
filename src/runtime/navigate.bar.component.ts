@@ -30,11 +30,10 @@ import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex"
 // @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
-import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
 import {InitSystemComponent} from "../common/init.system.component";
 import {TisResponseResult} from "../common/tis.plugin";
+import {Application, AppType} from "../index/application";
 
-const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 
 @Component({
   selector: 'my-navigate',
@@ -104,8 +103,9 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
               <li class="index-select-block" nz-menu-item nzMatchRouter>
                   <nz-select name="selectedCollection"
                              style="width: 100%;"
+                             [compareWith]="selectedCollectionCompareFn"
                              [nzSize]="'large'"
-                             [(ngModel)]="app.name"
+                             [ngModel]="app"
                              nzPlaceHolder="请选择"
                              [nzDropdownMatchSelectWidth]="false"
                              nzShowSearch
@@ -114,7 +114,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                              (nzOnSearch)="onCollectionSearch($event)"
                   >
                       <ng-container *ngFor="let o of collectionOptionList">
-                          <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o"></nz-option>
+                          <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o.name"></nz-option>
                       </ng-container>
                       <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
                           <i nz-icon nzType="loading" class="loading-icon"></i> Loading...
@@ -144,7 +144,7 @@ const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
                        xmlns="http://www.w3.org/2000/svg"
                        width="70" height="43"
                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                      <image xlink:href="/images/icon/tis-log.svg" width="70" />
+                      <image xlink:href="/images/icon/tis-log.svg" width="70"/>
                   </svg>
               </ng-template>
           </li>
@@ -196,7 +196,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   // public ops: any[];
   @ViewChild(RouterOutlet, {static: false}) router: RouterOutlet;
   // selectedIndex ;
-  collectionOptionList: string[] = [];
+  collectionOptionList: Array<SelectedIndex> = [];
   isLoading: boolean;
   userProfile: UserProfile;
   tisMeta: TISMeta = {};
@@ -213,16 +213,41 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     return this.app == null;
   }
 
-  public static popularSelectedIndex(_localStorageService: LocalStorageService): LatestSelectedIndex {
-    let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-
-    if (popularSelected) {
-      popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected); // $.extend(, );
-    } else {
-      popularSelected = new LatestSelectedIndex();
-    }
-    return popularSelected;
-  }
+  // public static routeToApp(_localStorageService: LocalStorageService, r: Router, app: Application): string[] {
+  //   let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+  //   if (!popularSelected) {
+  //     popularSelected = new LatestSelectedIndex();
+  //   } else {
+  //     // Object.assign()
+  //     popularSelected = $.extend(new LatestSelectedIndex(), popularSelected);
+  //   }
+  //   popularSelected.add(new SelectedIndex(app.projectName, app.appType));
+  //   _localStorageService.set(KEY_LOCAL_STORAGE_LATEST_INDEX, popularSelected);
+  //   // console.log(popularSelected.popularLatestSelected);
+  //   // this.collectionOptionList = popularSelected.popularLatestSelected;
+  //
+  //   switch (app.appType) {
+  //     case AppType.DataX:
+  //       r.navigate(['/x/' + app.projectName]);
+  //       break;
+  //     case AppType.Solr:
+  //       r.navigate(['/c/' + app.projectName]);
+  //       break;
+  //     default:
+  //       throw new Error(`Error Type:${app.appType}`);
+  //   }
+  //   return popularSelected.popularLatestSelected;
+  // }
+  // public static popularSelectedIndex(_localStorageService: LocalStorageService): LatestSelectedIndex {
+  //   let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+  //
+  //   if (popularSelected) {
+  //     popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected); // $.extend(, );
+  //   } else {
+  //     popularSelected = new LatestSelectedIndex();
+  //   }
+  //   return popularSelected;
+  // }
 
   constructor(tisService: TISService, modalService: NzModalService
     , private r: Router, private route: ActivatedRoute, private _http: HttpClient
@@ -231,6 +256,13 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     super(tisService, modalService, notification);
   }
 
+  selectedCollectionCompareFn(c1: any, c2: any): boolean {
+    if (!c1 || !c2) {
+      return false;
+    }
+    // console.log([c1, c2]);
+    return c1.name === c2.name;
+  }
 
   ngOnInit(): void {
     const getIndeNameList = (fuzzName: string) => {
@@ -239,12 +271,16 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
         .pipe(map((res: any) => res.bizresult))
         .pipe(
           map((list: any) => {
-            return list.map((item: any) => `${item.projectName}`);
+            return list.map((item: any) => {
+              let app = new SelectedIndex(item.projectName, item.appType);
+              // `${item.projectName}`
+              return app;
+            });
           })
         );
     }
 
-    const optionList$: Observable<string[]> = this.searchChange$
+    const optionList$: Observable<SelectedIndex[]> = this.searchChange$
       .asObservable()
       .pipe(debounceTime(500))
       .pipe(switchMap(getIndeNameList));
@@ -253,7 +289,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       this.collectionOptionList = data;
       this.isLoading = false;
     });
-    let popularSelected = NavigateBarComponent.popularSelectedIndex(this._localStorageService);
+    let popularSelected = LatestSelectedIndex.popularSelectedIndex(this._localStorageService);
 
     if (this.app) {
       popularSelected.addIfNotContain(this.app);
@@ -305,19 +341,14 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     }
   }
 
-  onCollectionChange(value: any) {
-    let popularSelected: LatestSelectedIndex = this._localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-    if (!popularSelected) {
-      popularSelected = new LatestSelectedIndex();
-    } else {
-      popularSelected = $.extend(new LatestSelectedIndex(), popularSelected);
-    }
-    popularSelected.add(new SelectedIndex(this.app.appName));
-    this._localStorageService.set(KEY_LOCAL_STORAGE_LATEST_INDEX, popularSelected);
-    // console.log(popularSelected.popularLatestSelected);
-    this.collectionOptionList = popularSelected.popularLatestSelected;
-    this.r.navigate(['/c/' + this.app.appName]);
+  onCollectionChange(value: SelectedIndex) {
+    // console.log(value);
+    let app = new Application();
+    app.appType = value.appType;
+    app.projectName = value.name;
+    LatestSelectedIndex.routeToApp(this._localStorageService, this.r, app);
   }
+
 
   logout() {
 

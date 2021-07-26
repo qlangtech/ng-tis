@@ -29,6 +29,7 @@ import {map} from "rxjs/operators";
 import {LogType} from "../runtime/misc/RCDeployment";
 
 import {DatasourceComponent} from "../offline/ds.component";
+import {AppType} from "../index/application";
 // import {CascaderOption} from "ng-zorro-antd";
 
 /**
@@ -384,7 +385,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
 }
 
 export class CurrentCollection {
-  constructor(private id: number, public name: string, public appTyp?: number) {
+  constructor(private id: number, public name: string, public appTyp?: AppType) {
   }
 
   public get appid() {

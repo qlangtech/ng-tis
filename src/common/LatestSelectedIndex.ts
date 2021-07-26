@@ -14,19 +14,64 @@
  */
 
 import {CurrentCollection} from "./basic.form.component";
+import {Application, AppType} from "../index/application";
+import {LocalStorageService} from "angular-2-local-storage";
+import {Router} from "@angular/router";
 
 const maxQueueSize = 8;
+const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
 
 export class SelectedIndex {
   public timestamp: number;
 
-  constructor(public name: string) {
+  constructor(public name: string, public appType: AppType) {
     this.timestamp = (new Date()).getTime();
   }
 }
 
+
 export class LatestSelectedIndex {
   private _queue: Array<SelectedIndex> = [];
+
+  public static popularSelectedIndex(_localStorageService: LocalStorageService): LatestSelectedIndex {
+    let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+
+    if (popularSelected) {
+      popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected); // $.extend(, );
+    } else {
+      popularSelected = new LatestSelectedIndex();
+    }
+    return popularSelected;
+  }
+
+  public static routeToApp(_localStorageService: LocalStorageService, r: Router, app: Application): Array<SelectedIndex> {
+    // console.log(app);
+    switch (app.appType) {
+      case AppType.DataX:
+        r.navigate(['/x/' + app.projectName]);
+        break;
+      case AppType.Solr:
+        r.navigate(['/c/' + app.projectName]);
+        break;
+      default:
+        throw new Error(`Error Type:${app.appType}`);
+    }
+    if (_localStorageService) {
+      let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+      if (!popularSelected) {
+        popularSelected = new LatestSelectedIndex();
+      } else {
+        // Object.assign()
+        popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected);
+      }
+      // console.log(app);
+      popularSelected.add(new SelectedIndex(app.projectName, app.appType));
+      _localStorageService.set(KEY_LOCAL_STORAGE_LATEST_INDEX, popularSelected);
+      // console.log(popularSelected.popularLatestSelected);
+      // this.collectionOptionList = popularSelected.popularLatestSelected;
+      return popularSelected.popularLatestSelected;
+    }
+  }
 
   public add(i: SelectedIndex): void {
 
@@ -74,15 +119,16 @@ export class LatestSelectedIndex {
       return;
     }
 
-    this.add(new SelectedIndex(idx.name));
+    this.add(new SelectedIndex(idx.name, idx.appTyp));
   }
 
   private _sort(): void {
     this._queue.sort((a, b) => (b.timestamp - a.timestamp));
   }
 
-  public get popularLatestSelected(): string[] {
-    return this._queue.map((r) => r.name);
+  public get popularLatestSelected(): Array<SelectedIndex> {
+    // return this._queue.map((r) => r.name);
+    return this._queue;
   }
 
 }
