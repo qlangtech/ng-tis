@@ -806,13 +806,41 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         }
 
         PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
-          let ids: Array<string> = biz;
-          ids.forEach((id) => {
-            let n = new ValOption();
-            n.name = id;
-            n.impl = d.impl;
-            _pp.options = [n, ..._pp.options]
-          });
+        //  console.log(_pp);
+          switch (_pp.type) {
+            case 5: // enum
+              // enum
+              // db detail
+              // let item: Item = Object.assign(new Item(d), );
+              // let nn = new ValOption();
+              // n.name = biz.detailed.identityName;
+              // n.impl = d.impl;
+
+              if (biz.detailed) {
+                let db = biz.detailed;
+                let enums = _pp.getEProp('enum');
+                // console.log(enums);
+                _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
+              } else {
+                console.log(biz);
+                throw new Error('invalid biz:' + d.displayName);
+              }
+              break;
+            case 6: // select
+              if (Array.isArray(biz)) {
+                // select
+                let ids: Array<string> = biz;
+                ids.forEach((id) => {
+                  let n = new ValOption();
+                  n.name = id;
+                  n.impl = d.impl;
+                  _pp.options = [n, ..._pp.options]
+                });
+              }
+              break;
+            default:
+              throw new Error(`error type:${_pp.type}`);
+          }
         });
       });
     });

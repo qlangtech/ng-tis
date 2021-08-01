@@ -40,7 +40,7 @@ import {Application} from "../index/application";
                           <nz-card [nzHoverable]="true" (click)="gotoIndexList()">
                               <div class="tis-card-content">
                                   <div class="compose">
-                                      <h1 style="margin: 0px">实例</h1>
+                                      <h1>实例</h1>
                                       dataX,Solr
                                   </div>
                               </div>
@@ -49,14 +49,20 @@ import {Application} from "../index/application";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/wf')">
                               <div class="tis-card-content">
-                                  <h1 class="compose"><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
+                                  <div class="compose">
+                                      <h1><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
+                                      轻松构建基于TIS的物化视图
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/offline/ds')">
                               <div class="tis-card-content">
-                                  <h1 class="compose"><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
+                                  <div class="compose">
+                                      <h1><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
+                                      所有的一切从定义数据源开始
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
@@ -65,14 +71,20 @@ import {Application} from "../index/application";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/basecfg')">
                               <div class="tis-card-content">
-                                  <h1 class="compose"><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
+                                  <div class="compose">
+                                      <h1><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
+                                      插件参数配置实例化
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
                               <div class="tis-card-content">
-                                  <h1 class="compose"><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
+                                  <div class="compose">
+                                      <h1><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
+                                      记录用户在TIS平台的操作流水
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
@@ -88,7 +100,10 @@ import {Application} from "../index/application";
                       <div nz-col nzSpan="8">
                           <nz-card [nzHoverable]="true" (click)="routerTo('/base/plugin-manage')">
                               <div class="tis-card-content">
-                                  <h1 class="compose"><i nz-icon nzType="tool" nzTheme="outline"></i>插件管理</h1>
+                                  <div class="compose">
+                                      <h1><i nz-icon nzType="api" nzTheme="outline"></i>插件池</h1>
+                                      从<i>插件池</i>中选择需要的插件为我所用
+                                  </div>
                               </div>
                           </nz-card>
                       </div>
@@ -109,7 +124,7 @@ import {Application} from "../index/application";
                               <nz-dropdown-menu #menu="nzDropdownMenu">
                                   <ul nz-menu>
                                       <li nz-menu-item>
-                                          <a routerLink="/base/appadd" >Solr实例</a>
+                                          <a routerLink="/base/appadd">Solr实例</a>
                                       </li>
                                       <li nz-menu-item>
                                           <a routerLink="/base/dataxadd">Datax实例</a>
@@ -189,6 +204,10 @@ import {Application} from "../index/application";
               #color: #767676;
           }
 
+          .compose h1 {
+              margin: 0px;
+          }
+
           nz-sider {
               background: #e3e3e3;
           }
@@ -243,7 +262,7 @@ export class RootWelcomeComponent implements OnInit {
   }
 
   enterIndex(item: SelectedIndex) {
-   // this.r.navigate(['/c', item]);
+    // this.r.navigate(['/c', item]);
     let app = new Application();
     app.projectName = item.name;
     app.appType = item.appType;
