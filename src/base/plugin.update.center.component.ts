@@ -2,8 +2,6 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {NzModalService} from "ng-zorro-antd";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Pager} from "../common/pagination.component";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>

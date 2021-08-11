@@ -13,22 +13,16 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
-import {MultiViewDAG} from "../common/MultiViewDAG";
-import {AddAppFlowDirective} from "../base/addapp.directive";
+
 
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
-import {PluginSaveResponse} from "../common/tis.plugin";
-import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
-import {DataXJobWorkerStatus, DataxWorkerDTO} from "./datax.worker.component";
-import {IndexIncrStatus} from "../runtime/incr.build.component";
 import {Subject} from "rxjs";
-import {K8sPodState, LogType, RcHpaStatus} from "../runtime/misc/RCDeployment";
+import {DataXJobWorkerStatus, DataxWorkerDTO, K8sPodState, LogType, RcHpaStatus} from "../runtime/misc/RCDeployment";
 
 @Component({
   template: `

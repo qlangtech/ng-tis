@@ -15,13 +15,12 @@
 
 import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {CurrentCollection} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NzDrawerRef, NzDrawerService, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
-import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {DataxDTO} from "./datax.add.component";
 
 export enum ExecModel {
@@ -278,7 +277,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   private startDataXEdit(execType: "reader" | "writer") {
-    let execId = WorkflowAddComponent.getUUID();
+    let execId = BasicFormComponent.getUUID();
     if (!execId) {
       throw new Error("in valid execId");
     }
@@ -294,14 +293,6 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   startEditWriter() {
 
     this.startDataXEdit("writer");
-
-    // this.httpPost("/coredefine/corenodemanage.ajax"
-    //   , "action=datax_action&emethod=create_update_process&execId=" + WorkflowAddComponent.getUUID())
-    //   .then((r) => {
-    //     if (r.success) {
-    //       this.r.navigate(['../update'], {relativeTo: this.route, fragment: "writer", queryParams: {"execId": r.bizresult}});
-    //     }
-    //   });
   }
 
 

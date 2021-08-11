@@ -13,15 +13,11 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NzModalService, NzTreeNodeOptions} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse} from "../common/tis.plugin";
-import {PluginsComponent} from "../common/plugins.component";
-import {DataxDTO, ISelectedTabMeta} from "./datax.add.component";
-import {DatasourceComponent} from "../offline/ds.component";
+import {CurrentCollection} from "../common/basic.form.component";
+import {NzModalService} from "ng-zorro-antd";
+import {Item, ItemPropVal} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 

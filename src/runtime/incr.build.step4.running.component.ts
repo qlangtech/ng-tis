@@ -18,10 +18,9 @@ import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
-import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
-import {K8sPodState, LogType} from "./misc/RCDeployment";
+import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
 
 @Component({
   template: `

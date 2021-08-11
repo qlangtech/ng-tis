@@ -14,7 +14,7 @@
  */
 
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {BasicSideBar, ColumnTransfer, ERMetaNode, ERRuleNode, LinkKey, PrimaryIndexColumnName} from '../common/basic.form.component';
+import {BasicSideBar, ColumnTransfer, ERMetaNode, ERRuleNode, IDataFlowMainComponent, LinkKey, PrimaryIndexColumnName} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
 
 
@@ -268,7 +268,7 @@ export class WorkflowAddErMetaComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, addComponent: WorkflowAddComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
 
     let old = graph.findById(nodeid);
 //    old.ermeta = ;
@@ -286,7 +286,7 @@ export class WorkflowAddErMetaComponent
     this._closeSidebar();
   }
 
-  initComponent(addComponent: WorkflowAddComponent, erMetaNode: ERMetaNode): void {
+  initComponent(_: IDataFlowMainComponent, erMetaNode: ERMetaNode): void {
     this.erMetaNode = erMetaNode;
   }
 

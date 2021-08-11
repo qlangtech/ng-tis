@@ -20,17 +20,14 @@ import {Component, EventEmitter, Input, OnInit, Output, Type} from '@angular/cor
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
-import {WorkflowAddComponent} from "../offline/workflow.add.component";
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd";
-import {Descriptor, HeteroList, ItemPropVal, PluginSaveResponse, PluginType, TisResponseResult} from "./tis.plugin";
+import {TisResponseResult} from "./tis.plugin";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {LogType} from "../runtime/misc/RCDeployment";
 
-import {DatasourceComponent} from "../offline/ds.component";
 import {AppType} from "../index/application";
-// import {CascaderOption} from "ng-zorro-antd";
 
 /**
  * Created by baisui on 2017/4/12 0012.
@@ -45,11 +42,25 @@ export class BasicFormComponent {
   // 表单是否禁用
 
   public formDisabled = false;
+
+  // 取得随机ID
+  public static getUUID(): string {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
   // // 当前上下文中使用的索引
   // currIndex: CurrentCollection;
   public showBreadCrumb(route: ActivatedRoute): boolean {
     return !!route.snapshot.data[KEY_show_Bread_crumb];
   }
+
   constructor(protected tisService: TISService, protected modalService?: NzModalService, protected notification?: NzNotificationService) {
   }
 
@@ -293,7 +304,7 @@ export abstract class BasicSideBar extends BasicFormComponent {
   @Output() onClose = new EventEmitter<any>();
   @Input() nodeMeta: NodeMeta;
   @Input() g6Graph: any;
-  @Input() parentComponent: IDataFlowMainComponent; // WorkflowAddComponent;
+  @Input() parentComponent: IDataFlowMainComponent;
 
   protected constructor(tisService: TISService, modalService: NzModalService, notification?: NzNotificationService) {
     super(tisService, modalService, notification);
@@ -307,14 +318,18 @@ export abstract class BasicSideBar extends BasicFormComponent {
     this.onClose.emit();
   }
 
-  public abstract initComponent(addComponent: WorkflowAddComponent, selectNode: BasicSidebarDTO): void;
+  public abstract initComponent(addComponent: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void;
 
-  public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: WorkflowAddComponent, evt: any): void;
+  public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: IDataFlowMainComponent, evt: any): void;
 }
 
 export interface IDataFlowMainComponent {
   readonly dumpTabs: Map<string, DumpTable>;
   readonly joinNodeMap: Map<string /*id*/, JoinNode>;
+
+  closePanel(): void;
+
+  getUid(): string;
 }
 
 export class WSMessage {

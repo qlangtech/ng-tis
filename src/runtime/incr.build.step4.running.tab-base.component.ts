@@ -20,10 +20,10 @@ import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.fo
 import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
-import {IndexIncrStatus} from "./incr.build.component";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {NgTerminal} from "ng-terminal";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 
 
 @Component({

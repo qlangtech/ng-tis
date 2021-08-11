@@ -20,8 +20,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subject} from "rxjs";
-import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
-import {K8sPodState, LogType} from "./misc/RCDeployment";
+
+import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
 
 @Component({
   selector: 'incr-pod-logs-status',
@@ -165,7 +165,7 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
               this.successNotify(`已经成功触发重启增量实例${this.currentApp.appName}`);
 
               setTimeout(() => {
-                IncrBuildComponent.getIncrStatusThenEnter(this, (incrStat: IndexIncrStatus) => {
+                IndexIncrStatus.getIncrStatusThenEnter(this, (incrStat: IndexIncrStatus) => {
                   this.incrStatus = incrStat;
                   this.sendIncrdeployChange();
                   this._transactionProcessing = false;

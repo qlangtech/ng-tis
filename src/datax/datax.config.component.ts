@@ -43,24 +43,6 @@ export class DataxConfigComponent extends AppFormComponent implements OnInit {
   public dto: DataxDTO = null;
 
 
-  public static getDataXMeta(cpt: BasicFormComponent, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
-    return cpt.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=get_data_x_meta")
-      .then((r) => {
-        // this.processResult(r);
-        if (r.success) {
-          let dto = new DataxDTO(execId);
-          dto.dataxPipeName = app.appName;
-          dto.processMeta = r.bizresult.processMeta;
-          // this.dto.readerDescriptor = null;
-          let wdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc).values();
-          let rdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc).values();
-          dto.writerDescriptor = wdescIt.next().value;
-          dto.readerDescriptor = rdescIt.next().value;
-          return dto;
-        }
-      });
-  }
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
     super(tisService, route, modalService);

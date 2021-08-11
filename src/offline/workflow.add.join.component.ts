@@ -14,35 +14,14 @@
  */
 
 import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
-import {
-  BasicSideBar,
-  BasicSidebarDTO,
-  DumpTable,
-  JoinNode,
-  NodeMeta,
-  Option
-} from '../common/basic.form.component';
+import {BasicSideBar, BasicSidebarDTO, DumpTable, IDataFlowMainComponent, JoinNode, NodeMeta, Option} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
 
 
-//  @ts-ignore
-// import {} from 'ng-sidebar';
-// import {Droppable} from '@shopify/draggable';
-// @ts-ignore
-// import { Graph } from '@antv/g6';
-// @ts-ignore
-// @ts-ignore
-
-// @ts-ignore
-// import * as $ from 'jquery';
-// import 'codemirror/mode/sql/sql.js';
-// import 'codemirror/lib/codemirror.css';
-// import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd";
 import {Item} from "../common/tis.plugin";
-// @ts-ignore
-// import {Shape} from '@antv/g6';
+
 
 @Component({
   template: `
@@ -102,7 +81,7 @@ export class WorkflowAddJoinComponent
     super(tisService, modalService);
   }
 
-  initComponent(addComponent: WorkflowAddComponent, selectNode: BasicSidebarDTO): void {
+  initComponent(_: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void {
 
     // @ts-ignore
     let dto: JoinNode = selectNode;
@@ -162,7 +141,7 @@ export class WorkflowAddJoinComponent
   }
 
   // 点击保存之后处理逻辑
-  public subscribeSaveClick(graph: any, $: any /*jquery*/, nodeid: string, addComponent: WorkflowAddComponent, evt: JoinNodeForm): void {
+  public subscribeSaveClick(graph: any, $: any /*jquery*/, nodeid: string, addComponent: IDataFlowMainComponent, evt: JoinNodeForm): void {
     let old = graph.findById(nodeid);
 
     let nmodel = {'label': evt.nodeName, 'nodeMeta': this.joinNodeForm.dto};
@@ -194,7 +173,7 @@ export class WorkflowAddJoinComponent
 
     // 更新label值
     graph.updateItem(old, nmodel);
-    addComponent._opened = false;
+    addComponent.closePanel();
 
   }
 

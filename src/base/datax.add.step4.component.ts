@@ -13,15 +13,13 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {AppDesc, ConfirmDTO} from "./addapp-pojo";
-import {NzDrawerRef, NzDrawerService, NzModalService, NzTreeNodeOptions, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginName, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {CurrentCollection} from "../common/basic.form.component";
+import {NzDrawerRef, NzDrawerService, NzModalService, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DataxDTO, ISelectedCol, ISelectedTabMeta} from "./datax.add.component";
-import {DatasourceComponent} from "../offline/ds.component";
+import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ExecModel} from "./datax.add.step7.confirm.component";

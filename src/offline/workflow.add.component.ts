@@ -13,36 +13,15 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterContentChecked,
-  AfterContentInit, AfterViewChecked,
-  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, ComponentFactoryResolver,
-  ComponentRef,
-  ElementRef,
-  OnInit,
-  Type,
-  ViewChild
-} from '@angular/core';
+import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
 
-import {
-  BasicSideBar, BasicSidebarDTO,
-  DumpTable, JoinNode,
-  NodeMeta,
-  NodeMetaConfig, Option,
-  NodeMetaDependency, IDataFlowMainComponent, ERRuleNode, LinkKey, ERMetaNode, ColumnTransfer, PrimaryIndexColumnName
-} from '../common/basic.form.component';
+import {BasicFormComponent, BasicSideBar, BasicSidebarDTO, DumpTable, ERMetaNode, ERRuleNode, IDataFlowMainComponent, JoinNode, LinkKey, NodeMeta, NodeMetaConfig, NodeMetaDependency, Option} from '../common/basic.form.component';
 
 import {TISService} from '../service/tis.service';
 
-import {BasicWFComponent, WorkflowComponent, Dataflow} from './workflow.component';
+import {BasicWFComponent, Dataflow, WorkflowComponent} from './workflow.component';
 //  @ts-ignore
 import {Draggable} from '@shopify/draggable';
-// import {} from 'ng-sidebar';
-// import {Droppable} from '@shopify/draggable';
-// @ts-ignore
-// import { Graph } from '@antv/g6';
-
 import * as G6 from '@antv/g6';
 // @ts-ignore
 // import {Grid} from '@antv/plugins';
@@ -57,15 +36,18 @@ import {WorkflowAddDbtableSetterComponent} from "./workflow.add.dbtable.setter.c
 import {WorkflowAddJoinComponent} from "./workflow.add.join.component";
 import {WorkflowAddNestComponent} from "./workflow.add.nest.component";
 import {WorkflowAddUnionComponent} from "./workflow.add.union.component";
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
-import {ERRules, LinkRule, WorkflowERComponent} from "./workflow.er.component";
+import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
-import {Observable} from "rxjs";
 import {NzModalService} from "ng-zorro-antd";
+// import {} from 'ng-sidebar';
+// import {Droppable} from '@shopify/draggable';
+// @ts-ignore
+// import { Graph } from '@antv/g6';
 
 
 export const TYPE_DUMP_TABLE = 'table';
@@ -207,6 +189,7 @@ export const TYPE_DUMP_TABLE = 'table';
 })
 export class WorkflowAddComponent extends BasicWFComponent
   implements IDataFlowMainComponent, OnInit, AfterContentInit, AfterViewInit {
+
   _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
   public _nodeTypesAry: NodeMeta[] = [
     new NodeMeta(TYPE_DUMP_TABLE, 'table.svg', [40, 40], '数据表', WorkflowAddDbtableSetterComponent)
@@ -260,6 +243,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     return model;
   }
 
+
   get pageTitle(): string {
     return (this.isAdd ? "添加数据流" : (this.topologyName));
   }
@@ -278,20 +262,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     });
   }
 
-  // 取得随机ID
-  public static getUUID(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
 
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
-
-    // return s4() + s4() + s4() + s4() +
-    //   s4() + s4() + s4() + s4();
-  }
 
   constructor(tisService: TISService, //
               private _componentFactoryResolver: ComponentFactoryResolver,
@@ -312,6 +283,9 @@ export class WorkflowAddComponent extends BasicWFComponent
     });
   }
 
+  closePanel(): void {
+    this._opened = true;
+  }
   // 保存图形
   saveTopology() {
     if (this.erRuleComponent) {
@@ -535,7 +509,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
   // 取得随机ID
   public getUid(): string {
-    return WorkflowAddComponent.getUUID();
+    return BasicFormComponent.getUUID();
   }
 
 

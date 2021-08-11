@@ -128,7 +128,7 @@ G6.registerBehavior('click-add-edge', {
     } else {
       // 在图上新增一条边，结束点是鼠标当前点击的节点的位置
       let edgeCfg = {
-        id: WorkflowAddComponent.getUUID(),
+        id: BasicFormComponent.getUUID(),
         source: model.id,
         // @ts-ignore
         target: point,

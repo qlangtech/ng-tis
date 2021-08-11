@@ -18,9 +18,9 @@ import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {IndexIncrStatus} from "./incr.build.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NzModalService} from "ng-zorro-antd";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 
 
 
