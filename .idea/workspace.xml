@@ -3,49 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -299,7 +259,7 @@
       <workItem from="1627519849977" duration="7525000" />
       <workItem from="1628325375412" duration="20954000" />
       <workItem from="1628655051549" duration="2948000" />
-      <workItem from="1628683804713" duration="1448000" />
+      <workItem from="1628683804713" duration="2317000" />
     </task>
     <servers />
   </component>

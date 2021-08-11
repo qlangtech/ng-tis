@@ -20,7 +20,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {IncrBuildStep0Component} from "./incr.build.step0.component";
+
 import {IncrBuildStep1Component} from "./incr.build.step1.component";
 import {IncrBuildStep2Component} from "./incr.build.step2.component";
 import {IncrBuildStep3Component} from "./incr.build.step3.component";
@@ -29,6 +29,7 @@ import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
 import {IndexIncrStatus} from "./misc/RCDeployment";
+import {IncrBuildStep0Component} from "./incr.build.step0.component";
 
 
 @Component({

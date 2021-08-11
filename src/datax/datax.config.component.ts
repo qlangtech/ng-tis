@@ -19,7 +19,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 
 import {NzModalService} from "ng-zorro-antd";
-import {DataxDTO} from "../base/datax.add.component";
+import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor} from "../common/tis.plugin";
@@ -49,7 +49,7 @@ export class DataxConfigComponent extends AppFormComponent implements OnInit {
   }
 
   protected initialize(app: CurrentCollection): void {
-    DataxConfigComponent.getDataXMeta(this, app).then((dto) => {
+    DataxAddComponent.getDataXMeta(this, app).then((dto) => {
       // console.log(dto);
       this.dto = dto;
     });
