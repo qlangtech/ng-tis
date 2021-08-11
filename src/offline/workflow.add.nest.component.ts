@@ -14,7 +14,7 @@
  */
 
 import {AfterContentInit, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { BasicSideBar} from '../common/basic.form.component';
+import {BasicSideBar, IDataFlowMainComponent} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
 
 
@@ -153,11 +153,11 @@ export class WorkflowAddNestComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, addComponent: WorkflowAddComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
 
   }
 
-  initComponent(addComponent: WorkflowAddComponent): void {
+  initComponent(_: IDataFlowMainComponent): void {
   }
 
 

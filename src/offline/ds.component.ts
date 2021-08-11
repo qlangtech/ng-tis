@@ -16,16 +16,16 @@
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {TISService} from '../service/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {DbAddComponent, DbPojo} from "./db.add.component";
+import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
-import {NzFormatEmitEvent, NzModalRef, NzModalService, NzNotificationService, NzTreeNodeOptions, NzTreeComponent, NzTreeNode} from "ng-zorro-antd";
+import {NzFormatEmitEvent, NzModalService, NzNotificationService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
+import {Descriptor, HeteroList, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";

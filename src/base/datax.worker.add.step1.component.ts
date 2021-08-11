@@ -13,32 +13,14 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {ActivatedRoute} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
-import {MultiViewDAG} from "../common/MultiViewDAG";
-import {AddAppFlowDirective} from "../base/addapp.directive";
-
-import {NzIconService} from 'ng-zorro-antd/icon';
-import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
-import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
-import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {Descriptor, HeteroList, PluginSaveResponse} from "../common/tis.plugin";
-import {DataxAddStep3Component} from "./datax.add.step3.component";
-import {DataxAddStep4Component} from "./datax.add.step4.component";
-import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
-import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
-import {Option} from "./addapp-pojo";
+import {HeteroList, PluginSaveResponse} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DatasourceComponent} from "../offline/ds.component";
-import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
-import {DataxWorkerDTO} from "./datax.worker.component";
+import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 
 @Component({
   template: `
@@ -48,7 +30,6 @@ import {DataxWorkerDTO} from "./datax.worker.component";
               <button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
           </tis-header-tool>
       </tis-page-header>
-     
       <nz-spin [nzSpinning]="this.formDisabled" class="item-block">
           <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'datax-worker', require: true}]"
                        (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
@@ -107,7 +88,6 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
       this.nextStep.emit(this.dto);
     }
   }
-
 
 
 }

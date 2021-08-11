@@ -19,9 +19,8 @@ import {
   Component,
   OnInit
 } from '@angular/core';
-import {BasicSideBar, DumpTable} from '../common/basic.form.component';
+import {BasicSideBar, DumpTable, IDataFlowMainComponent} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-
 
 
 /*
@@ -50,8 +49,8 @@ import {CascaderOption, NzCascaderOption, NzModalService} from "ng-zorro-antd";
           <form class="clear" nz-form [nzLayout]="'vertical'">
               <div class="item-head"><label>数据库表</label></div>
               <p>
-<!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
-<!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
+                  <!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
+                  <!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
                   <tis-table-select [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>
               </p>
 
@@ -84,36 +83,10 @@ export class WorkflowAddDbtableSetterComponent
   }
 
   ngOnInit(): void {
-
-    // let action = 'event_submit_do_get_datasource_info=y&action=offline_datasource_action';
-    // this.httpPost('/offline/datasource.ajax', action)
-    //   .then(result => {
-    //     if (result.success) {
-    //       this.cascaderOptions = [];
-    //       const dbs = result.bizresult.dbs;
-    //       for (let db of dbs) {
-    //         let children = [];
-    //         if (db.tables) {
-    //           for (let table of db.tables) {
-    //             let c: NzCascaderOption = {
-    //               'value': `${table.id}%${table.name}`,
-    //               'label': table.name,
-    //               'isLeaf': true
-    //             };
-    //             children.push(c);
-    //           }
-    //         }
-    //         let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, 'children': children};
-    //         this.cascaderOptions.push(dbNode);
-    //       }
-    //        console.log(this.cascaderOptions);
-    //     }
-    //   });
-
   }
 
 
-  initComponent(addComponent: WorkflowAddComponent, dumpTab: DumpTable): void {
+  initComponent(_: WorkflowAddComponent, dumpTab: DumpTable): void {
 
     if (dumpTab.tabid) {
       this.cascadervalues = [dumpTab.dbid, dumpTab.cascaderTabId];
@@ -125,15 +98,12 @@ export class WorkflowAddDbtableSetterComponent
 
 
   ngAfterViewInit(): void {
-    // let sqlmirror = fromTextArea(this.sqleditor.nativeElement, this.sqleditorOption);
-    //
-    // sqlmirror.setValue("select * from mytable;");
   }
 
   ngAfterContentInit(): void {
   }
 
-   get sqleditorOption(): any {
+  get sqleditorOption(): any {
     return {
       'readOnly': true,
     };
@@ -168,7 +138,7 @@ export class WorkflowAddDbtableSetterComponent
   }
 
   public subscribeSaveClick(graph: any, $: any, nodeid: string
-    , addComponent: WorkflowAddComponent, d: DumpTable): void {
+    , addComponent: IDataFlowMainComponent, d: DumpTable): void {
     let old = graph.findById(nodeid);
     let nmodel = {'label': d.tabname, 'nodeMeta': d};
 
@@ -179,7 +149,7 @@ export class WorkflowAddDbtableSetterComponent
     // 将节点注册到map中存储起来
     // console.log(model.id);
     addComponent.dumpTabs.set(nodeid, d);
-    addComponent._opened = false;
+    addComponent.closePanel();
   }
 
   // 删除节点

@@ -20,7 +20,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
-import {DataXJobWorkerStatus} from "../base/datax.worker.component";
+import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 
 // const breadcrumbArry = ['数据流', '/offline/wf', 'totalpay', '/offline/wf_update/totalpay'];
 @Component({

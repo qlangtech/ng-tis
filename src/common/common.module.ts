@@ -97,9 +97,11 @@ import {DataxAddStep7Component, ViewGenerateCfgComponent} from "../base/datax.ad
 import {DataxAddStep4Component, PluginSubFormComponent} from "../base/datax.add.step4.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {DataxAddStep1Component} from "../base/datax.add.step1.component";
+import {DataxAddStep2Component} from "../base/datax.add.step2.component";
 import {DataxAddStep5Component} from "../base/datax.add.step5.component";
 import {DataxAddStep3Component} from "../base/datax.add.step3.component";
 import {DataxAddStep6Component} from "../base/datax.add.step6.maptable.component";
+import {DataxAddStep6ColsMetaSetterComponent} from "../base/datax.add.step6.cols-meta-setter.component";
 import {IncrPodLogsStatusComponent} from "../runtime/incr.pod.logs.status.component";
 import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
 import {MarkdownModule} from "ngx-markdown";
@@ -123,8 +125,8 @@ import {MarkdownModule} from "ngx-markdown";
     TimeConsumePipe, SafePipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
     CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent, FinalExecControllerComponent,
-    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
+    CodemirrorComponent, PluginsComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
+    TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
   exports: [SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent, NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
@@ -133,8 +135,8 @@ import {MarkdownModule} from "ngx-markdown";
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
-    , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component
-    , DataxAddComponent, DataxAddStep1Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent],
+    , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component , DataxAddStep6ColsMetaSetterComponent
+    , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent],
   entryComponents: [CompareEachOtherComponent],
 })
 export class TisCommonModule {

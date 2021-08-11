@@ -13,9 +13,9 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
@@ -28,7 +28,7 @@ import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.compone
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {CloseSquareFill} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd";
-import {RCDeployment, K8sPodState} from "./misc/RCDeployment";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 
 
 @Component({
@@ -44,17 +44,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
   private multiViewDAG: MultiViewDAG;
 
-  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
-    basicForm.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=core_action&emethod=get_incr_status&cache=${cache}`)
-      .then((r) => {
-        if (r.success) {
-          // r.bizresult.incrScriptCreated;
-          let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
-          hander(incrStatus);
-        }
-      });
-  }
+
 
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
@@ -90,7 +80,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     // console.log(this.containerRef);
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
     //  this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
-    IncrBuildComponent.getIncrStatusThenEnter(this, (incrStatus) => {
+    IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
       let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
       if (k8sRCCreated) {
         // 增量已经在集群中运行，显示增量状态
@@ -115,34 +105,3 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
 
 }
 
-export class K8SControllerStatus  {
-  public k8sReplicationControllerCreated: boolean;
-  public rcDeployment: RCDeployment;
-}
-
-export class IndexIncrStatus extends K8SControllerStatus {
-  public incrScriptCreated: boolean;
-  public incrScriptMainFileContent: string;
-  public k8sPluginInitialized: boolean;
-  public incrProcess: IncrProcess;
-
-  /**
-   * 增量处理节点启动有异常
-   */
-  public get incrProcessLaunchHasError(): boolean {
-    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.rcDeployment && !!this.rcDeployment.status && this.rcDeployment.status.readyReplicas > 0;
-  }
-
-  public getFirstPod(): K8sPodState {
-    for (let i = 0; i < this.rcDeployment.pods.length; i++) {
-      return this.rcDeployment.pods[i];
-      break;
-    }
-    return null;
-  }
-}
-
-export interface IncrProcess {
-  incrGoingOn: boolean;
-  incrProcessPaused: boolean;
-}

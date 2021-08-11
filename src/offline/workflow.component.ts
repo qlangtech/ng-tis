@@ -18,16 +18,10 @@
  */
 import {Component, OnInit} from '@angular/core';
 import {TISService} from '../service/tis.service';
-
-// import {WorkflowAddComponent} from './workflow.add.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
-
-// import {BaseEvent} from '@shopify/draggable';
-
-// declare var jQuery: any;
 
 export class BasicWFComponent extends BasicFormComponent {
   constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute, notification?: NzNotificationService) {

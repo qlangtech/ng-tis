@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -28,11 +28,10 @@ import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
-import {DataxConfigComponent} from "../datax/datax.config.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
-
+import {PluginsComponent} from "../common/plugins.component";
 
 
 @Component({
@@ -49,10 +48,28 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
   @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
-
   multiViewDAG: MultiViewDAG;
+  public static getDataXMeta(cpt: BasicFormComponent, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
+    return cpt.httpPost("/coredefine/corenodemanage.ajax"
+      , "action=datax_action&emethod=get_data_x_meta")
+      .then((r) => {
+        // this.processResult(r);
+        if (r.success) {
+          let dto = new DataxDTO(execId);
+          dto.dataxPipeName = app.appName;
+          dto.processMeta = r.bizresult.processMeta;
+          // this.dto.readerDescriptor = null;
+          let wdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc).values();
+          let rdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc).values();
+          dto.writerDescriptor = wdescIt.next().value;
+          dto.readerDescriptor = rdescIt.next().value;
+          return dto;
+        }
+      });
+  }
 
-  // protected r: Router, protected route: ActivatedRoute
+
+
   constructor(tisService: TISService, protected r: Router, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver) {
     super(tisService, route, modalService);
@@ -74,7 +91,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           if (!execId) {
             throw new Error("param execId can not be null");
           }
-          DataxConfigComponent.getDataXMeta(this, app, execId).then((dto) => {
+          DataxAddComponent.getDataXMeta(this, app, execId).then((dto) => {
             dto.processModel = StepType.UpdateDataxReader;
             this.multiViewDAG.loadComponent(cpt, dto);
           })
@@ -84,7 +101,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           if (!execId) {
             throw new Error("param execId");
           }
-          DataxConfigComponent.getDataXMeta(this, app, execId).then((dto) => {
+          DataxAddComponent.getDataXMeta(this, app, execId).then((dto) => {
             dto.processModel = StepType.UpdateDataxWriter;
             this.multiViewDAG.loadComponent(cpt, dto);
           })

@@ -13,36 +13,20 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewChecked, AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../service/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
-import {MultiViewDAG} from "../common/MultiViewDAG";
-import {AddAppFlowDirective} from "../base/addapp.directive";
 
-import {NzIconService} from 'ng-zorro-antd/icon';
-import {CloseSquareFill} from "@ant-design/icons-angular/icons";
+import {MultiViewDAG} from "../common/MultiViewDAG";
 import {NzModalService} from "ng-zorro-antd";
-import {IncrBuildStep0Component} from "../runtime/incr.build.step0.component";
-import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
-import {DataxAddStep3Component} from "./datax.add.step3.component";
-import {DataxAddStep4Component} from "./datax.add.step4.component";
-import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
-import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
-import {Option} from "./addapp-pojo";
-import {ISelectedTabMeta} from "./datax.add.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
-import {K8SRCSpec} from "../common/k8s.replics.spec.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
-import {IndexIncrStatus, K8SControllerStatus} from "../runtime/incr.build.component";
-import {Descriptor} from "../common/tis.plugin";
+import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 
 @Component({
   template: `
@@ -94,14 +78,6 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
       });
 
   }
-}
-
-export class DataXJobWorkerStatus extends K8SControllerStatus {
-
-}
-
-export class DataxWorkerDTO {
-  rcSpec: K8SRCSpec;
 }
 
 

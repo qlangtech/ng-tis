@@ -1,3 +1,6 @@
+import {BasicFormComponent} from "../../common/basic.form.component";
+import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
+
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
  * <p>
@@ -109,4 +112,54 @@ export interface UsingResource {
   name: string;
   currentAverageUtilization: any;
   currentAverageValue: any;
+}
+
+export class K8SControllerStatus {
+  public k8sReplicationControllerCreated: boolean;
+  public rcDeployment: RCDeployment;
+}
+
+export class IndexIncrStatus extends K8SControllerStatus {
+  public incrScriptCreated: boolean;
+  public incrScriptMainFileContent: string;
+  public k8sPluginInitialized: boolean;
+  public incrProcess: IncrProcess;
+  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
+    basicForm.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=core_action&emethod=get_incr_status&cache=${cache}`)
+      .then((r) => {
+        if (r.success) {
+          // r.bizresult.incrScriptCreated;
+          let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
+          hander(incrStatus);
+        }
+      });
+  }
+  /**
+   * 增量处理节点启动有异常
+   */
+  public get incrProcessLaunchHasError(): boolean {
+    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.rcDeployment && !!this.rcDeployment.status && this.rcDeployment.status.readyReplicas > 0;
+  }
+
+  public getFirstPod(): K8sPodState {
+    for (let i = 0; i < this.rcDeployment.pods.length; i++) {
+      return this.rcDeployment.pods[i];
+      break;
+    }
+    return null;
+  }
+}
+
+export interface IncrProcess {
+  incrGoingOn: boolean;
+  incrProcessPaused: boolean;
+}
+
+export class DataXJobWorkerStatus extends K8SControllerStatus {
+
+}
+
+export class DataxWorkerDTO {
+  rcSpec: K8SRCSpec;
 }

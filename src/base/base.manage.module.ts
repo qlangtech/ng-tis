@@ -40,7 +40,7 @@ import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {DepartmentAddComponent} from "./department.add.component";
 // import {DataxAddStep1Component} from "./datax.add.step1.component";
 // import {DataxAddComponent} from "./datax.add.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
+
 
 // import { ViewGenerateCfgComponent} from "./datax.add.step7.confirm.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
@@ -50,7 +50,6 @@ import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {PluginManageComponent} from "./plugin.manage.component";
-import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 import {MarkdownModule} from "ngx-markdown";
 import {PluginUpdateCenterComponent} from "./plugin.update.center.component";
 
@@ -61,8 +60,7 @@ import {PluginUpdateCenterComponent} from "./plugin.update.center.component";
   declarations: [
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
-    , DataxAddStep2Component
-    , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component, DataxAddStep6ColsMetaSetterComponent
+    , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component
     , DataxWorkerRunningComponent, PluginManageComponent , PluginUpdateCenterComponent
   ],
   entryComponents: [ApplistComponent

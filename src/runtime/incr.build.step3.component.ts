@@ -18,8 +18,9 @@ import {TISService} from "../service/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
-import {IncrBuildComponent, IndexIncrStatus} from "./incr.build.component";
+import {IncrBuildComponent} from "./incr.build.component";
 import {NzModalService} from "ng-zorro-antd";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 
 
 @Component({
@@ -84,7 +85,7 @@ export class IncrBuildStep3Component extends AppFormComponent implements AfterCo
   gotoManage() {
     // this.router.navigate(["."], {relativeTo: this.route});
 
-    IncrBuildComponent.getIncrStatusThenEnter(this, (incrStatus) => {
+    IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
       let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
       if (k8sRCCreated) {
         this.nextStep.emit(incrStatus);

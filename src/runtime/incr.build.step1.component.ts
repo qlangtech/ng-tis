@@ -19,12 +19,12 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
-import {IndexIncrStatus} from "./incr.build.component";
 // import {IncrBuildStep1ParamsSetComponent} from "./incr.build.step1_1_params_set.component";
 import {FormGroup} from "@angular/forms";
 import {Item, PluginSaveResponse} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 
 // import {eventNames} from "cluster";
 

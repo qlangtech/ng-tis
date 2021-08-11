@@ -14,9 +14,8 @@
  */
 
 import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {BasicSideBar, ERRuleNode, LinkKey} from '../common/basic.form.component';
+import {BasicSideBar, ERRuleNode, IDataFlowMainComponent, LinkKey} from '../common/basic.form.component';
 import {TISService} from '../service/tis.service';
-
 
 
 import {WorkflowAddComponent} from "./workflow.add.component";
@@ -75,7 +74,7 @@ import {NzModalService} from "ng-zorro-antd";
                           <label nz-checkbox [(ngModel)]="rr.checked" [ngModelOptions]="{standalone: true}"></label>
                       </td>
                       <td>
-                          <nz-select  nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.parentKey" [ngModelOptions]="{standalone: true}"
+                          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.parentKey" [ngModelOptions]="{standalone: true}"
                                      (ngModelChange)="parentKeyChange(rr,$event)">
                               <nz-option *ngFor="let r of this.parentCols" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
                           </nz-select>
@@ -177,7 +176,7 @@ export class WorkflowAddErCardinalityComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, addComponent: WorkflowAddComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
 
     let old = graph.findById(nodeid);
     old.linkrule = {'linkKeyList': this.linkKeyList, 'cardinality': this.erRel.cardinality};
@@ -187,7 +186,7 @@ export class WorkflowAddErCardinalityComponent
     this._closeSidebar();
   }
 
-  initComponent(addComponent: WorkflowAddComponent, erRuleNode: ERRuleNode): void {
+  initComponent(_: IDataFlowMainComponent, erRuleNode: ERRuleNode): void {
     this.erRel = erRuleNode;
     this.linkKeyList = erRuleNode.linkKeyList;
   }
