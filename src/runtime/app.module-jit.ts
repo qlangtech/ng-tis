@@ -23,7 +23,7 @@ import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {AppComponent} from "./app.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 //
 // import {ScriptService} from "../service/script.service";
 import {TisCommonModule} from "../common/common.module";

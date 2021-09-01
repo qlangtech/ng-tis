@@ -16,7 +16,7 @@
 import {AfterContentInit, AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {TISService} from "../service/tis.service";
+import {TISService} from "./tis.service";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd";
 import {Item, ItemPropVal} from "./tis.plugin";

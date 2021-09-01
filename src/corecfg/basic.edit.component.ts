@@ -14,7 +14,7 @@
  */
 
 import {Component, OnInit, ViewChild, ElementRef, Input, TemplateRef} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 

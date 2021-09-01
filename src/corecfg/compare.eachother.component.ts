@@ -15,7 +15,7 @@
 
 import {Component, OnInit, Input, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
 
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NzModalRef, NzModalService} from "ng-zorro-antd";
 

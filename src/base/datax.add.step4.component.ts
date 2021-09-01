@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {NzDrawerRef, NzDrawerService, NzModalService, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
 import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType} from "../common/tis.plugin";

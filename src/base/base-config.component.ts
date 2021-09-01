@@ -15,7 +15,7 @@
 
 import {BasicFormComponent} from "../common/basic.form.component";
 import {Component, EventEmitter, OnInit} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 
 import {PluginSaveResponse, TisResponseResult} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd";

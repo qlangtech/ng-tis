@@ -15,7 +15,7 @@
 
 import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {BasicSideBar, BasicSidebarDTO, DumpTable, IDataFlowMainComponent, JoinNode, NodeMeta, Option} from '../common/basic.form.component';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 
 
 import {WorkflowAddComponent} from "./workflow.add.component";

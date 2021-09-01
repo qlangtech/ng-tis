@@ -15,7 +15,7 @@
 
 import {Component, OnInit} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
-import {TISService} from "../service/tis.service";
+import {TISService} from "./tis.service";
 import {NzModalRef} from "ng-zorro-antd";
 
 @Component({

@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";

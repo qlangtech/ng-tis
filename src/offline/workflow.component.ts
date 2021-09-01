@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, OnInit} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";

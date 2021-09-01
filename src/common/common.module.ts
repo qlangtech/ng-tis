@@ -15,16 +15,13 @@
 
 import {NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-// import {HttpModule, JsonpModule} from "@angular/http";
-
-
 import {TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {PaginationComponent, TdContentDirective, ThDirective, TisColumn} from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
-import {NavigateBarComponent} from "../runtime/navigate.bar.component";
+import {NavigateBarComponent} from "./navigate.bar.component";
 import {RouterModule} from "@angular/router";
-import {OperationLogComponent} from "../base/operation.log.component";
+import {OperationLogComponent} from "./operation.log.component";
 import {SafePipe} from "./safe.pipe";
 import {FinalExecControllerComponent, PageHeaderComponent, PageHeaderLeftComponent, TisHeaderTool, TisHeaderToolContent} from "./pager.header.component";
 import {TisMsgComponent} from "./msg.component";
@@ -34,7 +31,7 @@ import {NzSelectModule} from 'ng-zorro-antd/select';
 import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {LocalStorageModule} from 'angular-2-local-storage';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
-import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS, NzIconModule} from 'ng-zorro-antd/icon';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {ItemPropValComponent, PluginsComponent} from "./plugins.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
@@ -45,14 +42,14 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {NzBreadCrumbModule} from 'ng-zorro-antd/breadcrumb';
 import {TisBreadcrumbComponent} from "./breadcrumb.component";
-import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
+import {FullBuildHistoryComponent} from "./full.build.history.component";
 import {TisStepsComponent, TisStepsToolbarComponent} from "./steps.component";
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzBackTopModule} from 'ng-zorro-antd/back-top';
-import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from "../base/schema.expert.create.edit.component";
+import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from "./schema.expert.create.edit.component";
 import {NzTransferModule} from 'ng-zorro-antd/transfer';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzAlertModule} from 'ng-zorro-antd/alert';
@@ -61,22 +58,19 @@ import {NzCardModule} from 'ng-zorro-antd/card';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzListModule} from 'ng-zorro-antd/list';
-import {BuildProgressComponent, ProgressTitleComponent} from "../runtime/core.build.progress.component";
+import {BuildProgressComponent, ProgressComponent, ProgressTitleComponent} from "./core.build.progress.component";
 import {NgTerminalModule} from 'ng-terminal';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
-import {
-  ProgressComponent
-} from "../runtime/core.build.progress.component";
 import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
 import {NzAnchorModule} from 'ng-zorro-antd/anchor';
 import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzStatisticModule} from 'ng-zorro-antd/statistic';
-import {SnapshotsetComponent} from "../index/snapshotset.component";
-import {SnapshotLinkComponent} from "../corecfg/snapshot.link";
+import {SnapshotsetComponent} from "./snapshotset.component";
+import {SnapshotLinkComponent} from "./snapshot.link";
 import {SnapshotChangeLogComponent} from "../runtime/snapshot.change.log";
-import {SchemaXmlEditComponent, SchemaEditVisualizingModelComponent} from '../corecfg/schema-xml-edit.component';
+import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from '../corecfg/schema-xml-edit.component';
 import {CompareEachOtherComponent, CompareResultComponent} from '../corecfg/compare.eachother.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzEmptyModule} from 'ng-zorro-antd/empty';
@@ -105,7 +99,12 @@ import {DataxAddStep6ColsMetaSetterComponent} from "../base/datax.add.step6.cols
 import {IncrPodLogsStatusComponent} from "../runtime/incr.pod.logs.status.component";
 import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
 import {MarkdownModule} from "ngx-markdown";
+// import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
+// angular libraries: https://angular.io/guide/creating-libraries
+// https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004216480-Angular-Library-Module-Import-Error
+// import {HttpModule, JsonpModule} from "@angular/http";
+// @ts-ignore
 @NgModule({
   id: 'tiscommonModule',
   imports: [
@@ -114,6 +113,7 @@ import {MarkdownModule} from "ngx-markdown";
       prefix: 'my-app',
       storageType: 'localStorage'
     }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule,
+   // NgxTisCommonLibModule ,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule, NzPageHeaderModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
@@ -135,7 +135,7 @@ import {MarkdownModule} from "ngx-markdown";
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
-    , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component , DataxAddStep6ColsMetaSetterComponent
+    , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent
     , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent],
   entryComponents: [CompareEachOtherComponent],
 })

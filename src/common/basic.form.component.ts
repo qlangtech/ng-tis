@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TISService} from '../service/tis.service';
+import {TISService} from './tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
@@ -27,7 +27,7 @@ import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {LogType} from "../runtime/misc/RCDeployment";
 
-import {AppType} from "../index/application";
+import {AppType} from "./application";
 
 /**
  * Created by baisui on 2017/4/12 0012.

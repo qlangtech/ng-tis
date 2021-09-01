@@ -14,9 +14,9 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 
-import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from './schema.expert.create.edit.component';
+import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from '../common/schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
 import {NzModalService, NzTabsCanDeactivateFn} from "ng-zorro-antd";

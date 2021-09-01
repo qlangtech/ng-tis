@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd";

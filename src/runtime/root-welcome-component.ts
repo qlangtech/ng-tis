@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 // import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
 
@@ -25,9 +25,9 @@ import {AppFormComponent, CurrentCollection} from '../common/basic.form.componen
 import {ActivatedRoute, Router} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
 import {LocalStorageService} from "angular-2-local-storage";
-import {NavigateBarComponent} from "./navigate.bar.component";
+import {NavigateBarComponent} from "../common/navigate.bar.component";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
-import {Application} from "../index/application";
+import {Application} from "../common/application";
 
 @Component({
   template: `

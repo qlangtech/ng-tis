@@ -15,7 +15,7 @@
 
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
-import {TISService} from "../service/tis.service";
+import {TISService} from "./tis.service";
 import {NzCascaderOption, NzSelectSizeType} from "ng-zorro-antd";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 

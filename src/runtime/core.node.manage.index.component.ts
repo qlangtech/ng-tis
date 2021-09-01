@@ -14,7 +14,7 @@
  */
 
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';

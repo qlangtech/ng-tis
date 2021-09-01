@@ -14,7 +14,7 @@
  */
 
 import {AfterContentInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
