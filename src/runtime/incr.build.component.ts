@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
@@ -88,7 +88,6 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
         this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, incrStatus);
       } else {
         // 脚本还未创建
-        // this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
         this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
       }
       this.incrScript = incrStatus.incrScriptMainFileContent;

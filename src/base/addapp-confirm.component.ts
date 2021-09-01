@@ -18,7 +18,7 @@
  */
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {AppDesc, ConfirmDTO, CoreNodeCandidate, SchemaField} from './addapp-pojo';
 import {Router} from '@angular/router';
 import {NzModalService} from "ng-zorro-antd";

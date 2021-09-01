@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";

@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 // import {BasicEditComponent} from '../corecfg/basic.edit.component';
 // import {ScriptService} from '../service/script.service';
 

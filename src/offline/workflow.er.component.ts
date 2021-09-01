@@ -18,7 +18,7 @@ import {
   BasicFormComponent, ColumnTransfer, DumpTable, ERMetaNode, LinkKey, NodeMeta, PrimaryIndexColumnName,
   // tslint:disable-next-line:no-unused-variable
 } from '../common/basic.form.component';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 
 // @ts-ignore
 import * as $ from 'jquery';

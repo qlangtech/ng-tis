@@ -14,7 +14,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {TableAddStep} from './table.add.step';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';

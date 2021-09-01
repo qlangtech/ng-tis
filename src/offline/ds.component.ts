@@ -17,7 +17,7 @@
  * Created by baisui on 2017/3/29 0029.
  */
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -25,7 +25,7 @@ import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {NzFormatEmitEvent, NzModalService, NzNotificationService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";
@@ -216,7 +216,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   datasourceDesc: Array<Descriptor> = [];
   // 是否处在编辑模式
   updateMode = false;
-
 
 
   constructor(protected tisService: TISService //
@@ -451,9 +450,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               if (biz.facade) {
                 this.facdeDb = this.createDB(id, biz.facade);
                 this.facdeDb.facade = true;
-                this.createFacadePluginsMetas(this.facdeDb.dbName);
+                this.createFacadePluginsMetas(db.dbName);
               }
-
             } else if (type === 'table') {
               this.selectedTable = result.bizresult;
               this.selectedDb = new DbPojo();
@@ -644,21 +642,49 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   afterPluginInit(evne: HeteroList[]) {
-    evne.forEach((hlist) => {
-      let it = hlist.descriptorList;
-      it.forEach((des) => {
-        let ep = des.extractProps;
-        this.supportFacade = ep["supportFacade"];
+    // console.log([this.datasourceDesc, evne]);
+    this.supportFacade = false;
+    for (let index = 0; index < evne.length; index++) {
+      let catItems: HeteroList = evne[index];
+      let item: Item = catItems.items.find((_) => true);
+      if (!item) {
+        throw new Error("can not find item");
+      }
+      let des: Descriptor = catItems.descriptors.get(item.impl);
+      if (!des) {
+        throw new Error(`can not find plugin impl:${item.impl} in desc map`);
+      }
+      let ep = des.extractProps;
+      this.facadeSourceDesc = [];
+      if (ep["supportFacade"]) {
         let facadeSourceTypes: string[] = ep["facadeSourceTypes"];
-        this.facadeSourceDesc = [];
         facadeSourceTypes.filter((r) => {
-          let findDes = this.datasourceDesc.find((dd) => dd.displayName === r);
+          let findDes = this.datasourceDesc.find((dd) => (dd.displayName === r));
           if (findDes) {
             this.facadeSourceDesc.push(findDes);
           }
         });
-      });
-    });
+        this.supportFacade = true;
+      }
+      break;
+    }
+    // evne.forEach((hlist) => {
+    //   let it = hlist.descriptorList;
+    // it.forEach((des) => {
+    //   let ep = des.extractProps;
+    //   this.facadeSourceDesc = [];
+    //   if (ep["supportFacade"]) {
+    //     let facadeSourceTypes: string[] = ep["facadeSourceTypes"];
+    //     facadeSourceTypes.filter((r) => {
+    //       let findDes = this.datasourceDesc.find((dd) => (dd.displayName === r));
+    //       if (findDes) {
+    //         this.facadeSourceDesc.push(findDes);
+    //         this.supportFacade = true;
+    //       }
+    //     });
+    //   }
+    // });
+    // });
   }
 
   afterSave(event: PluginSaveResponse) {

@@ -29,7 +29,7 @@ import {AppDesc, ConfirmDTO, Option, StupidModal} from "./addapp-pojo";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {ActivatedRoute} from "@angular/router";
 import {BasicFormComponent} from "../common/basic.form.component";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 
 import {NzModalService} from "ng-zorro-antd";
 

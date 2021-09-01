@@ -14,7 +14,7 @@
  */
 
 import {CurrentCollection} from "./basic.form.component";
-import {Application, AppType} from "../index/application";
+import {Application, AppType} from "./application";
 import {LocalStorageService} from "angular-2-local-storage";
 import {Router} from "@angular/router";
 

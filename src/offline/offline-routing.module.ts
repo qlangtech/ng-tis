@@ -19,8 +19,8 @@ import {DatasourceComponent} from './ds.component';
 import {WorkflowComponent} from './workflow.component';
 import {RouterModule, Routes} from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
-import {BuildProgressComponent} from "../runtime/core.build.progress.component";
-import {FullBuildHistoryComponent} from "./full.build.history.component";
+import {BuildProgressComponent} from "../common/core.build.progress.component";
+import {FullBuildHistoryComponent} from "../common/full.build.history.component";
 
 const coreNodeRoutes: Routes = [
   {

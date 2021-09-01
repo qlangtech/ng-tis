@@ -17,19 +17,19 @@ import {Injectable, NgModule} from '@angular/core';
 import {CorenodemanageComponent} from './corenodemanage.component';
 
 import {ActivatedRoute, ActivatedRouteSnapshot, CanActivateChild, Router, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
-import {SnapshotsetComponent} from '../index/snapshotset.component';
+import {SnapshotsetComponent} from '../common/snapshotset.component';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {IndexQueryComponent} from './index.query.component';
-import {OperationLogComponent} from "../base/operation.log.component";
+import {OperationLogComponent} from "../common/operation.log.component";
 import {MonitorComponent} from "./monitor.component";
 import {MembershipComponent} from "./membership.component";
 import {CorePluginConfigComponent} from "./core.plugin.config.component";
 import {IncrBuildComponent} from "./incr.build.component";
-import {FullBuildHistoryComponent} from "../offline/full.build.history.component";
+import {FullBuildHistoryComponent} from "../common/full.build.history.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
-import {BuildProgressComponent} from "./core.build.progress.component";
+import {BuildProgressComponent} from "../common/core.build.progress.component";
 import {Observable} from "rxjs";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 
 @Injectable()

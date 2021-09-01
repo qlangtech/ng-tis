@@ -14,7 +14,7 @@
  */
 
 import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";

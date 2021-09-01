@@ -14,7 +14,7 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd";
 import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
@@ -24,30 +24,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   selector: 'addapp-form',
-  // templateUrl: '/runtime/addapp.htm'
   template: `
       <tis-steps type="createDatax" [step]="0"></tis-steps>
-      <!--      <tis-form [fieldsErr]="errorItem">-->
-      <!--          <tis-page-header [showBreadcrumb]="false">-->
-      <!--              <tis-header-tool>-->
-      <!--                  <button nz-button  (click)="createIndexStep1Next()">取消</button> &nbsp;  <button nz-button nzType="primary" (click)="createIndexStep1Next()">下一步</button>-->
-      <!--              </tis-header-tool>-->
-      <!--          </tis-page-header>-->
-      <!--          <tis-ipt #indexName title="实例名称" name="projectName" require="true">-->
-      <!--              <input nzSize="large" required type="text" [id]="indexName.name" nz-input [(ngModel)]="dto.profile.projectName" name="name"/>-->
-      <!--          </tis-ipt>-->
-      <!--          <tis-ipt #dptId title="所属部门" name="dptId" require="true">-->
-      <!--              <nz-select nzSize="large" style="width: calc(100% - 6em)" nzPlaceHolder="请选择" name="dptId" class="form-control" [(ngModel)]="dto.profile.dptId">-->
-      <!--                  <nz-option *ngFor="let pp of dpts" [nzValue]="pp.value" [nzLabel]="pp.name"></nz-option>-->
-      <!--              </nz-select>-->
-      <!--              <a class="tis-link-btn" [routerLink]="['/','base','departmentlist']">部门管理</a>-->
-      <!--          </tis-ipt>-->
-
-      <!--          <tis-ipt #recept title="接口人" name="recept" require="true">-->
-      <!--              <input nzSize="large" nz-input [id]="recept.name" [(ngModel)]="dto.profile.recept" name="recept"-->
-      <!--                     placeholder="小明">-->
-      <!--          </tis-ipt>-->
-      <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
           <div style="width: 80%;margin: 0 auto;">
@@ -85,35 +63,18 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
       , 'action=datax_action&emethod=datax_processor_desc' + dataxNameParam)
       .then((r) => {
         if (r.success) {
-          // let rList = PluginsComponent.wrapDescriptors(r.bizresult.descriptors);
-          // let desc = Array.from(rList.values());
           let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult);
           if (hlist.items.length < 1) {
             Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
           }
-//          DatasourceComponent.pluginDesc(desc[0])
-          this.hlist = [hlist]; // DatasourceComponent.pluginDesc(desc[0])
-          // console.log(this.hlist);
+          this.hlist = [hlist];
         }
       });
   }
 
   // 执行下一步
   public createIndexStep1Next(): void {
-    // let dto = new ConfirmDTO();
-    // dto.appform = this.model;
     this.savePlugin.emit();
-    // this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=validate_datax_profile'
-    //   , this.dto.profile)
-    //   .then((r) => {
-    //     this.processResult(r);
-    //     if (r.success) {
-    //       // console.log(dto);
-    //       this.nextStep.emit(this.dto);
-    //     } else {
-    //       this.errorItem = Item.processFieldsErr(r);
-    //     }
-    //   });
   }
 
   afterSaveReader(event: PluginSaveResponse) {
@@ -135,18 +96,4 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
 
     }
   }
-
-
-  // openTestDialog() {
-  //   // PluginsComponent.openPluginInstanceAddDialog(this,);
-  //   let impl = 'com.qlangtech.tis.plugin.datax.DataXGlobalConfig';
-  //   let url = "/coredefine/corenodemanage.ajax";
-  //   this.httpPost(url, "action=plugin_action&emethod=get_descriptor&impl=" + impl).then((r) => {
-  //     let desc = PluginsComponent.wrapDescriptors(r.bizresult);
-  //     desc.forEach((d) => {
-  //       PluginsComponent.openPluginInstanceAddDialog(this, d, {name: "params-cfg", require: true, extraParam: "append_true"}, "添加" + d.displayName, (biz) => {
-  //       });
-  //     });
-  //   });
-  // }
 }

@@ -2,10 +2,139 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tis-console-nodejs.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tis-console-nodejs.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/browserslist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/e2e/src/app.e2e-spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/e2e/src/app.po.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/e2e/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/app/app.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/assets/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/projects/ngx-tis-common-lib/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/assets/elements" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/environments/environment.prod.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/environments/environment.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/polyfills.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/src/test.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/tsconfig.spec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/elements/tslint.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rollup-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/rollup-config.js_bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.base.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/department.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/department.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/global.add.param.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/global.add.param.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/global.update.param.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/global.update.param.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/operation.log.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/operation.log.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/schema.expert.create.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/schema.expert.create.edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/init.system.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/init.system.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/basic.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/basic.edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/compare.eachother.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/compare.eachother.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/snapshot.link.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/snapshot.link.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.main.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.main.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index/application.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/application.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index/snapshotset.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/snapshotset.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/table.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/copy.other.core.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/copy.other.core.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.plugin.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.plugin.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/corenodemanage.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.pod.logs.status.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/index.query.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/index.query.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/line.chart.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/line.chart.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/membership.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/membership.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/monitor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/monitor.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/pojo.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/pojo.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/snapshot.change.log.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/snapshot.change.log.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/sync.cfg.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/sync.cfg.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/trigger_dump.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/trigger_dump.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/basic.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/basic.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/tsconfig.json_bak" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user/user.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user/user.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/user/user.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/user/user.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sysjs/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sysjs/systemjs-angular-loader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sysjs/systemjs-dagre-loader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sysjs/systemjs.config.extras.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,21 +166,21 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/projects/elements" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/projects/elements/src" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.tabs" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/projects/elements/src" />
       <recent name="$PROJECT_DIR$/projects/elements" />
       <recent name="$PROJECT_DIR$/src/base" />
       <recent name="$PROJECT_DIR$/src/datax" />
       <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$/src/runtime" />
     </key>
     <key name="es6.move.members.recent.items">
       <recent name="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" />
@@ -60,6 +189,8 @@
       <recent name="$PROJECT_DIR$/src/common/item.pojo.ts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/common" />
     </key>
   </component>
@@ -75,7 +206,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="npm.build:elements">
+  <component name="RunManager" selected="npm.ng:serve-jit">
     <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -128,8 +259,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.build:elements" />
         <item itemvalue="npm.ng:serve-jit" />
+        <item itemvalue="npm.build:elements" />
         <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.build:aot" />
@@ -259,7 +390,16 @@
       <workItem from="1627519849977" duration="7525000" />
       <workItem from="1628325375412" duration="20954000" />
       <workItem from="1628655051549" duration="2948000" />
-      <workItem from="1628683804713" duration="2317000" />
+      <workItem from="1628683804713" duration="14787000" />
+      <workItem from="1628943066212" duration="585000" />
+      <workItem from="1629072924290" duration="581000" />
+      <workItem from="1629253983976" duration="8111000" />
+      <workItem from="1629360676465" duration="677000" />
+      <workItem from="1630059157484" duration="1762000" />
+      <workItem from="1630111771017" duration="10036000" />
+      <workItem from="1630141064498" duration="6047000" />
+      <workItem from="1630149798594" duration="2382000" />
+      <workItem from="1630152615592" duration="10091000" />
     </task>
     <servers />
   </component>
@@ -270,7 +410,6 @@
         <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js" />
         <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.component.js" />
@@ -308,7 +447,6 @@
         <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
         <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
-        <option value="$PROJECT_DIR$/src/common/tis.plugin.js" />
         <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
         <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
@@ -317,7 +455,6 @@
         <option value="$PROJECT_DIR$/src/common/form.component.js" />
         <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/tis.plugin.js.map" />
         <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
@@ -352,29 +489,21 @@
         <option value="$PROJECT_DIR$/src/common/plugins.component.js" />
         <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/index/application.js.map" />
         <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
         <option value="$PROJECT_DIR$/src/index/application.module.js" />
         <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/basic.service.js" />
         <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/service/tis.service.js" />
-        <option value="$PROJECT_DIR$/src/service/tis.service.js.map" />
         <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
         <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
-        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/script.service.js" />
-        <option value="$PROJECT_DIR$/src/index/snapshotset.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.store.js" />
-        <option value="$PROJECT_DIR$/src/index/application.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/snapshot.link.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
         <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
         <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
@@ -387,17 +516,14 @@
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step1.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
         <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/app.module-jit.js" />
-        <option value="$PROJECT_DIR$/src/runtime/navigate.bar.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
@@ -418,7 +544,6 @@
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.build.progress.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
@@ -438,7 +563,11 @@
         <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
         <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/full.build.history.component.js.map" />
+      </list>
+    </option>
+    <option name="additionalRoots">
+      <list>
+        <option value="$PROJECT_DIR$/dist/ngx-tis-common-lib" />
       </list>
     </option>
   </component>
@@ -531,6 +660,16 @@
           <url>file://$PROJECT_DIR$/src/offline/workflow.component.ts</url>
           <line>20</line>
           <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/common/schema.expert.create.edit.component.ts</url>
+          <line>22</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/projects/tis-console-lib/src/lib/tis-console-lib.module.ts</url>
+          <line>37</line>
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

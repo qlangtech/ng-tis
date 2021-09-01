@@ -19,7 +19,7 @@
 // import {Http} from '@angular/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import {TISService} from './tis.service';
+import {TISService} from '../common/tis.service';
 import {HttpClient} from "@angular/common/http";
 
 export class BasicService {

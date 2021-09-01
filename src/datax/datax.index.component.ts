@@ -14,7 +14,7 @@
  */
 
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
@@ -38,6 +38,10 @@ import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>构建</a>
+                  </li>
+                  <li nz-menu-item nzMatchRouter>
+                      <a routerLink="./incr_build">
+                          <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时通道</a>
                   </li>
 <!--                  <li nz-menu-item nzMatchRouter>-->
 <!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->

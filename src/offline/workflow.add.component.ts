@@ -17,7 +17,7 @@ import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetector
 
 import {BasicFormComponent, BasicSideBar, BasicSidebarDTO, DumpTable, ERMetaNode, ERRuleNode, IDataFlowMainComponent, JoinNode, LinkKey, NodeMeta, NodeMetaConfig, NodeMetaDependency, Option} from '../common/basic.form.component';
 
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 
 import {BasicWFComponent, Dataflow, WorkflowComponent} from './workflow.component';
 //  @ts-ignore

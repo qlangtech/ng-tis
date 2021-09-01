@@ -1,6 +1,6 @@
 import {BasicFormComponent} from "../common/basic.form.component";
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd";
 
 /**

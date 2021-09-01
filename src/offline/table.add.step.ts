@@ -14,7 +14,7 @@
  */
 
 import {EventEmitter, Input, Output} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';

@@ -14,7 +14,7 @@
  */
 
 import {Component, OnInit, Input, ViewChild, ViewContainerRef, ContentChild, TemplateRef} from '@angular/core';
-import {TISService} from '../service/tis.service';
+import {TISService} from '../common/tis.service';
 
 // import {ScriptService} from '../service/script.service';
 import {AbstractSchemaEditComponent, BasicEditComponent} from './basic.edit.component';
@@ -23,7 +23,7 @@ import {FieldErrorInfo, StupidModal} from "../base/addapp-pojo";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SchemaVisualizingEditComponent} from "../base/schema.expert.create.edit.component";
+import {SchemaVisualizingEditComponent} from "../common/schema.expert.create.edit.component";
 
 export declare type TisResType = 'schema.xml' | 'solrconfig.xml';
 

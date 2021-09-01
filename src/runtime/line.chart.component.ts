@@ -15,7 +15,7 @@
 
 import {Component, Input, OnInit} from "@angular/core";
 import {BasicFormComponent} from "../common/basic.form.component";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {ChartDataSets, ChartOptions} from "chart.js";
 
 export declare type ChartType = 'solrQuery' | 'docUpdate';

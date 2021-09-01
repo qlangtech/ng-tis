@@ -4,6 +4,6 @@
 *.map
 *.ngsummary.json
 *.metadata.json
-!rollup-config.js
+!rollup-config.js_bak
 /dist
 

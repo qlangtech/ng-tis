@@ -14,7 +14,7 @@
  */
 
 import {Component} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";

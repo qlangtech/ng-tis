@@ -31,11 +31,8 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {ChartsModule} from 'ng2-charts';
-
-// import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
-
 import {NzDividerModule} from 'ng-zorro-antd/divider';
-import {NzIconModule, NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
@@ -44,19 +41,15 @@ import {DataxRoutingModule} from "./datax-routing.module";
 import {DataxIndexComponent} from "./datax.index.component";
 import {DataxMainComponent} from "./datax.main.component";
 import {DataxConfigComponent} from "./datax.config.component";
-import {BasiManageModule} from "../base/base.manage.module";
- // import {DataxAddStep7Component} from "../base/datax.add.step7.confirm.component";
-
-// import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
-
+import {CoreNodeManageModule} from "../runtime/core.node.manage.module";
 
 @NgModule({
   id: 'datax',
-  imports: [CommonModule, DataxRoutingModule, FormsModule, TisCommonModule, NzLayoutModule, NzCollapseModule
+  imports: [CommonModule, DataxRoutingModule, FormsModule, CoreNodeManageModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
     , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
   ],
-  declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent ],
+  declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}

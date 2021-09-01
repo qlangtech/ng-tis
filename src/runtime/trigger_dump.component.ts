@@ -14,7 +14,7 @@
  */
 
 import {Component} from '@angular/core';
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd";

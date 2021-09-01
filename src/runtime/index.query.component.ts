@@ -14,7 +14,7 @@
  */
 
 import {Component, Input, OnInit, ViewContainerRef} from "@angular/core";
-import {TISService} from "../service/tis.service";
+import {TISService} from "../common/tis.service";
 import {EditorConfiguration} from "codemirror";
 import {BasicFormComponent} from "../common/basic.form.component";
 
