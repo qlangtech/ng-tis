@@ -36,7 +36,7 @@ import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
               <nz-tag *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated" nzColor="processing">
                   <a target="_blank" [routerLink]="'/base/datax-worker'"><i nz-icon nzType="link" nzTheme="outline"></i>分布式K8S执行</a></nz-tag>
           </tis-page-header-left>
-          <button (click)="triggerFullBuild()" nz-button nzType="primary">触发构建</button> &nbsp;
+          <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nzType="primary">触发构建</button> &nbsp;
       </tis-page-header>
       <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
           <tis-col title="ID" width="10">
