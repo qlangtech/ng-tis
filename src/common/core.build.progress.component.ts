@@ -28,7 +28,6 @@ import {map} from 'rxjs/operators';
 @Component({
   selector: 'tis-progress',
   template: `
-      {{t| json}}
       <dd class="progress">
           <ng-container *ngIf="t.success">
               <nz-progress [nzPercent]="100"></nz-progress>
