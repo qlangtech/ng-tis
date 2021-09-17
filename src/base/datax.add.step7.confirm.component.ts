@@ -15,7 +15,7 @@
 
 import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection, AppFormComponent} from "../common/basic.form.component";
 import {NzDrawerRef, NzDrawerService, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -232,7 +232,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   viewCreateDDLFile(createDDLName: string) {
-    this.viewGenFile(createDDLName, {'formatMode': 'text/x-sql', 'titlePrefix': 'Table create DDL file For Writer ', 'type': GenCfgFileType.createDDL});
+    this.viewGenFile(createDDLName
+      , {'formatMode': 'text/x-sql', 'titlePrefix': 'Table create DDL file For Writer ', 'type': GenCfgFileType.createDDL, 'editable': true, updateMethod: "save_table_create_ddl"});
   }
 
   private viewGenFile(fileName: string, opt: GenCfgFileOpt) {
@@ -248,7 +249,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
             nzTitle: `${opt.titlePrefix} '${fileName}' `,
             nzContent: ViewGenerateCfgComponent,
             nzWrapClassName: 'get-gen-cfg-file',
-            nzContentParams: {fileMeta: r.bizresult, formatMode: opt.formatMode}
+            nzContentParams: {fileMeta: Object.assign({fileName: fileName, dataxName: this.dto.dataxPipeName}, r.bizresult), formatMode: opt.formatMode, editMeta: opt}
           });
         }
       });
@@ -307,6 +308,8 @@ interface GenCfgFileOpt {
   titlePrefix: string;
   formatMode: string;
   type: GenCfgFileType;
+  editable?: true;
+  updateMethod?: string;
 }
 
 class GenerateCfgs {
@@ -317,24 +320,50 @@ class GenerateCfgs {
 
 @Component({
   template: `
-      <tis-codemirror [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [ngModel]="fileMeta.content"></tis-codemirror>
+      <nz-page-header *ngIf="editMeta.editable" class="recent-using-tool" [nzGhost]="false">
+          <nz-page-header-extra>
+              <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
+          </nz-page-header-extra>
+      </nz-page-header>
+      <tis-codemirror  [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [(ngModel)]="fileMeta.content"></tis-codemirror>
   `
   , styles: [`
   `]
 })
-export class ViewGenerateCfgComponent {
+export class ViewGenerateCfgComponent extends AppFormComponent {
 
   @Input()
-  fileMeta: { content?: string } = {};
+  fileMeta: { content?: string, fileName?: string } = {};
 
   @Input()
   formatMode: string;
 
-  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>) {
+  @Input()
+  editMeta: EditMeta = {};
+
+  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, route, modalService, notification);
+  }
+
+  protected initialize(app: CurrentCollection): void {
+
   }
 
   close(): void {
     this.drawerRef.close();
+  }
+
+  saveContent() {
+    let post = this.fileMeta;
+    if (!this.editMeta.editable) {
+      throw new Error("must be editable");
+    }
+    this.jsonPost("/coredefine/corenodemanage.ajax?event_submit_do_" + this.editMeta.updateMethod + "=y&action=datax_action"
+      , post).then((result) => {
+      if (result.success) {
+        this.drawerRef.close();
+      }
+    });
   }
 }
 
@@ -342,4 +371,9 @@ export class ViewGenerateCfgComponent {
 interface ITableAlias {
   from: string;
   to: string;
+}
+
+interface EditMeta {
+  editable?: boolean;
+  updateMethod?: string;
 }
