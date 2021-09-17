@@ -381,7 +381,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
           // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
           this.consuming = this.progressStat.consumingTime;
           // 是否在执行中
-          if (this.progressStat.state === 2) {
+          if (this.progressStat.state === 2 || this.progressStat.state === 22) {
             this.consumingTimer = setInterval(() => {
               this.consuming += 1000;
             }, 1000);

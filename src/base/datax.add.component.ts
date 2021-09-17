@@ -21,7 +21,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {NzModalService, NzSafeAny} from "ng-zorro-antd";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
+import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
@@ -149,11 +149,11 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
      =======================================================*/
     // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
     //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "tt";
+    //   dto.dataxPipeName = "mysql_doris";
     //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   this.multiViewDAG.loadComponent(AddAppDefSchemaComponent, dto);
+    //   this.multiViewDAG.loadComponent(DataxAddStep7Component, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

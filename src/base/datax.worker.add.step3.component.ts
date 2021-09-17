@@ -29,7 +29,8 @@ import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment
       <tis-steps type="CreateWorkderOfDataX" [step]="2"></tis-steps>
       <tis-page-header [showBreadcrumb]="false">
           <tis-header-tool>
-              <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="launchK8SController()"><i nz-icon nzType="rocket" nzTheme="outline"></i>启动</button>
+              <button nz-button nzType="default" [disabled]="formDisabled" (click)="prestep()">上一步</button>&nbsp;
+              <button [disabled]="formDisabled" nz-button nzType="primary" (click)="launchK8SController()"><i nz-icon nzType="rocket" nzTheme="outline"></i>启动</button>
           </tis-header-tool>
       </tis-page-header>
       <h4>K8S基本信息</h4>

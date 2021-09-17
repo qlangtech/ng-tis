@@ -92,8 +92,8 @@ export class TISService {
 
   public set currentApp(currApp: CurrentCollection) {
     // console.log("currentApp");
-   // let err = new Error();
-   // console.log(err.stack);
+    // let err = new Error();
+    // console.log(err.stack);
     this.currApp = currApp;
   }
 
@@ -178,6 +178,10 @@ export class TISService {
 
   private processResult(result: TisResponseResult): TisResponseResult {
     if (result.success) {
+      if (result.msg && result.msg.length > 0) {
+        let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
+        this.notification.create('info', '执行成功', msgContent, {nzDuration: 6000});
+      }
       return result;
     } else {
       // faild
