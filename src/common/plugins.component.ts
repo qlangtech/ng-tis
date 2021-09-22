@@ -18,11 +18,9 @@ import {TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AttrDesc, HeteroList, IFieldError, PluginType, PluginSaveResponse, ValOption, PluginName, PluginMeta, DescribleVal, Item, TisResponseResult, Descriptor, ItemPropVal} from "./tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, ValOption} from "./tis.plugin";
 import {NzAnchorLinkComponent, NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {Subscription} from "rxjs";
-
 
 @Component({
   selector: 'tis-plugins',
@@ -139,7 +137,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   @Input()
   formControlSpan = 13;
 
-  @Input() savePlugin: EventEmitter<{ verifyConfig: boolean }>;
+  // notShowBizMsg: 不需要在客户端显示成功信息
+  @Input() savePlugin: EventEmitter<SavePluginEvent>;
   // 是否显示保存按钮
   @Input() showSaveButton = false;
 
@@ -349,11 +348,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
-    , verifyConfig: boolean, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
+    , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
 
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${verifyConfig}`;
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}&not_show_biz_msg=${savePluginEvent.notShowBizMsg}`;
 
     let postData: Array<Item[]> = [];
     heteroList.forEach((h) => {
@@ -371,7 +370,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   configCheck(event: MouseEvent) {
-    this.savePluginSetting(event, true);
+    let savePlugin = new SavePluginEvent();
+    savePlugin.verifyConfig = true;
+    savePlugin.notShowBizMsg = false;
+    this.savePluginSetting(event, savePlugin);
   }
 
   @Input()
@@ -419,8 +421,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   ngAfterContentInit(): void {
     if (this.savePlugin) {
-      this.subscription = this.savePlugin.subscribe((e: { verifyConfig: boolean }) => {
-        this.savePluginSetting(null, e && !!e.verifyConfig);
+      this.subscription = this.savePlugin.subscribe((e: SavePluginEvent) => {
+        this.savePluginSetting(null, e || new SavePluginEvent());
       });
     }
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
@@ -515,17 +517,17 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  savePluginSetting(event: MouseEvent, verifyConfig: boolean) {
+  savePluginSetting(event: MouseEvent, savePluginEvent: SavePluginEvent) {
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
     // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
 
 
-    PluginsComponent.postHeteroList(this, this.plugins, this._heteroList, verifyConfig, this.errorsPageShow, (r) => {
+    PluginsComponent.postHeteroList(this, this.plugins, this._heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
-      if (!verifyConfig) {
+      if (!savePluginEvent.verifyConfig) {
         this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
       } else {
         if (r.success) {
@@ -806,7 +808,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         }
 
         PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
-        //  console.log(_pp);
+          //  console.log(_pp);
           switch (_pp.type) {
             case 5: // enum
               // enum

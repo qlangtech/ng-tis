@@ -303,7 +303,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_cancel_task=y&action=core_action&taskid=" + this.taskid)
           .then((r) => {
             if (r.success) {
-              this.successNotify(r.msg[0])
+             // this.successNotify(r.msg[0])
               this.progressStat = Object.assign(new ProgressStat(), r.bizresult);
             }
           });

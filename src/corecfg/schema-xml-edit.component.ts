@@ -195,7 +195,7 @@ export class SchemaEditVisualizingModelComponent extends AbstractSchemaEditCompo
       if (result.success) {
         this.router.navigate(['../../snapshotset'], {relativeTo: this.route});
         // this.notification.create('success', '成功', result.msg[0]);
-        this.successNotify(result.msg[0])
+       // this.successNotify(result.msg[0])
       } else {
         let errs: Array<FieldErrorInfo> = result.bizresult;
        // console.log(result.success);

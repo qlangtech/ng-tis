@@ -1,3 +1,5 @@
+import {EventEmitter} from "@angular/core";
+
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
  * <p>
@@ -424,6 +426,12 @@ export interface IFieldError {
 export class ValOption {
   public impl: string;
   public name: string;
+}
+
+export class SavePluginEvent {
+  // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
+  public verifyConfig = false;
+  public notShowBizMsg = false;
 }
 
 

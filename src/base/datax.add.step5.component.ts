@@ -18,7 +18,7 @@ import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataXCreateProcessMeta} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -78,7 +78,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     DataxAddStep3Component.initializeDataXRW(this, "writer", this.dto)
       .then((i: { "desc": Descriptor, "item": Item }) => {
         this.hlist = PluginsComponent.pluginDesc(i.desc);
-       // console.log(this.hlist);
+        // console.log(this.hlist);
         if (i.item) {
           this.hlist[0].items[0] = i.item;
         }
@@ -90,8 +90,9 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createStepNext(): void {
-
-    this.savePlugin.emit();
+    let savePluginEvent = new SavePluginEvent();
+    savePluginEvent.notShowBizMsg = true;
+    this.savePlugin.emit(savePluginEvent);
   }
 
   afterSaveReader(response: PluginSaveResponse) {
@@ -129,18 +130,5 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
       // }
     }
     this.nextStep.emit(n);
-    // if (processMeta.writerRDBMS) {
-    //   if (processMeta.readerRDBMS) {
-    //     // 表映射设置
-    //     n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
-    //   } else {
-    //     n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
-    //   }
-    // } else {
-    //   // 直接确认
-    //   n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
-    //   // this.nextStep.emit(n);
-    // }
-
   }
 }
