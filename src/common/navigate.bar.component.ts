@@ -64,7 +64,7 @@ import {Application} from "./application";
                       <ul nz-menu nzSelectable>
                           <li nz-menu-item><a routerLink="/base/applist"><i class="fa fa-list-ul"
                                                                             aria-hidden="true"></i>列表</a></li>
-                          <li nz-menu-item><a routerLink="/base/appadd"><i class="fa fa-plus" aria-hidden="true"></i>添加</a></li>
+                          <li nz-menu-item><a routerLink="/base/dataxadd"><i class="fa fa-plus" aria-hidden="true"></i>添加</a></li>
                       </ul>
                   </nz-dropdown-menu>
               </li>

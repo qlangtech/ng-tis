@@ -3,12 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tsconfig.json_bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -279,6 +283,9 @@
       <workItem from="1631346811883" duration="1262000" />
       <workItem from="1631604448895" duration="1025000" />
       <workItem from="1631674509932" duration="814000" />
+      <workItem from="1631853046958" duration="1772000" />
+      <workItem from="1631960652213" duration="2495000" />
+      <workItem from="1632274046241" duration="1248000" />
     </task>
     <servers />
   </component>
@@ -517,7 +524,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>279</line>
+          <line>281</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

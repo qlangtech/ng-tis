@@ -180,7 +180,7 @@ export class TISService {
     if (result.success) {
       if (result.msg && result.msg.length > 0) {
         let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
-        this.notification.create('info', '执行成功', msgContent, {nzDuration: 6000});
+        this.notification.create('success', '成功', msgContent, {nzDuration: 6000});
       }
       return result;
     } else {

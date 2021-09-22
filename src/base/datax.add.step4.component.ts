@@ -17,7 +17,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, TemplateRef, View
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {NzDrawerRef, NzDrawerService, NzModalService, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -234,7 +234,9 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   public createStepNext(): void {
     // console.log(this.subFormHetero);
     // console.log(this.tisService.currentApp);
-    PluginsComponent.postHeteroList(this, this.getPluginMetas(), [this.subFormHetero], false, true, (result) => {
+    let savePluginEvent = new SavePluginEvent();
+    savePluginEvent.notShowBizMsg = true;
+    PluginsComponent.postHeteroList(this, this.getPluginMetas(), [this.subFormHetero], savePluginEvent, true, (result) => {
       if (result.success) {
         this.nextStep.emit(this.dto);
       } else {

@@ -18,7 +18,7 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {IntendDirect} from "../common/MultiViewDAG";
@@ -58,7 +58,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   model = new AppDesc();
   @ViewChild('pluginComponent', {static: false}) pluginComponent: PluginsComponent;
 
-  savePlugin = new EventEmitter<any>();
+  savePlugin = new EventEmitter<SavePluginEvent>();
 
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
@@ -142,7 +142,9 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   // 执行下一步
   public createStepNext(): void {
 
-    this.savePlugin.emit();
+    let savePluginEvent = new SavePluginEvent();
+    savePluginEvent.notShowBizMsg = true;
+    this.savePlugin.emit(savePluginEvent);
 
     // let dto = new DataxDTO();
     // dto.appform = this.readerDesc;
