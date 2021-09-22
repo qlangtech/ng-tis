@@ -22,7 +22,7 @@ import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd";
-import {TisResponseResult} from "./tis.plugin";
+import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {LogType} from "../runtime/misc/RCDeployment";
@@ -179,11 +179,11 @@ export class BasicFormComponent {
   }
 
   // 发送json表单
-  public jsonPost(url: string, body: any): Promise<TisResponseResult> {
+  public jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();
-    return this.tisService.jsonPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+    return this.tisService.jsonPost(url, body, e).then(this.webExecuteCallback).catch(this.handleError);
   }
 
 // = (r: TisResponseResult): TisResponseResult => {

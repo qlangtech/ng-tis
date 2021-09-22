@@ -21,7 +21,7 @@ import {ActivatedRoute} from "@angular/router";
 
 
 import {NzModalService} from "ng-zorro-antd";
-import {Item} from "../common/tis.plugin";
+import {Item, SavePluginEvent} from "../common/tis.plugin";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 
@@ -40,7 +40,7 @@ import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
   `
 })
 export class DataxWorkerAddStep2Component extends AppFormComponent implements AfterViewInit, OnInit {
-  savePlugin = new EventEmitter<any>();
+  savePlugin = new EventEmitter<SavePluginEvent>();
   // @ViewChild('k8sReplicsSpec', {read: K8SReplicsSpecComponent, static: true}) k8sReplicsSpec: K8SReplicsSpecComponent;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
@@ -55,10 +55,12 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   createStep1Next(k8sReplicsSpec: K8SReplicsSpecComponent) {
     // console.log(k8sReplicsSpec.k8sControllerSpec);
     let rcSpec = k8sReplicsSpec.k8sControllerSpec;
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker'
       , {
         k8sSpec: rcSpec,
-      })
+      }, e)
       .then((r) => {
         if (r.success) {
           this.dto.rcSpec = rcSpec;

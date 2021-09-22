@@ -18,7 +18,7 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd";
-import {HeteroList, PluginSaveResponse} from "../common/tis.plugin";
+import {HeteroList, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 
@@ -39,7 +39,7 @@ import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 })
 export class DataxWorkerAddStep1Component extends BasicFormComponent implements AfterViewInit, OnInit {
   hlist: HeteroList[] = [];
-  savePlugin = new EventEmitter<any>();
+  savePlugin = new EventEmitter<SavePluginEvent>();
   @Input() dto: DataxWorkerDTO;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
@@ -49,7 +49,9 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
   }
 
   createStep1Next() {
-    this.savePlugin.emit();
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
+    this.savePlugin.emit(e);
     // this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker'
     //   , {
     //     dataxWorker: this.hlist[0]

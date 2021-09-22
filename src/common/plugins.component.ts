@@ -352,14 +352,14 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
 
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}&not_show_biz_msg=${savePluginEvent.notShowBizMsg}`;
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
 
     let postData: Array<Item[]> = [];
     heteroList.forEach((h) => {
       postData.push(h.items);
     });
 
-    basicModule.jsonPost(url, postData).then((r) => {
+    basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {
       processCallback(r);
     }).catch((e) => {
       if (errProcessCallback) {

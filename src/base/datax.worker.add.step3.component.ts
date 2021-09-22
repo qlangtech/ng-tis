@@ -23,6 +23,7 @@ import {ActivatedRoute} from "@angular/router";
 import {NzModalService, NzNotificationService} from "ng-zorro-antd";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {SavePluginEvent} from "../common/tis.plugin";
 
 @Component({
   template: `
@@ -66,10 +67,12 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   }
 
   launchK8SController() {
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker'
       , {
         // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
-      })
+      }, e)
       .then((r) => {
         if (r.success) {
           this.successNotify("已经成功在K8S集群中启动DataX执行器");

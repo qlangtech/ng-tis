@@ -199,7 +199,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
         case 'log':
           if (!this.podNameSub) {
             this.podNameSub = this.route.fragment.subscribe((podName) => {
-              console.log(`podName:${podName}`);
+            //  console.log(`podName:${podName}`);
               if (this.route.snapshot.params['targetTab'] !== 'log') {
                 return;
               }
