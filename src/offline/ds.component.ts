@@ -302,7 +302,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.treeNodeClicked = true;
         this.onEvent(e);
 
-        this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
+      //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       });
 
     // let modalRef = this.openDialog(PluginsComponent, {nzTitle: `添加${pluginDesc.displayName}数据库`});
