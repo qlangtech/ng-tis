@@ -16,7 +16,7 @@
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd";
-import {Descriptor, HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -45,7 +45,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   // model = new AppDesc();
 
   @Output() nextStep = new EventEmitter<any>();
-  savePlugin = new EventEmitter<any>();
+  savePlugin = new EventEmitter<SavePluginEvent>();
   hlist: HeteroList[] = [];
 
 
@@ -74,7 +74,9 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createIndexStep1Next(): void {
-    this.savePlugin.emit();
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
+    this.savePlugin.emit(e);
   }
 
   afterSaveReader(event: PluginSaveResponse) {

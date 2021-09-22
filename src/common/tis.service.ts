@@ -22,7 +22,7 @@ import {Observable, Observer, Subject} from "rxjs";
 import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
-import {TisResponseResult} from "./tis.plugin";
+import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 
 declare var TIS: any;
 
@@ -102,7 +102,7 @@ export class TISService {
   }
 
 // 发送http post请求
-  public httpPost(url: string, body: string): Promise<TisResponseResult> {
+  public httpPost(url: string, body: string, e?: SavePluginEvent): Promise<TisResponseResult> {
 
     let headers = new HttpHeaders();
     headers = headers.append('content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -121,7 +121,7 @@ export class TISService {
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts)
       .toPromise()
       .then((response) => {
-        let result = this.processResult(response);
+        let result = this.processResult(response, e);
         if (result) {
           return result;
         }
@@ -145,7 +145,7 @@ export class TISService {
 
 
   // 发送json表单
-  public jsonPost(url: string, body: any): Promise<TisResponseResult> {
+  public jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult> {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
     let opts = {'headers': this.appendHeaders(headers)};
@@ -153,7 +153,7 @@ export class TISService {
       .toPromise()
       // @ts-ignore
       .then((response) => {
-        let result = this.processResult(response);
+        let result = this.processResult(response, e);
         if (result) {
           return result;
         } else {
@@ -176,9 +176,9 @@ export class TISService {
     return this.jsonPost(url, JSON.stringify(o));
   }
 
-  private processResult(result: TisResponseResult): TisResponseResult {
+  private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
     if (result.success) {
-      if (result.msg && result.msg.length > 0) {
+      if (result.msg && result.msg.length > 0 && (!e || !e.notShowBizMsg)) {
         let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
         this.notification.create('success', '成功', msgContent, {nzDuration: 6000});
       }
@@ -201,13 +201,6 @@ export class TISService {
     }
   }
 
-  // protected handleError(error: any): Promise<any> {
-  //   // console.error('An error occurred', error);
-  //   this.notification.create('error', '错误', error, {nzDuration: 6000});
-  //   NProgress.done();
-  //   return Promise.reject(error.message || error);
-  // }
-
   protected handleError = (error: any): Promise<any> => {
     // console.log(error);
     if (error instanceof HttpErrorResponse) {
@@ -221,34 +214,6 @@ export class TISService {
   }
 
 }
-
-// @Injectable()
-// export class AppTISService extends TISService {
-//   // 当前上下文中使用的索引实例
-//   private currApp: CurrentCollection;
-//
-//   constructor(http: HttpClient, modalService: NgbModal,
-//               notification: NzNotificationService) {
-//     super(http, modalService, notification);
-//   }
-//
-//   public set currentApp(currApp: CurrentCollection) {
-//     this.currApp = currApp;
-//   }
-//
-//   public get currentApp(): CurrentCollection {
-//     return this.currApp;
-//   }
-//
-//   protected appendHeaders(headers: HttpHeaders): HttpHeaders {
-//     let result = headers;
-//     if (this.currApp) {
-//       result = headers.append('appname', this.currApp.appName);
-//       result = result.append('appid', '' + this.currApp.appid);
-//     }
-//     return result;
-//   }
-// }
 
 
 
