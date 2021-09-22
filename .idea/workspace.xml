@@ -3,14 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -135,8 +128,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.ng:serve-aot" />
+        <item itemvalue="npm.ng:serve-jit" />
         <item itemvalue="npm.build:elements" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.build:aot" />
@@ -283,7 +276,7 @@
       <workItem from="1631674509932" duration="814000" />
       <workItem from="1631853046958" duration="1772000" />
       <workItem from="1631960652213" duration="2495000" />
-      <workItem from="1632274046241" duration="3228000" />
+      <workItem from="1632274046241" duration="3786000" />
     </task>
     <servers />
   </component>

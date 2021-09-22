@@ -32,7 +32,7 @@ import {Subscription} from "rxjs";
           </tis-page-header>
           <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
               <div style="float: right;">
-                  <button nz-button nzType="primary" (click)="savePluginSetting($event,false)">保存</button>
+                  <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
               </div>
               <div *ngIf="shallInitializePluginItems && this.itemChangeable" class="plugins-nav">
                   <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
@@ -516,6 +516,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   protected initialize(app: CurrentCollection): void {
   }
 
+  _savePlugin(event: MouseEvent) {
+    let e = new SavePluginEvent();
+    e.verifyConfig = false;
+    this.savePluginSetting(event, e);
+  }
 
   savePluginSetting(event: MouseEvent, savePluginEvent: SavePluginEvent) {
     // console.log(JSON.stringify(this._heteroList.items));
