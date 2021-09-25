@@ -301,32 +301,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         let e = {'type': 'db', 'id': `${db.dbId}`};
         this.treeNodeClicked = true;
         this.onEvent(e);
-
       //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       });
-
-    // let modalRef = this.openDialog(PluginsComponent, {nzTitle: `添加${pluginDesc.displayName}数据库`});
-    // let addDb: PluginsComponent = modalRef.getContentComponent();
-    // addDb.errorsPageShow = true;
-    // addDb.formControlSpan = 20;
-    // addDb.shallInitializePluginItems = false;
-    // addDb._heteroList = DatasourceComponent.pluginDesc(pluginDesc);
-    // addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}])
-    // addDb.showSaveButton = true;
-    // addDb.afterSave.subscribe((r: PluginSaveResponse) => {
-    //   if (r && r.saveSuccess && r.hasBiz()) {
-    //     modalRef.close();
-    //     let db = r.biz();
-    //     let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
-    //     this.nodes = newNode.concat(this.nodes);
-    //
-    //     let e = {'type': 'db', 'id': `${db.dbId}`};
-    //     this.treeNodeClicked = true;
-    //     this.onEvent(e);
-    //
-    //     this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
-    //   }
-    // });
   }
 
 
