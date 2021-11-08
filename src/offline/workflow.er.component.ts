@@ -27,7 +27,7 @@ import {Grid} from "@antv/g6/build/plugins.js";
 
 import * as G6 from '@antv/g6';
 import {TYPE_DUMP_TABLE, WorkflowAddComponent} from "./workflow.add.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 const edgeActiveStyle = {

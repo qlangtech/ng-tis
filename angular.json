@@ -18,7 +18,6 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
             "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -60,7 +59,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -76,19 +74,28 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "ng-tis:build"
-          },
           "configurations": {
             "production": {
               "browserTarget": "ng-tis:build:production"
+            },
+            "development": {
+              "browserTarget": "ng-tis:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -136,46 +143,6 @@
             "production": {
               "devServerTarget": "ng-tis:serve:production"
             }
-          }
-        }
-      }
-    },
-    "ngx-tis-common-lib": {
-      "projectType": "library",
-      "root": "projects/ngx-tis-common-lib",
-      "sourceRoot": "projects/ngx-tis-common-lib/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/ngx-tis-common-lib/tsconfig.lib.json",
-            "project": "projects/ngx-tis-common-lib/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/ngx-tis-common-lib/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ngx-tis-common-lib/src/test.ts",
-            "tsConfig": "projects/ngx-tis-common-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-tis-common-lib/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ngx-tis-common-lib/tsconfig.lib.json",
-              "projects/ngx-tis-common-lib/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

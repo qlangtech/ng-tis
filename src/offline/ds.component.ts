@@ -23,9 +23,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
-import {NzFormatEmitEvent, NzModalService, NzNotificationService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd";
+// import {NzFormatEmitEvent, NzModalService, NzNotificationService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
+import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";
@@ -103,7 +106,8 @@ const db_model_facade = "facade";
                       </nz-tabset>
                       <ng-template #extraTemplate>
                           <nz-space>
-                              <nz-space-item *ngIf="supportFacade && !this.facdeDb">
+                              <ng-container *ngIf="supportFacade && !this.facdeDb">
+                              <span *nzSpaceItem>
                                   <button [disabled]="this.updateMode" nz-button nzType="default" nz-dropdown
                                           [nzDropdownMenu]="dbFacadeAdd" [disabled]="facdeDb != null">添加门面配置<i nz-icon nzType="down"></i></button>
                                   <nz-dropdown-menu #dbFacadeAdd="nzDropdownMenu">
@@ -114,16 +118,17 @@ const db_model_facade = "facade";
                                           </li>
                                       </ul>
                                   </nz-dropdown-menu>
-                              </nz-space-item>
-                              <nz-space-item>
+                              </span>
+                              </ng-container>
+                              <span *nzSpaceItem>
                                   <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
-                              </nz-space-item>
-                              <nz-space-item>
-                                  <button nz-button [disabled]="this.updateMode" nzType="danger" (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除{{dbType}}</button>
-                              </nz-space-item>
-                              <nz-space-item>
+                              </span>
+                              <span  *nzSpaceItem>
+                                  <button nz-button [disabled]="this.updateMode" nzType="primary" nzDanger (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除{{dbType}}</button>
+                              </span>
+                              <span *nzSpaceItem>
                                   <button *ngIf="updateMode" nz-button (click)="this.updateMode=false">取消</button>
-                              </nz-space-item>
+                              </span>
                           </nz-space>
                       </ng-template>
                   </div>
@@ -136,7 +141,7 @@ const db_model_facade = "facade";
                                   <i nz-icon nzType="edit" nzTheme="outline"></i>
                                   编辑
                               </button>&nbsp;
-                              <button nz-button nzType="danger" (click)="deleteTable()">
+                              <button nz-button nzType="primary" nzDanger (click)="deleteTable()">
                                   <i nz-icon nzType="delete" nzTheme="outline"></i>删除
                               </button>
                           </tis-header-tool>
@@ -301,7 +306,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         let e = {'type': 'db', 'id': `${db.dbId}`};
         this.treeNodeClicked = true;
         this.onEvent(e);
-      //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
+        //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       });
   }
 

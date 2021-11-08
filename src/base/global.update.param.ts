@@ -17,7 +17,7 @@ import {TISService} from '../common/tis.service';
 import {Component, Injector, Input, OnInit} from '@angular/core';
 
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 // 设置全局参数
@@ -34,7 +34,7 @@ import {NzModalService} from "ng-zorro-antd";
       </div>
       <div class="modal-body">
          <tis-page-header [showBreadcrumb]="false" [result]="result" >
-             <button nz-button nzType="danger"  (click)="deleteParam()">
+             <button nz-button nzType="primary" nzDanger  (click)="deleteParam()">
                  <i class="fa fa-trash" aria-hidden="true"></i>删除
              </button> &nbsp;
              <button nz-button nzType="primary"

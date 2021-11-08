@@ -18,7 +18,8 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgTerminal} from "ng-terminal";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 
 import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";

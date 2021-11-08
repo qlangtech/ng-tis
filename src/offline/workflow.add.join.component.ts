@@ -19,7 +19,7 @@ import {TISService} from '../common/tis.service';
 
 
 import {WorkflowAddComponent} from "./workflow.add.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Item} from "../common/tis.plugin";
 
 

@@ -26,7 +26,8 @@ import {
   ViewContainerRef
 } from "@angular/core";
 import {IFieldError, Item, ItemPropVal} from "./tis.plugin";
-import {NzInputDirective, NzSelectComponent} from "ng-zorro-antd";
+import {NzSelectComponent} from "ng-zorro-antd/select";
+import {NzInputDirective} from "ng-zorro-antd/input";
 // import {ActivatedRoute, Router} from "@angular/router";
 
 declare var jQuery: any;

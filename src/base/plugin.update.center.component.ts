@@ -1,7 +1,7 @@
 import {BasicFormComponent} from "../common/basic.form.component";
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>

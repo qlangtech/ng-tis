@@ -21,7 +21,7 @@ import {Location} from '@angular/common';
 
 import {TabColReflect, TablePojo} from './table.add.component';
 import {FormComponent} from "../common/form.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 declare var jQuery: any;
 

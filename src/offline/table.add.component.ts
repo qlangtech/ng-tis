@@ -20,7 +20,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';
-import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {DbPojo} from "./db.add.component";
 import {TisResponseResult} from "../common/tis.plugin";
 

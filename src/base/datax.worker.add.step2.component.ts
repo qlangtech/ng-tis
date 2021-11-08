@@ -20,7 +20,7 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {ActivatedRoute} from "@angular/router";
 
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, SavePluginEvent} from "../common/tis.plugin";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";

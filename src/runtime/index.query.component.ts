@@ -24,7 +24,7 @@ import * as $ from 'jquery';
 import {PojoComponent} from "./pojo.component";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LocalStorageService} from "angular-2-local-storage";
-import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import { NzModalService} from "ng-zorro-antd/modal";
 import {TisResponseResult} from "../common/tis.plugin";
 
 const LocalStoreTags = 'local_Store_Tags';

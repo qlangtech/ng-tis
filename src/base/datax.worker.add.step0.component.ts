@@ -16,7 +16,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 

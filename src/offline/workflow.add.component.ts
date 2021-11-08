@@ -43,7 +43,7 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
 import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 // import {} from 'ng-sidebar';
 // import {Droppable} from '@shopify/draggable';
 // @ts-ignore

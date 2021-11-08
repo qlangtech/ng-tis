@@ -15,6 +15,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
+import {HeteroList, PluginType} from "./tis.plugin";
 
 @Pipe({name: 'safe'})
 export class SafePipe implements PipeTransform {
@@ -23,5 +24,18 @@ export class SafePipe implements PipeTransform {
 
   public transform(url: string): any {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+}
+
+@Pipe({
+  name: 'callback',
+  pure: false
+})
+export class CallbackPipe implements PipeTransform {
+  transform(items: any[], h: HeteroList, pluginMetas: PluginType[], callback: (h: HeteroList, pluginMetas: PluginType[], item: any) => boolean): any {
+    if (!items || !callback) {
+      return items;
+    }
+    return items.filter(item => callback(h, pluginMetas, item));
   }
 }

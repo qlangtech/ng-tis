@@ -19,13 +19,13 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {IncrBuildComponent} from "./incr.build.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 
 
 @Component({
   template: `
-      <tis-steps type="createIncr" [step]="2"></tis-steps>
+      <tis-steps type="createIncr" [step]="3"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
               <!--

@@ -16,11 +16,9 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
-
 import {ActivatedRoute, Router} from "@angular/router";
-
-
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {DataXJobWorkerStatus, DataxWorkerDTO, K8sPodState, LogType, RcHpaStatus} from "../runtime/misc/RCDeployment";
 
@@ -132,7 +130,7 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, K8sPodState, LogType, RcHpaStatus}
                   <nz-list class="ant-advanced-search-form" nzBordered>
                       <nz-list-item>
                           <span nz-typography>删除DataX Worker</span>
-                          <button nz-button nzType="danger" (click)="dataXWorkerDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                          <button nz-button nzType="primary" (click)="dataXWorkerDelete()" nzDanger><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
                       </nz-list-item>
                   </nz-list>
               </nz-tab>
@@ -189,6 +187,11 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     super(tisService, route, modalService, notification);
   }
 
+
+  get currentApp(): CurrentCollection {
+    return new CurrentCollection(0, this.dto.processMeta.targetName);
+  }
+
   ngOnInit(): void {
     // super.ngOnInit();
     // console.log("==========================");
@@ -199,7 +202,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
         case 'log':
           if (!this.podNameSub) {
             this.podNameSub = this.route.fragment.subscribe((podName) => {
-            //  console.log(`podName:${podName}`);
+              //  console.log(`podName:${podName}`);
               if (this.route.snapshot.params['targetTab'] !== 'log') {
                 return;
               }
@@ -212,7 +215,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
                 }
                 this.selectedPod = pods[0];
               }
-              if (podName !== undefined && podName !== this.selectedPod.name) {
+              if (!!podName && podName !== this.selectedPod.name) {
                 this.selectedPod = this.dto.rcDeployment.pods.find((pp) => (pp.name === podName));
                 if (!this.selectedPod) {
                   throw new Error("can not find podName:" + podName + " in:" + this.dto.rcDeployment.pods.map((pp) => pp.name).join(","));
@@ -244,19 +247,19 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     // }
   }
 
-  launchK8SController() {
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker'
-      , {
-        // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
-      })
-      .then((r) => {
-        if (r.success) {
-          // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-          // let desc = Array.from(rList.values());
-          // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-        }
-      });
-  }
+  // launchK8SController() {
+  //   this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker'
+  //     , {
+  //       // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
+  //     })
+  //     .then((r) => {
+  //       if (r.success) {
+  //         // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
+  //         // let desc = Array.from(rList.values());
+  //         // this.hlist = DatasourceComponent.pluginDesc(desc[0])
+  //       }
+  //     });
+  // }
 
   protected initialize(app: CurrentCollection): void {
   }
@@ -272,7 +275,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   dataXWorkerDelete() {
 
     this.confirm("是否确定要将DataX任务执行器从K8S容器中删除", () => {
-      this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker'
+      this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker&targetName=' + this.dto.processMeta.targetName
         , {})
         .then((r) => {
           if (r.success) {
@@ -304,7 +307,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   private activeTab(tabName: string) {
     let currentTab = this.route.snapshot.params['targetTab']
     if (currentTab !== tabName) {
-      this.router.navigate(["/base/datax-worker", tabName], {relativeTo: this.route});
+      this.router.navigate([`/base/${this.dto.processMeta.targetName}`, tabName], {relativeTo: this.route});
     }
   }
 
@@ -313,7 +316,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   profileViewSelect(): void {
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_datax_worker_hpa'
+    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_datax_worker_hpa&targetName=${this.dto.processMeta.targetName}`
       , {})
       .then((r) => {
         if (r.success) {
@@ -330,7 +333,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   viewPodLog(podname: K8sPodState) {
-    this.router.navigate(["/base/datax-worker/log"], {relativeTo: this.route, fragment: podname.name});
+    this.router.navigate([`/base/${this.dto.processMeta.targetName}/log`], {relativeTo: this.route, fragment: podname.name});
     // this.tabSelectIndex = 2;
   }
 

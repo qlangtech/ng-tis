@@ -15,13 +15,14 @@
 
 import {TISService} from './tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import {Component, EventEmitter, Input, OnInit, Output, Type} from '@angular/core';
+import {Component, EventEmitter, Injectable, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
-import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd";
+
+import {NzNotificationService, NzNotificationRef} from "ng-zorro-antd/notification";
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
@@ -32,7 +33,6 @@ import {AppType} from "./application";
 /**
  * Created by baisui on 2017/4/12 0012.
  */
-
 declare var jQuery: any;
 const KEY_show_Bread_crumb = "showBreadcrumb";
 
@@ -132,39 +132,17 @@ export class BasicFormComponent {
       this.formDisabled = false;
     });
   }
-
-  // public openLargeDialog(component: any): NzModalRef<any> {
-  //
-  //   return this.modalService.create({
-  //     nzTitle: 'dddd',
-  //     nzContent: component
-  //   });
-  // }
-
-  // <T>(options?: ModalOptionsForService<T>): NzModalRef<T>;
   public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
 
     let option: any = {
       // nzTitle: title,
-      nzWidth: "800",
+      nzWidth: "800px",
       nzContent: component,
       nzFooter: null,
       nzMaskClosable: false
     };
-    // if (title) {
-    //   option.nzTitle = title
-    // }
-
     return this.modalService.create(Object.assign(option, options));
-    // const modalRef: NgbModalRef = this.modalService.open(component
-    //   , {size: 'xl', backdrop: 'static'});
-    // return modalRef;
   }
-
-  // 设置当前上下文中的应用
-  // protected set currentApp(app: CurrentCollection) {
-  //   this.tisService.currentApp = app;
-  // }
 
   get currentApp(): CurrentCollection {
     return this.tisService.currentApp;
@@ -261,7 +239,7 @@ export abstract class BasicSidebarDTO {
   ],
   template: `
       <div class="sidebar">
-          <button *ngIf="!deleteDisabled" nz-button nzType="danger" (click)="_deleteNode()">删除</button>
+          <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
           <div [ngClass]="{'float-right': true}">
               <button nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;<button nz-button nzType="default" (click)="_closeSidebar()">关闭</button>
           </div>
@@ -298,7 +276,7 @@ export class SideBarToolBar extends BasicFormComponent {
   }
 }
 
-
+@Injectable()
 export abstract class BasicSideBar extends BasicFormComponent {
   @Output() saveClick = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
@@ -338,6 +316,7 @@ export class WSMessage {
   }
 }
 
+@Injectable()
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
   private _getCurrentAppCache = false;
 
@@ -346,7 +325,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
   }
 
   @Input()
-  set getCurrentAppCache(val: boolean) {
+  public set getCurrentAppCache(val: boolean) {
     this._getCurrentAppCache = val;
   }
 

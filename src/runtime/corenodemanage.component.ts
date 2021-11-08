@@ -17,21 +17,19 @@ import {Component, ElementRef, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {TriggerDumpComponent} from "./trigger_dump.component";
 import {PojoComponent} from "./pojo.component";
-import {SyncConfigComponent} from "./sync.cfg.component";
-import {CopyOtherCoreComponent} from "./copy.other.core.component";
 import {SnapshotChangeLogComponent} from "./snapshot.change.log";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import * as dagreD3 from 'dagre-d3';
 import * as d3 from 'd3';
-import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 // 这个类专门负责router
 @Component({
   template: `
       <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
-          <tis-page-header [showBreadcrumb]="false"  (refesh)="get_view_data()">
+          <tis-page-header [showBreadcrumb]="false" (refesh)="get_view_data()">
           </tis-page-header>
           <nz-row [nzGutter]="16">
               <nz-col [nzSpan]="3">
@@ -137,7 +135,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   app: any;
   config: any;
   instanceDirDesc: any = {allcount: 0};
-  todayMetrics: TodayMetrics = { queryCount: 0, updateCount: 0};
+  todayMetrics: TodayMetrics = {queryCount: 0, updateCount: 0};
 
   STATE_COLOR = {
     COLOR_Active: '#57A957',

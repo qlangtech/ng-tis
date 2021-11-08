@@ -18,7 +18,8 @@ import {Component, OnInit} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from "../common/pagination.component";
-import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {DepartmentAddComponent} from "./department.add.component";
 
 

@@ -24,7 +24,7 @@ import {TISService} from '../common/tis.service';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
 import {EditorConfiguration} from "codemirror";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   template: `

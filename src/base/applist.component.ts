@@ -19,7 +19,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from '../common/pagination.component';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Application, AppType} from "../common/application";
 import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 import {LocalStorageService} from "angular-2-local-storage";

@@ -17,7 +17,7 @@ import {TISService} from '../common/tis.service';
 import {Component} from '@angular/core';
 
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 declare var jQuery: any;
 

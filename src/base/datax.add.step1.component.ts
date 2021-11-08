@@ -15,7 +15,7 @@
 
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {BasicDataXAddComponent} from "./datax.add.base";

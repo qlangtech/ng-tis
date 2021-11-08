@@ -17,7 +17,7 @@ import {Component, OnInit, Input, ElementRef, ViewChild, ViewContainerRef} from 
 
 import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 
 declare var jQuery: any;
 

@@ -19,7 +19,7 @@ import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 @Component({

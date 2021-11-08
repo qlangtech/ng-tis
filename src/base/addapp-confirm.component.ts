@@ -21,7 +21,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {TISService} from '../common/tis.service';
 import {AppDesc, ConfirmDTO, CoreNodeCandidate, SchemaField} from './addapp-pojo';
 import {Router} from '@angular/router';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   // templateUrl: '/runtime/addapp_confirm.htm'

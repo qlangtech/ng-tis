@@ -1,5 +1,6 @@
 import {BasicFormComponent} from "../../common/basic.form.component";
 import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
+import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -119,22 +120,32 @@ export class K8SControllerStatus {
   public rcDeployment: RCDeployment;
 }
 
+export interface PluginExtraProps {
+  endType: string;
+  extendPoint: string;
+}
+
 export class IndexIncrStatus extends K8SControllerStatus {
   public incrScriptCreated: boolean;
   public incrScriptMainFileContent: string;
   public k8sPluginInitialized: boolean;
+  public flinkJobDetail: FlinkJobDetail;
   public incrProcess: IncrProcess;
+
+  public readerDesc: PluginExtraProps;
+  public writerDesc: PluginExtraProps;
+
   public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
     basicForm.httpPost('/coredefine/corenodemanage.ajax'
       , `action=core_action&emethod=get_incr_status&cache=${cache}`)
       .then((r) => {
         if (r.success) {
-          // r.bizresult.incrScriptCreated;
           let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
           hander(incrStatus);
         }
       });
   }
+
   /**
    * 增量处理节点启动有异常
    */
@@ -156,10 +167,15 @@ export interface IncrProcess {
   incrProcessPaused: boolean;
 }
 
-export class DataXJobWorkerStatus extends K8SControllerStatus {
+export interface ProcessMeta {
+  targetName: string;
+}
 
+export class DataXJobWorkerStatus extends K8SControllerStatus {
+  processMeta: ProcessMeta;
 }
 
 export class DataxWorkerDTO {
   rcSpec: K8SRCSpec;
+  processMeta: ProcessMeta;
 }

@@ -17,7 +17,7 @@ import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from "@angula
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataXCreateProcessMeta} from "./datax.add.component";

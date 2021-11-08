@@ -16,13 +16,14 @@
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
-import {EventEmitter, Input, Output} from "@angular/core";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
+import {Component, EventEmitter, Injectable, Input, Output} from "@angular/core";
 import {DataxDTO} from "./datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
 
-
+@Injectable()
 export abstract class BasicDataXAddComponent extends AppFormComponent {
 
   @Output()

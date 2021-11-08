@@ -29,8 +29,9 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {NzTableSize} from "ng-zorro-antd";
+
 import {TisResponseResult} from "./tis.plugin";
+import {NzTableSize} from "ng-zorro-antd/table";
 
 export class Pager {
 

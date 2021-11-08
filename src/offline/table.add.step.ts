@@ -13,14 +13,14 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EventEmitter, Input, Output} from '@angular/core';
+import {EventEmitter, Inject, Injectable, Input, Output} from '@angular/core';
 import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 
-import {NzModalService} from "ng-zorro-antd";
 
+@Injectable()
 export class TableAddStep extends BasicFormComponent {
  // @Input() isShow: boolean;
   @Output() previousStep: EventEmitter<any> = new EventEmitter();

@@ -17,7 +17,9 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {ConfirmDTO, StupidModal} from "./addapp-pojo";
-import {NzModalService, NzNotificationService, TransferDirection, TransferItem} from "ng-zorro-antd";
+import {   TransferItem} from "ng-zorro-antd/transfer";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService}  from "ng-zorro-antd/notification";
 
 
 @Component({

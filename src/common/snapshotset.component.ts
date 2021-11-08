@@ -18,7 +18,8 @@ import {TISService} from "./tis.service";
 import {CompareEachOtherComponent} from "../corecfg/compare.eachother.component";
 import {BasicFormComponent, CurrentCollection} from "./basic.form.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Pager} from "./pagination.component";
 
 declare var jQuery: any;

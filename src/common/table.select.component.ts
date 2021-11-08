@@ -16,8 +16,9 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
-import {NzCascaderOption, NzSelectSizeType} from "ng-zorro-antd";
+import { NzSelectSizeType} from "ng-zorro-antd/select";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {NzCascaderOption} from "ng-zorro-antd/cascader";
 
 @Component({
   selector: 'tis-table-select',

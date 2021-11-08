@@ -20,7 +20,9 @@ import {TISService} from "./tis.service";
 
 
 import {NgTerminal} from "ng-terminal";
-import {NzDrawerRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import { NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
 
@@ -93,7 +95,7 @@ export class ProgressTitleComponent {
   template: `
       <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumb]="showBreadcrumb">
           <button nz-button (click)="openReltimeLog()">实时日志</button>&nbsp;
-          <button nzType="danger" [disabled]="isSpinning || !progressStat.running" nz-button (click)="cancelJob()"><i nz-icon nzType="stop" nzTheme="outline"></i>终止</button>
+          <button nzType="primary" nzDanger [disabled]="isSpinning || !progressStat.running" nz-button (click)="cancelJob()"><i nz-icon nzType="stop" nzTheme="outline"></i>终止</button>
       </tis-page-header>
       <nz-spin [nzSpinning]="isSpinning" [nzDelay]="1000" nzSize="large">
           <div class="stat-header">

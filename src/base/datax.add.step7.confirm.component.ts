@@ -16,7 +16,9 @@
 import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection, AppFormComponent} from "../common/basic.form.component";
-import {NzDrawerRef, NzDrawerService, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import { NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -52,7 +54,7 @@ export enum ExecModel {
                       <button nz-button *ngSwitchCase="false" (click)="startUpdate()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑基本信息</button>&nbsp;
                       <button nz-button *ngSwitchCase="false" (click)="startEditReader()"><i nz-icon nzType="edit" nzTheme="outline"></i>Reader</button>&nbsp;
                       <button nz-button *ngSwitchCase="false" (click)="startEditWriter()"><i nz-icon nzType="edit" nzTheme="outline"></i>Writer</button>&nbsp;
-                      <button nz-button *ngSwitchCase="true" nzType="danger" (click)="inUpdate = false"><i nz-icon nzType="edit" nzTheme="outline"></i>取消编辑</button>
+                      <button nz-button *ngSwitchCase="true" nzType="primary" nzDanger (click)="inUpdate = false"><i nz-icon nzType="edit" nzTheme="outline"></i>取消编辑</button>
                   </ng-container>
                   &nbsp;
                   <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()">生成DataX配置文件</button>

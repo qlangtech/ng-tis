@@ -19,7 +19,7 @@ import {BasicFormComponent} from "./basic.form.component";
 
 import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 
 @Component({

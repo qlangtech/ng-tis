@@ -19,7 +19,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 enum PluginTab {
   avail = 'avaliable',

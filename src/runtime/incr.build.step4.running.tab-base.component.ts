@@ -19,7 +19,8 @@ import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.fo
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {ChartDataSets, ChartOptions} from "chart.js";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {NgTerminal} from "ng-terminal";
@@ -48,15 +49,15 @@ import {IndexIncrStatus} from "./misc/RCDeployment";
                                   </div>
                               </td>
                               <td align="center" valign="center">
-                                              <span [ngSwitch]="dto.incrProcess.incrProcessPaused">
-                                                  <button *ngSwitchCase="false" nzType="primary" nzSize="small" nz-button (click)="incrResumePause(true)">暂停</button>
-                                                  <button *ngSwitchCase="true" nzType="primary" nzSize="small" nz-button (click)="incrResumePause(false)">启动</button>
-                                              </span>
+<!--                                              <span [ngSwitch]="dto.incrProcess.incrProcessPaused">-->
+<!--                                                  <button *ngSwitchCase="false" nzType="primary" nzSize="small" nz-button (click)="incrResumePause(true)">暂停</button>-->
+<!--                                                  <button *ngSwitchCase="true" nzType="primary" nzSize="small" nz-button (click)="incrResumePause(false)">启动</button>-->
+<!--                                              </span>-->
                                   <br/>
-                                  <span [ngSwitch]="dto.incrProcess.incrProcessPaused">
-                                                  <i *ngSwitchCase="false" class="fa fa-cog fa-spin" style="font-size:3em;color:blue;" aria-hidden="true"></i>
-                                                  <i *ngSwitchCase="true" nz-icon nzType="stop" style="font-size:3em;color:deeppink" nzTheme="outline"></i>
-                                              </span>
+<!--                                  <span [ngSwitch]="dto.incrProcess.incrProcessPaused">-->
+<!--                                                  <i *ngSwitchCase="false" class="fa fa-cog fa-spin" style="font-size:3em;color:blue;" aria-hidden="true"></i>-->
+<!--                                                  <i *ngSwitchCase="true" nz-icon nzType="stop" style="font-size:3em;color:deeppink" nzTheme="outline"></i>-->
+<!--                                              </span>-->
                               </td>
                               <td align="center"><b style="color:blue;font-size:40px" id="tis-incr-out-rate">{{tisIncrStatus?.summary.solrConsume}}</b>
                                   <div id="db-syn" style="width:130px;height:5px;background-color:blue;">

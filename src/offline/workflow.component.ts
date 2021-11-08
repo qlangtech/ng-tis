@@ -21,7 +21,8 @@ import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 export class BasicWFComponent extends BasicFormComponent {
   constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute, notification?: NzNotificationService) {

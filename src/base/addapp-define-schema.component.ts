@@ -19,10 +19,11 @@ import {TISService} from '../common/tis.service';
 import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from '../common/schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
-import {NzModalService, NzTabsCanDeactivateFn} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {TisResponseResult} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
 import {StepType} from "../common/steps.component";
+import {NzTabsCanDeactivateFn} from "ng-zorro-antd/tabs";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 // schema 高级编辑模式入口：http://tis:8080/runtime/schema_manage.htm?aid=1
 // 高级模式: http://tis:8080/runtime/schemaXml.ajax?aid=$aid&event_submit_do_get_xml_content=y&action=schema_action
@@ -269,8 +270,9 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     switch (this.engineType.type) {
       case EnginType.ES:
 
+
         this.httpPost('/runtime/schemaManage.ajax'
-          , "event_submit_do_get_es_tpl_fields=y&action=schema_action&dataxName=" + this._dataxDto.dataxPipeName)
+          , "stepType=" + this.stepInfo.type + "&event_submit_do_get_es_tpl_fields=y&action=schema_action&dataxName=" + this._dataxDto.dataxPipeName)
           .then((r) => {
             if (r.success) {
               this.stupidModal = StupidModal.deseriablize(r.bizresult);
