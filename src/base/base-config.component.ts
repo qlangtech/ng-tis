@@ -18,7 +18,7 @@ import {Component, EventEmitter, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 
 import {PluginSaveResponse, TisResponseResult} from "../common/tis.plugin";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
 
 enum PluginCategory {
@@ -38,7 +38,6 @@ enum PluginCategory {
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="实时" (nzClick)="goto('incr')" (nzDeselect)="configDeSelect($event)">
-                  <!---->
                   <ng-template nz-tab>
                       <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['incr-config']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>

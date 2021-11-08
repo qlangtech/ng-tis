@@ -17,7 +17,8 @@ import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, Vi
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
@@ -25,68 +26,100 @@ import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
 @Component({
   template: `
       <nz-spin size="large" [nzSpinning]="this.formDisabled">
+
+          <div style="margin-top: 8px;" *ngIf="true">
+              <nz-alert *ngIf="true" nzType="info" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
+              <ng-template #unableToUseK8SController>
+                  可直接打开Flink控制台<a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'"><i nz-icon nzType="link" nzTheme="outline"></i>控制台</a>
+              </ng-template>
+          </div>
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="基本">
                   <ng-template nz-tab>
-                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>
-                      <ng-template #errorTpl>
-                          增量处理节点启动有误
-                          <button nz-button nzType="link" (click)="tabSelectIndex=2">查看启动日志</button>
-                      </ng-template>
-                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>
-                  </ng-template>
-              </nz-tab>
-              <nz-tab nzTitle="规格">
-                  <nz-descriptions nzTitle="配置" nzBordered>
-                      <nz-descriptions-item nzTitle="Docker Image">{{dto.rcDeployment.dockerImage}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="创建时间">{{dto.rcDeployment.creationTimestamp | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
-                  </nz-descriptions>
-                  <nz-descriptions nzTitle="当前状态" nzBordered>
-                      <nz-descriptions-item nzTitle="availableReplicas">{{dto.rcDeployment.status.availableReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="fullyLabeledReplicas">{{dto.rcDeployment.status.fullyLabeledReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="observedGeneration">{{dto.rcDeployment.status.observedGeneration}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="readyReplicas">{{dto.rcDeployment.status.readyReplicas}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="replicas">{{dto.rcDeployment.status.replicas}}</nz-descriptions-item>
-                  </nz-descriptions>
-                  <nz-descriptions nzTitle="资源分配" nzBordered>
-                      <nz-descriptions-item nzTitle="CPU">
-                          <nz-tag>request</nz-tag>
-                          {{dto.rcDeployment.cpuRequest.val + dto.rcDeployment.cpuRequest.unit}}
-                          <nz-tag>limit</nz-tag>
-                          {{dto.rcDeployment.cpuLimit.val + dto.rcDeployment.cpuLimit.unit}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="Memory">
-                          <nz-tag>request</nz-tag>
-                          {{dto.rcDeployment.memoryRequest.val + dto.rcDeployment.memoryRequest.unit}}
-                          <nz-tag>limit</nz-tag>
-                          {{dto.rcDeployment.memoryLimit.val + dto.rcDeployment.memoryLimit.unit}}</nz-descriptions-item>
-                  </nz-descriptions>
-                  <nz-descriptions nzTitle="环境变量" nzBordered>
-                      <nz-descriptions-item *ngFor=" let e of  dto.rcDeployment.envs | keyvalue" [nzTitle]="e.key">{{e.value}}</nz-descriptions-item>
-                  </nz-descriptions>
+                      <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
+                      <!--                      <ng-template #errorTpl>-->
+                      <!--                          增量处理节点启动有误-->
+                      <!--                          <button nz-button nzType="link" (click)="tabSelectIndex=2">查看启动日志</button>-->
+                      <!--                      </ng-template>-->
+                      <!--                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>-->
 
-                  <h4 class="ant-descriptions-title pods">Pods</h4>
-                  <nz-table #pods nzSize="small" nzBordered="true" nzShowPagination="false" [nzData]="this?.dto.rcDeployment.pods">
-                      <thead>
-                      <tr>
-                          <th width="20%">名称</th>
-                          <th>状态</th>
-                          <th>创建时间</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let pod of pods.data">
-                          <td>{{pod.name}}</td>
-                          <td>
-                              <nz-tag [nzColor]="'blue'"> {{pod.phase}}</nz-tag>
-                          </td>
-                          <td>{{pod.startTime | date:'yyyy/MM/dd HH:mm:ss'}}</td>
-                      </tr>
-                      </tbody>
-                  </nz-table>
-              </nz-tab>
-              <nz-tab nzTitle="日志">
-                  <ng-template nz-tab>
-                      <incr-pod-logs-status [incrStatus]="this.dto" [msgSubject]="this.msgSubject"></incr-pod-logs-status>
+                      <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
+                          <nz-descriptions-item nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="Start Time">{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="End Time">{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                          <nz-descriptions-item nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
+                      </nz-descriptions>
+                      <ng-template #descTitle>
+                          <nz-space [nzSplit]="spaceSplit">
+                              <ng-template #spaceSplit>
+                                  <nz-divider nzType="vertical"></nz-divider>
+                              </ng-template>
+                              <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}</span>
+                              <nz-tag *nzSpaceItem [nzColor]="this.dto.flinkJobDetail.statusColor"><i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync" nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
+                              <span *nzSpaceItem>
+                                  <nz-tag style="margin: 0" *ngFor="let s of this.dto.flinkJobDetail.jobVerticesPerState" [nzColor]="s.stateColor">{{s.count}}</nz-tag>
+                              </span>
+                          </nz-space>
+                      </ng-template>
+                      <ng-template #extraTpl>
+                          <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()">操作</button>
+                      </ng-template>
+                      <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
+                          <tis-col title="Name" width="20">
+                              <ng-template let-rr="r">
+                                  <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Status" width="10">
+                              <ng-template let-rr="r">
+                                  <nz-tag [nzColor]="rr.executionStateColor"><i *ngIf="rr.executionStateColor === 'processing'" nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}</nz-tag>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Bytes Received" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.jobVertexMetrics.bytesRead}}B
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Records Received" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.jobVertexMetrics.recordsRead}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Bytes Sent" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.jobVertexMetrics.bytesWritten}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Records Sent" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.jobVertexMetrics.recordsWritten}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Parallelism" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.parallelism}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Start Time" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Duration" width="10">
+                              <ng-template let-rr="r">
+                                  {{rr.duration | timeconsume}}
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="End Time" width="10">
+                              <ng-template let-rr="r">
+                                  <ng-container [ngSwitch]="rr.endTime > 0">
+                                      <span *ngSwitchCase="true">
+                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                                      </span>
+                                  </ng-container>
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="操作">
@@ -96,7 +129,7 @@ import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
                   <nz-list class="ant-advanced-search-form" nzBordered>
                       <nz-list-item>
                           <span nz-typography>删除增量实例</span>
-                          <button nz-button nzType="danger" (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
+                          <button nz-button nzType="primary" nzDanger (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
                       </nz-list-item>
                   </nz-list>
               </nz-tab>
@@ -187,7 +220,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
           throw  new Error("have not found any pod");
         }
       } else {
-        this.startMonitorMqTagsStatus('mq_tags_status');
+        // this.startMonitorMqTagsStatus('mq_tags_status');
       }
     })
   }
@@ -196,7 +229,6 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     // console.log(this.currentApp);
     this.msgSubject = this.getWSMsgSubject(logtype);
   }
-
 
 
   ngOnDestroy(): void {
@@ -220,11 +252,15 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
           if (r.success) {
             this.successNotify(`已经成功删除增量实例${this.currentApp.appName}`);
             //  this.router.navigate(["."], {relativeTo: this.route});
-            this.nextStep.next(null);
+            this.nextStep.next(this.dto);
           }
         });
       }
     });
+  }
+
+  manageChannel() {
+    this.tabSelectIndex = 1;
   }
 }
 

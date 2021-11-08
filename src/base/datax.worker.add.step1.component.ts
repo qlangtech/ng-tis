@@ -17,7 +17,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@an
 import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {HeteroList, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
@@ -75,7 +75,7 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
 
   ngOnInit(): void {
     this.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=datax_action&emethod=datax_worker_desc')
+      , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);

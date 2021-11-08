@@ -18,7 +18,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {TISService} from '../common/tis.service';
 import {Router} from '@angular/router';
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   // from:/runtime/usradd.htm

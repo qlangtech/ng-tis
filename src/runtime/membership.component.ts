@@ -17,7 +17,7 @@ import {Component} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {BasicFormComponent} from "../common/basic.form.component";
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 // 会员权限管理
 @Component({

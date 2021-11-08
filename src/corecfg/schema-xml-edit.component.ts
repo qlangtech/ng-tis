@@ -21,7 +21,8 @@ import {AbstractSchemaEditComponent, BasicEditComponent} from './basic.edit.comp
 import {EditorConfiguration} from "codemirror";
 import {FieldErrorInfo, StupidModal} from "../base/addapp-pojo";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SchemaVisualizingEditComponent} from "../common/schema.expert.create.edit.component";
 

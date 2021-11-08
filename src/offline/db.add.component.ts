@@ -23,7 +23,7 @@ import {Location} from '@angular/common';
 
 //  @ts-ignore
 import * as $ from 'jquery';
-import {NzModalRef} from "ng-zorro-antd";
+import {NzModalRef} from "ng-zorro-antd/modal";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 
 

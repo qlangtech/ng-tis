@@ -18,7 +18,7 @@ import {TISService} from "../common/tis.service";
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NzModalRef, NzModalService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {ChartDataSets, ChartOptions} from "chart.js";
 
 

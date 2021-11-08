@@ -16,7 +16,7 @@ import {EventEmitter} from "@angular/core";
  */
 
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' ;
-export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string };
+export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string, descFilter?: (desc: Descriptor) => boolean };
 export declare type PluginType = PluginName | PluginMeta;
 
 
@@ -387,6 +387,7 @@ export class HeteroList {
     return this._descriptorList;
   }
 
+  identityId: string;
   // item 可选数量
   cardinality: string;
   caption: string;

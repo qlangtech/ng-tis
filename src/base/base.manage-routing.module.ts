@@ -15,14 +15,12 @@
 
 import {NgModule} from '@angular/core';
 
-// import {FormsModule} from '@angular/forms';
 import {BaseMangeIndexComponent} from './base.manage.index.component';
 
 import {Routes, RouterModule} from '@angular/router';
 import {DepartmentListComponent} from './department.list.component';
 import {ApplistComponent} from './applist.component';
 import {OperationLogComponent} from '../common/operation.log.component';
-// import {AddAppFormComponent} from './addapp-form.component';
 import {AddAppStepFlowComponent} from './addapp.step.flow.component';
 import {BaseConfigComponent} from "./base-config.component";
 import {SnapshotsetComponent} from "../common/snapshotset.component";
@@ -31,6 +29,9 @@ import {DataxAddComponent} from "./datax.add.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
 import {PluginManageComponent} from "./plugin.manage.component";
 
+
+const dataXWorkerCfg = {processMeta: {targetName: "datax-worker"}};
+const flinkClusterCfg = {processMeta: {targetName: "flink-cluster"}};
 
 const basemanageRoutes: Routes = [
   {
@@ -104,18 +105,29 @@ const basemanageRoutes: Routes = [
             path: '',
             component: ApplistComponent
           },
-          // datax
           {
             path: 'dataxadd',
             component: DataxAddComponent
           },
           {
-            path: 'datax-worker',
-            component: DataxWorkerComponent
+            path: dataXWorkerCfg.processMeta.targetName,
+            component: DataxWorkerComponent,
+            data: dataXWorkerCfg
           },
           {
-            path: 'datax-worker/:targetTab',
-            component: DataxWorkerComponent
+            path: flinkClusterCfg.processMeta.targetName,
+            component: DataxWorkerComponent,
+            data: flinkClusterCfg
+          },
+          {
+            path: flinkClusterCfg.processMeta.targetName + '/:targetTab',
+            component: DataxWorkerComponent,
+            data: flinkClusterCfg
+          },
+          {
+            path: dataXWorkerCfg.processMeta.targetName + '/:targetTab',
+            component: DataxWorkerComponent,
+            data: dataXWorkerCfg
           }
         ]
       }

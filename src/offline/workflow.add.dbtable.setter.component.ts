@@ -36,7 +36,7 @@ import {TISService} from '../common/tis.service';
 */
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
-import {CascaderOption, NzCascaderOption, NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 //

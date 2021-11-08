@@ -19,8 +19,10 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 
 import {ActivatedRoute} from "@angular/router";
 import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, ValOption} from "./tis.plugin";
-import {NzAnchorLinkComponent, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
+import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 
 @Component({
   selector: 'tis-plugins',
@@ -66,7 +68,7 @@ import {Subscription} from "rxjs";
                       <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
                       <nz-dropdown-menu #menu="nzDropdownMenu">
                           <ul nz-menu>
-                              <li nz-menu-item *ngFor="let d of h.descriptorList">
+                              <li nz-menu-item *ngFor="let d of h.descriptorList | callback: h: this.plugins : filterDescriptor">
                                   <a href="javascript:void(0)" (click)="addNewPluginItem(h,d)">{{d.displayName}}</a>
                               </li>
                           </ul>
@@ -368,6 +370,20 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     });
   }
 
+  filterDescriptor(h: HeteroList, pluginMetas: PluginType[], desc: Descriptor) {
+    let pt: PluginType;
+    let o: any;
+    let meta: PluginMeta;
+    for (let i = 0; i < pluginMetas.length; i++) {
+      pt = pluginMetas[i];
+      o = pt;
+      if (o.name && o.descFilter && h.identityId === o.name) {
+        meta = o;
+        return meta.descFilter(desc);
+      }
+    }
+    return true;
+  }
 
   configCheck(event: MouseEvent) {
     let savePlugin = new SavePluginEvent();
@@ -829,7 +845,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                 // console.log(enums);
                 _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
               } else {
-                console.log(biz);
+                // console.log(biz);
                 throw new Error('invalid biz:' + d.displayName);
               }
               break;

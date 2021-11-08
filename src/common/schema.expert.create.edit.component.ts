@@ -19,7 +19,7 @@ import {TISService} from './tis.service';
 
 import {EnginType, FieldErrorInfo, SchemaField, SchemaFieldType, SchemaFieldTypeTokensType, StupidModal} from "../base/addapp-pojo";
 import {ActivatedRoute} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {TisResponseResult} from "./tis.plugin";
 
 

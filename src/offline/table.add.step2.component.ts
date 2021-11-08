@@ -24,7 +24,7 @@ import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {TablePojo} from './table.add.component';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, TisResponseResult} from "../common/tis.plugin";
 
 declare var jQuery: any;

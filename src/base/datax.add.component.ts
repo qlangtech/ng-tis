@@ -19,7 +19,8 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {NzModalService, NzSafeAny} from "ng-zorro-antd";
+// import { NzSafeAny} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
 import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
@@ -32,6 +33,7 @@ import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 import {PluginsComponent} from "../common/plugins.component";
+import {NzSafeAny} from "ng-zorro-antd/core/types";
 
 
 @Component({

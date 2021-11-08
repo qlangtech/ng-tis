@@ -24,7 +24,7 @@ import {BasicEditComponent} from '../corecfg/basic.edit.component';
 
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 import {ActivatedRoute} from '@angular/router';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   // templateUrl: '/runtime/operation_log_special_app.htm'

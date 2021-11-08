@@ -16,7 +16,9 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
-import {NzDrawerRef, NzDrawerService, NzModalService, TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd";
+import { NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";

@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ViewChild, ElementRef, Input, TemplateRef} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, Input, TemplateRef, Inject, Injectable} from '@angular/core';
 import {TISService} from '../common/tis.service';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from '../common/basic.form.component';
@@ -26,11 +26,13 @@ declare var jQuery: any;
 import {Subject} from 'rxjs/Subject';
 import {EditorConfiguration} from "codemirror";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 // import {Observable} from 'rxjs/Observable';
 
+@Injectable()
 export abstract class BasicEditComponent extends BasicFormComponent implements OnInit {
 
   showSaveControl = true;
@@ -148,6 +150,7 @@ export abstract class BasicEditComponent extends BasicFormComponent implements O
 }
 
 
+@Injectable()
 export abstract class AbstractSchemaEditComponent extends BasicEditComponent {
 
   pageTitle: string;

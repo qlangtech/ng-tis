@@ -13,20 +13,20 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
-import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
 
 @Component({
   template: `
@@ -34,12 +34,15 @@ import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment
       </tis-page-header>
       <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
           <ng-template #container></ng-template>
-      </nz-spin>`
+      </nz-spin>
+      {{ multiViewDAG.lastCpt?.name}}
+  `
 })
 export class DataxWorkerComponent extends AppFormComponent implements AfterViewInit, OnInit {
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
-  private multiViewDAG: MultiViewDAG;
+   multiViewDAG: MultiViewDAG;
+  processMeta: ProcessMeta;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver) {
@@ -54,6 +57,7 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
 
 
   ngOnInit(): void {
+    this.processMeta = this.route.snapshot.data["processMeta"];
     // 配置步骤前后跳转状态机
     let configFST: Map<any, { next: any, pre: any }> = new Map();
     configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
@@ -61,24 +65,24 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep1Component});
     configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
     configFST.set(DataxWorkerRunningComponent, {next: DataxWorkerAddStep0Component, pre: DataxWorkerAddStep3Component});
-    // configFST.set(DataxWorkerAddStep0Component, {next: DataxAddStep2Component, pre: null});
-    // console.log(this.containerRef);
+
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
     this.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=datax_action&emethod=get_datax_worker_meta`)
+      , `action=datax_action&emethod=get_job_worker_meta&targetName=${this.processMeta.targetName}`)
       .then((r) => {
         if (r.success) {
-          let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult);
+          let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: this.processMeta});
           if (dataXWorkerStatus.k8sReplicationControllerCreated) {
             this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
           } else {
-            this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, new DataxWorkerDTO());
+            this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
           }
         }
       });
-
   }
 }
+
+
 
 
 

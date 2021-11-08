@@ -18,7 +18,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 // import {HttpModule, JsonpModule} from "@angular/http";
-import {NZ_I18N, zh_CN} from 'ng-zorro-antd';
+// import {NZ_I18N, zh_CN} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {AppComponent} from "./app.component";
@@ -30,6 +30,7 @@ import {TisCommonModule} from "../common/common.module";
 import {CorenodemanageComponent} from "./corenodemanage.component";
 import {RootWelcomeComponent} from "./root-welcome-component";
 import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
+import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
 
 
 // export function offlineModuleFactory() {
@@ -84,23 +85,23 @@ export function markedOptionsFactory(): MarkedOptions {
       },
       {  // 索引一览
         path: 'base',
-        loadChildren: "../base/base.manage.module#BasiManageModule"
+        loadChildren: () => import( "../base/base.manage.module").then(m => m.BasiManageModule)
       },
       {  // 用户权限
         path: 'usr',
-        loadChildren: "../user/user.module#UserModule"
+        loadChildren: () => import("../user/user.module").then(m => m.UserModule)
       },
       {   // 离线模块
         path: 'offline',
-        loadChildren: "../offline/offline.module#OfflineModule"
+        loadChildren: () => import("../offline/offline.module").then(m => m.OfflineModule)
       },
       {   // 索引控制台
         path: 'c/:name',
-        loadChildren: "./core.node.manage.module#CoreNodeManageModule"
+        loadChildren: () => import("./core.node.manage.module").then(m => m.CoreNodeManageModule)
       },
       {   // datax控制台
         path: 'x/:name',
-        loadChildren: "../datax/datax.module#DataxModule"
+        loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
       }
     ])
   ],

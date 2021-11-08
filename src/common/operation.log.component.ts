@@ -19,7 +19,7 @@ import {BasicFormComponent} from './basic.form.component';
 
 import {Pager} from "./pagination.component";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 // 查看操作日志
 @Component({

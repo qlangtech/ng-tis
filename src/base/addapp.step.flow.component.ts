@@ -31,7 +31,7 @@ import {ActivatedRoute} from "@angular/router";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../common/tis.service";
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   template: `

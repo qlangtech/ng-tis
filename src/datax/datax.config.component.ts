@@ -18,7 +18,7 @@ import {TISService} from '../common/tis.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
 
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {PluginsComponent} from "../common/plugins.component";

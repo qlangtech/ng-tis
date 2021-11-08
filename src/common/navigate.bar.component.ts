@@ -27,7 +27,8 @@ import {HttpClient} from "@angular/common/http";
 import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex, SelectedIndex} from "./LatestSelectedIndex";
 // @ts-ignore
-import {NzModalRef, NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";

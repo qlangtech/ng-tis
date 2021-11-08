@@ -36,9 +36,10 @@ import {IncrBuildComponent} from "./incr.build.component";
 import {NzStepsModule} from 'ng-zorro-antd/steps';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
-import {IncrBuildStep2Component} from "./incr.build.step2.component";
+// import {IncrBuildStep2Component} from "./incr.build.step2.component";
 import {IncrBuildStep3Component} from "./incr.build.step3.component";
-import {IncrBuildStep1Component} from "./incr.build.step1.component";
+import {IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent} from "./incr.build.step1.component";
+import {IncrBuildStep2SetSinkComponent} from "./incr.build.step2.setSink.components";
 import {IncrBuildStep4RunningComponent} from "./incr.build.step4.running.component";
 import {NgTerminalModule} from 'ng-terminal';
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
@@ -48,17 +49,13 @@ import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {ChartsModule} from 'ng2-charts';
 
-// import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
- // import {IncrPodLogsStatusComponent} from "./incr.pod.logs.status.component";
 import {NzDividerModule} from 'ng-zorro-antd/divider';
-import {NzIconModule, NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
-// import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {IncrBuildStep4RunningTabBaseComponent} from "./incr.build.step4.running.tab-base.component";
 import {LineChartComponent} from "./line.chart.component";
-
 
 
 @NgModule({
@@ -74,19 +71,21 @@ import {LineChartComponent} from "./line.chart.component";
     CopyOtherCoreComponent
     , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
-    , IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent
+    , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent,
+    // IncrBuildStep2Component,
+    IncrBuildStep3Component, IncrBuildStep4RunningComponent
   ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}
   ],
   exports: [
-  //  IncrPodLogsStatusComponent
+    //  IncrPodLogsStatusComponent
   ],
   entryComponents: [TriggerDumpComponent, PojoComponent,
     SyncConfigComponent,
     CopyOtherCoreComponent
-    , MonitorComponent, MembershipComponent, IncrBuildStep0Component, IncrBuildStep1Component, IncrBuildStep2Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent]
+    , MonitorComponent, MembershipComponent, IncrBuildStep0Component, IncrBuildStep1Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent]
 })
 export class CoreNodeManageModule implements OnInit {
   ngOnInit(): void {

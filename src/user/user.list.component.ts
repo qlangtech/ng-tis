@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
 import {UserAddComponent} from './user.add.component';
 
 import {Pager} from '../common/pagination.component';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   template: `

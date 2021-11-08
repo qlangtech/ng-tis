@@ -20,7 +20,9 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 import {ActivatedRoute} from "@angular/router";
 
 
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
+
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {SavePluginEvent} from "../common/tis.plugin";
@@ -69,17 +71,19 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   launchK8SController() {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker'
+    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker&targetName=${this.dto.processMeta.targetName}`
       , {
         // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
       }, e)
       .then((r) => {
         if (r.success) {
           this.successNotify("已经成功在K8S集群中启动DataX执行器");
-          let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult);
+          let dataXWorkerStatus: DataXJobWorkerStatus
+            = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {'processMeta': this.dto.processMeta});
           // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
           // let desc = Array.from(rList.values());
           // this.hlist = DatasourceComponent.pluginDesc(desc[0])
+         // console.log(dataXWorkerStatus);
           this.nextStep.emit(dataXWorkerStatus);
         }
       });

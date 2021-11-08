@@ -13,25 +13,79 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
+import {AfterContentInit, Component, EventEmitter, Input, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 import {EditorConfiguration} from "codemirror";
-// import {IncrBuildStep1ParamsSetComponent} from "./incr.build.step1_1_params_set.component";
-import {FormGroup} from "@angular/forms";
-import {Item, PluginSaveResponse} from "../common/tis.plugin";
-import {NzModalService} from "ng-zorro-antd";
-import {PluginsComponent} from "../common/plugins.component";
+import {Descriptor, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
-
-// import {eventNames} from "cluster";
-
 
 @Component({
   template: `
       <tis-steps type="createIncr" [step]="0"></tis-steps>
+      <tis-page-header [showBreadcrumb]="false" [result]="result">
+          <nz-affix [nzOffsetTop]="10">
+              <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon nzType="save" nzTheme="outline"></i>保存&下一步</button>
+              &nbsp;
+              <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+          </nz-affix>
+      </tis-page-header>
+      <nz-spin nzSize="large" [nzSpinning]="formDisabled">
+          <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (afterSave)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+      </nz-spin>
+  `
+})
+export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent implements AfterContentInit {
+  plugins = [{name: 'incr-config', require: true}];
+  savePlugin = new EventEmitter<SavePluginEvent>();
+
+  @Output() nextStep = new EventEmitter<any>();
+  @Output() preStep = new EventEmitter<any>();
+
+  @Input() dto: IndexIncrStatus;
+
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
+    super(tisService, route, modalService);
+  }
+
+  protected initialize(app: CurrentCollection): void {
+  }
+
+  ngAfterContentInit(): void {
+  }
+
+  buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
+    if (event.saveSuccess) {
+      // 成功
+      // let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_script_meta=y&action=core_action';
+      //  this.jsonPost(url, {}).then((r) => {
+      //    if (r.success) {
+      // r.bizresult;
+      // this.compileAndPackageIncr();
+      this.nextStep.emit(this.dto);
+      //  console.log("ddddddddddddd");
+      //   }
+      // });
+    }
+  }
+
+  createIndexStep1Next() {
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
+    this.savePlugin.emit(e);
+  }
+
+  cancelStep() {
+
+  }
+}
+
+@Component({
+  template: `
+      <tis-steps type="createIncr" [step]="1"></tis-steps>
       <tis-page-header [showBreadcrumb]="false" [result]="result">
           <tis-header-tool>
           </tis-header-tool>
@@ -40,20 +94,21 @@ import {IndexIncrStatus} from "./misc/RCDeployment";
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="配置" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>
+                      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (afterSave)="buildStep1ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>
                   </ng-template>
               </nz-tab>
-              <nz-tab nzTitle="执行脚本">
-                  <ng-template nz-tab>
-                      <div style="height: 800px">
-                          <tis-codemirror name="schemaContent" [(ngModel)]="dto.incrScriptMainFileContent" [config]="codeMirrorCfg"></tis-codemirror>
-                      </div>
-                  </ng-template>
-              </nz-tab>
+              <!--              <nz-tab nzTitle="执行脚本">-->
+              <!--                  <ng-template nz-tab>-->
+              <!--                      <div style="height: 800px">-->
+              <!--                          <tis-codemirror name="schemaContent" [(ngModel)]="dto.incrScriptMainFileContent" [config]="codeMirrorCfg"></tis-codemirror>-->
+              <!--                      </div>-->
+              <!--                  </ng-template>-->
+              <!--              </nz-tab>-->
           </nz-tabset>
           <ng-template #extraTemplate>
               <nz-affix [nzOffsetTop]="10">
-                  <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon nzType="save" nzTheme="outline" ></i>保存&下一步</button>
+                  <button nz-button nzType="default" (click)="createIndexStepPre()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>&nbsp;
+                  <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon nzType="save" nzTheme="outline"></i>保存&下一步</button>
                   &nbsp;
                   <button nz-button nzType="default" (click)="cancelStep()">取消</button>
               </nz-affix>
@@ -72,9 +127,20 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: IndexIncrStatus;
-  plugins = [{name: 'mq', require: true}];
+  plugins = [{
+    name: 'mq', require: true
+    , descFilter: (desc: Descriptor) => {
+      let tt = desc.extractProps['targetType'];
+      return tt === 'all' || this.dto.readerDesc.endType === tt;
+    }
+  }, {
+    name: 'sinkFactory', require: true, descFilter: (desc: Descriptor) => {
+      let tt = desc.extractProps['targetType'];
+      return tt === 'all' || this.dto.writerDesc.endType === tt;
+    }
+  }];
 
-  savePlugin = new EventEmitter<any>();
+  savePlugin = new EventEmitter<SavePluginEvent>();
   tabSelectIndex = 0;
   // private configParamForm: FormGroup;
 
@@ -85,9 +151,9 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   ngOnInit(): void {
-
+    // console.log(this.dto);
     if (!this.dto.k8sPluginInitialized) {
-      this.plugins.push({name: 'incr-config', require: true});
+      // this.plugins.push({name: 'incr-config', require: true});
     }
     super.ngOnInit();
   }
@@ -109,12 +175,6 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   //   this._incrScript = value;
   // }
 
-  get codeMirrorCfg(): EditorConfiguration {
-    return {
-      mode: "text/x-scala",
-      lineNumbers: true
-    };
-  }
 
   protected initialize(app: CurrentCollection): void {
   }
@@ -122,32 +182,16 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   ngAfterContentInit(): void {
   }
 
-  createIncrSyncChannal() {
-  }
-
   createIndexStep1Next() {
-    // console.log("tabSelectIndex:" + this.tabSelectIndex)
-    if (this.tabSelectIndex === 0) {
-      // 当前正在 '配置' tab
-      this.savePlugin.emit();
-    } else {
-      // 当前正在 '执行脚本' tab
-      this.compileAndPackageIncr();
-    }
-
-    // if (this.buildStep1ParamsSetComponent) {
-    //   let f = this.buildStep1ParamsSetComponent.validateForm;
-    //   if (f.invalid) {
-    //     return;
-    //   }
-    //   this.configParamForm = f;
+    // if (this.tabSelectIndex === 0) {
+    // 当前正在 '配置' tab
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
+    this.savePlugin.emit(e);
     // } else {
-    //   if (!this.configParamForm || this.configParamForm.invalid) {
-    //     return;
-    //   }
+    // 当前正在 '执行脚本' tab
+    // this.compileAndPackageIncr();
     // }
-    // console.log(this.buildStep1ParamsSetComponent.validateForm.valid);
-    // console.log(this.buildStep1ParamsSetComponent.validateForm.value);
   }
 
   private compileAndPackageIncr() {
@@ -176,20 +220,15 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
 
     if (event.saveSuccess) {
-      // 成功
-      // let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_script_meta=y&action=core_action';
-      //  this.jsonPost(url, {}).then((r) => {
-      //    if (r.success) {
-      // r.bizresult;
-      this.compileAndPackageIncr();
-      // this.nextStep.emit(this.dto);
-      //  console.log("ddddddddddddd");
-      //   }
-      // });
+      this.nextStep.emit(this.dto);
     }
 
     setTimeout(() => {
       this.formDisabled = event.formDisabled;
     })
+  }
+
+  createIndexStepPre() {
+    this.preStep.emit(this.dto);
   }
 }

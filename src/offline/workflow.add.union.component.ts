@@ -21,7 +21,7 @@ import {TISService} from '../common/tis.service';
 import 'codemirror/mode/sql/sql.js';
 import 'codemirror/lib/codemirror.css';
 import {EditorConfiguration, fromTextArea} from 'codemirror';
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 
 @Component({

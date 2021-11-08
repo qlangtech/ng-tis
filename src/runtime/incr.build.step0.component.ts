@@ -18,30 +18,32 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {IndexIncrStatus} from "./misc/RCDeployment";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 @Component({
   template: `
-<nz-spin nzSize="large" [nzSpinning]="formDisabled" >
-      <nz-empty
-              [nzNotFoundImage]="
+      <nz-spin nzSize="large" [nzSpinning]="formDisabled">
+          <nz-empty
+                  [nzNotFoundImage]="
         'https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'
       "
-              [nzNotFoundContent]="contentTpl"
-      >
-          <ng-template #contentTpl>
-              <button nz-button nzType="primary" (click)="createIncrSyncChannal()">创建增量通道</button>
-          </ng-template>
-      </nz-empty>
-</nz-spin>
+                  [nzNotFoundContent]="contentTpl"
+          >
+              <ng-template #contentTpl>
+                  <button nz-button nzType="primary" (click)="createIncrSyncChannal()">创建增量通道</button>
+              </ng-template>
+          </nz-empty>
+      </nz-spin>
   `
 })
 export class IncrBuildStep0Component extends AppFormComponent implements AfterContentInit {
   @Output() nextStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
-    super(tisService, route, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, route, modalService, notification);
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -55,7 +57,17 @@ export class IncrBuildStep0Component extends AppFormComponent implements AfterCo
     this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=create_incr_sync_channal')
       .then((r) => {
         if (r.success) {
-          this.nextStep.next(r.bizresult);
+          let dto: IndexIncrStatus = r.bizresult;
+         // console.log(dto);
+          if (!dto.readerDesc.endType) {
+            this.errNotify(dto.readerDesc.extendPoint + "类型的Source暂时不支持增量同步", 10000);
+            return;
+          }
+          if (!dto.writerDesc.endType) {
+            this.errNotify(dto.writerDesc.extendPoint + "类型的Sink暂时不支持增量同步", 10000);
+            return;
+          }
+          this.nextStep.next(dto);
         }
       });
   }

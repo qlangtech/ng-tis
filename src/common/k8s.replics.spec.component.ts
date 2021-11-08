@@ -18,7 +18,7 @@ import {BasicFormComponent} from "./basic.form.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TISService} from "./tis.service";
 import {ActivatedRoute} from "@angular/router";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, ItemPropVal} from "./tis.plugin";
 
 

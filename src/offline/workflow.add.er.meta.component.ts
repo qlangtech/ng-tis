@@ -22,7 +22,8 @@ import {WorkflowAddComponent} from "./workflow.add.component";
 
 import {NzIconService} from 'ng-zorro-antd/icon';
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
-import {NzModalService, NzNotificationService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 @Component({

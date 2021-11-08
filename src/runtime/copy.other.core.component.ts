@@ -20,7 +20,7 @@ import {Component} from '@angular/core';
 import {TISService} from '../common/tis.service';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from "../common/basic.form.component";
-import {NzModalService} from "ng-zorro-antd";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   // templateUrl: '/runtime/jarcontent/copy_config_from_other_app.htm?an={dddd}'
