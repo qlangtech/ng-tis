@@ -30,7 +30,7 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc
 
 @Component({
   template: `
-      <tis-page-header title="DataX分布式执行器">
+      <tis-page-header [title]="this.processMeta.pageHeader">
       </tis-page-header>
       <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
           <ng-template #container></ng-template>
@@ -41,7 +41,7 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc
 export class DataxWorkerComponent extends AppFormComponent implements AfterViewInit, OnInit {
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
-   multiViewDAG: MultiViewDAG;
+  multiViewDAG: MultiViewDAG;
   processMeta: ProcessMeta;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
@@ -61,9 +61,15 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     // 配置步骤前后跳转状态机
     let configFST: Map<any, { next: any, pre: any }> = new Map();
     configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
-    configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep2Component, pre: DataxWorkerAddStep0Component});
-    configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep1Component});
-    configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
+    if (this.processMeta.supportK8SReplicsSpecSetter) {
+      configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep2Component, pre: DataxWorkerAddStep0Component});
+      configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep1Component});
+      configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
+    } else {
+      configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep0Component});
+      configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep1Component});
+    }
+
     configFST.set(DataxWorkerRunningComponent, {next: DataxWorkerAddStep0Component, pre: DataxWorkerAddStep3Component});
 
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);

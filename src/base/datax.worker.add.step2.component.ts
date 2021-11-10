@@ -17,17 +17,18 @@ import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@an
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, SavePluginEvent} from "../common/tis.plugin";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 @Component({
   template: `
-      <tis-steps type="CreateWorkderOfDataX" [step]="1"></tis-steps>
+      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="1"></tis-steps>
       <tis-page-header [showBreadcrumb]="false">
           <tis-header-tool>
               <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStep1Next(k8sReplicsSpec)">下一步</button>
@@ -52,12 +53,16 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
     super(tisService, route, modalService);
   }
 
+  get currentApp(): CurrentCollection {
+    return new CurrentCollection(0, this.dto.processMeta.targetName);
+  }
+
   createStep1Next(k8sReplicsSpec: K8SReplicsSpecComponent) {
     // console.log(k8sReplicsSpec.k8sControllerSpec);
     let rcSpec = k8sReplicsSpec.k8sControllerSpec;
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker'
+    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker&targetName=${this.dto.processMeta.targetName}`
       , {
         k8sSpec: rcSpec,
       }, e)

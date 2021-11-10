@@ -27,11 +27,34 @@ import {SnapshotsetComponent} from "../common/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
+import {ProcessMeta} from "../runtime/misc/RCDeployment";
 import {PluginManageComponent} from "./plugin.manage.component";
+import {StepType} from "../common/steps.component";
 
 
-const dataXWorkerCfg = {processMeta: {targetName: "datax-worker"}};
-const flinkClusterCfg = {processMeta: {targetName: "flink-cluster"}};
+const dataXWorkerCfg: { processMeta: ProcessMeta }
+  = {
+  processMeta: {
+    targetName: "datax-worker"
+    , pageHeader: "DataX分布式执行器"
+    , notCreateTips: "还未创建DataX执行器，创建之后可以将DataX构建任务提交到K8S集群，高效并行执行DataX数据同步任务"
+    , createButtonLabel: "创建DataX执行器"
+    , stepsType: StepType.CreateWorkderOfDataX
+    , supportK8SReplicsSpecSetter: true
+  }
+};
+
+const flinkClusterCfg: { processMeta: ProcessMeta }
+  = {
+  processMeta: {
+    targetName: "flink-cluster"
+    , pageHeader: "Flink Native Cluster执行器"
+    , createButtonLabel: "创建Flink Native Cluster执行器"
+    , notCreateTips: "还未创建Flink Native Cluster执行器，创建之后可以将Flink Job提交到K8S集群，高效并行执行数据实时同步任务"
+    , stepsType: StepType.CreateFlinkCluster
+    , supportK8SReplicsSpecSetter: false
+  }
+};
 
 const basemanageRoutes: Routes = [
   {

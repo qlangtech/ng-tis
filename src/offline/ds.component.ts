@@ -52,6 +52,8 @@ const db_model_facade = "facade";
                           <li nz-menu-item *ngFor="let d of datasourceDesc">
                               <a href="javascript:void(0)" (click)="addDbBtnClick(d)">{{d.displayName}}</a>
                           </li>
+                          <li nz-menu-divider></li>
+                          <li nz-menu-item><a routerLink="/base/plugin-manage" ><i nz-icon nzType="api" nzTheme="outline"></i>插件管理</a></li>
                       </ul>
                   </nz-dropdown-menu>
                   <button nz-button nz-dropdown nzSize="small" style="width: 4em" [nzDropdownMenu]="menu">
