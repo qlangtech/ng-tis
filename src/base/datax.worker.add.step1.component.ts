@@ -15,16 +15,18 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {HeteroList, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {ActivatedRoute, Router} from "@angular/router";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 @Component({
   template: `
-      <tis-steps type="CreateWorkderOfDataX" [step]="0"></tis-steps>
+      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="0"></tis-steps>
       <tis-page-header [showBreadcrumb]="false">
           <tis-header-tool>
               <button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
@@ -37,33 +39,27 @@ import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
       </nz-spin>
   `
 })
-export class DataxWorkerAddStep1Component extends BasicFormComponent implements AfterViewInit, OnInit {
+export class DataxWorkerAddStep1Component extends AppFormComponent implements AfterViewInit, OnInit {
   hlist: HeteroList[] = [];
   savePlugin = new EventEmitter<SavePluginEvent>();
   @Input() dto: DataxWorkerDTO;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
+    super(tisService, route, modalService);
   }
 
+  // get currentApp(): CurrentCollection {
+  //   return new CurrentCollection(0, this.dto.processMeta.targetName);
+  // }
   createStep1Next() {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
+    let appTisService: TISService = this.tisService;
+    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    e.basicModule = this;
     this.savePlugin.emit(e);
-    // this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker'
-    //   , {
-    //     dataxWorker: this.hlist[0]
-    //   })
-    //   .then((r) => {
-    //     if (r.success) {
-    //       this.nextStep.emit(this.dto);
-    //       // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-    //       // let desc = Array.from(rList.values());
-    //       // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-    //     }
-    //   });
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -74,6 +70,8 @@ export class DataxWorkerAddStep1Component extends BasicFormComponent implements 
 
 
   ngOnInit(): void {
+
+   // console.log(appTisService.currentApp);
     this.httpPost('/coredefine/corenodemanage.ajax'
       , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
       .then((r) => {

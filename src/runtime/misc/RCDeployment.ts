@@ -1,6 +1,7 @@
 import {BasicFormComponent} from "../../common/basic.form.component";
-import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
+import {K8SRCSpec, K8SReplicsSpecComponent} from "../../common/k8s.replics.spec.component";
 import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
+import {StepType} from "../../common/steps.component";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -123,6 +124,7 @@ export class K8SControllerStatus {
 export interface PluginExtraProps {
   endType: string;
   extendPoint: string;
+  impl: string;
 }
 
 export class IndexIncrStatus extends K8SControllerStatus {
@@ -169,6 +171,12 @@ export interface IncrProcess {
 
 export interface ProcessMeta {
   targetName: string;
+  pageHeader: string;
+  stepsType: StepType
+  supportK8SReplicsSpecSetter: boolean;
+  // step0
+  notCreateTips: string;
+  createButtonLabel: string;
 }
 
 export class DataXJobWorkerStatus extends K8SControllerStatus {

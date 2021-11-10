@@ -28,10 +28,10 @@ import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
                 [nzNotFoundContent]="contentTpl"
       >
           <ng-template #contentTpl>
-              <span> 还未创建DataX执行器，创建之后可以将DataX构建任务提交到K8S集群，高效并行执行DataX数据同步任务</span>
+              <span>{{this.dto.processMeta.notCreateTips}}</span>
           </ng-template>
           <ng-template #footerTpl>
-              <button nz-button nzType="primary" (click)="onClick()">创建DataX执行器</button>
+              <button nz-button nzType="primary" (click)="onClick()">{{this.dto.processMeta.createButtonLabel}}</button>
           </ng-template>
       </nz-empty>
   `

@@ -13,7 +13,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
+import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -23,6 +23,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
   selector: 'tis-plugins',
@@ -46,7 +47,7 @@ import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
           <div class="extension-point" [id]="h.identity">
               <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
           </div>
-          <div *ngFor=" let item of h.items" [ngClass]="{'item-block':shallInitializePluginItems}">
+          <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
               <div style="float:right">
                   <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
                   <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
@@ -68,7 +69,7 @@ import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
                       <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
                       <nz-dropdown-menu #menu="nzDropdownMenu">
                           <ul nz-menu>
-                              <li nz-menu-item *ngFor="let d of h.descriptorList | callback: h: this.plugins : filterDescriptor">
+                              <li nz-menu-item *ngFor="let d of h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor">
                                   <a href="javascript:void(0)" (click)="addNewPluginItem(h,d)">{{d.displayName}}</a>
                               </li>
                           </ul>
@@ -187,44 +188,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let db = r.biz();
 
         onSuccess(db);
-
-        // let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
-        // this.nodes = newNode.concat(this.nodes);
-        //
-        // let e = {'type': 'db', 'id': `${db.dbId}`};
-        // this.treeNodeClicked = true;
-        // this.onEvent(e);
-        //
-        // this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       }
     });
   }
 
-  // /**
-  //  *
-  //  * @param h
-  //  * @param des
-  //  * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
-  //  */
-  // public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
-  //   , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-  //   let nItem = new Item(des);
-  //   nItem.displayName = des.displayName;
-  //   des.attrs.forEach((attr) => {
-  //     nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
-  //   });
-  //   let nitems: Item[] = [];
-  //   h.items.forEach((r) => {
-  //     nitems.push(r);
-  //   });
-  //   // console.log(nItem);
-  //   nitems.push(nItem);
-  //   h.items = nitems;
-  // }
-
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
+   // console.log(pluginMeta);
     return pluginMeta.map((p) => {
       let param: any = p;
+      // console.log(param);
       if (param.name) {
         let t: PluginMeta = param;
         return `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? ',' + t.extraParam : ''}`
@@ -351,7 +323,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
     , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
-    let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
+    // console.log(pluginMetas);
+      let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
 
     let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
@@ -369,6 +342,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
     });
   }
+
 
   filterDescriptor(h: HeteroList, pluginMetas: PluginType[], desc: Descriptor) {
     let pt: PluginType;
@@ -456,6 +430,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems() {
+    // console.log("ddd");
     PluginsComponent.initializePluginItems(this, this.plugins, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
       if (success) {
         this.showExtensionPoint.open = showExtensionPoint;
@@ -467,45 +442,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
       this.ajaxOccur.emit(new PluginSaveResponse(success, false));
     });
-
-    // let pluginMeta = this.getPluginMetaParams();
-    // let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
-    //
-    // this.jsonPost(url, {}).then((r) => {
-    //   this._heteroList = [];
-    //   if (r.success) {
-    //     this.showExtensionPoint.open = r.bizresult.showExtensionPoint;
-    //     let bizArray: HeteroList[] = r.bizresult.plugins;
-    //     bizArray.forEach((he) => {
-    //       let h: HeteroList = Object.assign(new HeteroList(), he);
-    //       let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
-    //       // console.log(descMap);
-    //       h.descriptors = descMap;
-    //       // 遍历item
-    //       let items: Item[] = [];
-    //       let i: Item;
-    //       h.items.forEach((item) => {
-    //
-    //         let desc: Descriptor = h.descriptors.get(item.impl);
-    //         i = Object.assign(new Item(desc), item);
-    //
-    //         i.wrapItemVals();
-    //         items.push(i);
-    //       });
-    //
-    //       h.items = items;
-    //       this._heteroList.push(h);
-    //     });
-    //     this.afterInit.emit(this._heteroList);
-    //     this.cdr.reattach();
-    //     this.cdr.detectChanges();
-    //   }
-    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-    // }).catch((e) => {
-    //   // console.log("================ error occur");
-    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-    //   throw new Error(e);
-    // });
   }
 
 
@@ -543,9 +479,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
     // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
-
-
-    PluginsComponent.postHeteroList(this, this.plugins, this._heteroList, savePluginEvent, this.errorsPageShow, (r) => {
+    // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
+    let formContext = !!savePluginEvent.basicModule ? savePluginEvent.basicModule : this;
+    // console.log(formContext)
+    PluginsComponent.postHeteroList(formContext, this.plugins, this._heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
       if (!savePluginEvent.verifyConfig) {
@@ -709,8 +646,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
-                          <li nz-menu-item>
-                              <a target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
+                          <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
+                              <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
+                              <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                           </li>
                           <li nz-menu-item *ngFor="let p of createRouter.plugin">
                               <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
@@ -785,7 +723,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   @Input()
   formControlSpan = 13;
 
-  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef) {
+  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
@@ -947,6 +885,54 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
 
+  openSelectableInputManager(createRouter: CreatorRouter) {
+    const drawerRef = this.drawerService.create<SelectionInputAssistComponent, {}, {}>({
+      nzWidth: "60%",
+      nzPlacement: "right",
+      nzTitle: `基础配置录入`,
+      nzContent: SelectionInputAssistComponent,
+      // nzWrapClassName: 'get-gen-cfg-file',
+      nzContentParams: {'createCfg': createRouter}
+    });
+  }
+}
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.Default,
+  template: `
+      <tis-plugins [showSaveButton]="false" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)"></tis-plugins>`
+})
+export class SelectionInputAssistComponent extends BasicFormComponent implements OnInit {
+
+  @Input()
+  createCfg: CreatorRouter;
+
+  pluginTyps: PluginType[] = [];
+
+  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService) {
+    super(tisService, modalService, notification);
+  }
+
+  ngOnInit(): void {
+    let tp: TargetPlugin;
+    this.pluginTyps = [];
+    for (let i = 0; i < this.createCfg.plugin.length; i++) {
+      tp = this.createCfg.plugin[i];
+
+      this.pluginTyps.push({
+        name: tp.hetero
+        , require: true
+        , extraParam: tp.extraParam + ",targetItemDesc_" + tp.descName
+        , descFilter: (desc) => {
+          return desc.displayName === tp.descName;
+        }
+      });
+    }
+  }
+
+  whenAjaxOccur(e: PluginSaveResponse) {
+
+  }
 }
 
 interface CreatorRouter {

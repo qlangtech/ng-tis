@@ -1,4 +1,5 @@
 import {EventEmitter} from "@angular/core";
+import {BasicFormComponent} from "./basic.form.component";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -16,7 +17,12 @@ import {EventEmitter} from "@angular/core";
  */
 
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' ;
-export declare type PluginMeta = { name: PluginName, require: boolean, extraParam?: string, descFilter?: (desc: Descriptor) => boolean };
+export declare type PluginMeta = {
+  name: PluginName, require: boolean, extraParam?: string
+   // 服务端对目标Item的desc进行过滤
+  // , targetItemDesc?: string
+  , descFilter?: (desc: Descriptor) => boolean
+};
 export declare type PluginType = PluginName | PluginMeta;
 
 
@@ -162,14 +168,6 @@ export class Item {
   public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } = {};
   displayName = '';
   private _propVals: ItemPropVal[];
-
-  // public get itemVals(): { string?: ItemPropVal } | { string?: { string?: ItemPropVal } } {
-  //   return this.vals;
-  // }
-  //
-  // public set itemVals(v: { string?: ItemPropVal } | { string?: { string?: ItemPropVal } }) {
-  //   this.vals = v;
-  // }
 
   /**
    * 创建一个新的Item
@@ -433,6 +431,8 @@ export class SavePluginEvent {
   // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
   public verifyConfig = false;
   public notShowBizMsg = false;
+
+  public basicModule: BasicFormComponent;
 }
 
 

@@ -22,7 +22,7 @@ import {CommonModule} from "@angular/common";
 import {NavigateBarComponent} from "./navigate.bar.component";
 import {RouterModule} from "@angular/router";
 import {OperationLogComponent} from "./operation.log.component";
-import {CallbackPipe, SafePipe} from "./safe.pipe";
+import {PluginDescCallbackPipe, SafePipe} from "./safe.pipe";
 import {FinalExecControllerComponent, PageHeaderComponent, PageHeaderLeftComponent, TisHeaderTool, TisHeaderToolContent} from "./pager.header.component";
 import {TisMsgComponent} from "./msg.component";
 import {FormComponent, InputContentDirective, TisInputProp, TisInputTool} from "./form.component";
@@ -33,7 +33,7 @@ import {LocalStorageModule} from 'angular-2-local-storage';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
-import {ItemPropValComponent, PluginsComponent} from "./plugins.component";
+import {ItemPropValComponent, PluginsComponent, SelectionInputAssistComponent} from "./plugins.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzFormModule} from 'ng-zorro-antd/form';
@@ -123,17 +123,17 @@ import {MarkdownModule} from "ngx-markdown";
   declarations: [SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, SafePipe, CallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    TimeConsumePipe, SafePipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
     CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
+    CodemirrorComponent, PluginsComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
   exports: [SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent, NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule, NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule, ViewGenerateCfgComponent,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule, TisStepsToolbarComponent,
-    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, CallbackPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
+    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp, PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
     , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent

@@ -29,7 +29,7 @@ import {SavePluginEvent} from "../common/tis.plugin";
 
 @Component({
   template: `
-      <tis-steps type="CreateWorkderOfDataX" [step]="2"></tis-steps>
+      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="2"></tis-steps>
       <tis-page-header [showBreadcrumb]="false">
           <tis-header-tool>
               <button nz-button nzType="default" [disabled]="formDisabled" (click)="prestep()">上一步</button>&nbsp;
@@ -42,10 +42,12 @@ import {SavePluginEvent} from "../common/tis.plugin";
                        [showSaveButton]="false"
                        #pluginComponent></tis-plugins>
       </div>
-      <h4>K8S资源规格</h4>
-      <div class="item-block">
-          <k8s-replics-spec [rcSpec]="this.dto.rcSpec" [disabled]="true" #k8sReplicsSpec [labelSpan]="3"></k8s-replics-spec>
-      </div>
+      <ng-container *ngIf="dto.processMeta.supportK8SReplicsSpecSetter">
+          <h4>K8S资源规格</h4>
+          <div class="item-block">
+              <k8s-replics-spec [rcSpec]="this.dto.rcSpec" [disabled]="true" #k8sReplicsSpec [labelSpan]="3"></k8s-replics-spec>
+          </div>
+      </ng-container>
   `
   , styles: [
       `
@@ -63,27 +65,24 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   }
 
   ngOnInit(): void {
-    if (!this.dto.rcSpec) {
+    if (this.dto.processMeta.supportK8SReplicsSpecSetter && !this.dto.rcSpec) {
       throw new Error("rcSpec can not be null");
     }
   }
 
+  get currentApp(): CurrentCollection {
+    return new CurrentCollection(0, this.dto.processMeta.targetName);
+  }
   launchK8SController() {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker&targetName=${this.dto.processMeta.targetName}`
-      , {
-        // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
-      }, e)
+      , {}, e)
       .then((r) => {
         if (r.success) {
-          this.successNotify("已经成功在K8S集群中启动DataX执行器");
+          this.successNotify("已经成功在K8S集群中启动" + this.dto.processMeta.pageHeader);
           let dataXWorkerStatus: DataXJobWorkerStatus
             = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {'processMeta': this.dto.processMeta});
-          // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-          // let desc = Array.from(rList.values());
-          // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-         // console.log(dataXWorkerStatus);
           this.nextStep.emit(dataXWorkerStatus);
         }
       });

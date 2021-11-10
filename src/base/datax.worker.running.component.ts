@@ -129,7 +129,7 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, K8sPodState, LogType, RcHpaStatus}
                   </nz-page-header>
                   <nz-list class="ant-advanced-search-form" nzBordered>
                       <nz-list-item>
-                          <span nz-typography>删除DataX Worker</span>
+                          <span nz-typography>删除{{this.dto.processMeta.pageHeader}}</span>
                           <button nz-button nzType="primary" (click)="dataXWorkerDelete()" nzDanger><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
                       </nz-list-item>
                   </nz-list>
@@ -197,7 +197,6 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     // console.log("==========================");
     this.route.params.subscribe((p) => {
       let targetTab = p['targetTab'];
-      // console.log(targetTab);
       switch (targetTab) {
         case 'log':
           if (!this.podNameSub) {
@@ -236,30 +235,16 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
           this.profileViewSelect();
           this.tabSelectIndex = 0;
           break;
+        case 'manage':
+          this.tabSelectIndex = 3;
+          break;
         case 'env':
         default :
           this.tabSelectIndex = 1;
       }
     });
-
-    // if (!this.dto.rcSpec) {
-    //   throw new Error("rcSpec can not be null");
-    // }
   }
 
-  // launchK8SController() {
-  //   this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=launch_datax_worker'
-  //     , {
-  //       // k8sSpec: this.k8sReplicsSpec.k8sControllerSpec,
-  //     })
-  //     .then((r) => {
-  //       if (r.success) {
-  //         // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-  //         // let desc = Array.from(rList.values());
-  //         // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-  //       }
-  //     });
-  // }
 
   protected initialize(app: CurrentCollection): void {
   }
@@ -274,15 +259,12 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
 
   dataXWorkerDelete() {
 
-    this.confirm("是否确定要将DataX任务执行器从K8S容器中删除", () => {
+    this.confirm(`是否确定要将${this.dto.processMeta.pageHeader}从K8S容器中删除`, () => {
       this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker&targetName=' + this.dto.processMeta.targetName
         , {})
         .then((r) => {
           if (r.success) {
-            // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-            // let desc = Array.from(rList.values());
-            // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-            this.nextStep.emit(new DataxWorkerDTO());
+            this.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: this.dto.processMeta}));
           }
         });
     });
@@ -291,21 +273,11 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   profileTabSelect() {
-    // this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker'
-    //   , {})
-    //   .then((r) => {
-    //     if (r.success) {
-    //       // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-    //       // let desc = Array.from(rList.values());
-    //       // this.hlist = DatasourceComponent.pluginDesc(desc[0])
-    //       this.nextStep.emit(new DataxWorkerDTO());
-    //     }
-    //   });
     this.activeTab('profile');
   }
 
   private activeTab(tabName: string) {
-    let currentTab = this.route.snapshot.params['targetTab']
+    let currentTab = this.route.snapshot.params['targetTab'];
     if (currentTab !== tabName) {
       this.router.navigate([`/base/${this.dto.processMeta.targetName}`, tabName], {relativeTo: this.route});
     }

@@ -26,8 +26,6 @@ import {GlobalUpdateParamComponent} from "./global.update.param";
 import {AddAppFormComponent} from "./addapp-form.component";
 import {AddAppStepFlowComponent} from "./addapp.step.flow.component";
 import {AddAppFlowDirective} from "./addapp.directive";
-// import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
-// import {SchemaExpertAppCreateEditComponent} from "./schema.expert.create.edit.component";
 import {AddAppConfirmComponent} from "./addapp-confirm.component";
 import {TisCommonModule} from "../common/common.module";
 
@@ -38,11 +36,6 @@ import {NzTabsModule} from 'ng-zorro-antd/tabs';
 import {BaseConfigComponent} from "./base-config.component";
 import {AddappSelectNodesComponent} from "./addapp-select-nodes.component";
 import {DepartmentAddComponent} from "./department.add.component";
-// import {DataxAddStep1Component} from "./datax.add.step1.component";
-// import {DataxAddComponent} from "./datax.add.component";
-
-
-// import { ViewGenerateCfgComponent} from "./datax.add.step7.confirm.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
