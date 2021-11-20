@@ -324,7 +324,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
     super(tisService, modalService, notification);
   }
 
-  @Input()
+ // @Input()
   public set getCurrentAppCache(val: boolean) {
     this._getCurrentAppCache = val;
   }

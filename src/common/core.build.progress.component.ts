@@ -20,11 +20,13 @@ import {TISService} from "./tis.service";
 
 
 import {NgTerminal} from "ng-terminal";
-import { NzModalService} from "ng-zorro-antd/modal";
-import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
+import {ViewGenerateCfgComponent} from "../base/datax.add.step7.confirm.component";
+import {TerminalComponent} from "./terminal.component";
 
 
 @Component({
@@ -64,18 +66,17 @@ export class ProgressComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'tis-progress-title',
   template: `
-      <h6 class="card-title">
       <span *ngIf="t.success">
          <nz-tag [nzColor]="'#87d068'"><i class="fa fa-check"
                                           aria-hidden="true"></i>成功</nz-tag></span>
-          <span *ngIf="t.faild">
+      <span *ngIf="t.faild">
         <nz-tag [nzColor]="'#f50'">
               <i class="fa fa-times"
                  aria-hidden="true"></i>失败</nz-tag></span>
 
-          <i *ngIf="t.processing" class="fa fa-cog fa-spin fa-1x fa-fw"></i>
-          <ng-content></ng-content>
-      </h6>  `
+      <i *ngIf="t.processing" class="fa fa-cog fa-spin fa-1x fa-fw"></i>
+      <ng-content></ng-content>
+  `
 })
 export class ProgressTitleComponent {
   t: any = {};
@@ -126,6 +127,7 @@ export class ProgressTitleComponent {
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
+                  <div style="clear: both"></div>
               </nz-collapse-panel>
               <ng-template #dumpTpl>
                   <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
@@ -138,6 +140,7 @@ export class ProgressTitleComponent {
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
+                  <div style="clear: both"></div>
               </nz-collapse-panel>
               <ng-template #joinTpl>
                   <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>
@@ -151,6 +154,7 @@ export class ProgressTitleComponent {
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
+                  <div style="clear: both"></div>
               </nz-collapse-panel>
               <ng-template #indexBuildTpl>
                   <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>
@@ -164,6 +168,7 @@ export class ProgressTitleComponent {
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
+                  <div style="clear: both"></div>
               </nz-collapse-panel>
               <ng-template #indexBackFlow>
                   <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>
@@ -171,6 +176,7 @@ export class ProgressTitleComponent {
 
           </nz-collapse>
       </nz-spin>
+      <!--
       <nz-drawer
               [nzWrapClassName]="'get-gen-cfg-file'"
               [nzBodyStyle]="{  overflow: 'auto' }"
@@ -178,10 +184,12 @@ export class ProgressTitleComponent {
               [nzWidth]="'70%'"
               [nzVisible]="termVisible"
               [nzTitle]="drawerTitle"
-              (nzOnClose)="termClose()"
-      >
-          <ng-terminal #term></ng-terminal>
+              (nzOnClose)="termClose()">
+          <ng-container *nzDrawerContent>
+              <ng-terminal #term></ng-terminal>
+          </ng-container>
       </nz-drawer>
+      -->
       <ng-template #drawerTitle>
           执行日志
           <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>
@@ -220,12 +228,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   // 运行耗时
   consuming = 0;
   consumingTimer: any;
-  @ViewChild('termTemplate', {static: false}) termTemplate: TemplateRef<{
-    $implicit: { value: string };
-    drawerRef: NzDrawerRef<string>;
-  }>;
+  @ViewChild('drawerTitle', {static: false}) drawerTitle: TemplateRef<any>;
   breadcrumb: string[] = [];
-  @ViewChild('term', {static: true}) terminal: NgTerminal;
+ // @ViewChild('term', {static: true}) terminal: NgTerminal;
   buildTask = new BuildTask();
   private componentDestroy = false;
   showBreadcrumb = false;
@@ -236,7 +241,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 //   app: any;
 //   config: any;
 //   instanceDirDesc: any;
-  @ViewChild('term', {static: true}) child: NgTerminal;
+ // @ViewChild('term', {static: true}) child: NgTerminal;
   value = 'ng';
   liveExecLog: any = {
     "buildPhase": {
@@ -273,13 +278,13 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     }
   };
   isSpinning = false;
-  termVisible = false;
+ // termVisible = false;
   progressStat: ProgressStat = new ProgressStat();
   dataxProcess = false;
 
   // private count: number = 1;
   constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService
-    , route: ActivatedRoute, private cd: ChangeDetectorRef) {
+    , route: ActivatedRoute, private cd: ChangeDetectorRef, private drawerService: NzDrawerService) {
     super(tisService, route, modalService, notification);
     // ng-terminal说明文档
     // https://ng.ant.design/docs/introduce/zh
@@ -305,7 +310,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_cancel_task=y&action=core_action&taskid=" + this.taskid)
           .then((r) => {
             if (r.success) {
-             // this.successNotify(r.msg[0])
+              // this.successNotify(r.msg[0])
               this.progressStat = Object.assign(new ProgressStat(), r.bizresult);
             }
           });
@@ -402,9 +407,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
           break;
         case "full":
           // console.log(response.data);
-          if (response.data.msg) {
-            this.terminal.write(response.data.msg + "\r\n");
-          }
+          // if (response.data.msg) {
+           // this.terminal.write(response.data.msg + "\r\n");
+          // }
           break;
         default:
           throw new Error(`logttype:${response.logtype} is illegal`);
@@ -427,12 +432,21 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
 
   openReltimeLog() {
-    this.termVisible = true;
+  //  this.termVisible = true;
     this.msgSubject.next(new WSMessage("full"));
+
+      const drawerRef = this.drawerService.create<TerminalComponent, {}, {}>({
+      nzWidth: "70%",
+      nzPlacement: "right",
+      nzTitle: this.drawerTitle,
+      nzContent: TerminalComponent,
+      nzWrapClassName: 'get-gen-cfg-file',
+      nzContentParams: {logSubject: this.msgSubject}
+    });
   }
 
   termClose() {
-    this.termVisible = false;
+   //  this.termVisible = false;
   }
 
   downloadLogFile() {

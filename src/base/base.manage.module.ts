@@ -42,9 +42,8 @@ import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
-import {PluginManageComponent} from "./plugin.manage.component";
+
 import {MarkdownModule} from "ngx-markdown";
-import {PluginUpdateCenterComponent} from "./plugin.update.center.component";
 
 
 @NgModule({
@@ -54,7 +53,7 @@ import {PluginUpdateCenterComponent} from "./plugin.update.center.component";
     ApplistComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component, DataxWorkerAddStep3Component
-    , DataxWorkerRunningComponent, PluginManageComponent , PluginUpdateCenterComponent
+    , DataxWorkerRunningComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent

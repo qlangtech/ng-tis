@@ -52,7 +52,11 @@ import {ActivatedRoute, Router} from "@angular/router";
                               </nz-form-item>
                           </ng-template>
                       </tis-col>
-                      <tis-col title="Type" field="type"></tis-col>
+                      <tis-col title="Type" >
+                          <ng-template let-u='r'>
+                              {{u.type.collapse}}
+                          </ng-template>
+                      </tis-col>
                   </tis-page>
               </tis-ipt>
           </tis-form>

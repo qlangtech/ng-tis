@@ -21,6 +21,7 @@ import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
+import {TisResponseResult} from "./tis.plugin";
 
 @Component({
   selector: "full-build-history",
@@ -29,6 +30,11 @@ import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
           <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
           <ng-template #unableToUseK8SController>
               当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启 <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
+          </ng-template>
+          <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告" [nzDescription]="installLocal" nzShowIcon></nz-alert>
+          <ng-template #installLocal>
+              当前DataX任务执行器需要安装（<strong>单机版</strong>）执行器，请先安装
+              <tis-plugin-add-btn [extendPoint]="'com.qlangtech.tis.datax.DataXJobSubmit'" [descriptors]="[]"></tis-plugin-add-btn>
           </ng-template>
       </div>
       <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" (refesh)="refesh()">
@@ -73,7 +79,14 @@ import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
               <ng-template let-rr='r'>{{rr.triggerType}}</ng-template>
           </tis-col>
       </tis-page>
-  `
+  `,
+  styles: [
+      `
+          nz-alert {
+              margin-top: 5px;
+          }
+    `
+  ]
 })
 export class FullBuildHistoryComponent extends BasicFormComponent implements OnInit {
   pager: Pager = new Pager(1, 1, 0);
@@ -154,6 +167,9 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
         sucMsg: '全量索引构建已经触发'
       };
 
+    if (this.dataXWorkerStatus) {
+      this.dataXWorkerStatus.installLocal = false;
+    }
 
     if (this.appNotAware) {
       // 单纯数据流触发
@@ -164,6 +180,10 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       };
     }
     this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
+      if (!r.success) {
+        // let p =   <Promise<any>>r;
+        return;
+      }
       let taskid = r.bizresult.taskid;
       let msg: Array<any> = [];
       msg.push({
@@ -175,6 +195,10 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
           this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
           this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
         });
+    }, (r: TisResponseResult) => {
+      if (!r.success && this.dataXWorkerStatus) {
+        this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
+      }
     })
 
   }

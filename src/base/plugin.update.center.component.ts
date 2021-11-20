@@ -96,7 +96,6 @@ export class PluginUpdateCenterComponent extends BasicFormComponent implements O
           this.loading.emit(false);
           this.firstLoad = false;
         }
-        // console.log(r.bizresult);
         this.plugins = r.bizresult;
         this.cd.detectChanges();
         if (!this.hasDestroy) {
