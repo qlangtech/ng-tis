@@ -16,7 +16,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
-import { NzModalService} from "ng-zorro-antd/modal";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
@@ -286,6 +286,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       throw new Error("illegal type");
     }
     let cachedVals: { [key: string]: ItemPropVal } = ip;
+    // console.log(cachedVals);
     if (cachedVals) {
       // console.log(cachedVals);
       let allHasFillEnums = false;
@@ -313,6 +314,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         return;
       }
     }
+    // console.log("==================");
     let metaParam = PluginsComponent.getPluginMetaParams(pluginMeta);
     // console.log(this.subFormHetero.descriptorList[0]);
     // let onClickMeta = meta.behaviorMeta.onClickFillData;
@@ -388,11 +390,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       }
       meta.setted = true;
 
-      // let ip = hetero.hetero.items[0].vals;
-      // if (ip instanceof ItemPropVal) {
-      //   throw new Error("illegal type");
-      // }
-
       // @ts-ignore
       this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
     });
@@ -457,8 +454,8 @@ interface GetDateMethodMeta {
   `
 })
 export class PluginSubFormComponent {
-  @Input() hetero: HeteroList[];
-  @Input() pluginMeta: PluginType[];
+  @Input() hetero: HeteroList[] = [];
+  @Input() pluginMeta: PluginType[] = [];
   savePlugin = new EventEmitter<{ verifyConfig: boolean }>();
 
   constructor(public  drawer: NzDrawerRef<{ hetero: HeteroList }>) {

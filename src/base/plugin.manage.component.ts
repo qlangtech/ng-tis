@@ -20,6 +20,7 @@ import {BasicFormComponent} from '../common/basic.form.component';
 import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
+import {Observable, Subject} from "rxjs";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -30,11 +31,11 @@ enum PluginTab {
 // 查看操作日志
 @Component({
   template: `
-      <tis-page-header title="插件管理" [showBreadcrumb]="true">
+      <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
       </tis-page-header>
       <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
-              <nz-tab nzTitle="可安装"  (nzClick)="openAvailable()">
+              <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
                   <ng-template nz-tab>
                       <nz-affix class="tool-bar" [nzOffsetTop]="20">
                           <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary" (click)="installPlugin()">
@@ -95,11 +96,11 @@ enum PluginTab {
                                       </div>
                                       <div class="tis-tags">
                                           <span>作者:</span>
-                                          <nz-tag >TIS官方</nz-tag>
+                                          <nz-tag>TIS官方</nz-tag>
                                           <span>费用:</span>
                                           <nz-tag [nzColor]="'green'">免费</nz-tag>
                                           <span>打包时间:</span>
-                                          <nz-tag >{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                          <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
                                       </div>
                                   </div>
                               </ng-template>
@@ -147,6 +148,16 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   installedPlugs: Array<PluginInfo> = [];
   selectedIndex = 0;
 
+  /**
+   * 当前是否在抽屉模式
+   */
+  drawerModel = false;
+
+  // 目标扩展点接口名
+  extendPoint: string;
+
+  paramObservable: Observable<Params>;
+
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
   }
@@ -161,7 +172,8 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
 
   ngOnInit(): void {
 
-    this.route.params.subscribe((params: Params) => {
+    this.paramObservable = this.drawerModel ? new Subject<Params>() : this.route.params;
+    this.paramObservable.subscribe((params: Params) => {
       let tab = params["tab"];
       switch (tab) {
         case PluginTab.updateCenter:
@@ -170,7 +182,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
         case PluginTab.installed: {
           this.selectedIndex = 1;
           this.httpPost('/coredefine/corenodemanage.ajax'
-            , 'action=plugin_action&emethod=get_installed_plugins')
+            , 'action=plugin_action&emethod=get_installed_plugins' + this.buildExtendPointParam())
             .then((r) => {
               if (r.success) {
                 this.installedPlugs = r.bizresult;
@@ -182,7 +194,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
         default: {
           this.selectedIndex = 0;
           this.httpPost('/coredefine/corenodemanage.ajax'
-            , `action=plugin_action&emethod=get_available_plugins`)
+            , `action=plugin_action&emethod=get_available_plugins${this.buildExtendPointParam()}`)
             .then((r) => {
               this.pager = Pager.create(r);
               // this.logs = r.bizresult.rows;
@@ -192,8 +204,11 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       }
 
     });
+    this.triggerSubPath(null);
+  }
 
-
+  private buildExtendPointParam(): string {
+    return !!this.extendPoint ? '&extendpoint=' + this.extendPoint : '';
   }
 
   goPage(event: number) {
@@ -234,7 +249,18 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   private goto(subpath: string) {
-    this.router.navigate(["/base/plugin-manage", subpath], {relativeTo: this.route});
+    if (this.drawerModel) {
+      this.triggerSubPath(subpath);
+    } else {
+      this.router.navigate(["/base/plugin-manage", subpath], {relativeTo: this.route});
+    }
+  }
+
+  private triggerSubPath(subpath: string) {
+    if (this.drawerModel) {
+      let s = <Subject<Params>>this.paramObservable;
+      s.next({"tab": subpath});
+    }
   }
 
   updateCenterLoading(load: boolean) {

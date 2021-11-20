@@ -66,14 +66,8 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
               <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
                   <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
                   <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                      <button nz-button nz-dropdown [nzDropdownMenu]="menu" [disabled]="h.addItemDisabled">添加<i nz-icon nzType="down"></i></button>
-                      <nz-dropdown-menu #menu="nzDropdownMenu">
-                          <ul nz-menu>
-                              <li nz-menu-item *ngFor="let d of h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor">
-                                  <a href="javascript:void(0)" (click)="addNewPluginItem(h,d)">{{d.displayName}}</a>
-                              </li>
-                          </ul>
-                      </nz-dropdown-menu>
+                      <tis-plugin-add-btn [extendPoint]="h.extensionPoint"  [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor" (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
+
                   </ng-container>
               </nz-collapse-panel>
           </nz-collapse>
@@ -343,6 +337,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     });
   }
 
+  @Input()
+  public set getCurrentAppCache(val: boolean) {
+   super.getCurrentAppCache = val;
+  }
 
   filterDescriptor(h: HeteroList, pluginMetas: PluginType[], desc: Descriptor) {
     let pt: PluginType;

@@ -92,8 +92,8 @@ export class TISService {
 
   public set currentApp(currApp: CurrentCollection) {
     // console.log("currentApp");
-    // let err = new Error();
-    // console.log(err.stack);
+    //  let err = new Error();
+    //  console.log(err.stack);
     this.currApp = currApp;
   }
 
@@ -125,7 +125,7 @@ export class TISService {
         if (result) {
           return result;
         }
-        return () => Promise.reject(response);
+        return Promise.reject(response);
       }).catch(this.handleError);
   }
 

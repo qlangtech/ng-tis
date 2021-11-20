@@ -16,7 +16,7 @@
 import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection, AppFormComponent} from "../common/basic.form.component";
-import { NzModalService} from "ng-zorro-antd/modal";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
@@ -60,16 +60,22 @@ export enum ExecModel {
                   <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()">生成DataX配置文件</button>
               </div>
           </ng-container>
-          <h3>脚本文件</h3>
+          <h3>DataX脚本文件</h3>
           <ul class="item-block child-block">
               <li *ngFor="let f of genCfgFileList">
                   <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="file-text" nzTheme="outline"></i>{{f}}</button>
               </li>
-              <li *ngFor="let f of createDDLFileList">
-                  <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="console-sql" nzTheme="outline"></i>{{f}}</button>
-              </li>
               <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
           </ul>
+          <ng-container *ngIf="createDDLFileList.length > 0">
+              <h3>Create Table DDL</h3>
+              <ul class="item-block child-block">
+                  <li *ngFor="let f of createDDLFileList">
+                      <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="console-sql" nzTheme="outline"></i>{{f}}</button>
+                  </li>
+                  <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+              </ul>
+          </ng-container>
           <h3>基本信息</h3>
           <div class="item-block">
               <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
@@ -327,7 +333,7 @@ class GenerateCfgs {
               <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
           </nz-page-header-extra>
       </nz-page-header>
-      <tis-codemirror  [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+      <tis-codemirror [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [(ngModel)]="fileMeta.content"></tis-codemirror>
   `
   , styles: [`
   `]
@@ -345,6 +351,7 @@ export class ViewGenerateCfgComponent extends AppFormComponent {
 
   constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
     super(tisService, route, modalService, notification);
+    this.getCurrentAppCache = true;
   }
 
   protected initialize(app: CurrentCollection): void {

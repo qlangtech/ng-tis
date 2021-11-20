@@ -44,19 +44,11 @@ const db_model_facade = "facade";
 
       <nz-layout>
           <nz-sider [nzWidth]="300">
-              <div class="btn-block">
-                  <button style="width: 4em" nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="dbAdd"><i class="fa fa-plus" aria-hidden="true"></i>
-                      <i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></button>
-                  <nz-dropdown-menu #dbAdd="nzDropdownMenu">
-                      <ul nz-menu>
-                          <li nz-menu-item *ngFor="let d of datasourceDesc">
-                              <a href="javascript:void(0)" (click)="addDbBtnClick(d)">{{d.displayName}}</a>
-                          </li>
-                          <li nz-menu-divider></li>
-                          <li nz-menu-item><a routerLink="/base/plugin-manage" ><i nz-icon nzType="api" nzTheme="outline"></i>插件管理</a></li>
-                      </ul>
-                  </nz-dropdown-menu>
-                  <button nz-button nz-dropdown nzSize="small" style="width: 4em" [nzDropdownMenu]="menu">
+              <nz-space class="btn-block">
+                  <tis-plugin-add-btn *nzSpaceItem [btnStyle]="'width: 4em'" (addPlugin)="addDbBtnClick($event)"  [btnSize]="'small'"
+                                      [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'" [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
+                      <i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></tis-plugin-add-btn>
+                  <button *nzSpaceItem nz-button nz-dropdown nzSize="small" style="width: 4em" [nzDropdownMenu]="menu">
                       <i class="fa fa-plus" aria-hidden="true"></i>
                       <i class="fa fa-table" aria-hidden="true"></i>
                       <i nz-icon nzType="down"></i></button>
@@ -72,7 +64,7 @@ const db_model_facade = "facade";
                       </ul>
                   </nz-dropdown-menu>
 
-              </div>
+              </nz-space>
               <nz-input-group [nzSuffix]="suffixIcon">
                   <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
               </nz-input-group>
