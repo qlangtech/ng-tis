@@ -34,7 +34,7 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--          </tis-page-header>-->
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()" [goBackBtnShow]="_offsetStep>0"  (goOn)="createStepNext()"></tis-steps-tools-bar>
+          <tis-steps-tools-bar [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()" [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
           <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
               <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">
                   <input nz-input [(ngModel)]="writerTargetTabName"/>
@@ -52,7 +52,7 @@ import {ActivatedRoute, Router} from "@angular/router";
                               </nz-form-item>
                           </ng-template>
                       </tis-col>
-                      <tis-col title="Type" >
+                      <tis-col title="Type">
                           <ng-template let-u='r'>
                               {{u.type.collapse}}
                           </ng-template>
@@ -75,6 +75,7 @@ import {ActivatedRoute, Router} from "@angular/router";
                 border-radius: 4px;
                 padding: 4px 11px;
             }
+
             nz-form-item {
                 margin: 0px;
             }
@@ -89,6 +90,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   errorItem: Item = Item.create([]);
 
   writerTargetTabName: string;
+  writerFromTabName: string;
   colsMeta: Array<ReaderColMeta> = [];
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
@@ -108,6 +110,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
     this.httpPost(url, 'action=datax_action&emethod=get_writer_cols_meta&dataxName=' + this.dto.dataxPipeName).then((r) => {
       this.colsMeta = r.bizresult.sourceCols;
       this.writerTargetTabName = r.bizresult.to;
+      this.writerFromTabName = r.bizresult.from;
       let index = 0;
       this.colsMeta.forEach((c) => {
         c.index = ++index;
@@ -127,6 +130,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_writer_cols_meta&dataxName=' + this.dto.dataxPipeName
       , {
         "writerTargetTabName": this.writerTargetTabName,
+        "writerFromTabName": this.writerFromTabName,
         "colsMeta": this.colsMeta
       })
       .then((r) => {
