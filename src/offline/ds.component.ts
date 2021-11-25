@@ -45,7 +45,7 @@ const db_model_facade = "facade";
       <nz-layout>
           <nz-sider [nzWidth]="300">
               <nz-space class="btn-block">
-                  <tis-plugin-add-btn *nzSpaceItem [btnStyle]="'width: 4em'" (addPlugin)="addDbBtnClick($event)"  [btnSize]="'small'"
+                  <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 4em'" (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
                                       [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'" [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
                       <i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></tis-plugin-add-btn>
                   <button *nzSpaceItem nz-button nz-dropdown nzSize="small" style="width: 4em" [nzDropdownMenu]="menu">
@@ -117,7 +117,7 @@ const db_model_facade = "facade";
                               <span *nzSpaceItem>
                                   <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
                               </span>
-                              <span  *nzSpaceItem>
+                              <span *nzSpaceItem>
                                   <button nz-button [disabled]="this.updateMode" nzType="primary" nzDanger (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除{{dbType}}</button>
                               </span>
                               <span *nzSpaceItem>
@@ -240,6 +240,10 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.initComponents(true);
+  }
+
+  initComponents(updateTreeInit: boolean) {
     this.treeLoad = true;
     let action = 'emethod=get_datasource_info&action=offline_datasource_action';
     this.httpPost('/offline/datasource.ajax', action)
@@ -252,15 +256,17 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
           let descList = PluginsComponent.wrapDescriptors(result.bizresult.pluginDesc);
           this.datasourceDesc = Array.from(descList.values());
           this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
-          this.treeInit(dbs);
-          setTimeout(() => {
-            let queryParams = this.activateRoute.snapshot.queryParams;
-            if (queryParams['dbId']) {
-              this.activateDb(Number(queryParams['dbId']));
-            } else if (queryParams['tableId']) {
-              this.activateTable(Number(queryParams['tableId']));
-            }
-          }, 100);
+          if (updateTreeInit) {
+            this.treeInit(dbs);
+            setTimeout(() => {
+              let queryParams = this.activateRoute.snapshot.queryParams;
+              if (queryParams['dbId']) {
+                this.activateDb(Number(queryParams['dbId']));
+              } else if (queryParams['tableId']) {
+                this.activateTable(Number(queryParams['tableId']));
+              }
+            }, 100);
+          }
         }
         this.treeLoad = false;
       }).catch((e) => {

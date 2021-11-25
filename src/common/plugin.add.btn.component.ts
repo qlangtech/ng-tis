@@ -18,8 +18,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@
 import {Descriptor} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
-import {NzModalService} from "ng-zorro-antd/modal";
-import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button/button.component";
@@ -28,27 +26,37 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <button [style]="btnStyle" nz-button nz-dropdown [nzSize]="btnSize" [nzDropdownMenu]="menu" [disabled]="this.disabled">
-          <ng-content></ng-content>
-      </button>
-      <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-              <li nz-menu-item *ngFor="let d of descriptors">
-                  <a href="javascript:void(0)" (click)="addNewPluginItem(d)">{{d.displayName}}</a>
-              </li>
-              <li nz-menu-divider></li>
-              <li nz-menu-item>
-                  <a href="javascript:void(0)" (click)="addNewPlugin()"><i nz-icon nzType="api" nzTheme="outline"></i>安装插件</a>
-              </li>
-          </ul>
-      </nz-dropdown-menu>
+      <ng-container [ngSwitch]="this.descriptors.length> 0 ">
+          <ng-container *ngSwitchCase="true">
+              <button [style]="btnStyle" nz-button nz-dropdown [nzSize]="btnSize" [nzDropdownMenu]="menu" [disabled]="this.disabled">
+                  <ng-content></ng-content>
+              </button>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                      <li nz-menu-item *ngFor="let d of descriptors">
+                          <a href="javascript:void(0)" (click)="addNewPluginItem(d)">{{d.displayName}}</a>
+                      </li>
+                      <li nz-menu-divider></li>
+                      <li nz-menu-item>
+                          <a href="javascript:void(0)" (click)="addNewPlugin()"><i nz-icon nzType="api" nzTheme="outline"></i>安装插件</a>
+                      </li>
+                  </ul>
+              </nz-dropdown-menu>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+              <button [style]="btnStyle" nz-button  nzType="primary" [nzSize]="btnSize" (click)="addNewPlugin()" [disabled]="this.disabled">
+                  添加
+              </button>
+          </ng-container>
+      </ng-container>
+
   `
 })
 export class PluginAddBtnComponent extends BasicFormComponent {
   @Input()
   descriptors: Array<Descriptor> = [];
   @Input()
-  extendPoint: string;
+  extendPoint: string | Array<String>;
   @Input()
   disabled: boolean;
 
@@ -61,9 +69,12 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   @Output()
   addPlugin = new EventEmitter<Descriptor>();
 
-  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService
+  @Output()
+  afterPluginAddClose = new EventEmitter<Descriptor>();
+
+  constructor(tisService: TISService
     , private drawerService: NzDrawerService) {
-    super(tisService, modalService, notification);
+    super(tisService);
   }
 
   addNewPluginItem(desc: Descriptor) {
@@ -80,6 +91,7 @@ export class PluginAddBtnComponent extends BasicFormComponent {
     });
 
     drawerRef.afterClose.subscribe(() => {
+      this.afterPluginAddClose.emit();
     })
   }
 }

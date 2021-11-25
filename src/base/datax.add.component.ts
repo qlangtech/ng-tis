@@ -155,7 +155,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep7Component, dto);
+    //   this.multiViewDAG.loadComponent(DataxAddStep2Component, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

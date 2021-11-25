@@ -66,7 +66,10 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
               <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
                   <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
                   <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                      <tis-plugin-add-btn [extendPoint]="h.extensionPoint"  [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor" (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
+                      <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
+                                          [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
+                                          (afterPluginAddClose)="updateHeteroListDesc(h)"
+                                          (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
 
                   </ng-container>
               </nz-collapse-panel>
@@ -187,7 +190,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
-   // console.log(pluginMeta);
+    // console.log(pluginMeta);
     return pluginMeta.map((p) => {
       let param: any = p;
       // console.log(param);
@@ -318,7 +321,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
     , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
     // console.log(pluginMetas);
-      let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
+    let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
 
     let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
@@ -339,7 +342,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Input()
   public set getCurrentAppCache(val: boolean) {
-   super.getCurrentAppCache = val;
+    super.getCurrentAppCache = val;
   }
 
   filterDescriptor(h: HeteroList, pluginMetas: PluginType[], desc: Descriptor) {
@@ -514,48 +517,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     });
 
-
-    // let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${this.errorsPageShow}&verify=${verifyConfig}`;
-    //
-    // let postData: Array<Item[]> = [];
-    // this._heteroList.forEach((h) => {
-    //   postData.push(h.items);
-    // });
-    //
-    // this.jsonPost(url, postData).then((r) => {
-    //   // 成功了
-    //   this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
-    //   if (!verifyConfig) {
-    //     this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
-    //   } else {
-    //     if (r.success) {
-    //       this.notification.create('success', '校验成功', "表单配置无误");
-    //     }
-    //   }
-    //   if (!this.errorsPageShow && r.success) {
-    //     // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
-    //     if (this.showSaveButton && r.msg.length > 0) {
-    //       this.notification.create('success', '成功', r.msg[0]);
-    //     }
-    //     return;
-    //   }
-    //
-    //   this.processResult(r);
-    //   this.cdr.detectChanges();
-    //   let pluginErrorFields = r.errorfields;
-    //   // console.log(pluginErrorFields);
-    //   let index = 0;
-    //   // let tmpHlist: HeteroList[] = [];
-    //   this._heteroList.forEach((h) => {
-    //     let items: Item[] = h.items;
-    //     let errorFields = pluginErrorFields[index++];
-    //     PluginsComponent.processErrorField(errorFields, items);
-    //   });
-    //   this.cdr.detectChanges();
-    // }).catch((e) => {
-    //   this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-    // });
-
     if (event) {
       event.stopPropagation();
     }
@@ -586,6 +547,19 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
+  updateHeteroListDesc(h: HeteroList) {
+    let url = "/coredefine/corenodemanage.ajax";
+    this.httpPost(url, "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint)
+      .then((r) => {
+        if (r.success) {
+          let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
+          if (h.descriptors.size !== descMap.size) {
+            h.updateDescriptor(descMap);
+          }
+        }
+      });
+
+  }
 }
 
 // 如果不加这个component的话在父组件中添加一个新的item，之前已经输入值的input控件上的值就会消失，确实很奇怪
