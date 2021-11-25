@@ -34,7 +34,7 @@ import {TisResponseResult} from "./tis.plugin";
           <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告" [nzDescription]="installLocal" nzShowIcon></nz-alert>
           <ng-template #installLocal>
               当前DataX任务执行器需要安装（<strong>单机版</strong>）执行器，请先安装
-              <tis-plugin-add-btn [extendPoint]="'com.qlangtech.tis.datax.DataXJobSubmit'" [descriptors]="[]"></tis-plugin-add-btn>
+              <tis-plugin-add-btn [extendPoint]="'com.qlangtech.tis.datax.DataXJobSubmit'" [descriptors]="[]">添加</tis-plugin-add-btn>
           </ng-template>
       </div>
       <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb" [result]="result" (refesh)="refesh()">

@@ -154,7 +154,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   drawerModel = false;
 
   // 目标扩展点接口名
-  extendPoint: string;
+  extendPoint: string | Array<String>;
 
   paramObservable: Observable<Params>;
 
@@ -208,7 +208,10 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   private buildExtendPointParam(): string {
-    return !!this.extendPoint ? '&extendpoint=' + this.extendPoint : '';
+  //  console.log(this.extendPoint);
+    let isArray = Array.isArray(this.extendPoint);
+    let epParam: Array<string> = isArray ? <Array<string>>this.extendPoint : [<string>this.extendPoint];
+    return !!this.extendPoint ? (epParam).map((e) => `&extendpoint=${e}`).join('') : '';
   }
 
   goPage(event: number) {

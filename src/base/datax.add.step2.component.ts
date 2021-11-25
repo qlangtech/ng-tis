@@ -57,6 +57,10 @@ import {Descriptor, Item} from "../common/tis.plugin";
                       <label class="source-lab" *ngFor="let pp of writerDesc" nz-radio-button [nzValue]="pp.impl">{{pp.displayName}}</label>
                   </nz-radio-group>
               </tis-ipt>
+              <tis-ipt  title="插件安装"  require="false">
+                  <tis-plugin-add-btn (afterPluginAddClose)="ngOnInit()"  [extendPoint]="['com.qlangtech.tis.datax.impl.DataxReader','com.qlangtech.tis.datax.impl.DataxWriter']"
+                                      [descriptors]="[]">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
+              </tis-ipt>
           </tis-form>
       </nz-spin>
       <!-- Content here -->
@@ -146,6 +150,7 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
       }
     });
   }
+
 }
 
 export interface DataXReaderWriterEnum {

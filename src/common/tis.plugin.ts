@@ -19,7 +19,7 @@ import {BasicFormComponent} from "./basic.form.component";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' ;
 export declare type PluginMeta = {
   name: PluginName, require: boolean, extraParam?: string
-   // 服务端对目标Item的desc进行过滤
+  // 服务端对目标Item的desc进行过滤
   // , targetItemDesc?: string
   , descFilter?: (desc: Descriptor) => boolean
 };
@@ -385,6 +385,7 @@ export class HeteroList {
     return this._descriptorList;
   }
 
+
   identityId: string;
   // item 可选数量
   cardinality: string;
@@ -396,6 +397,10 @@ export class HeteroList {
     return this.extensionPoint.replace(/\./g, '-');
   }
 
+  public updateDescriptor(newDescriptors: Map<string /* impl */, Descriptor>): void {
+    this.descriptors = newDescriptors;
+    this._descriptorList = undefined;
+  }
 
   public get addItemDisabled(): boolean {
     return (this.cardinality === '1' && this.items.length > 0);
