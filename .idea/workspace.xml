@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -130,8 +129,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.ng:serve-jit" />
+        <item itemvalue="npm.ng:serve-aot" />
         <item itemvalue="npm.build:elements" />
         <item itemvalue="npm.build" />
         <item itemvalue="npm.build:aot" />
@@ -287,7 +286,7 @@
       <workItem from="1635210074289" duration="8741000" />
       <workItem from="1635296696661" duration="2042000" />
       <workItem from="1635325259145" duration="20480000" />
-      <workItem from="1636263470836" duration="67123000" />
+      <workItem from="1636263470836" duration="69508000" />
     </task>
     <servers />
   </component>
@@ -503,7 +502,7 @@
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/node_modules/@antv/g6/lib/plugins/grid/index.d.ts</url>
+          <url>file://$PROJECT_DIR$/node_modules_bak/@antv/g6/lib/plugins/grid/index.d.ts</url>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
