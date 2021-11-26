@@ -127,7 +127,7 @@ import {Application} from "../common/application";
                                           <a routerLink="/base/appadd">Solr实例</a>
                                       </li>
                                       <li nz-menu-item>
-                                          <a routerLink="/base/dataxadd">Datax实例</a>
+                                          <a routerLink="/base/dataxadd">数据管道</a>
                                       </li>
                                   </ul>
                               </nz-dropdown-menu>

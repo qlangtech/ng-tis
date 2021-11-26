@@ -68,10 +68,10 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量同步添加", ["引擎选择", "Source/Sink配置", "Stream脚本确认",  "状态确认"]));
-    this.processMap.set(StepType.CreateDatax, new CaptionSteps("DataX添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
-    this.processMap.set(StepType.UpdateDataxReader, new CaptionSteps("DataX Reader 更 新", ["Reader设置", "Writer设置", "表映射", "确认"]));
-    this.processMap.set(StepType.UpdateDataxWriter, new CaptionSteps("DataX Writer 更 新", ["Writer设置", "表映射", "确认"]));
-    this.processMap.set(StepType.CreateWorkderOfDataX, new CaptionSteps("DataX分布式执行器添加", ["K8S基本信息", "K8S资源规格", "确认"]));
+    this.processMap.set(StepType.CreateDatax, new CaptionSteps("数据管道添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.UpdateDataxReader, new CaptionSteps("数据管道 Reader 更 新", ["Reader设置", "Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.UpdateDataxWriter, new CaptionSteps("数据管道 Writer 更 新", ["Writer设置", "表映射", "确认"]));
+    this.processMap.set(StepType.CreateWorkderOfDataX, new CaptionSteps("数据管道分布式执行器添加", ["K8S基本信息", "K8S资源规格", "确认"]));
     this.processMap.set(StepType.CreateFlinkCluster, new CaptionSteps("Flink Native Cluster执行器添加", ["K8S基本信息", "确认"]));
   }
 

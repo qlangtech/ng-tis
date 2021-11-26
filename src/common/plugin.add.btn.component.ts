@@ -18,7 +18,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@
 import {Descriptor} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
-import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button/button.component";
 
@@ -38,14 +38,14 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
                       </li>
                       <li nz-menu-divider></li>
                       <li nz-menu-item>
-                          <a href="javascript:void(0)" (click)="addNewPlugin()"><i nz-icon nzType="api" nzTheme="outline"></i>安装插件</a>
+                          <a href="javascript:void(0)" (click)="addNewPlugin()"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
                       </li>
                   </ul>
               </nz-dropdown-menu>
           </ng-container>
           <ng-container *ngSwitchCase="false">
-              <button [style]="btnStyle" nz-button  nzType="primary" [nzSize]="btnSize" (click)="addNewPlugin()" [disabled]="this.disabled">
-                  添加
+              <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()" [disabled]="this.disabled">
+                  <i nz-icon nzType="api" nzTheme="outline"></i>添加
               </button>
           </ng-container>
       </ng-container>
@@ -72,6 +72,8 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   @Output()
   afterPluginAddClose = new EventEmitter<Descriptor>();
 
+
+
   constructor(tisService: TISService
     , private drawerService: NzDrawerService) {
     super(tisService);
@@ -82,16 +84,12 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   }
 
   addNewPlugin() {
-    const drawerRef = this.drawerService.create<PluginManageComponent, {}, {}>({
-      nzWidth: "70%",
-      nzPlacement: "right",
-      nzTitle: `插件管理`,
-      nzContent: PluginManageComponent,
-      nzContentParams: {drawerModel: true, extendPoint: this.extendPoint}
-    });
+    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint);
 
     drawerRef.afterClose.subscribe(() => {
       this.afterPluginAddClose.emit();
     })
   }
+
+
 }

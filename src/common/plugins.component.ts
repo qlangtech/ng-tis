@@ -24,6 +24,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {PluginManageComponent} from "../base/plugin.manage.component";
 
 @Component({
   selector: 'tis-plugins',
@@ -622,6 +623,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                               <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                               <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                           </li>
+<!--  先注释掉                 <li nz-menu-item>-->
+<!--                              <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>更新</a>-->
+<!--                          </li>-->
                           <li nz-menu-item *ngFor="let p of createRouter.plugin">
                               <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
                           </li>
@@ -725,58 +729,74 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
-    // PluginsComponent.openPluginInstanceAddDialog(this,);
     let descName = targetPlugin.descName;
-    //  console.log(_pp.options);
     let url = "/coredefine/corenodemanage.ajax";
-    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero).then((r) => {
-      let desc = PluginsComponent.wrapDescriptors(r.bizresult);
-      desc.forEach((d) => {
-
-        let pluginTp: PluginType = {name: targetPlugin.hetero, require: true};
-        if (targetPlugin.extraParam) {
-          pluginTp.extraParam = targetPlugin.extraParam;
-        }
-
-        PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
-          //  console.log(_pp);
-          switch (_pp.type) {
-            case 5: // enum
-              // enum
-              // db detail
-              // let item: Item = Object.assign(new Item(d), );
-              // let nn = new ValOption();
-              // n.name = biz.detailed.identityName;
-              // n.impl = d.impl;
-
-              if (biz.detailed) {
-                let db = biz.detailed;
-                let enums = _pp.getEProp('enum');
-                // console.log(enums);
-                _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
-              } else {
-                // console.log(biz);
-                throw new Error('invalid biz:' + d.displayName);
+    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
+      .then((r) => {
+        if (!r.success) {
+          if (r.bizresult.notFoundExtension) {
+            this.modalService.confirm({
+              nzTitle: '确认',
+              nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
+              nzOkText: '开始安装',
+              nzCancelText: '取消',
+              nzOnOk: () => {
+                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension);
+                drawerRef.afterClose.subscribe(() => {
+                  // this.afterPluginAddClose.emit();
+                })
               }
-              break;
-            case 6: // select
-              if (Array.isArray(biz)) {
-                // select
-                let ids: Array<string> = biz;
-                ids.forEach((id) => {
-                  let n = new ValOption();
-                  n.name = id;
-                  n.impl = d.impl;
-                  _pp.options = [n, ..._pp.options]
-                });
-              }
-              break;
-            default:
-              throw new Error(`error type:${_pp.type}`);
+            });
           }
+          return;
+        }
+        let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+        desc.forEach((d) => {
+
+          let pluginTp: PluginType = {name: targetPlugin.hetero, require: true};
+          if (targetPlugin.extraParam) {
+            pluginTp.extraParam = targetPlugin.extraParam;
+          }
+
+          PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
+            //  console.log(_pp);
+            switch (_pp.type) {
+              case 5: // enum
+                // enum
+                // db detail
+                // let item: Item = Object.assign(new Item(d), );
+                // let nn = new ValOption();
+                // n.name = biz.detailed.identityName;
+                // n.impl = d.impl;
+
+                if (biz.detailed) {
+                  let db = biz.detailed;
+                  let enums = _pp.getEProp('enum');
+                  // console.log(enums);
+                  _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
+                } else {
+                  // console.log(biz);
+                  throw new Error('invalid biz:' + d.displayName);
+                }
+                break;
+              case 6: // select
+                if (Array.isArray(biz)) {
+                  // select
+                  let ids: Array<string> = biz;
+                  ids.forEach((id) => {
+                    let n = new ValOption();
+                    n.name = id;
+                    n.impl = d.impl;
+                    _pp.options = [n, ..._pp.options]
+                  });
+                }
+                break;
+              default:
+                throw new Error(`error type:${_pp.type}`);
+            }
+          });
         });
       });
-    });
   }
 
   toggleDescContentShow() {
@@ -866,6 +886,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
       // nzWrapClassName: 'get-gen-cfg-file',
       nzContentParams: {'createCfg': createRouter}
     });
+  }
+
+  reloadSelectableItems() {
   }
 }
 
