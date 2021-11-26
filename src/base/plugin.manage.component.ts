@@ -21,6 +21,7 @@ import {Pager} from "../common/pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -157,6 +158,17 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   extendPoint: string | Array<String>;
 
   paramObservable: Observable<Params>;
+
+  public static openPluginManage(drawerService: NzDrawerService, extendPoint: string | Array<String>): NzDrawerRef<PluginManageComponent, any> {
+    const drawerRef = drawerService.create<PluginManageComponent, {}, {}>({
+      nzWidth: "70%",
+      nzPlacement: "right",
+      nzTitle: `插件管理`,
+      nzContent: PluginManageComponent,
+      nzContentParams: {drawerModel: true, extendPoint: extendPoint}
+    });
+    return drawerRef;
+  }
 
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
