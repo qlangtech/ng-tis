@@ -35,12 +35,12 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'Reader-Writer表映射关系'" (cancel)="cancel()" (goBack)="goback()" [goBackBtnShow]="_offsetStep>0"  (goOn)="createStepNext()"></tis-steps-tools-bar>
-          <nz-table #basicTable [nzData]="tabAliasList" [nzShowPagination]="false">
+          <nz-table #basicTable [nzData]="tabAliasList" [nzShowPagination]="true" [nzPaginationPosition]="'top'">
               <thead>
               <tr>
                   <th width="40%">Reader源表</th>
                   <th width="10%"></th>
-                  <th>Writer目标表</th>
+                  <th>Writer目标表<i nz-icon nzType="edit" nzTheme="outline"></i></th>
               </tr>
               </thead>
               <tbody>
