@@ -175,6 +175,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
     let addDb: PluginsComponent = modalRef.getContentComponent();
     addDb.errorsPageShow = true;
+    addDb.getCurrentAppCache = true;
     addDb.formControlSpan = 20;
     addDb.shallInitializePluginItems = false;
     addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc);
@@ -895,7 +896,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-plugins [showSaveButton]="false" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)"></tis-plugins>`
+      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="false" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)"></tis-plugins>`
 })
 export class SelectionInputAssistComponent extends BasicFormComponent implements OnInit {
 

@@ -194,25 +194,25 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
     // }
   }
 
-  private compileAndPackageIncr() {
-    let url = '/coredefine/corenodemanage.ajax?emethod=compileAndPackage&action=core_action';
-    this.jsonPost(url, {}).then((result) => {
-      if (result.success) {
-        // 执行编译打包
-        this.nextStep.emit(this.dto);
-      } else {
-        let errFields = result.errorfields;
-        if (errFields.length > 0) {
-          let errFieldKey = "incr_script_compile_error";
-          let item: Item = Item.create([errFieldKey]);
-          Item.processErrorField(errFields[0], [item]);
-          if ("error" === item.vals[errFieldKey].error) {
-            this.tabSelectIndex = 1;
-          }
-        }
-      }
-    });
-  }
+  // private compileAndPackageIncr() {
+  //   let url = '/coredefine/corenodemanage.ajax?emethod=compileAndPackage&action=core_action';
+  //   this.jsonPost(url, {}).then((result) => {
+  //     if (result.success) {
+  //       // 执行编译打包
+  //       this.nextStep.emit(this.dto);
+  //     } else {
+  //       let errFields = result.errorfields;
+  //       if (errFields.length > 0) {
+  //         let errFieldKey = "incr_script_compile_error";
+  //         let item: Item = Item.create([errFieldKey]);
+  //         Item.processErrorField(errFields[0], [item]);
+  //         if ("error" === item.vals[errFieldKey].error) {
+  //           this.tabSelectIndex = 1;
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
 
   cancelStep() {
   }

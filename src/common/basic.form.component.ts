@@ -134,7 +134,7 @@ export class BasicFormComponent {
   }
   public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
 
-    let option: any = {
+    let option: ModalOptions = {
       // nzTitle: title,
       nzWidth: "800px",
       nzContent: component,
