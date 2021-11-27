@@ -44,40 +44,40 @@ enum PluginTab {
                           </button>
                       </nz-affix>
                       <tis-page [rows]="avaliablePlugs">
-                          <tis-col title="安装" width="5">
+                          <tis-col title="安装" width="4">
                               <ng-template let-item="r">
                                   <label nz-checkbox
                                          [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
                               </ng-template>
                           </tis-col>
-                          <tis-col title="名称">
+                          <tis-col title="插件" (search)="queryAvailablePlugin($event)" width="15">
                               <ng-template let-item="r">
                                   <a href="javascript:void(0)">{{item.name}}</a>
+                                  <div class="tis-tags">
+                                      <span>作者:</span>
+                                      <nz-tag>TIS官方</nz-tag>
+                                      <br/>
+                                      <span>费用:</span>
+                                      <nz-tag [nzColor]="'green'">免费</nz-tag>
+                                      <br/>
+                                      <span>版本:</span>{{ item.version }} <br/>
+                                      <span>包大小:</span>
+                                      <nz-tag>{{item.sizeLiteral}}</nz-tag>
+                                      <br/>
+                                      <span>打包时间:</span>
+                                      <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="详细">
+                              <ng-template let-item="r">
                                   <div class="item-block">
                                       <markdown [data]="item.excerpt" class="excerpt"></markdown>
                                       <div class="tis-tags" *ngIf="item.dependencies.length >0">
                                           <span>依赖:</span>
                                           <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
                                       </div>
-                                      <div class="tis-tags">
-                                          <span>作者:</span>
-                                          <nz-tag>TIS官方</nz-tag>
-                                          <span>费用:</span>
-                                          <nz-tag [nzColor]="'green'">免费</nz-tag>
-                                          <span>打包时间:</span>
-                                          <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
-                                      </div>
                                   </div>
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="包大小">
-                              <ng-template let-item="r">
-                                  {{item.sizeLiteral}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="版本">
-                              <ng-template let-item="r">
-                                  {{ item.version }}
                               </ng-template>
                           </tis-col>
                       </tis-page>
@@ -86,9 +86,25 @@ enum PluginTab {
               <nz-tab nzTitle="已安装" (nzClick)="openInstalledPlugins()">
                   <ng-template nz-tab>
                       <tis-page [rows]="installedPlugs">
-                          <tis-col title="名称">
+                          <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="15">
                               <ng-template let-item="r">
                                   <a href="javascript:void(0)">{{item.name}}</a>
+                                  <div class="tis-tags">
+                                      <span>作者:</span>
+                                      <nz-tag>TIS官方</nz-tag>
+                                      <br/>
+                                      <span>费用:</span>
+                                      <nz-tag [nzColor]="'green'">免费</nz-tag>
+                                      <br/>
+                                      <span>版本:</span>{{ item.version }} <br/>
+                                      <span>打包时间:</span>
+                                      <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                  </div>
+
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="详细">
+                              <ng-template let-item="r">
                                   <div class="item-block">
                                       <markdown [data]="item.excerpt" class="excerpt"></markdown>
                                       <div class="tis-tags" *ngIf="item.dependencies.length >0">
@@ -96,19 +112,8 @@ enum PluginTab {
                                           <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
                                       </div>
                                       <div class="tis-tags">
-                                          <span>作者:</span>
-                                          <nz-tag>TIS官方</nz-tag>
-                                          <span>费用:</span>
-                                          <nz-tag [nzColor]="'green'">免费</nz-tag>
-                                          <span>打包时间:</span>
-                                          <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
                                       </div>
                                   </div>
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Version">
-                              <ng-template let-item="r">
-                                  {{ item.version }}
                               </ng-template>
                           </tis-col>
                       </tis-page>
@@ -193,25 +198,13 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
           break;
         case PluginTab.installed: {
           this.selectedIndex = 1;
-          this.httpPost('/coredefine/corenodemanage.ajax'
-            , 'action=plugin_action&emethod=get_installed_plugins' + this.buildExtendPointParam())
-            .then((r) => {
-              if (r.success) {
-                this.installedPlugs = r.bizresult;
-              }
-            });
+          this.fetchInstalledPlugins(null);
           break;
         }
         case PluginTab.avail:
         default: {
           this.selectedIndex = 0;
-          this.httpPost('/coredefine/corenodemanage.ajax'
-            , `action=plugin_action&emethod=get_available_plugins${this.buildExtendPointParam()}`)
-            .then((r) => {
-              this.pager = Pager.create(r);
-              // this.logs = r.bizresult.rows;
-              this.avaliablePlugs = r.bizresult.rows;
-            });
+          this.fetchAvailablePlugins(null);
         }
       }
 
@@ -219,8 +212,28 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
     this.triggerSubPath(null);
   }
 
+  private fetchAvailablePlugins(query: string) {
+    this.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=plugin_action&emethod=get_available_plugins${this.buildExtendPointParam()}${!!query ? '&query=' + query : ''}`)
+      .then((r) => {
+        this.pager = Pager.create(r);
+        // this.logs = r.bizresult.rows;
+        this.avaliablePlugs = r.bizresult.rows;
+      });
+  }
+
+  private fetchInstalledPlugins(query: string) {
+    this.httpPost('/coredefine/corenodemanage.ajax'
+      , 'action=plugin_action&emethod=get_installed_plugins' + this.buildExtendPointParam() + (!!query ? '&query=' + query : ''))
+      .then((r) => {
+        if (r.success) {
+          this.installedPlugs = r.bizresult;
+        }
+      });
+  }
+
   private buildExtendPointParam(): string {
-  //  console.log(this.extendPoint);
+    //  console.log(this.extendPoint);
     let isArray = Array.isArray(this.extendPoint);
     let epParam: Array<string> = isArray ? <Array<string>>this.extendPoint : [<string>this.extendPoint];
     return !!this.extendPoint ? (epParam).map((e) => `&extendpoint=${e}`).join('') : '';
@@ -280,6 +293,14 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
 
   updateCenterLoading(load: boolean) {
     this.formDisabled = load;
+  }
+
+  queryAvailablePlugin(event: { query: string; reset: boolean }) {
+    this.fetchAvailablePlugins(event.reset ? null : event.query);
+  }
+
+  queryIntalledPlugin(event: { query: string; reset: boolean }) {
+    this.fetchInstalledPlugins(event.reset ? null : event.query);
   }
 }
 

@@ -189,7 +189,7 @@ export class TdContentDirective implements OnInit {
   template: `
       <nz-table #tabrows [nzBordered]="bordered" [nzData]="rows" [nzSize]="this.tabSize" [nzShowPagination]="showPagination" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                 (nzPageIndexChange)="searchData()"
-                [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
+                [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize" >
           <thead>
           <tr>
               <th *ngFor="let k of cls" tis-th [key-meta]='k' [nzCustomFilter]="k.searchable">{{k.title}}
@@ -232,17 +232,6 @@ export class TdContentDirective implements OnInit {
           </tr>
           </tbody>
       </nz-table>
-      <nz-dropdown-menu #menu="nzDropdownMenu">
-          <div class="ant-table-filter-dropdown">
-              <div class="search-box">
-                  <input type="text" nz-input placeholder="Search name"/>
-                  <button nz-button nzSize="small" nzType="primary" class="search-button">
-                      Search
-                  </button>
-                  <button nz-button nzSize="small">Reset</button>
-              </div>
-          </div>
-      </nz-dropdown-menu>
       <!--
       <nav *ngIf="pager && pager.allPage>1" aria-label="翻页导航">
           <ul class="pagination pagination-sm ">
