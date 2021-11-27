@@ -557,6 +557,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
           if (h.descriptors.size !== descMap.size) {
             h.updateDescriptor(descMap);
+            this.cdr.detectChanges();
           }
         }
       });
