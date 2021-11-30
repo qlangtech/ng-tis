@@ -225,10 +225,14 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
         if (r.success) {
           // console.log(dto);
           // this.nextStep.emit(this.dto);
-          this.successNotify(`DataX 实例:'${this.dto.dataxPipeName}'已创建成功`, 2000)
-            .onClose.subscribe(() => {
+          // this.successNotify(`DataX 实例:'${this.dto.dataxPipeName}'已创建成功`, 2000)
+          setTimeout(() => {
             this.r.navigate(["/x", this.dto.dataxPipeName], {relativeTo: this.route});
-          })
+          }, 1000);
+
+          // onClose.subscribe(() => {
+          //
+          // })
         } else {
           this.errorItem = Item.processFieldsErr(r);
         }
