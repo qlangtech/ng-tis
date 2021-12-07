@@ -1,31 +1,27 @@
 /**
- * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
- * <p>
- *   This program is free software: you can use, redistribute, and/or modify
- *   it under the terms of the GNU Affero General Public License, version 3
- *   or later ("AGPL"), as published by the Free Software Foundation.
- * <p>
- *  This program is distributed in the hope that it will be useful, but WITHOUT
- *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- *   FITNESS FOR A PARTICULAR PURPOSE.
- * <p>
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   Licensed to the Apache Software Foundation (ASF) under one
+ *   or more contributor license agreements.  See the NOTICE file
+ *   distributed with this work for additional information
+ *   regarding copyright ownership.  The ASF licenses this file
+ *   to you under the Apache License, Version 2.0 (the
+ *   "License"); you may not use this file except in compliance
+ *   with the License.  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
  */
 
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {TISService} from '../common/tis.service';
-// import {BasicEditComponent} from '../corecfg/basic.edit.component';
-// import {ScriptService} from '../service/script.service';
-
-import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EditorConfiguration} from "codemirror";
 import {LocalStorageService} from "angular-2-local-storage";
-import {NavigateBarComponent} from "../common/navigate.bar.component";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
 import {Application} from "../common/application";
 
@@ -142,26 +138,28 @@ import {Application} from "../common/application";
       </nz-layout>
       <!--https://market.aliyun.com/qidian/company/1180716023102499578-->
       <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'" nzTitle="杭州晴朗网络科技有限公司版权所有" (nzOnClose)="companyIntrShow=false">
-          <div nz-row [nzGutter]="8">
-              <div nz-col nzSpan="8">
-                  <nz-card nzTitle="相关">
-                      <nz-descriptions [nzColumn]="1">
-                          <nz-descriptions-item [nzTitle]="githubRef"><a target="_blank" href="https://github.com/qlangtech/tis-solr">https://github.com/qlangtech/tis-solr</a></nz-descriptions-item>
-                          <ng-template #githubRef><i nz-icon nzType="github" nzTheme="outline"></i></ng-template>
-                      </nz-descriptions>
-                  </nz-card>
+          <ng-container *nzDrawerContent>
+              <div nz-row [nzGutter]="8">
+                  <div nz-col nzSpan="8">
+                      <nz-card nzTitle="相关">
+                          <nz-descriptions [nzColumn]="1">
+                              <nz-descriptions-item [nzTitle]="githubRef"><a target="_blank" href="https://github.com/qlangtech/tis">https://github.com/qlangtech/tis</a></nz-descriptions-item>
+                              <ng-template #githubRef><i nz-icon nzType="github" nzTheme="outline"></i></ng-template>
+                          </nz-descriptions>
+                      </nz-card>
+                  </div>
+                  <div nz-col nzSpan="8">
+                      <nz-card nzTitle="钉钉讨论群">
+                          <img width="260" src="/images/dingding_talk_group.jpeg"/>
+                      </nz-card>
+                  </div>
+                  <div nz-col nzSpan="8">
+                      <nz-card nzTitle="微信公众号">
+                          <img width="260" src="/images/weixin_talk_group.jpg"/>
+                      </nz-card>
+                  </div>
               </div>
-              <div nz-col nzSpan="8">
-                  <nz-card nzTitle="钉钉讨论群">
-                      <img width="260" src="/images/dingding_talk_group.jpeg"/>
-                  </nz-card>
-              </div>
-              <div nz-col nzSpan="8">
-                  <nz-card nzTitle="微信公众号">
-                      <img width="260" src="/images/weixin_talk_group.jpg"/>
-                  </nz-card>
-              </div>
-          </div>
+          </ng-container>
       </nz-drawer>
   `,
   styles: [
