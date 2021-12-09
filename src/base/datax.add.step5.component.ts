@@ -21,7 +21,7 @@ import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataXCreateProcessMeta} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -48,7 +48,7 @@ import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
           </tis-steps-tools-bar>
-          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[{name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
+          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[]"
                        [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
       </nz-spin>
   `
@@ -70,9 +70,15 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   writerDesc: Array<Descriptor> = [];
 
   hlist: HeteroList[] = [];
+  pluginCategory: PluginType;
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
+  }
+
+  ngOnInit(): void {
+    this.pluginCategory = {name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName};
+    super.ngOnInit();
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -80,7 +86,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     // console.log(this.hlist);
     DataxAddStep3Component.initializeDataXRW(this, "writer", this.dto)
       .then((i: { "desc": Descriptor, "item": Item }) => {
-        this.hlist = PluginsComponent.pluginDesc(i.desc);
+        this.hlist = PluginsComponent.pluginDesc(i.desc, this.pluginCategory);
         // console.log(this.hlist);
         if (i.item) {
           this.hlist[0].items[0] = i.item;

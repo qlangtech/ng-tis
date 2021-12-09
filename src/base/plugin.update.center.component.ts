@@ -40,6 +40,10 @@ import {NzModalService} from "ng-zorro-antd/modal";
   selector: "update-center",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+      <nz-alert [style]="'margin:10px'" *ngIf="connCheckErr" nzType="error" nzMessage="服务端异常" [nzDescription]="connCheckErrTpl" nzShowIcon></nz-alert>
+      <ng-template #connCheckErrTpl>
+          {{connCheckErr.detailedStatus}}
+      </ng-template>
       <nz-list nzItemLayout="vertical" [nzDataSource]="plugins">
           <ng-container *ngFor="let item of plugins">
               <nz-list-item *ngIf="item.type === 'InstallationJob'">
@@ -94,6 +98,8 @@ export class PluginUpdateCenterComponent extends BasicFormComponent implements O
   loading = new EventEmitter<boolean>();
   firstLoad = true;
 
+  connCheckErr: ConnectionCheckJobError;
+
   constructor(tisService: TISService, modalService: NzModalService, private cd: ChangeDetectorRef) {
     super(tisService, modalService);
     cd.detach();
@@ -115,12 +121,34 @@ export class PluginUpdateCenterComponent extends BasicFormComponent implements O
           this.firstLoad = false;
         }
         this.plugins = r.bizresult;
+        let err = this.plugins.find((p) => {
+          return p.error !== undefined;
+        });
+        if (err) {
+          this.connCheckErr = Object.assign(new ConnectionCheckJobError(), err);
+        }
+        let hasAnyInstalling =
+          this.plugins.find((p) => {
+            return p.type === 'InstallationJob' && p.status.type === 'Installing';
+          }) !== undefined;
         this.cd.detectChanges();
-        if (!this.hasDestroy) {
+        if (hasAnyInstalling && !this.hasDestroy) {
           setTimeout(() => {
             this.ngOnInit();
           }, 2000);
         }
       });
+  }
+}
+
+class ConnectionCheckJobError {
+  type: string;
+  statuses: Array<string>;
+
+  get detailedStatus(): string {
+    if (!this.statuses) {
+      return '';
+    }
+    return this.statuses.join(" ");
   }
 }

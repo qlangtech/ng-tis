@@ -27,6 +27,7 @@ import {NzIconService} from 'ng-zorro-antd/icon';
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 
 @Component({
@@ -223,8 +224,8 @@ export class WorkflowAddErMetaComponent
   transfers: Array<{ key: string }> = [];
 
   constructor(tisService: TISService, notification: NzNotificationService,
-              modalService: NzModalService, private cdr: ChangeDetectorRef) {
-    super(tisService, modalService, notification);
+              modalService: NzModalService, private cdr: ChangeDetectorRef, drawerRef: NzDrawerRef<BasicSideBar>) {
+    super(tisService, modalService, drawerRef, notification);
     this.transfers.push({"key": "dateYYYYmmdd"});
     this.transfers.push({"key": "dateYYYYMMddHHmmss"});
     // this.transfers.push({"key": "dateYYYYmmdd"});

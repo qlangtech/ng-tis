@@ -47,6 +47,8 @@ import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.c
 import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {TerminalComponent} from "../common/terminal.component";
 // import {} from 'ng-sidebar';
 // import {Droppable} from '@shopify/draggable';
 // @ts-ignore
@@ -62,18 +64,18 @@ export const TYPE_DUMP_TABLE = 'table';
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
 
-      <nz-drawer
-              [nzBodyStyle]="{ height: 'calc(100% - 20px)', overflow: 'auto', 'padding-bottom': '20px' }"
-              [nzMaskClosable]="false"
-              [nzClosable]="false"
-              [nzWidth]="900"
-              [nzVisible]="_opened"
-              (nzOnClose)="_toggleSidebar()"
-      >
-          <ng-container *nzDrawerContent>
-          <ng-template tis-index-add-flow></ng-template>
-          </ng-container>
-      </nz-drawer>
+      <!--      <nz-drawer-->
+      <!--              [nzBodyStyle]="{ height: 'calc(100% - 20px)', overflow: 'auto', 'padding-bottom': '20px' }"-->
+      <!--              [nzMaskClosable]="false"-->
+      <!--              [nzClosable]="false"-->
+      <!--              [nzWidth]="900"-->
+      <!--              [nzVisible]="_opened"-->
+      <!--              (nzOnClose)="_toggleSidebar()"-->
+      <!--      >-->
+      <!--          <ng-container *nzDrawerContent>-->
+      <!--              <ng-h tis-index-add-flow></ng-h>-->
+      <!--          </ng-container>-->
+      <!--      </nz-drawer>-->
 
       <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle" [result]="result"></tis-page-header>
       <div>
@@ -207,7 +209,7 @@ export class WorkflowAddComponent extends BasicWFComponent
   // workflow: any;
   isAdd = true;
   // title: string = '创建';
-  public _opened = false;
+ // public _opened = false;
 
   isSaveTopologyDialogVisible = false;
 
@@ -268,7 +270,6 @@ export class WorkflowAddComponent extends BasicWFComponent
   }
 
 
-
   constructor(tisService: TISService, //
               private _componentFactoryResolver: ComponentFactoryResolver,
               router: Router,
@@ -276,7 +277,8 @@ export class WorkflowAddComponent extends BasicWFComponent
               private fb: FormBuilder,
               notification: NzNotificationService,
               private cdr: ChangeDetectorRef,
-              private modal: NzModalService) {
+              private modal: NzModalService,
+              private drawerService: NzDrawerService) {
     super(tisService, modal, router, route, notification);
     // this.formDisabled = true;
     // this.workflow = new Workflow();
@@ -289,8 +291,9 @@ export class WorkflowAddComponent extends BasicWFComponent
   }
 
   closePanel(): void {
-    this._opened = true;
+   // this._opened = true;
   }
+
   // 保存图形
   saveTopology() {
     if (this.erRuleComponent) {
@@ -585,7 +588,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
 
   _toggleSidebar(): void {
-    this._opened = !this._opened;
+   // this._opened = !this._opened;
   }
 
   ngAfterViewInit(): void {
@@ -688,19 +691,6 @@ export class WorkflowAddComponent extends BasicWFComponent
     });
 
     draggable.on('drag:stop', (evt: any) => {
-      // let model = {
-      //   id: this.getUid(),
-      //   x: clientPos.x,
-      //   y: clientPos.y,
-      //   shape: 'image',
-      //   img: clientPos.nodemeta.imgPath,
-      //   size: [clientPos.nodemeta.width, clientPos.nodemeta.height],
-      //   style: {
-      //     'cursor': 'pointer'
-      //   }
-      // };
-      // graph.addItem('node', model);
-
       const nodeid = this.getUid();
       let nm: NodeMeta = clientPos.nodemeta;
       // console.log(nm.type);
@@ -722,7 +712,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
       this.graph.addItem('node', WorkflowAddComponent.addItem2UI(nodeid, clientPos.x, clientPos.y, clientPos.nodemeta, sidebarDTO));
       this.openSideBar(this.graph, nodeid, clientPos.nodemeta.compRef, sidebarDTO);
-      this._opened = true;
+      // this._opened = true;
     });
 
     this.graph.on('node:click', (evt: any) => {
@@ -732,42 +722,60 @@ export class WorkflowAddComponent extends BasicWFComponent
       let nmeta: BasicSidebarDTO = nodeinfo.model.nodeMeta;
       clientPos.nodemeta = this.getNodeMeta(nmeta.nodeMeta.type);
       this.openSideBar(this.graph, nodeinfo.id, clientPos.nodemeta.compRef, nmeta);
-      this._opened = true;
+      // this._opened = true;
     });
     this.cdr.detectChanges();
   }
 
   // selectNode 用于在update流程下传输selectNode对象
   private openSideBar(g6graph: any, nodeid: any, component: Type<any>, nmeta: BasicSidebarDTO): void {
-
-    const cref: ComponentRef<BasicSideBar> = this.setSizebarView(component);
-    cref.instance.parentComponent = this;
+    // console.log(component);
+    let contentParams: any = {"parentComponent": this, "g6Graph": g6graph};
     if (nmeta) {
-      cref.instance.nodeMeta = nmeta.nodeMeta;
+      contentParams.nodeMeta = nmeta.nodeMeta;
     }
-    cref.instance.g6Graph = g6graph;
-    cref.instance.initComponent(this, nmeta);
-
-    cref.instance.saveClick.subscribe((d: any) => {
-      cref.instance.subscribeSaveClick(g6graph, $, nodeid, this, d);
+    const drawerRef = this.drawerService.create<BasicSideBar, {}, {}>({
+      nzWidth: "40%",
+      nzPlacement: "right",
+      nzTitle: '',
+      nzClosable: false,
+      nzContent: component,
+     // nzWrapClassName: 'get-gen-cfg-file',
+      nzContentParams: contentParams
     });
+    drawerRef.afterOpen.subscribe(() => {
+      let sideBar = drawerRef.getContentComponent();
+      sideBar.initComponent(this, nmeta);
 
-    // 关闭对话框
-    cref.instance.onClose.subscribe(() => {
-      this._opened = false;
+      sideBar.saveClick.subscribe((d: any) => {
+        sideBar.subscribeSaveClick(g6graph, $, nodeid, this, d);
+      });
+
+      // 关闭对话框
+      // sideBar.onClose.subscribe(() => {
+      //   drawerRef.close();
+      //   // this._opened = false;
+      // });
     });
+    // let sideBar = drawerRef.getContentComponent();
+    // sideBar.parentComponent = this;
+    // if (nmeta) {
+    //   sideBar.nodeMeta = nmeta.nodeMeta;
+    // }
+    // sideBar.g6Graph = g6graph;
+
 
   }
 
 
-  private setSizebarView(component: Type<any>): ComponentRef<any> {
-    let componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
-    let sidebarRef = this.sidebarComponent.viewContainerRef;
-    sidebarRef.clear();
-
-    let cref: ComponentRef<any> = sidebarRef.createComponent(componentFactory);
-    return cref;
-  }
+  // private setSizebarView(component: Type<any>): ComponentRef<any> {
+  //   let componentFactory = this._componentFactoryResolver.resolveComponentFactory(component);
+  //   let sidebarRef = this.sidebarComponent.viewContainerRef;
+  //   sidebarRef.clear();
+  //
+  //   let cref: ComponentRef<any> = sidebarRef.createComponent(componentFactory);
+  //   return cref;
+  // }
 
 
   ngAfterContentInit(): void {
@@ -820,7 +828,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     this.openSideBar(e.g6, nodeid, WorkflowAddErCardinalityComponent, emeta);
 
     // this.setSizebarView(WorkflowAddErCardinalityComponent);
-    this._opened = true;
+   // this._opened = true;
 
   }
 
@@ -837,7 +845,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     // console.log(e.ermeta);
     // let emeta = new ERMetaNode(dumpNode, this.topologyName);
     this.openSideBar(e.g6, dumpNode.nodeid, WorkflowAddErMetaComponent, emeta);
-    this._opened = true;
+   // this._opened = true;
   }
 
   syncTabs() {

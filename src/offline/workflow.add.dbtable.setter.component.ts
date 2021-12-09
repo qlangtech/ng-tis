@@ -40,6 +40,7 @@ import {TISService} from '../common/tis.service';
 // import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 
 //
@@ -49,20 +50,20 @@ import {NzModalService} from "ng-zorro-antd/modal";
 
           <sidebar-toolbar (close)="_closeSidebar()" (save)="_saveClick()" (delete)="deleteNode()"></sidebar-toolbar>
 
-          <form class="clear" nz-form [nzLayout]="'vertical'">
-              <div class="item-head"><label>数据库表</label></div>
-              <p>
-                  <!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
-                  <!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
-                  <tis-table-select [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>
-              </p>
+          <!--          <form class="clear" nz-form [nzLayout]="'vertical'">-->
+          <!--              <div class="item-head"><label>数据库表</label></div>-->
+          <!--              <p>-->
+          <!--                  &lt;!&ndash;                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"&ndash;&gt;-->
+          <!--                  &lt;!&ndash;                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>&ndash;&gt;-->
+          <!--                  <tis-table-select [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>-->
+          <!--              </p>-->
 
-              <label>SQL</label>
-              <div>
-                  <tis-codemirror name="sqltext" [(ngModel)]="sql"
-                                  [size]="{width:'100%',height:600}" [config]="sqleditorOption"></tis-codemirror>
-              </div>
-          </form>
+          <!--              <label>SQL</label>-->
+          <!--              <div>-->
+          <!--                  <tis-codemirror name="sqltext" [(ngModel)]="sql"-->
+          <!--                                  [size]="{width:'100%',height:600}" [config]="sqleditorOption"></tis-codemirror>-->
+          <!--              </div>-->
+          <!--          </form>-->
 
       </nz-spin>
   `,
@@ -81,8 +82,8 @@ export class WorkflowAddDbtableSetterComponent
   sql = 'select * from usertable;';
 
   constructor(tisService: TISService, //
-              modalService: NzModalService) {
-    super(tisService, modalService);
+              modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
+    super(tisService, modalService, drawerRef);
   }
 
   ngOnInit(): void {

@@ -32,6 +32,7 @@ import {map} from "rxjs/operators";
 import {LogType} from "../runtime/misc/RCDeployment";
 
 import {AppType} from "./application";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 /**
  * Created by baisui on 2017/4/12 0012.
@@ -135,6 +136,7 @@ export class BasicFormComponent {
       this.formDisabled = false;
     });
   }
+
   public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
 
     let option: ModalOptions = {
@@ -282,12 +284,12 @@ export class SideBarToolBar extends BasicFormComponent {
 @Injectable()
 export abstract class BasicSideBar extends BasicFormComponent {
   @Output() saveClick = new EventEmitter<any>();
-  @Output() onClose = new EventEmitter<any>();
+  // @Output() onClose = new EventEmitter<any>();
   @Input() nodeMeta: NodeMeta;
   @Input() g6Graph: any;
   @Input() parentComponent: IDataFlowMainComponent;
 
-  protected constructor(tisService: TISService, modalService: NzModalService, notification?: NzNotificationService) {
+  protected constructor(tisService: TISService, modalService: NzModalService, private drawerRef: NzDrawerRef<BasicSideBar>, notification?: NzNotificationService) {
     super(tisService, modalService, notification);
   }
 
@@ -296,7 +298,8 @@ export abstract class BasicSideBar extends BasicFormComponent {
   }
 
   _closeSidebar(): void {
-    this.onClose.emit();
+    // this.onClose.emit();
+    this.drawerRef.close();
   }
 
   public abstract initComponent(addComponent: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void;
@@ -327,7 +330,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
     super(tisService, modalService, notification);
   }
 
- // @Input()
+  // @Input()
   public set getCurrentAppCache(val: boolean) {
     this._getCurrentAppCache = val;
   }

@@ -33,58 +33,59 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
   selector: 'tis-plugins',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <ng-container *ngIf="this.showSaveButton">
-          <!--编辑-->
-          <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
-          </tis-page-header>
-          <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
-              <div style="float: right;">
-                  <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
-              </div>
-              <div *ngIf="shallInitializePluginItems && this.itemChangeable" class="plugins-nav">
-                  <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
-              </div>
-              <div style="clear: both;margin-bottom:3px;"></div>
-          </nz-anchor>
-      </ng-container>
-      <ng-template #pluginForm let-h="h">
-          <div class="extension-point" [id]="h.identity">
-              <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
-          </div>
-          <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
-              <div style="float:right">
-                  <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
-                  <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
-                      <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
-                  </button>
-              </div>
-              <div>
-                  <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck($event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
-              </div>
-              <div style="clear: both"></div>
-              <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
-          </div>
-      </ng-template>
-      <form nz-form [ngSwitch]="shallInitializePluginItems">
-          <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
-              <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
-                  <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
-                  <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                      <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
-                                          [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
-                                          (afterPluginAddClose)="updateHeteroListDesc(h)"
-                                          (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
-
-                  </ng-container>
-              </nz-collapse-panel>
-          </nz-collapse>
-          <ng-container *ngSwitchCase="false">
-              <ng-container *ngFor="let h of _heteroList">
-                  <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
-              </ng-container>
+      <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+          <ng-container *ngIf="this.showSaveButton">
+              <!--编辑-->
+              <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
+              </tis-page-header>
+              <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
+                  <div style="float: right;">
+                      <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+                  </div>
+                  <div *ngIf="shallInitializePluginItems && this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
+                      <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
+                  </div>
+                  <div style="clear: both;margin-bottom:3px;"></div>
+              </nz-anchor>
           </ng-container>
-      </form>
+          <ng-template #pluginForm let-h="h">
+              <div class="extension-point" [id]="h.identity">
+                  <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
+              </div>
+              <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
+                  <div style="float:right">
+                      <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
+                      <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
+                          <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
+                      </button>
+                  </div>
+                  <div>
+                      <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
+                  </div>
+                  <div style="clear: both"></div>
+                  <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+              </div>
+          </ng-template>
+          <form nz-form [ngSwitch]="shallInitializePluginItems">
+              <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
+                  <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
+                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
+                      <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
+                          <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
+                                              [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
+                                              (afterPluginAddClose)="updateHeteroListDesc(h)"
+                                              (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
 
+                      </ng-container>
+                  </nz-collapse-panel>
+              </nz-collapse>
+              <ng-container *ngSwitchCase="false">
+                  <ng-container *ngFor="let h of _heteroList">
+                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
+                  </ng-container>
+              </ng-container>
+          </form>
+      </nz-spin>
       <!--
             {{this._heteroList | json}}
       -->
@@ -159,11 +160,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * 当前选中的DS plugin 描述信息
    * @param desc
    */
-  public static pluginDesc(desc: Descriptor, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
+  public static pluginDesc(desc: Descriptor, pluginCategory: PluginType, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
     if (!desc) {
       throw new Error("param desc can not be null");
     }
     let h = new HeteroList();
+    h.pluginCategory = pluginCategory;
     h.extensionPoint = desc.extendPoint;
     h.descriptors.set(desc.impl, desc);
     if (!itemPropSetter) {
@@ -181,7 +183,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.getCurrentAppCache = true;
     addDb.formControlSpan = 20;
     addDb.shallInitializePluginItems = false;
-    addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc);
+    addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
     addDb.setPluginMeta([pluginTp])
     addDb.showSaveButton = true;
     addDb.afterSave.subscribe((r: PluginSaveResponse) => {
@@ -195,7 +197,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
-    // console.log(pluginMeta);
     return pluginMeta.map((p) => {
       let param: any = p;
       // console.log(param);
@@ -208,8 +209,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }).join("&plugin=");
   }
 
-  public static wrapperHeteroList(he: HeteroList): HeteroList {
-    let h: HeteroList = Object.assign(new HeteroList(), he);
+  public static wrapperHeteroList(he: HeteroList, pm: PluginType): HeteroList {
+    let h: HeteroList = Object.assign(new HeteroList(), he, {"pluginCategory": pm});
     let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
     // console.log(descMap);
     h.descriptors = descMap;
@@ -275,15 +276,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
-        bizArray.forEach((he) => {
-          let h: HeteroList = PluginsComponent.wrapperHeteroList(he); // Object.assign(new HeteroList(), he);
+        for (let i = 0; i < pm.length; i++) {
+          let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
           _heteroList.push(h);
-        });
+        }
+        // bizArray.forEach((he) => {
+        //
+        // });
       }
-
-      // console.log(_heteroList);
-      callback(r.success, _heteroList, r.bizresult.showExtensionPoint);
-
+      callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     }).catch((e) => {
       // console.log("================ error occur");
@@ -336,6 +337,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       postData.push(h.items);
     });
 
+    //  console.log([heteroList.length, heteroList]);
+
     basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {
       processCallback(r);
     }).catch((e) => {
@@ -365,11 +368,19 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     return true;
   }
 
-  configCheck(event: MouseEvent) {
+
+  configCheck(h: HeteroList, item: Item, event: MouseEvent) {
     let savePlugin = new SavePluginEvent();
     savePlugin.verifyConfig = true;
     savePlugin.notShowBizMsg = false;
-    this.savePluginSetting(event, savePlugin);
+    //  this.savePluginSetting(event, savePlugin);
+    if (!h.pluginCategory) {
+      throw new Error("pluginCategory can not be null");
+    }
+
+    let nh = Object.assign(new HeteroList(), h);
+    nh.items = [item];
+    this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
   }
 
   @Input()
@@ -450,27 +461,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     });
   }
 
-
   submitForm(value: any): void {
-    // for (const key in this._validateForm.controls) {
-    //   this._validateForm.controls[key].markAsDirty();
-    //   this._validateForm.controls[key].updateValueAndValidity();
-    // }
-    // console.log(value);
   }
 
-
-  // get validateForm(): FormGroup {
-  //   return this._validateForm;
-  // }
-
-// get incrScript(): string {
-  //   return this._incrScript;
-  // }
-  //
-  // set incrScript(value: string) {
-  //   this._incrScript = value;
-  // }
   protected initialize(app: CurrentCollection): void {
   }
 
@@ -481,6 +474,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   savePluginSetting(event: MouseEvent, savePluginEvent: SavePluginEvent) {
+    this._savePluginInfo(event, savePluginEvent, this.plugins, this._heteroList);
+  }
+
+  _savePluginInfo(event: MouseEvent, savePluginEvent: SavePluginEvent, pluginTypes: PluginType[], _heteroList: HeteroList[]) {
     // console.log(JSON.stringify(this._heteroList.items));
     this.ajaxOccur.emit(new PluginSaveResponse(false, true));
     // console.log(this.plugins);
@@ -488,20 +485,22 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
     let formContext = !!savePluginEvent.basicModule ? savePluginEvent.basicModule : this;
     // console.log(formContext)
-    PluginsComponent.postHeteroList(formContext, this.plugins, this._heteroList, savePluginEvent, this.errorsPageShow, (r) => {
+    PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
       if (!savePluginEvent.verifyConfig) {
         this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
       } else {
         if (r.success) {
-          this.notification.create('success', '校验成功', "表单配置无误");
+          if (!r.msg || r.msg.length < 1) {
+            this.notification.create('success', '校验成功', "表单配置无误");
+          }
         }
       }
       if (!this.errorsPageShow && r.success) {
         // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
         if (this.showSaveButton && r.msg.length > 0) {
-          this.notification.create('success', '成功', r.msg[0]);
+          // this.notification.create('success', '成功dd', r.msg[0]);
         }
         return;
       }
@@ -512,7 +511,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       // console.log(pluginErrorFields);
       let index = 0;
       // let tmpHlist: HeteroList[] = [];
-      this._heteroList.forEach((h) => {
+      _heteroList.forEach((h) => {
         let items: Item[] = h.items;
         let errorFields = pluginErrorFields[index++];
         Item.processErrorField(errorFields, items);
@@ -628,9 +627,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                               <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                               <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                           </li>
-<!--  先注释掉                 <li nz-menu-item>-->
-<!--                              <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>更新</a>-->
-<!--                          </li>-->
+                          <li nz-menu-item>
+                              <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
+                          </li>
                           <li nz-menu-item *ngFor="let p of createRouter.plugin">
                               <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
                           </li>
@@ -704,8 +703,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   @Input()
   formControlSpan = 13;
 
-  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   get disabled(): boolean {
@@ -757,10 +756,10 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         }
         let desc = PluginsComponent.wrapDescriptors(r.bizresult);
         desc.forEach((d) => {
-
-          let pluginTp: PluginType = {name: targetPlugin.hetero, require: true};
+          // console.log(targetPlugin);
+          let pluginTp: PluginType = {name: targetPlugin.hetero, require: true, extraParam: "append_true,targetItemDesc_" + d.displayName};
           if (targetPlugin.extraParam) {
-            pluginTp.extraParam = targetPlugin.extraParam;
+            pluginTp.extraParam += (',' + targetPlugin.extraParam);
           }
 
           PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
@@ -891,23 +890,46 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
       // nzWrapClassName: 'get-gen-cfg-file',
       nzContentParams: {'createCfg': createRouter}
     });
+    drawerRef.afterClose.subscribe(() => {
+      let cpt = drawerRef.getContentComponent();
+      if (cpt.hasSaved) {
+        this.reloadSelectableItems();
+      }
+    });
   }
 
   reloadSelectableItems() {
+    let url = "/coredefine/corenodemanage.ajax";
+    this.httpPost(url, `action=plugin_action&emethod=get_fresh_enum_field&impl=${this._pluginImpl}&field=${this._pp.key}`)
+      .then((r) => {
+        if (!r.success) {
+          return;
+        }
+        let opts: ValOption[] = [];
+        if (!Array.isArray(r.bizresult)) {
+          throw new Error(r.bizresult);
+        }
+        r.bizresult.forEach((opt) => {
+          opts.push(Object.assign(new ValOption(), opt));
+        });
+        this._pp.options = opts;
+        this.successNotify(`'${this._pp.label}'可选内容已经刷新`, 2000);
+        this.cdr.detectChanges();
+      });
   }
 }
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="false" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)"></tis-plugins>`
+      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="true" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)" (afterSave)="afterSave($event)"></tis-plugins>`
 })
 export class SelectionInputAssistComponent extends BasicFormComponent implements OnInit {
 
   @Input()
   createCfg: CreatorRouter;
-
   pluginTyps: PluginType[] = [];
+  hasSaved: boolean;
 
   constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService) {
     super(tisService, modalService, notification);
@@ -918,11 +940,14 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
     this.pluginTyps = [];
     for (let i = 0; i < this.createCfg.plugin.length; i++) {
       tp = this.createCfg.plugin[i];
-
+      let extraParam = "targetItemDesc_" + tp.descName;
+      if (tp.extraParam) {
+        extraParam += (',' + tp.extraParam);
+      }
       this.pluginTyps.push({
         name: tp.hetero
         , require: true
-        , extraParam: tp.extraParam + ",targetItemDesc_" + tp.descName
+        , extraParam: extraParam
         , descFilter: (desc) => {
           return desc.displayName === tp.descName;
         }
@@ -932,6 +957,10 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
 
   whenAjaxOccur(e: PluginSaveResponse) {
 
+  }
+
+  afterSave(e: PluginSaveResponse) {
+    this.hasSaved = e.saveSuccess;
   }
 }
 
