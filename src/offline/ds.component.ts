@@ -322,11 +322,12 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     addDb.formControlSpan = 20;
     addDb.itemChangeable = false;
     if (pluginDesc) {
-      let hlist = PluginsComponent.pluginDesc(pluginDesc);
+      let hlist = PluginsComponent.pluginDesc(pluginDesc, facade ? this.facadePluginsMetas[0] : this.pluginsMetas[0]);
       addDb._heteroList = hlist;
     }
+//    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${facade ? "facade" : db_model_detailed}`}])
+    addDb.setPluginMeta(facade ? this.facadePluginsMetas : this.pluginsMetas);
 
-    addDb.setPluginMeta([{name: 'datasource', require: true, extraParam: `dsname_${this.selectedDb.dbName},update_true,type_${facade ? "facade" : db_model_detailed}`}])
     addDb.shallInitializePluginItems = update;
     // addDb._heteroList = this.dsPluginDesc(pluginDesc);
     addDb.showSaveButton = true;

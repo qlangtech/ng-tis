@@ -19,7 +19,7 @@
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -32,7 +32,7 @@ import {ActivatedRoute, Router} from "@angular/router";
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
           <div style="width: 80%;margin: 0 auto;">
-              <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}]"
+              <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                            (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
           </div>
       </nz-spin>
@@ -51,6 +51,8 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   savePlugin = new EventEmitter<SavePluginEvent>();
   hlist: HeteroList[] = [];
 
+  pluginCategory: PluginType;
+
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
@@ -62,11 +64,13 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
       dataxNameParam = `&dataxName=${this.dto.dataxPipeName}`;
     }
 
+    this.pluginCategory = {name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}
+
     this.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=datax_action&emethod=datax_processor_desc' + dataxNameParam)
       .then((r) => {
         if (r.success) {
-          let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult);
+          let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, this.pluginCategory);
           if (hlist.items.length < 1) {
             Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
           }

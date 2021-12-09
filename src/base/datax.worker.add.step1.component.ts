@@ -21,11 +21,12 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {HeteroList, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {HeteroList, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+
 
 @Component({
   template: `
@@ -36,7 +37,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           </tis-header-tool>
       </tis-page-header>
       <nz-spin [nzSpinning]="this.formDisabled" class="item-block">
-          <tis-plugins [formControlSpan]="20" [pluginMeta]="[{name: 'datax-worker', require: true}]"
+          <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                        (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
                        [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
       </nz-spin>
@@ -48,6 +49,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
   @Input() dto: DataxWorkerDTO;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
+  pluginCategory: PluginType = {name: 'datax-worker', require: true};
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
@@ -74,14 +76,14 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
 
   ngOnInit(): void {
 
-   // console.log(appTisService.currentApp);
+    // console.log(appTisService.currentApp);
     this.httpPost('/coredefine/corenodemanage.ajax'
       , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
           let desc = Array.from(rList.values());
-          this.hlist = PluginsComponent.pluginDesc(desc[0])
+          this.hlist = PluginsComponent.pluginDesc(desc[0], this.pluginCategory)
         }
       });
   }

@@ -34,7 +34,7 @@ import {BasicFormComponent} from "./basic.form.component";
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' ;
+export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
 export declare type PluginMeta = {
   name: PluginName, require: boolean, extraParam?: string
   // 服务端对目标Item的desc进行过滤
@@ -410,6 +410,8 @@ export class HeteroList {
   caption: string;
   extensionPoint: string;
   items: Item[] = [];
+
+  pluginCategory: PluginType;
 
   public get identity(): string {
     return this.extensionPoint.replace(/\./g, '-');

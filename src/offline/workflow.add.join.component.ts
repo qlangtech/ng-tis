@@ -24,6 +24,7 @@ import {TISService} from '../common/tis.service';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item} from "../common/tis.plugin";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 
 @Component({
@@ -80,8 +81,8 @@ export class WorkflowAddJoinComponent
   // @ViewChild('sqleditor', {static: false}) sqleditor: ElementRef;
   listOfOption: Array<Option> = [];
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
+    super(tisService, modalService, drawerRef);
   }
 
   initComponent(_: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void {

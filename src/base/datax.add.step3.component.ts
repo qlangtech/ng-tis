@@ -21,7 +21,7 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {IntendDirect} from "../common/MultiViewDAG";
@@ -46,7 +46,7 @@ import {ActivatedRoute, Router} from "@angular/router";
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0" (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
           <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                       [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName }]" #pluginComponent></tis-plugins>
+                       [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[this.pluginCategory]" #pluginComponent></tis-plugins>
       </nz-spin>
   `
   , styles: [
@@ -68,6 +68,8 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   writerDesc: Array<Descriptor> = [];
 
   hlist: HeteroList[] = [];
+
+  pluginCategory: PluginType;
 
   public static initializeDataXRW(baseForm: BasicFormComponent, rw: "reader" | "writer", dto: DataxDTO): Promise<{ "desc": Descriptor, "item"?: Item }> {
 
@@ -105,17 +107,17 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   protected initialize(app: CurrentCollection): void {
     DataxAddStep3Component.initializeDataXRW(this, "reader", this.dto)
       .then((i: { "desc": Descriptor, "item": Item }) => {
-        this.hlist = PluginsComponent.pluginDesc(i.desc);
+        this.hlist = PluginsComponent.pluginDesc(i.desc, this.pluginCategory);
         if (i.item) {
           this.hlist[0].items[0] = i.item;
         }
       });
   }
 
-  // ngOnInit(): void {
-  //   super.ngOnInit();
-  //
-  // }
+  ngOnInit(): void {
+    this.pluginCategory = {name: 'dataxReader', require: true, "extraParam": 'dataxName_' + this.dto.dataxPipeName}
+    super.ngOnInit();
+  }
 
 
   ngAfterViewInit(): void {

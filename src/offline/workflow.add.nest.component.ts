@@ -36,6 +36,7 @@ import 'codemirror/lib/codemirror.css';
 import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 
 @Component({
@@ -44,7 +45,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
           <sidebar-toolbar (close)="_closeSidebar()"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
 
-          <form class="clear" nz-form [nzLayout]="'vertical'" >
+          <form class="clear" nz-form [nzLayout]="'vertical'">
 
               <p class="item-head"><label>主表</label></p>
 
@@ -125,8 +126,8 @@ export class WorkflowAddNestComponent
   listOfSelectedValue: any;
 
   constructor(tisService: TISService, //
-              modalService: NzModalService) {
-    super(tisService, modalService);
+              modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
+    super(tisService, modalService, drawerRef);
   }
 
   ngOnInit(): void {

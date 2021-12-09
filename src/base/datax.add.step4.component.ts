@@ -310,7 +310,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       }
 
       if (allHasFillEnums) {
-        let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0]);
+        let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], pluginMeta[0]);
         heteroList[0].items[0].vals = cachedVals;
         this.openSubDetailForm(meta, pluginMeta, heteroList);
         event.stopPropagation();
@@ -333,7 +333,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         // console.log(this.subFieldForms);
         let result = r.bizresult;
         let desc = this.subFormHetero.descriptorList[0];
-        let hlist: HeteroList[] = PluginsComponent.pluginDesc(desc, (key, propVal: ItemPropVal) => {
+        let hlist: HeteroList[] = PluginsComponent.pluginDesc(desc, pluginMeta[0], (key, propVal: ItemPropVal) => {
           if (propVal.pk) {
             propVal.primary = meta.id;
             return propVal;
@@ -410,7 +410,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       if (remove) {
         delete itemVals.vals[meta.id]
       } else if (!itemVals.vals[meta.id]) {
-        let hlist: HeteroList[] = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], (key, propVal) => {
+        let hlist: HeteroList[] = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], null, (key, propVal) => {
           if (propVal.pk) {
             propVal.primary = meta.id;
           }

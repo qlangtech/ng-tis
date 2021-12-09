@@ -25,6 +25,7 @@ import 'codemirror/mode/sql/sql.js';
 import 'codemirror/lib/codemirror.css';
 import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {NzModalService} from "ng-zorro-antd/modal";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 
 @Component({
@@ -86,8 +87,8 @@ export class WorkflowAddUnionComponent
   listOfTagOptions: any[] = [];
 
   constructor(tisService: TISService, //
-              modalService: NzModalService) {
-    super(tisService, modalService);
+              modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
+    super(tisService, modalService, drawerRef);
   }
 
   ngOnInit(): void {
