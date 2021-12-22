@@ -34,6 +34,7 @@ import {BasicFormComponent} from "./basic.form.component";
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
 export declare type PluginMeta = {
   name: PluginName, require: boolean, extraParam?: string
@@ -60,6 +61,7 @@ export class ItemPropVal {
   // 是否是主键
   pk: boolean;
   has_set_primaryVal = false;
+  disabled = false;
 
   set eprops(vals: { String: any }) {
     // @ts-ignore
@@ -70,14 +72,15 @@ export class ItemPropVal {
 
 
   public setPropValEnums(cols: Array<{ name: string, value: string }>, colItemChecked?: (optVal) => boolean) {
+    // console.log([cols, colItemChecked]);
     if (!colItemChecked) {
       colItemChecked = (_) => true;
     }
-    let enums = [];
+    let enums: Array<OptionEnum> = [];
     cols.forEach((s) => {
       enums.push({label: s.name, val: s.value, checked: colItemChecked(s.value)})
     });
-    this.setEProp("enum", enums);
+    this.setEProp(KEY_OPTIONS_ENUM, enums);
   }
 
   constructor(public updateModel = false) {
@@ -244,6 +247,38 @@ export class Item {
     return Item.create([]);
   }
 
+  public static wrapItemPropVal(v: any, at: AttrDesc): ItemPropVal {
+    if (v === undefined || v === null) {
+      return;
+    }
+    let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
+    if (at.describable) {
+      let d = at.descriptors.get(v.impl);
+      if (!d) {
+        throw new Error(`impl:${v.impl} can not find relevant descriptor`);
+      }
+      let ii: Item = Object.assign(new Item(d), v);
+      ii.wrapItemVals();
+      // console.log(ii);
+      newVal.descVal = at.createDescribleVal(ii);
+    } else {
+      if (at.isMultiSelectableType) {
+        if (!Array.isArray(v)) {
+          // console.log(v);
+          throw new Error("expect val type is array but is not");
+        }
+        let cols: Array<{ name: string, value: string }> = v.map((r) => {
+          return {name: r, value: r}
+        });
+        newVal.setPropValEnums(cols);
+      } else {
+        newVal._primaryVal = v;
+      }
+      // newVal.pk = (at.key === this.dspt.pkField);
+    }
+    return newVal;
+  }
+
   constructor(public dspt: Descriptor) {
     if (dspt) {
       this.impl = dspt.impl;
@@ -257,38 +292,39 @@ export class Item {
     let newVal: ItemPropVal;
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
+      newVal = Item.wrapItemPropVal(v, at);
       // console.log(at.key + ":" + v);
-      if (v === undefined || v === null) {
-        return;
+      // if (v === undefined || v === null) {
+      //   return;
+      // }
+      // newVal = at.addNewEmptyItemProp(true);
+      // if (at.describable) {
+      //   let d = at.descriptors.get(v.impl);
+      //   if (!d) {
+      //     throw new Error(`impl:${v.impl} can not find relevant descriptor`);
+      //   }
+      //   let ii: Item = Object.assign(new Item(d), v);
+      //   ii.wrapItemVals();
+      //   // console.log(ii);
+      //   newVal.descVal = at.createDescribleVal(ii);
+      // } else {
+      //   if (at.isMultiSelectableType) {
+      //     if (!Array.isArray(v)) {
+      //       // console.log(v);
+      //       throw new Error("expect val type is array but is not");
+      //     }
+      //     let cols: Array<{ name: string, value: string }> = v.map((r) => {
+      //       return {name: r, value: r}
+      //     });
+      //     newVal.setPropValEnums(cols);
+      //   } else {
+      //     newVal._primaryVal = v;
+      //   }
+      //   // newVal.pk = (at.key === this.dspt.pkField);
+      // }
+      if (newVal) {
+        newVals[at.key] = (newVal);
       }
-      newVal = at.addNewEmptyItemProp(true);
-      if (at.describable) {
-        let d = at.descriptors.get(v.impl);
-        if (!d) {
-          throw new Error(`impl:${v.impl} can not find relevant descriptor`);
-        }
-        let ii: Item = Object.assign(new Item(d), v);
-        ii.wrapItemVals();
-        // console.log(ii);
-        newVal.descVal = at.createDescribleVal(ii);
-      } else {
-        if (at.isMultiSelectableType) {
-          if (!Array.isArray(v)) {
-            // console.log(v);
-            throw new Error("expect val type is array but is not");
-          }
-          let cols: Array<{ name: string, value: string }> = v.map((r) => {
-            return {name: r, value: r}
-          });
-          newVal.setPropValEnums(cols);
-        } else {
-          newVal._primaryVal = v;
-        }
-
-
-        // newVal.pk = (at.key === this.dspt.pkField);
-      }
-      newVals[at.key] = (newVal);
     });
     this.vals = newVals;
     // console.log(this.vals);
@@ -450,6 +486,13 @@ export interface IFieldError {
 export class ValOption {
   public impl: string;
   public name: string;
+}
+
+export interface OptionEnum {
+  // {label: s.name, val: s.value, checked: colItemChecked(s.value)}
+  label: string;
+  val: string;
+  checked: boolean;
 }
 
 export class SavePluginEvent {

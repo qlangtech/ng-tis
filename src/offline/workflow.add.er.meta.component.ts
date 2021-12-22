@@ -35,7 +35,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
   template: `
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
 
-          <sidebar-toolbar (close)="_closeSidebar()"
+          <sidebar-toolbar (close)="_closeSidebar($event)"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
           <form class="mete-form" nz-form>
               <nz-row id="meta-setter">
@@ -288,7 +288,7 @@ export class WorkflowAddErMetaComponent
     // 更新label值
     graph.updateItem(old, nmodel);
 
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 
   initComponent(_: IDataFlowMainComponent, erMetaNode: ERMetaNode): void {
@@ -306,7 +306,7 @@ export class WorkflowAddErMetaComponent
     // this.g6Graph.removeItem(node);
     // this.parentComponent.joinNodeMap.delete(id);
     // this.refeshDependencyOption();
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 
   addKeyLink() {
@@ -332,8 +332,8 @@ export class WorkflowAddErMetaComponent
   }
 
 
-  parentKeyChange(link: ColumnTransfer, parentKey: any) {
-
+  parentKeyChange(link: any, parentKey: any) {
+    let ct: ColumnTransfer = link;
     // if (this.childCols.findIndex((r) => {
     //   // console.log(r);
     //   return r.key === parentKey;

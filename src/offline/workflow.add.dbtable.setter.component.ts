@@ -48,7 +48,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
   template: `
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
 
-          <sidebar-toolbar (close)="_closeSidebar()" (save)="_saveClick()" (delete)="deleteNode()"></sidebar-toolbar>
+          <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()" (delete)="deleteNode()"></sidebar-toolbar>
 
           <!--          <form class="clear" nz-form [nzLayout]="'vertical'">-->
           <!--              <div class="item-head"><label>数据库表</label></div>-->
@@ -163,7 +163,7 @@ export class WorkflowAddDbtableSetterComponent
     let node = this.g6Graph.findById(id);
     this.g6Graph.removeItem(node);
     this.parentComponent.dumpTabs.delete(id);
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 }
 

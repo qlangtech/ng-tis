@@ -42,7 +42,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 @Component({
   template: `
       <div>
-          <sidebar-toolbar (close)="_closeSidebar()"
+          <sidebar-toolbar (close)="_closeSidebar($event)"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
 
           <form class="clear" nz-form [nzLayout]="'vertical'">

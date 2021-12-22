@@ -32,7 +32,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
       <div>
 
-          <sidebar-toolbar (close)="_closeSidebar()"
+          <sidebar-toolbar (close)="_closeSidebar($event)"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
           <tis-form [fieldsErr]="errorItem" formLayout="vertical">
               <tis-page-header [showBreadcrumb]="false" [result]="result">
@@ -118,7 +118,7 @@ export class WorkflowAddJoinComponent
     this.g6Graph.removeItem(node);
     this.parentComponent.joinNodeMap.delete(id);
     this.refeshDependencyOption();
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 
   ngOnInit(): void {

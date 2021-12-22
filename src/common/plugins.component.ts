@@ -63,7 +63,7 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
                       <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                   </div>
                   <div style="clear: both"></div>
-                  <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+                  <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
               </div>
           </ng-template>
           <form nz-form [ngSwitch]="shallInitializePluginItems">
@@ -220,7 +220,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     h.items.forEach((item) => {
 
       let desc: Descriptor = h.descriptors.get(item.impl);
-
       if (desc.subForm) {
         i = new Item(desc); // Object.assign(, {"displayName": item.displayName}, {"vals": subFormVals});
         i.displayName = item.displayName;

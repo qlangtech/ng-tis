@@ -27,7 +27,6 @@ import {OffileIndexComponent} from "./offline.index.component";
 import {DbAddComponent} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {TableAddStep1Component} from "./table.add.step1.component";
-import {TableAddStep2Component} from "./table.add.step2.component";
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzTabsModule} from 'ng-zorro-antd/tabs';
 
@@ -80,7 +79,7 @@ const icons: IconDefinition[] = [DeleteOutline];
   ],
   declarations: [
     WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
-    , TableAddComponent, TableAddStep1Component, TableAddStep2Component,
+    , TableAddComponent, TableAddStep1Component, // TableAddStep2Component,
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     // tslint:disable-next-line:whitespace

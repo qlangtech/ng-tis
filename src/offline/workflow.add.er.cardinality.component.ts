@@ -34,7 +34,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
   template: `
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
 
-          <sidebar-toolbar (close)="_closeSidebar()"
+          <sidebar-toolbar (close)="_closeSidebar($event)"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
           <form class="clear" nz-form>
               <div style="background: #ECECEC; padding: 30px;">
@@ -187,7 +187,7 @@ export class WorkflowAddErCardinalityComponent
     // = this.linkKeyList;
     // console.log(old);
 
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 
   initComponent(_: IDataFlowMainComponent, erRuleNode: ERRuleNode): void {
@@ -206,7 +206,7 @@ export class WorkflowAddErCardinalityComponent
     this.g6Graph.removeItem(node);
     // this.parentComponent.joinNodeMap.delete(id);
     // this.refeshDependencyOption();
-    this._closeSidebar();
+    this._closeSidebar(null);
   }
 
   addKeyLink() {

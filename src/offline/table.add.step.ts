@@ -21,13 +21,14 @@ import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
+import {IntendDirect} from "../common/MultiViewDAG";
 
 
 @Injectable()
 export class TableAddStep extends BasicFormComponent {
- // @Input() isShow: boolean;
+  // @Input() isShow: boolean;
   @Output() previousStep: EventEmitter<any> = new EventEmitter();
-  @Output() nextStep: EventEmitter<any> = new EventEmitter();
+  @Output() nextStep = new EventEmitter<IntendDirect | any>();
 
   constructor(protected tisService: TISService, protected router: Router
     , protected localtion: Location) {
