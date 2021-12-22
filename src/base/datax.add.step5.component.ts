@@ -48,7 +48,7 @@ import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
       <nz-spin [nzSpinning]="this.formDisabled">
           <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
           </tis-steps-tools-bar>
-          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[]"
+          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
                        [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
       </nz-spin>
   `

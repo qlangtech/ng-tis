@@ -168,8 +168,14 @@ export class DbEnum {
 
 export class DbPojo {
   dbName = '';
+  // 插件实现
+  pluginImpl: string;
+  readerPluginImpl: string;
   // 是否是Cobar配置
   facade = false;
+  // 对应的DataSource是否已经设置DataX配置？
+  dataReaderSetted = false;
+  supportDataXReader = false;
 
   constructor(public dbId?: string) {
 

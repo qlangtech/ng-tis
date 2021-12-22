@@ -26,11 +26,13 @@ import {DataxDTO} from "./datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
 
+export const DATAX_PREFIX_DB = "dataxDB_";
+
 @Injectable()
 export abstract class BasicDataXAddComponent extends AppFormComponent {
 
   @Output()
-  protected nextStep = new EventEmitter<any>();
+  public nextStep = new EventEmitter<any>();
   @Output()
   protected preStep = new EventEmitter<any>();
   @Input()

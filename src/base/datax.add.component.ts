@@ -37,6 +37,8 @@ import {Descriptor} from "../common/tis.plugin";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
+import {TablePojo} from "../offline/table.add.component";
+import {Subject} from "rxjs";
 
 
 @Component({
@@ -54,6 +56,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
 
   @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
   multiViewDAG: MultiViewDAG;
+
   public static getDataXMeta(cpt: BasicFormComponent, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
     return cpt.httpPost("/coredefine/corenodemanage.ajax"
       , "action=datax_action&emethod=get_data_x_meta")
@@ -72,7 +75,6 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
         }
       });
   }
-
 
 
   constructor(tisService: TISService, protected r: Router, route: ActivatedRoute, modalService: NzModalService
@@ -192,6 +194,9 @@ class DataxProfile {
 }
 
 export class DataxDTO {
+
+  public headerStepShow = true;
+
   dataxPipeName: string;
   profile: DataxProfile = new DataxProfile();
   selectableTabs: Map<string /* table */, ISelectedTabMeta> = new Map();
@@ -201,6 +206,12 @@ export class DataxDTO {
   processMeta: DataXCreateProcessMeta;
   // 流程是否处于更新模式
   processModel: StepType = StepType.CreateDatax;
+
+  componentCallback: { step3: Subject<DataxAddStep3Component>, step4: Subject<DataxAddStep4Component> }
+   = {step3: new Subject<DataxAddStep3Component>(), step4: new Subject<DataxAddStep4Component>()};
+  tablePojo: TablePojo;
+
+  // dataxAddStep3Callback: (_: DataxAddStep3Component) => void;
 
   constructor(public execId?: string) {
   }

@@ -26,7 +26,7 @@ import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {BasicDataXAddComponent} from "./datax.add.base";
+import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 
 
@@ -35,7 +35,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-      <tis-steps [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+      <tis-steps *ngIf="dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--              <tis-header-tool>-->
@@ -111,11 +111,20 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
         if (i.item) {
           this.hlist[0].items[0] = i.item;
         }
+
+        this.dto.componentCallback.step3.next(this);
       });
   }
 
   ngOnInit(): void {
-    this.pluginCategory = {name: 'dataxReader', require: true, "extraParam": 'dataxName_' + this.dto.dataxPipeName}
+    if (!this.dto) {
+      throw new Error("dto can not be null");
+    }
+    if (!this.dto.readerDescriptor) {
+      throw new Error("readerDescriptor can not be null");
+    }
+    this.pluginCategory = {name: 'dataxReader', require: true
+      , "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName)}
     super.ngOnInit();
   }
 
