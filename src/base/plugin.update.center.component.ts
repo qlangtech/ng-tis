@@ -129,7 +129,7 @@ export class PluginUpdateCenterComponent extends BasicFormComponent implements O
         }
         let hasAnyInstalling =
           this.plugins.find((p) => {
-            return p.type === 'InstallationJob' && p.status.type === 'Installing';
+            return p.type === 'InstallationJob' && (p.status.type === 'Installing' || p.status.type === 'Pending');
           }) !== undefined;
         this.cd.detectChanges();
         if (hasAnyInstalling && !this.hasDestroy) {
