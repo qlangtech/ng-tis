@@ -21,7 +21,7 @@ import {TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, ValOption} from "./tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_ENUM, TYPE_PLUGIN_SELECTION, ValOption, OptionEnum} from "./tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
@@ -622,15 +622,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
                   <nz-dropdown-menu #menu="nzDropdownMenu">
                       <ul nz-menu>
+                          <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                              <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
+                          </li>
                           <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
                               <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                               <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
                           </li>
                           <li nz-menu-item>
                               <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
-                          </li>
-                          <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                              <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
                           </li>
                       </ul>
                   </nz-dropdown-menu>
@@ -764,13 +764,13 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
             //  console.log(_pp);
             switch (_pp.type) {
-              case 5: // enum
-                // enum
-                // db detail
-                // let item: Item = Object.assign(new Item(d), );
-                // let nn = new ValOption();
-                // n.name = biz.detailed.identityName;
-                // n.impl = d.impl;
+              case TYPE_ENUM: // enum
+                              // enum
+                              // db detail
+                              // let item: Item = Object.assign(new Item(d), );
+                              // let nn = new ValOption();
+                              // n.name = biz.detailed.identityName;
+                              // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -782,7 +782,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                   throw new Error('invalid biz:' + d.displayName);
                 }
                 break;
-              case 6: // select
+              case TYPE_PLUGIN_SELECTION: // select
                 if (Array.isArray(biz)) {
                   // select
                   let ids: Array<string> = biz;
@@ -904,14 +904,31 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         if (!r.success) {
           return;
         }
-        let opts: ValOption[] = [];
-        if (!Array.isArray(r.bizresult)) {
-          throw new Error(r.bizresult);
+        switch (this._pp.type) {
+          case TYPE_ENUM:
+            if (!Array.isArray(r.bizresult)) {
+              throw new Error('bizresult must be a Array');
+            }
+            let cols: Array<{ name: string, value: string }> = [];
+            (<Array<OptionEnum>>r.bizresult).forEach((e) => {
+              cols.push({name: e.label, value: e.val})
+            })
+            this._pp.setPropValEnums(cols, (optVal) => this._pp.primary === optVal);
+
+            break;
+          case TYPE_PLUGIN_SELECTION:
+            let opts: ValOption[] = [];
+            if (!Array.isArray(r.bizresult)) {
+              throw new Error(r.bizresult);
+            }
+            r.bizresult.forEach((opt) => {
+              opts.push(Object.assign(new ValOption(), opt));
+            });
+            this._pp.options = opts;
+            break;
+          default:
+            throw new Error(`illegal field type:${this._pp.type}`);
         }
-        r.bizresult.forEach((opt) => {
-          opts.push(Object.assign(new ValOption(), opt));
-        });
-        this._pp.options = opts;
         this.successNotify(`'${this._pp.label}'可选内容已经刷新`, 2000);
         this.cdr.detectChanges();
       });

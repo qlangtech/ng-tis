@@ -16,9 +16,9 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, Input, OnInit} from "@angular/core";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {BasicFormComponent, CurrentCollection, AppFormComponent} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -27,6 +27,7 @@ import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
 import {DataxDTO} from "./datax.add.component";
+import {CodemirrorComponent} from "../common/codemirror.component";
 
 export enum ExecModel {
   Create, Reader
@@ -64,7 +65,7 @@ export enum ExecModel {
               </div>
           </ng-container>
           <h3>DataX脚本文件</h3>
-          <ul class="item-block child-block">
+          <ul class="item-block child-block script-block">
               <li *ngFor="let f of genCfgFileList">
                   <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="file-text" nzTheme="outline"></i>{{f}}</button>
               </li>
@@ -72,7 +73,8 @@ export enum ExecModel {
           </ul>
           <ng-container *ngIf="createDDLFileList.length > 0">
               <h3>Create Table DDL</h3>
-              <ul class="item-block child-block">
+
+              <ul class="child-block item-block script-block">
                   <li *ngFor="let f of createDDLFileList">
                       <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="console-sql" nzTheme="outline"></i>{{f}}</button>
                   </li>
@@ -103,39 +105,43 @@ export enum ExecModel {
       </nz-spin>
   `
   , styles: [
-      `
-            .fix-foot {
-                z-index: 100;
-                padding: 6px;
-                background-color: #f1f1f1;
-                height: 40px;
-                text-align: center;
-                position: fixed;
-                bottom: 0px;
-                width: 100%;
-            }
+      `     .script-block {
+            max-height: 200px;
+            overflow-y: auto
+        }
 
-            .child-block {
-                list-style-type: none;
-            }
+        .fix-foot {
+            z-index: 100;
+            padding: 6px;
+            background-color: #f1f1f1;
+            height: 40px;
+            text-align: center;
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+        }
 
-            .child-block li {
-                display: inline-block;
-                width: 20%;
-                padding-right: 8px;
-            }
+        .child-block {
+            list-style-type: none;
+        }
 
-            .editable-cell {
-                position: relative;
-                padding: 5px 12px;
-                cursor: pointer;
-            }
+        .child-block li {
+            display: inline-block;
+            width: 20%;
+            padding-right: 8px;
+        }
 
-            .editable-row:hover .editable-cell {
-                border: 1px solid #d9d9d9;
-                border-radius: 4px;
-                padding: 4px 11px;
-            }
+        .editable-cell {
+            position: relative;
+            padding: 5px 12px;
+            cursor: pointer;
+        }
+
+        .editable-row:hover .editable-cell {
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 4px 11px;
+        }
 
 
 
@@ -259,8 +265,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
         this.processResult(r);
         if (r.success) {
           const drawerRef = this.drawerService.create<ViewGenerateCfgComponent, {}, {}>({
-            nzHeight: "80%",
-            nzPlacement: "bottom",
+            nzWidth: "70%",
+            nzPlacement: "right",
             nzTitle: `${opt.titlePrefix} '${fileName}' `,
             nzContent: ViewGenerateCfgComponent,
             nzWrapClassName: 'get-gen-cfg-file',
@@ -334,19 +340,23 @@ class GenerateCfgs {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
       <nz-page-header *ngIf="editMeta.editable" class="recent-using-tool" [nzGhost]="false">
           <nz-page-header-extra>
               <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
           </nz-page-header-extra>
       </nz-page-header>
-      <tis-codemirror [config]="{mode:formatMode,lineNumbers: true}" [size]="{width:'100%',height:800}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+      <div class="item-block" style="height: 90%">
+          <tis-codemirror #codemirror name="script" [config]="{mode: formatMode ,lineNumbers: true}" [size]="{width:null,height:'100%'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+      </div>
   `
   , styles: [`
   `]
 })
-export class ViewGenerateCfgComponent extends AppFormComponent {
+export class ViewGenerateCfgComponent extends AppFormComponent implements AfterViewInit {
 
+  @ViewChild('codemirror', {static: false}) codeMirror: CodemirrorComponent;
   @Input()
   fileMeta: { content?: string, fileName?: string } = {};
 
@@ -356,9 +366,22 @@ export class ViewGenerateCfgComponent extends AppFormComponent {
   @Input()
   editMeta: EditMeta = {};
 
-  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
+  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, route, modalService, notification);
     this.getCurrentAppCache = true;
+    this.cd.detach()
+  }
+
+  ngAfterViewInit(): void {
+    // setTimeout(() => {
+    //   this.codeMirror.save();
+    // }, 2000);
+  }
+
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.cd.detectChanges();
   }
 
   protected initialize(app: CurrentCollection): void {

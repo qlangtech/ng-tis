@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/department.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/department.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/codemirror.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/codemirror.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -292,6 +297,7 @@
       <workItem from="1638950665490" duration="6462000" />
       <workItem from="1639029849284" duration="121561000" />
       <workItem from="1640062040354" duration="1947000" />
+      <workItem from="1640224989992" duration="12666000" />
     </task>
     <servers />
   </component>
@@ -558,7 +564,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/common/tis.plugin.ts</url>
-          <line>48</line>
+          <line>50</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
