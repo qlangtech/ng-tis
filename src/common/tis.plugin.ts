@@ -44,6 +44,8 @@ export declare type PluginMeta = {
 };
 export declare type PluginType = PluginName | PluginMeta;
 
+export const TYPE_ENUM = 5;
+export const TYPE_PLUGIN_SELECTION = 6;
 
 // 某一插件某一属性行
 export class ItemPropVal {

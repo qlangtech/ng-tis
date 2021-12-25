@@ -156,11 +156,11 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
      =======================================================*/
     // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
     //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "mysql_doris";
+    //   dto.dataxPipeName = "mysql_starrock3";
     //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep2Component, dto);
+    //   this.multiViewDAG.loadComponent(DataxAddStep6Component, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

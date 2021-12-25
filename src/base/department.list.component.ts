@@ -30,7 +30,7 @@ import {DepartmentAddComponent} from "./department.add.component";
 @Component({
   // templateUrl: '/runtime/bizdomainlist.htm'
   template: `
-      <tis-page-header title="业务线" >
+      <tis-page-header title="业务线">
           <button nz-button nzType="primary" (click)="openAddDptDialog()"><i class="fa fa-plus" aria-hidden="true"></i>添加</button>
       </tis-page-header>
       <tis-page [rows]="bizline" [spinning]="this.formDisabled">
@@ -116,12 +116,13 @@ export class DepartmentListComponent extends BasicFormComponent implements OnIni
           .then((r) => {
             this.processResult(r);
             if (r.success) {
-              this.successNotify(`已经成功删除部门${dpt.fullName}`);
+              // this.successNotify(`已经成功删除部门${dpt.fullName}`);
               let indexOf = this.bizline.indexOf(dpt);
+              // console.log(indexOf);
               if (indexOf > -1) {
                 this.bizline.splice(indexOf, 1);
+                this.bizline = [...this.bizline];
               }
-              //  this.router.navigate(["."], {relativeTo: this.route});
             }
           });
       }
