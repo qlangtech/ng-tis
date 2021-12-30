@@ -61,7 +61,17 @@ export enum ExecModel {
                       <button nz-button *ngSwitchCase="true" nzType="primary" nzDanger (click)="inUpdate = false"><i nz-icon nzType="edit" nzTheme="outline"></i>取消编辑</button>
                   </ng-container>
                   &nbsp;
-                  <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()">生成DataX配置文件</button>
+                  <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()"></button>
+                  <button nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="dataxScriptfiles">
+                      生成脚本文件
+                      <i nz-icon nzType="down"></i>
+                  </button>
+                  <nz-dropdown-menu #dataxScriptfiles="nzDropdownMenu">
+                      <ul nz-menu>
+                          <li nz-menu-item (click)="reGenerate()">DataX配置文件</li>
+                          <li nz-menu-item (click)="reGenerateSqlDDL()">SQL DDL</li>
+                      </ul>
+                  </nz-dropdown-menu>
               </div>
           </ng-container>
           <h3>DataX脚本文件</h3>
@@ -265,7 +275,9 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
         this.processResult(r);
         if (r.success) {
           const drawerRef = this.drawerService.create<ViewGenerateCfgComponent, {}, {}>({
-            nzWidth: "70%",
+            // 此处宽度不能用百分比，不然内部的codemirror显示会有问题
+            nzWidth: "800px",
+            // nzHeight: "80%",
             nzPlacement: "right",
             nzTitle: `${opt.titlePrefix} '${fileName}' `,
             nzContent: ViewGenerateCfgComponent,
@@ -281,6 +293,19 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     this.generate_datax_cfgs(false).then((r: GenerateCfgs) => {
       // title: string, content: string, options?: NzNotificationDataOptions
       this.tisService.notification.success("成功", `最新生成${r.dataxFiles.length}个DataX配置文件`);
+    });
+  }
+
+  reGenerateSqlDDL() {
+    let url = '/coredefine/corenodemanage.ajax';
+    return this.httpPost(url, 'action=datax_action&emethod=regenerate_sql_ddl_cfgs&dataxName=' + this.dto.dataxPipeName)
+      .then((r) => {
+      if (r.success) {
+        let cfgs: GenerateCfgs = r.bizresult;
+        this.createDDLFileList = cfgs.createDDLFiles;
+        this.lastestGenFileTime = cfgs.genTime;
+        this.tisService.notification.success("成功", `最新生成${cfgs.createDDLFiles.length}个Create Table DDL文件`);
+      }
     });
   }
 
@@ -347,8 +372,8 @@ class GenerateCfgs {
               <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
           </nz-page-header-extra>
       </nz-page-header>
-      <div class="item-block" style="height: 90%">
-          <tis-codemirror #codemirror name="script" [config]="{mode: formatMode ,lineNumbers: true}" [size]="{width:null,height:'100%'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+      <div class="item-block" style="height: 90%;">
+          <tis-codemirror #codemirror [name]="'script'" [config]="{mode: formatMode ,lineNumbers: true}" [size]="{width:null,height:'100%'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
       </div>
   `
   , styles: [`
@@ -369,7 +394,7 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
   constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, route, modalService, notification);
     this.getCurrentAppCache = true;
-    this.cd.detach()
+    // this.cd.detach()
   }
 
   ngAfterViewInit(): void {
@@ -381,7 +406,7 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.cd.detectChanges();
+    //  this.cd.detectChanges();
   }
 
   protected initialize(app: CurrentCollection): void {
