@@ -50,15 +50,16 @@ export class TerminalComponent implements AfterContentInit, OnInit, OnDestroy {
   logSubject: Subject<WSMessage>;
   @ViewChild('term', {static: true}) terminal: NgTerminal;
 
-  subscription: Unsubscribable;
+  // subscription: Unsubscribable;
 
   ngAfterContentInit(): void {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    // if (this.subscription) {
+    //   this.subscription.unsubscribe();
+    // }
+   // this.logSubject.next(new WSMessage("full", "unsubscribe"));
   }
 
   ngOnInit(): void {
@@ -68,7 +69,7 @@ export class TerminalComponent implements AfterContentInit, OnInit, OnDestroy {
     if (!this.terminal) {
       throw new Error("terminal can not be null");
     }
-    this.subscription = this.logSubject.subscribe((msg) => {
+    this.logSubject.subscribe((msg) => {
       if (msg.logtype === 'full') {
         this.terminal.write(msg.data.msg + "\r\n");
       }

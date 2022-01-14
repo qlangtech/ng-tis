@@ -132,6 +132,7 @@ export class Descriptor {
 
 
   impl: string;
+  implUrl: string;
   displayName: string;
   extendPoint: string;
   attrs: AttrDesc[];
@@ -158,6 +159,7 @@ export class Descriptor {
     , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
     let nItem = new Item(des);
     nItem.displayName = des.displayName;
+    nItem.implUrl = des.implUrl;
     des.attrs.forEach((attr) => {
       nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
     });
@@ -185,6 +187,7 @@ export interface TisResponseResult {
  */
 export class Item {
   impl = '';
+  implUrl: string;
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
   // vals: Map<string /**key*/, ItemPropVal> = new Map();
   // 后一种类型支持subform的类型
@@ -447,6 +450,7 @@ export class HeteroList {
   cardinality: string;
   caption: string;
   extensionPoint: string;
+  extensionPointUrl: string;
   items: Item[] = [];
 
   pluginCategory: PluginType;

@@ -50,11 +50,12 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
           </ng-container>
           <ng-template #pluginForm let-h="h">
               <div class="extension-point" [id]="h.identity">
-                  <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>{{h.extensionPoint}}</nz-tag>
+                  <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
+                      <a class="plugin-link"  target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a></nz-tag>
               </div>
               <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
                   <div style="float:right">
-                      <nz-tag *ngIf="showExtensionPoint.open">{{item.impl}}</nz-tag>
+                      <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link" target="_blank">{{item.impl}}</a></nz-tag>
                       <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
                           <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
                       </button>
@@ -92,6 +93,14 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
   `,
   styles: [
       `
+          .plugin-link {
+              text-decoration: underline;
+          }
+
+          .plugin-link:hover {
+              background-color: #b7d6ff;
+          }
+
           .extension-point {
               margin-bottom: 10px;
           }
