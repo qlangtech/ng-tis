@@ -164,9 +164,9 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
   constructor(tisService: TISService, modalService: NzModalService, private fb: FormBuilder) {
     super(tisService, modalService);
     this.specForm = this.fb.group({
-      'supportHpa': [false, [Validators.required]],
+      supportHpa: [ false, [Validators.required]],
       minHpaPod: [1],
-      maxHpaPod: [1],
+      maxHpaPod: [3],
       cpuAverageUtilization: [10, [Validators.max(100), Validators.min(1)]],
       pods: [1, [Validators.required]],
       cuprequest: [500, [Validators.required]],
@@ -217,7 +217,7 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
     if (!this.rcSpec) {
       this.rcSpec = {
         'pods': 1,
-        supportHpa: true, minHpaPod: 1, maxHpaPod: 3, cpuAverageUtilization: 10,  cuprequest: 500,
+        supportHpa: false, minHpaPod: 1, maxHpaPod: 3, cpuAverageUtilization: 10,  cuprequest: 500,
         cuprequestunit: 'm',
         cuplimitunit: 'cores',
         cuplimit: 1,

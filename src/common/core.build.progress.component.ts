@@ -126,7 +126,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
                       <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
-                          <dt>{{t.name}} <span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
+                          <dt>{{t.name}} <span *ngIf="!t.waiting" class='percent-status'>({{t.processed}} <span *ngIf="t.all>0">/{{t.all}}</span>)</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -136,46 +136,46 @@ export class ProgressTitleComponent {
                   <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
               </ng-template>
 
-              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
-                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">
-                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
-                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
-                          <tis-progress [val]="t"></tis-progress>
-                      </li>
-                  </ul>
-                  <div style="clear: both"></div>
-              </nz-collapse-panel>
-              <ng-template #joinTpl>
-                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>
-              </ng-template>
+<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">-->
+<!--                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">-->
+<!--                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">-->
+<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+<!--                          <tis-progress [val]="t"></tis-progress>-->
+<!--                      </li>-->
+<!--                  </ul>-->
+<!--                  <div style="clear: both"></div>-->
+<!--              </nz-collapse-panel>-->
+<!--              <ng-template #joinTpl>-->
+<!--                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>-->
+<!--              </ng-template>-->
 
 
-              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">
-                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">
-                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">
-                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
-                          <tis-progress [val]="t"></tis-progress>
-                      </li>
-                  </ul>
-                  <div style="clear: both"></div>
-              </nz-collapse-panel>
-              <ng-template #indexBuildTpl>
-                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>
-              </ng-template>
+<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
+<!--                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">-->
+<!--                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">-->
+<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+<!--                          <tis-progress [val]="t"></tis-progress>-->
+<!--                      </li>-->
+<!--                  </ul>-->
+<!--                  <div style="clear: both"></div>-->
+<!--              </nz-collapse-panel>-->
+<!--              <ng-template #indexBuildTpl>-->
+<!--                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>-->
+<!--              </ng-template>-->
 
 
-              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">
-                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">
-                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">
-                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
-                          <tis-progress [val]="t"></tis-progress>
-                      </li>
-                  </ul>
-                  <div style="clear: both"></div>
-              </nz-collapse-panel>
-              <ng-template #indexBackFlow>
-                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>
-              </ng-template>
+<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">-->
+<!--                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">-->
+<!--                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">-->
+<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+<!--                          <tis-progress [val]="t"></tis-progress>-->
+<!--                      </li>-->
+<!--                  </ul>-->
+<!--                  <div style="clear: both"></div>-->
+<!--              </nz-collapse-panel>-->
+<!--              <ng-template #indexBackFlow>-->
+<!--                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>-->
+<!--              </ng-template>-->
 
           </nz-collapse>
       </nz-spin>
@@ -233,7 +233,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   consumingTimer: any;
   @ViewChild('drawerTitle', {static: false}) drawerTitle: TemplateRef<any>;
   breadcrumb: string[] = [];
- // @ViewChild('term', {static: true}) terminal: NgTerminal;
+  // @ViewChild('term', {static: true}) terminal: NgTerminal;
   buildTask = new BuildTask();
   private componentDestroy = false;
   showBreadcrumb = false;
@@ -244,7 +244,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 //   app: any;
 //   config: any;
 //   instanceDirDesc: any;
- // @ViewChild('term', {static: true}) child: NgTerminal;
+  // @ViewChild('term', {static: true}) child: NgTerminal;
   value = 'ng';
   liveExecLog: any = {
     "buildPhase": {
@@ -281,7 +281,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     }
   };
   isSpinning = false;
- // termVisible = false;
+  // termVisible = false;
   progressStat: ProgressStat = new ProgressStat();
   dataxProcess = false;
 
@@ -411,7 +411,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         case "full":
           // console.log(response.data);
           // if (response.data.msg) {
-           // this.terminal.write(response.data.msg + "\r\n");
+          // this.terminal.write(response.data.msg + "\r\n");
           // }
           break;
         default:
@@ -435,10 +435,10 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
 
   openReltimeLog() {
-  //  this.termVisible = true;
+    //  this.termVisible = true;
     this.msgSubject.next(new WSMessage("full"));
 
-      const drawerRef = this.drawerService.create<TerminalComponent, {}, {}>({
+    const drawerRef = this.drawerService.create<TerminalComponent, {}, {}>({
       nzWidth: "70%",
       nzPlacement: "right",
       nzTitle: this.drawerTitle,
@@ -449,7 +449,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 
   termClose() {
-   //  this.termVisible = false;
+    //  this.termVisible = false;
   }
 
   downloadLogFile() {
