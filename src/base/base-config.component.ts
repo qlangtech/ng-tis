@@ -47,7 +47,7 @@ enum PluginCategory {
 <!--              </nz-tab>-->
               <nz-tab nzTitle="离线" (nzClick)="goto('offline')" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs','flat_table_builder','index_build_container','ds_dump']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs','flat_table_builder']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
           </nz-tabset>

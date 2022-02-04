@@ -48,10 +48,10 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
                   <div style="clear: both;margin-bottom:3px;"></div>
               </nz-anchor>
           </ng-container>
-          <ng-template #pluginForm let-h="h">
+          <ng-template #pluginForm let-h="h" let-index="index">
               <div class="extension-point" [id]="h.identity">
                   <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
-                      <a class="plugin-link"  target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a></nz-tag>
+                      <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a></nz-tag>
               </div>
               <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
                   <div style="float:right">
@@ -64,13 +64,13 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
                       <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                   </div>
                   <div style="clear: both"></div>
-                  <item-prop-val [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+                  <item-prop-val [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
               </div>
           </ng-template>
           <form nz-form [ngSwitch]="shallInitializePluginItems">
               <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
-                  <nz-collapse-panel *ngFor="let h of _heteroList" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
-                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
+                  <nz-collapse-panel *ngFor="let h of _heteroList;let i = index" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
+                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
                       <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
                           <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
                                               [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
@@ -81,8 +81,8 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
                   </nz-collapse-panel>
               </nz-collapse>
               <ng-container *ngSwitchCase="false">
-                  <ng-container *ngFor="let h of _heteroList">
-                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h}"></ng-container>
+                  <ng-container *ngFor="let h of _heteroList;let i = index">
+                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
                   </ng-container>
               </ng-container>
           </form>
@@ -145,6 +145,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Input()
   _heteroList: HeteroList[] = [];
+  private _plugins: PluginType[] = [];
 
   @Output()
   afterInit: EventEmitter<HeteroList[]> = new EventEmitter<HeteroList[]>();
@@ -163,7 +164,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
   @Output() afterSave = new EventEmitter<PluginSaveResponse>();
-  private _plugins: PluginType[] = [];
+
 
   /**
    * 当前选中的DS plugin 描述信息
@@ -581,7 +582,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item>
-          <nz-form-label [nzSpan]="3" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
+          <nz-form-label [nzSpan]="5" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -697,6 +698,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   descContentShow = false;
   asyncHelp = false;
 
+  @Input()
+  pluginMeta: PluginType;
 
   @Input()
   set disabled(val: boolean) {
@@ -743,7 +746,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
     let descName = targetPlugin.descName;
     let url = "/coredefine/corenodemanage.ajax";
-    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
+
+    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero )
       .then((r) => {
         if (!r.success) {
           if (r.bizresult.notFoundExtension) {
@@ -815,7 +819,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     if (this.asyncHelp) {
       if (!this.descContent && !this.descContentShow) {
         let url = "/coredefine/corenodemanage.ajax";
-        this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}`).then((r) => {
+        console.log(this.pluginMeta);
+        this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams([this.pluginMeta])}`).then((r) => {
           this.descContent = r.bizresult;
           this.descContentShow = true;
           // console.log(this.descContentShow);
