@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -300,7 +297,7 @@
       <workItem from="1641544676891" duration="2962000" />
       <workItem from="1641882951746" duration="1690000" />
       <workItem from="1642729487779" duration="926000" />
-      <workItem from="1643359030652" duration="13795000" />
+      <workItem from="1643359030652" duration="15993000" />
     </task>
     <servers />
   </component>

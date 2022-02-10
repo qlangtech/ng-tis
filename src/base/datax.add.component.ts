@@ -154,16 +154,16 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     /**=====================================================
      * <<<<<<<<<for test
      =======================================================*/
-    DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
-      let dto = new DataxDTO();
-      dto.dataxPipeName = "mysql_hudi";
-      dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
-      // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
-      // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-      dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MySQL" === r.displayName);
-      dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Hudi" === r.displayName);
-      this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
-    });
+    // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+    //   let dto = new DataxDTO();
+    //   dto.dataxPipeName = "mysql_hudi";
+    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+    //   // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
+    //   // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
+    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MySQL" === r.displayName);
+    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Hudi" === r.displayName);
+    //   this.multiViewDAG.loadComponent(DataxAddStep5Component, dto);
+    // });
     /**=====================================================
      * for test end>>>>>>>>
      =======================================================*/
