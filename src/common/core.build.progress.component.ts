@@ -19,7 +19,7 @@
 import {AppFormComponent, CurrentCollection, WSMessage} from "./basic.form.component";
 import {ActivatedRoute, Params} from "@angular/router";
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, TemplateRef, ViewChild} from "@angular/core";
-import {TISService} from "./tis.service";
+import {TISService, WS_CLOSE_MSG} from "./tis.service";
 
 
 import {NgTerminal} from "ng-terminal";
@@ -136,46 +136,46 @@ export class ProgressTitleComponent {
                   <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
               </ng-template>
 
-<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">-->
-<!--                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">-->
-<!--                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">-->
-<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-<!--                          <tis-progress [val]="t"></tis-progress>-->
-<!--                      </li>-->
-<!--                  </ul>-->
-<!--                  <div style="clear: both"></div>-->
-<!--              </nz-collapse-panel>-->
-<!--              <ng-template #joinTpl>-->
-<!--                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>-->
-<!--              </ng-template>-->
+              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">-->
+              <!--                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">-->
+              <!--                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">-->
+              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+              <!--                          <tis-progress [val]="t"></tis-progress>-->
+              <!--                      </li>-->
+              <!--                  </ul>-->
+              <!--                  <div style="clear: both"></div>-->
+              <!--              </nz-collapse-panel>-->
+              <!--              <ng-template #joinTpl>-->
+              <!--                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>-->
+              <!--              </ng-template>-->
 
 
-<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
-<!--                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">-->
-<!--                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">-->
-<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-<!--                          <tis-progress [val]="t"></tis-progress>-->
-<!--                      </li>-->
-<!--                  </ul>-->
-<!--                  <div style="clear: both"></div>-->
-<!--              </nz-collapse-panel>-->
-<!--              <ng-template #indexBuildTpl>-->
-<!--                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>-->
-<!--              </ng-template>-->
+              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
+              <!--                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">-->
+              <!--                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">-->
+              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+              <!--                          <tis-progress [val]="t"></tis-progress>-->
+              <!--                      </li>-->
+              <!--                  </ul>-->
+              <!--                  <div style="clear: both"></div>-->
+              <!--              </nz-collapse-panel>-->
+              <!--              <ng-template #indexBuildTpl>-->
+              <!--                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>-->
+              <!--              </ng-template>-->
 
 
-<!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">-->
-<!--                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">-->
-<!--                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">-->
-<!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-<!--                          <tis-progress [val]="t"></tis-progress>-->
-<!--                      </li>-->
-<!--                  </ul>-->
-<!--                  <div style="clear: both"></div>-->
-<!--              </nz-collapse-panel>-->
-<!--              <ng-template #indexBackFlow>-->
-<!--                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>-->
-<!--              </ng-template>-->
+              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">-->
+              <!--                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">-->
+              <!--                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">-->
+              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+              <!--                          <tis-progress [val]="t"></tis-progress>-->
+              <!--                      </li>-->
+              <!--                  </ul>-->
+              <!--                  <div style="clear: both"></div>-->
+              <!--              </nz-collapse-panel>-->
+              <!--              <ng-template #indexBackFlow>-->
+              <!--                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>-->
+              <!--              </ng-template>-->
 
           </nz-collapse>
       </nz-spin>
@@ -297,7 +297,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   ngOnDestroy(): void {
     this.componentDestroy = true;
     if (this.msgSubject) {
-      this.msgSubject.unsubscribe()
+      this.msgSubject.next(new WSMessage(WS_CLOSE_MSG));
     }
   }
 
@@ -368,60 +368,108 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
       .pipe(map((response: MessageEvent) => {
         let json = JSON.parse(response.data);
+       // console.log(json);
         if (json.logType && json.logType === "FULL") {
           return new WSMessage('full', json);
         } else if (json.consuming) {
           // server side pojo: ExtendWorkFlowBuildHistory
-          return new WSMessage('stat', json);
+          this.processEvent(new WSMessage('stat', json));
         } else {
-          return new WSMessage('build_status_metrics', json);
+          this.processEvent(new WSMessage('build_status_metrics', json));
         }
         // return new WSMessage('build_status_metrics', json);
       }));
+    this.msgSubject.subscribe((response: WSMessage): void => {});
 
-    this.msgSubject.subscribe((response: WSMessage): void => {
-      if (this.componentDestroy) {
-        return;
-      }
-      // console.log(response.data);
-      switch (response.logtype) {
-        case "stat":
-          this.progressStat = Object.assign(new ProgressStat(), response.data);
-          // let now = Date.now();
-          // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
-          this.consuming = this.progressStat.consumingTime;
-          // 是否在执行中
-          if (this.progressStat.state === 2 || this.progressStat.state === 22) {
-            this.consumingTimer = setInterval(() => {
-              this.consuming += 1000;
-            }, 1000);
-          } else if (this.consumingTimer) {
-            // console.log("clearInterval");
-            clearInterval(this.consumingTimer);
-          }
-          break;
-        case "build_status_metrics":
-          let status = response.data;
-          this.liveExecLog.dumpPhase = status.dumpPhase;
-          this.liveExecLog.joinPhase = status.joinPhase;
-          this.liveExecLog.buildPhase = status.buildPhase;
-          this.liveExecLog.indexBackFlowPhaseStatus
-            = status.indexBackFlowPhaseStatus;
-          break;
-        case "full":
-          // console.log(response.data);
-          // if (response.data.msg) {
-          // this.terminal.write(response.data.msg + "\r\n");
-          // }
-          break;
-        default:
-          throw new Error(`logttype:${response.logtype} is illegal`);
-      }
-      this.cd.detectChanges();
-      if (this.isSpinning) {
-        this.isSpinning = false;
-      }
-    });
+    // this.msgSubject.subscribe((response: WSMessage): void => {
+    //   if (this.componentDestroy) {
+    //     console.log("componentDestroy");
+    //     return;
+    //   }
+    //   switch (response.logtype) {
+    //     case "stat":
+    //       this.progressStat = Object.assign(new ProgressStat(), response.data);
+    //       // let now = Date.now();
+    //       // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
+    //       console.log(this.progressStat);
+    //       this.consuming = this.progressStat.consumingTime;
+    //       // 是否在执行中
+    //       if (this.progressStat.state === 2 || this.progressStat.state === 22) {
+    //         this.consumingTimer = setInterval(() => {
+    //           this.consuming += 1000;
+    //         }, 1000);
+    //       } else if (this.consumingTimer) {
+    //         // console.log("clearInterval");
+    //         clearInterval(this.consumingTimer);
+    //       }
+    //       break;
+    //     case "build_status_metrics":
+    //       let status = response.data;
+    //       this.liveExecLog.dumpPhase = status.dumpPhase;
+    //       this.liveExecLog.joinPhase = status.joinPhase;
+    //       this.liveExecLog.buildPhase = status.buildPhase;
+    //       this.liveExecLog.indexBackFlowPhaseStatus
+    //         = status.indexBackFlowPhaseStatus;
+    //       break;
+    //     case "full":
+    //       // console.log(response.data);
+    //       // if (response.data.msg) {
+    //       // this.terminal.write(response.data.msg + "\r\n");
+    //       // }
+    //       break;
+    //     default:
+    //       throw new Error(`logttype:${response.logtype} is illegal`);
+    //   }
+    //   this.cd.detectChanges();
+    //   if (this.isSpinning) {
+    //     this.isSpinning = false;
+    //   }
+    // });
+  }
+
+  private processEvent(response: WSMessage) {
+    if (this.componentDestroy) {
+      console.log("componentDestroy");
+      return;
+    }
+    switch (response.logtype) {
+      case "stat":
+        this.progressStat = Object.assign(new ProgressStat(), response.data);
+        // let now = Date.now();
+        // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
+       // console.log(this.progressStat);
+        this.consuming = this.progressStat.consumingTime;
+        // 是否在执行中
+        if (this.progressStat.state === 2 || this.progressStat.state === 22) {
+          this.consumingTimer = setInterval(() => {
+            this.consuming += 1000;
+          }, 1000);
+        } else if (this.consumingTimer) {
+          // console.log("clearInterval");
+          clearInterval(this.consumingTimer);
+        }
+        break;
+      case "build_status_metrics":
+        let status = response.data;
+        this.liveExecLog.dumpPhase = status.dumpPhase;
+        this.liveExecLog.joinPhase = status.joinPhase;
+        this.liveExecLog.buildPhase = status.buildPhase;
+        this.liveExecLog.indexBackFlowPhaseStatus
+          = status.indexBackFlowPhaseStatus;
+        break;
+      case "full":
+        // console.log(response.data);
+        // if (response.data.msg) {
+        // this.terminal.write(response.data.msg + "\r\n");
+        // }
+        break;
+      default:
+        throw new Error(`logttype:${response.logtype} is illegal`);
+    }
+    this.cd.detectChanges();
+    if (this.isSpinning) {
+      this.isSpinning = false;
+    }
   }
 
 

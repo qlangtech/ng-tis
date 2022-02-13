@@ -70,7 +70,7 @@ export class TerminalComponent implements AfterContentInit, OnInit, OnDestroy {
       throw new Error("terminal can not be null");
     }
     this.logSubject.subscribe((msg) => {
-      if (msg.logtype === 'full') {
+      if (msg && msg.logtype === 'full') {
         this.terminal.write(msg.data.msg + "\r\n");
       }
     });
