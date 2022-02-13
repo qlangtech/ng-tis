@@ -19,7 +19,7 @@
 import {Injectable} from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
-import {CurrentCollection} from './basic.form.component';
+import {CurrentCollection, WSMessage} from './basic.form.component';
 import {Observable, Observer, Subject} from "rxjs";
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
@@ -28,6 +28,8 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/c
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 
 declare var TIS: any;
+
+export const WS_CLOSE_MSG = 'event_close_ws';
 
 // @ts-ignore
 @Injectable()
@@ -69,7 +71,11 @@ export class TISService {
       }
     );
     let observer = {
-      next: (data: Object) => {
+      next: (data: WSMessage) => {
+        if (data.logtype === WS_CLOSE_MSG) {
+          ws.close();
+          return;
+        }
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify(data));
         }
