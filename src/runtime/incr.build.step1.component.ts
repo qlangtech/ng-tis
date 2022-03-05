@@ -137,7 +137,8 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
       return tt === 'all' || this.dto.readerDesc.endType === tt;
     }
   }, {
-    name: 'sinkFactory', require: true, descFilter: (desc: Descriptor) => {
+    name: 'sinkFactory', require: true
+    , descFilter: (desc: Descriptor) => {
       let tt = desc.extractProps['targetType'];
       return tt === 'all' || this.dto.writerDesc.endType === tt;
     }
@@ -145,9 +146,6 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
 
   savePlugin = new EventEmitter<SavePluginEvent>();
   tabSelectIndex = 0;
-  // private configParamForm: FormGroup;
-
-  // @ViewChild('buildStep1ParamsSetComponent', {static: false}) buildStep1ParamsSetComponent: IncrBuildStep1ParamsSetComponent;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
@@ -190,6 +188,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
     // 当前正在 '配置' tab
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
+    e.serverForward = "coredefine:core_action:create_incr_sync_channal";
     this.savePlugin.emit(e);
     // } else {
     // 当前正在 '执行脚本' tab
@@ -221,8 +220,10 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
-
     if (event.saveSuccess) {
+      if (event.hasBiz()) {
+        this.dto.incrScriptMainFileContent = event.biz().incrScriptMainFileContent;
+      }
       this.nextStep.emit(this.dto);
     }
 
