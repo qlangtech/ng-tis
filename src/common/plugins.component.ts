@@ -341,11 +341,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
 
-    let postData: Array<Item[]> = [];
-    heteroList.forEach((h) => {
-      postData.push(h.items);
-    });
 
+    let items: Array<Item[]> = [];
+    heteroList.forEach((h) => {
+      items.push(h.items);
+    });
+    let postData: any = {"items": items};
+    if (savePluginEvent.serverForward) {
+      postData.serverForward = savePluginEvent.serverForward;
+    }
     //  console.log([heteroList.length, heteroList]);
 
     basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {
@@ -584,6 +588,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       <nz-form-item>
           <nz-form-label [nzSpan]="5" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+              <ng-container [ngSwitch]="_pp.primaryVal">
+                  <ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
                       <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
@@ -604,7 +610,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   </ng-container>
                   <ng-container *ngSwitchCase="5">
                       <!--ENUM-->
-                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
+                      <nz-select nzShowSearch [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label" [nzValue]="e.val"></nz-option>
                        </nz-select>
                   </ng-container>
@@ -615,48 +621,51 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
-    <nz-input-group [nzSuffix]="suffixTemplate">
-      <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
-    </nz-input-group>
-    <ng-template #suffixTemplate>
-      <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
-    </ng-template>
+                      <nz-input-group [nzSuffix]="suffixTemplate">
+                        <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
+                      </nz-input-group>
+                      <ng-template #suffixTemplate>
+                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+                      </ng-template>
                   </ng-container>
                  <ng-container *ngSwitchCase="8">
                      <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)" [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
                       <nz-checkbox-group [ngModel]="_pp.getEProp('enum')" (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
                  </ng-container>
               </span>
-              <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
-              <ng-container *ngIf="this.createRouter && !this.disabled">
-                  <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
-                  <nz-dropdown-menu #menu="nzDropdownMenu">
-                      <ul nz-menu>
-                          <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                              <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
-                          </li>
-                          <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
-                              <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
-                              <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
-                          </li>
-                          <li nz-menu-item>
-                              <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
-                          </li>
-                      </ul>
-                  </nz-dropdown-menu>
+                      <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
+                      <ng-container *ngIf="this.createRouter && !this.disabled">
+                          <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
+                          <nz-dropdown-menu #menu="nzDropdownMenu">
+                              <ul nz-menu>
+                                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                                      <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
+                                  </li>
+                                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
+                                      <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
+                                      <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
+                                  </li>
+                                  <li nz-menu-item>
+                                      <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
+                                  </li>
+                              </ul>
+                          </nz-dropdown-menu>
+                      </ng-container>
+                      <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
+                      <ng-template #helpTpl>
+                          <markdown class="tis-markdown" [data]="descContent"></markdown>
+                      </ng-template>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="false">
+                      <nz-select [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
+                          <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
+                      </nz-select>
+                      <div *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
+                          <item-prop-val [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
+                      </div>
+                  </ng-container>
               </ng-container>
-              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
-              <ng-template #helpTpl>
-                  <markdown class="tis-markdown" [data]="descContent"></markdown>
-              </ng-template>
-              <nz-select *ngIf="!_pp.primaryVal" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
-                  <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
-              </nz-select>
           </nz-form-control>
-          <div *ngIf="!_pp.primaryVal" class="sub-prop">
-              <!-- {{_pp.descVal.propVals|json}} -->
-              <item-prop-val [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
-          </div>
       </nz-form-item>  `,
   styles: [
       `
@@ -673,8 +682,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
           .sub-prop {
               clear: both;
-              margin-left: 50px;
-              background-color: #eeeeee;
+              margin-left: 0px;
+              background-color: #f6f6f6;
+              padding: 3px;
+              border-left: 1px solid #cccccc;
+              border-bottom: 1px solid #cccccc;
+              border-right: 1px solid #cccccc;
           }
 
           .has-help-url {
@@ -747,7 +760,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     let descName = targetPlugin.descName;
     let url = "/coredefine/corenodemanage.ajax";
 
-    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero )
+    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
       .then((r) => {
         if (!r.success) {
           if (r.bizresult.notFoundExtension) {
@@ -817,10 +830,16 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
   toggleDescContentShow() {
     if (this.asyncHelp) {
+
       if (!this.descContent && !this.descContentShow) {
         let url = "/coredefine/corenodemanage.ajax";
-        console.log(this.pluginMeta);
-        this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams([this.pluginMeta])}`).then((r) => {
+
+        let metas: PluginType[] = [];
+        if (this.pluginMeta) {
+          metas = [this.pluginMeta];
+        }
+
+        this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams(metas)}`).then((r) => {
           this.descContent = r.bizresult;
           this.descContentShow = true;
           // console.log(this.descContentShow);

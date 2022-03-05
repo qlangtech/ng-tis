@@ -46,6 +46,7 @@ export declare type PluginType = PluginName | PluginMeta;
 
 export const TYPE_ENUM = 5;
 export const TYPE_PLUGIN_SELECTION = 6;
+export const KEY_DEFAULT_VALUE = 'dftVal';
 
 // 某一插件某一属性行
 export class ItemPropVal {
@@ -65,10 +66,13 @@ export class ItemPropVal {
   has_set_primaryVal = false;
   disabled = false;
 
+  constructor(public updateModel = false) {
+  }
+
   set eprops(vals: { String: any }) {
     // @ts-ignore
     this._eprops = vals || {};
-    this.dftVal = this._eprops['dftVal'];
+    this.dftVal = this._eprops[KEY_DEFAULT_VALUE];
     this.placeholder = this._eprops['placeholder'] || '';
   }
 
@@ -85,8 +89,6 @@ export class ItemPropVal {
     this.setEProp(KEY_OPTIONS_ENUM, enums);
   }
 
-  constructor(public updateModel = false) {
-  }
 
   get label(): string {
     let label = this._eprops['label'];
@@ -284,12 +286,18 @@ export class Item {
     return newVal;
   }
 
-  constructor(public dspt: Descriptor) {
+  constructor(public dspt: Descriptor, public updateModel = false) {
     if (dspt) {
       this.impl = dspt.impl;
     }
   }
 
+  public get implVal() {
+    if (!this.updateModel) {
+
+    }
+    return '';
+  }
 
   public wrapItemVals(): void {
     let newVals = {};
@@ -355,7 +363,7 @@ export class Item {
       let ip: ItemPropVal | { [key: string]: ItemPropVal } = this.vals[attr.key];
       if (!ip) {
         // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
-        ip = attr.addNewEmptyItemProp(true);
+        ip = attr.addNewEmptyItemProp(this.updateModel);
         this.vals[attr.key] = ip;
       }
       // console.log(ip);
@@ -411,22 +419,31 @@ export class AttrDesc {
     // 当type为6时，options应该有内容
     desVal.options = this.options;
     if (this.describable) {
-      desVal.descVal = this.createDescribleVal(new Item(null));
+      desVal.descVal = this.createDescribleVal(new Item(null, updateModel));
+      let displayName = this.eprops[KEY_DEFAULT_VALUE];
+      // displayName
+      if (!updateModel && displayName) {
+        // 在新建时候
+        for (let e of desVal.descVal.descriptors.values()) {
+          if (displayName === e.displayName) {
+            desVal.descVal.impl = e.impl;
+            desVal.descVal.dspt = e;
+            break;
+          }
+        }
+      }
     }
     return desVal;
   }
 
   public createDescribleVal(v: Item): DescribleVal {
-    let descVal = new DescribleVal(v.dspt);
+    let descVal = new DescribleVal(v.dspt, v.updateModel);
     descVal.displayName = v.displayName;
     // descVal.impl = v.impl;
     descVal.vals = v.vals;
     this.descriptors.forEach((entry) => {
       descVal.descriptors.set(entry.impl, entry);
     });
-    // for (let impl in this.descriptors.) {
-    //
-    // }
     return descVal;
   }
 }
@@ -505,7 +522,9 @@ export class SavePluginEvent {
   // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
   public verifyConfig = false;
   public notShowBizMsg = false;
-
+  // 顺带要在服务端执行一段脚本
+  // namespace:corename:method
+  public serverForward;
   public basicModule: BasicFormComponent;
 }
 

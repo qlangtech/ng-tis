@@ -175,21 +175,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           }
           let rawProp: ItemPropVal;
           let rawVal: any;
-
-          // if (subForm) {
-          //   console.log([key, subForm[key]]);
-          // }
-          // if (subForm
-          //   && (rawProp = subForm[key]) !== undefined
-          //   && (rawVal = rawProp.primary) !== undefined
-          // ) {
-          //    // Item.wrapItemPropVal(v, at);
-          //   if (!((typeof rawVal) === 'object')) {
-          //     propVal.primary = rawVal;
-          //   } else {
-          //
-          //   }
-          // }
           if (result[key]) {
             // console.log([key, result[key], subForm[key]]);
             let colItemChecked: (optVal) => boolean = (_) => true;
@@ -205,30 +190,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
               rawProp = subForm[key];
 
               if (fieldDesc.isMultiSelectableType) {
-               // let colItemChecked: (optVal) => boolean = (_) => true;
+                // let colItemChecked: (optVal) => boolean = (_) => true;
                 selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
                 if (result[key]) {
                   colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
                 }
-              //  propVal.setPropValEnums(result[key], colItemChecked);
+                //  propVal.setPropValEnums(result[key], colItemChecked);
               } else {
-               // console.log([rawProp, rawProp.primary, propVal]);
                 propVal.primary = rawProp.primary;
               }
-
-              // selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
-              // if (fieldDesc.isMultiSelectableType && result[key]) {
-              //   // console.log(rawVal);
-              //   // if (!Array.isArray(rawVal)) {
-              //   //   throw new Error(`rawProp must be a type of Array,but now is :${typeof rawVal}`);
-              //   // }
-              //   // let selectedItems: Array<any> = rawVal;
-              //   // console.log(selectedItems);
-              //   colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
-              // }
             }
-            // console.log([key, subForm[key]], selOpts);
-            // MULTI_SELECTABLE: please reference to com.qlangtech.tis.plugin.annotation.FormFieldType
             propVal.setPropValEnums(result[key], colItemChecked);
           } else {
             if (subForm
@@ -239,7 +210,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
             }
           }
           return propVal;
-        }, true);
+        }, meta.setted);
         return hlist;
       });
   }
@@ -501,7 +472,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       }
     }
 
-    console.log([meta, this.subFieldForms.get(meta.id)]);
+    // console.log([meta, this.subFieldForms.get(meta.id)]);
     DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id), this.subFormHetero.descriptorList[0])
       .then((hlist: HeteroList[]) => {
         this.openSubDetailForm(meta, pluginMeta, hlist);

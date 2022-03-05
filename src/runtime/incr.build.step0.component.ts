@@ -57,7 +57,7 @@ export class IncrBuildStep0Component extends AppFormComponent implements AfterCo
 
   public createIncrSyncChannal(): void {
 
-    this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=create_incr_sync_channal')
+    this.httpPost('/coredefine/corenodemanage.ajax', 'action=core_action&emethod=start_incr_sync_channal')
       .then((r) => {
         if (r.success) {
           let dto: IndexIncrStatus = r.bizresult;
