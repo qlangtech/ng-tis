@@ -231,7 +231,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
       let desc: Descriptor = h.descriptors.get(item.impl);
       if (desc.subForm) {
-        i = new Item(desc); // Object.assign(, {"displayName": item.displayName}, {"vals": subFormVals});
+        i = new Item(desc);
         i.displayName = item.displayName;
         let rawVal = item.vals;
         // delete item.vals;
@@ -239,6 +239,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let subFormVals: { [tabname: string]: { [propKey: string]: ItemPropVal } } = {};
         for (let subFieldPk in rawVal) {
           subFrom = rawVal[subFieldPk];
+          // console.log([subFrom, desc]);
           let ii = new Item(desc);
           ii.vals = subFrom;
           ii.wrapItemVals();
@@ -252,23 +253,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           // console.log(i);
         }
         i.vals = subFormVals;
-
-
-        // let a = {"aaa": new ItemPropVal()};
-        //
-        // let vvals: { [key: string]: ItemPropVal } | { string?: { string?: ItemPropVal } } = {};
-        //
-        // vvals = a;
-        //
-        // i.vals = a;
-        // for (let key in i) {
-        //   console.log({key: key, 'val': i[key]});
-        // }
-        // console.log(i);
       } else {
         i = Object.assign(new Item(desc), item);
         i.wrapItemVals();
       }
+
       items.push(i);
     });
     // console.log(items[0].itemVals);
@@ -791,12 +780,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                              // enum
-                              // db detail
-                              // let item: Item = Object.assign(new Item(d), );
-                              // let nn = new ValOption();
-                              // n.name = biz.detailed.identityName;
-                              // n.impl = d.impl;
+                // enum
+                // db detail
+                // let item: Item = Object.assign(new Item(d), );
+                // let nn = new ValOption();
+                // n.name = biz.detailed.identityName;
+                // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;

@@ -511,7 +511,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
                 , (subFieldForms: Map<string /*tableName*/, { string?: ItemPropVal }>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
 
-                  DataxAddStep4Component.processSubFormHeteroList(this, m, meta, subFieldForms.get(meta.id), subFormHetero.descriptorList[0])
+                  DataxAddStep4Component.processSubFormHeteroList(this, m, meta, subFieldForms.get(meta.id) // , subFormHetero.descriptorList[0]
+                  )
                     .then((hlist: HeteroList[]) => {
                       // this.openSubDetailForm(meta, pluginMeta, hlist);
                       this.selectedTableHeteroList = hlist;
