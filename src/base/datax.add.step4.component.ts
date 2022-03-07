@@ -22,7 +22,7 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, KEY_OPTIONS_ENUM, OptionEnum, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult} from "../common/tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, KEY_OPTIONS_ENUM, OptionEnum, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_PLUGIN_MULTI_SELECTION} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
@@ -94,7 +94,8 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
                                   <nz-tag *ngSwitchCase="true" [nzColor]="'#87d068'"><i nz-icon nzType="check" nzTheme="outline"></i>已设置</nz-tag>
                                   <nz-tag *ngSwitchCase="false" [nzColor]="'#999999'"><i nz-icon nzType="warning" nzTheme="outline"></i>未设置</nz-tag>
                               </ng-container>
-                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>
+                              <!--                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>-->
+                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">设置</button>
                           </td>
                       </tr>
                       </tbody>
@@ -159,7 +160,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   }
 
   static processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
-    , meta: ISubDetailTransferMeta, subForm: { string?: ItemPropVal }, subFormDesc: Descriptor): Promise<HeteroList[]> {
+    , meta: ISubDetailTransferMeta, subForm: { string?: ItemPropVal }): Promise<HeteroList[]> {
     let metaParam = PluginsComponent.getPluginMetaParams([pluginMeta]);
     return baseCpt.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
@@ -167,50 +168,98 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        let result: { [subFormFieldName: string]: Array<{ name: string, value: string }> } = r.bizresult;
-        let hlist: HeteroList[] = PluginsComponent.pluginDesc(subFormDesc, pluginMeta, (key, propVal: ItemPropVal) => {
-          if (propVal.pk) {
-            propVal.primary = meta.id;
-            return propVal;
-          }
-          let rawProp: ItemPropVal;
-          let rawVal: any;
-          if (result[key]) {
-            // console.log([key, result[key], subForm[key]]);
-            let colItemChecked: (optVal) => boolean = (_) => true;
-            // TODO:
-            let fieldDesc: AttrDesc = subFormDesc.attrs.find((attr) => {
-              return key === attr.key
-            });
-            if (!fieldDesc) {
-              throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
-            }
-            let selOpts: Array<OptionEnum> = [];
-            if (subForm) {
-              rawProp = subForm[key];
 
-              if (fieldDesc.isMultiSelectableType) {
-                // let colItemChecked: (optVal) => boolean = (_) => true;
-                selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
-                if (result[key]) {
-                  colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
-                }
-                //  propVal.setPropValEnums(result[key], colItemChecked);
-              } else {
-                propVal.primary = rawProp.primary;
+        let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
+        // console.log(h.items);
+        let subFormDesc: Descriptor = h.descriptorList[0];
+        // let result: { [subFormFieldName: string]: Array<{ name: string, value: string }> } = {}; // r.bizresult;
+        let hlist: HeteroList[] = // [h];
+          PluginsComponent.pluginDesc(subFormDesc, pluginMeta, (key, propVal: ItemPropVal) => {
+            if (propVal.pk) {
+              propVal.primary = meta.id;
+              propVal.disabled = true;
+              return propVal;
+            }
+            // ==================================================
+            if (!subForm) {
+              return propVal;
+            }
+            // console.log(subForm);
+            let rawProp: ItemPropVal = subForm[key];
+            let rawVal: any;
+
+            if (propVal.type === TYPE_PLUGIN_MULTI_SELECTION) {
+              let allCols: Array<{ val: string, label: string }> = propVal.getEProp(KEY_OPTIONS_ENUM);
+              // console.log([key, result[key], subForm[key]]);
+              let colItemChecked: (optVal) => boolean = (_) => true;
+              // TODO:
+              let fieldDesc: AttrDesc = subFormDesc.attrs.find((attr) => {
+                return key === attr.key
+              });
+              if (!fieldDesc) {
+                throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
+              }
+              let selOpts: Array<OptionEnum> = [];
+              // console.log(subForm);
+              // rawProp = subForm[key];
+
+              // if (fieldDesc.isMultiSelectableType) {
+              // let colItemChecked: (optVal) => boolean = (_) => true;
+              selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
+              // if (result[key]) {
+              colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
+              // }
+              //  propVal.setPropValEnums(result[key], colItemChecked);
+              // } else {
+              //   propVal.primary = rawProp.primary;
+              // }
+
+              propVal.setPropValEnums(allCols.map((c) => {
+                return {"name": c.label, "value": c.val}
+              }), colItemChecked);
+            } else if (!propVal.primaryVal) {
+              console.log([rawProp, propVal]);
+            } else {
+
+              if (subForm
+                && (rawProp = subForm[key]) !== undefined
+                && (rawVal = rawProp.primary) !== undefined
+              ) {
+                propVal.primary = rawVal;
               }
             }
-            propVal.setPropValEnums(result[key], colItemChecked);
-          } else {
-            if (subForm
-              && (rawProp = subForm[key]) !== undefined
-              && (rawVal = rawProp.primary) !== undefined
-            ) {
-              propVal.primary = rawVal;
-            }
-          }
-          return propVal;
-        }, meta.setted);
+
+            // if (result[key]) {
+            //   // console.log([key, result[key], subForm[key]]);
+            //   let colItemChecked: (optVal) => boolean = (_) => true;
+            //   // TODO:
+            //   let fieldDesc: AttrDesc = subFormDesc.attrs.find((attr) => {
+            //     return key === attr.key
+            //   });
+            //   if (!fieldDesc) {
+            //     throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
+            //   }
+            //   let selOpts: Array<OptionEnum> = [];
+            //   if (subForm) {
+            //     rawProp = subForm[key];
+            //
+            //     if (fieldDesc.isMultiSelectableType) {
+            //       // let colItemChecked: (optVal) => boolean = (_) => true;
+            //       selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
+            //       if (result[key]) {
+            //         colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
+            //       }
+            //       //  propVal.setPropValEnums(result[key], colItemChecked);
+            //     } else {
+            //       propVal.primary = rawProp.primary;
+            //     }
+            //   }
+            //   propVal.setPropValEnums(result[key], colItemChecked);
+            // } else {
+
+            // }
+            return propVal;
+          }, meta.setted);
         return hlist;
       });
   }
@@ -225,6 +274,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         }
         let subFieldForms: Map<string /*tableName*/, { string?: ItemPropVal }> = new Map();
         let subFormHetero: HeteroList = hList[0];
+        // console.log(subFormHetero);
         let item: Item = null;
         let subForm: { string?: ItemPropVal } = null;
         //  let desc: Descriptor = subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
@@ -258,6 +308,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!desc.subForm) {
           throw new Error("readerDescriptorImpl:" + readerDescriptorImpl + ",desc:" + desc.impl + " must has subForm");
         }
+
 
         subFieldFormsCallback(subFieldForms, subFormHetero, desc);
 
@@ -432,7 +483,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
    * @param data
    */
   tableColsSelect(event: MouseEvent, meta: ISubDetailTransferMeta) {
-
+    // console.log(meta);
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(this.dto.readerDescriptor.displayName, meta.fieldName, this.getDataXReaderTargetName())];
     // console.log(meta.id);
@@ -440,27 +491,27 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
     if (ip instanceof ItemPropVal) {
       throw new Error("illegal type");
     }
-    // console.log("==================");
+    // console.log(ip);
     let cachedVals: { [key: string]: ItemPropVal } = ip;
     // console.log(cachedVals);
     if (cachedVals) {
       // console.log(cachedVals);
       let allHasFillEnums = false;
-      for (let fieldKey in meta.behaviorMeta.onClickFillData) {
-        // console.log(fieldKey);
-        let pv: ItemPropVal = cachedVals[fieldKey];
-        // console.log(pv.getEProp("enum"));
-        if (!pv) {
-          throw new Error(`fieldKey:${fieldKey} relevant ItemPropVal can not be null`);
-        }
-        // console.log(pv);
-        let enums: Array<any> = pv.getEProp(KEY_OPTIONS_ENUM);
-        if (enums && enums.length > 0) {
-          //  allHasFillEnums = true;
-          break;
-        }
-        // console.log("allHasFillEnums：" + allHasFillEnums + " enums.length" + enums.length);
-      }
+      // for (let fieldKey in meta.behaviorMeta.onClickFillData) {
+      //   // console.log(fieldKey);
+      //   let pv: ItemPropVal = cachedVals[fieldKey];
+      //   // console.log(pv.getEProp("enum"));
+      //   if (!pv) {
+      //     throw new Error(`fieldKey:${fieldKey} relevant ItemPropVal can not be null`);
+      //   }
+      //   // console.log(pv);
+      //   let enums: Array<any> = pv.getEProp(KEY_OPTIONS_ENUM);
+      //   if (enums && enums.length > 0) {
+      //     //  allHasFillEnums = true;
+      //     break;
+      //   }
+      //   // console.log("allHasFillEnums：" + allHasFillEnums + " enums.length" + enums.length);
+      // }
 
       if (allHasFillEnums) {
         let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], pluginMeta[0]);
@@ -472,11 +523,12 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       }
     }
 
-    // console.log([meta, this.subFieldForms.get(meta.id)]);
-    DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id), this.subFormHetero.descriptorList[0])
-      .then((hlist: HeteroList[]) => {
-        this.openSubDetailForm(meta, pluginMeta, hlist);
-      });
+    // console.log([meta, this.subFieldForms.get(meta.id)], this.subFormHetero.descriptorList[0]);
+    DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id) // , this.subFormHetero.descriptorList[0]
+    ).then((hlist: HeteroList[]) => {
+      // console.log(hlist[0].items[0]);
+      this.openSubDetailForm(meta, pluginMeta, hlist);
+    });
 
     // let metaParam = PluginsComponent.getPluginMetaParams(pluginMeta);
     // this.httpPost('/coredefine/corenodemanage.ajax'
@@ -641,7 +693,7 @@ interface ISubDetailClickBehaviorMeta {
 
 export interface ISubDetailTransferMeta {
   id: string;
-  behaviorMeta: ISubDetailClickBehaviorMeta;
+  // behaviorMeta: ISubDetailClickBehaviorMeta;
   fieldName: string;
   idList: Array<string>;
   // 是否已经设置子表单

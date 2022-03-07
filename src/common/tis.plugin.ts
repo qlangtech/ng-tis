@@ -46,6 +46,7 @@ export declare type PluginType = PluginName | PluginMeta;
 
 export const TYPE_ENUM = 5;
 export const TYPE_PLUGIN_SELECTION = 6;
+export const TYPE_PLUGIN_MULTI_SELECTION = 8;
 export const KEY_DEFAULT_VALUE = 'dftVal';
 
 // 某一插件某一属性行
@@ -402,7 +403,7 @@ export class AttrDesc {
 
   // MULTI_SELECTABLE
   public get isMultiSelectableType(): boolean {
-    return this.type === 8;
+    return this.type === TYPE_PLUGIN_MULTI_SELECTION;
   }
 
   /**
