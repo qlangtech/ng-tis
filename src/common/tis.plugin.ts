@@ -19,20 +19,6 @@
 import {EventEmitter} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 
-/**
- * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
- * <p>
- *   This program is free software: you can use, redistribute, and/or modify
- *   it under the terms of the GNU Affero General Public License, version 3
- *   or later ("AGPL"), as published by the Free Software Foundation.
- * <p>
- *  This program is distributed in the hope that it will be useful, but WITHOUT
- *  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- *   FITNESS FOR A PARTICULAR PURPOSE.
- * <p>
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
@@ -263,6 +249,7 @@ export class Item {
     if (at.describable) {
       let d = at.descriptors.get(v.impl);
       if (!d) {
+       // console.log([at, v]);
         throw new Error(`impl:${v.impl} can not find relevant descriptor`);
       }
       let ii: Item = Object.assign(new Item(d), v);
@@ -275,10 +262,20 @@ export class Item {
           // console.log(v);
           throw new Error("expect val type is array but is not");
         }
-        let cols: Array<{ name: string, value: string }> = v.map((r) => {
-          return {name: r, value: r}
+        let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
+        if (!selectableCol) {
+          throw new Error("selectableCol can not be null");
+        }
+        // let cols: Array<{ name: string, value: string }> = v.map((r) => {
+        //   return {name: r, value: r}
+        // });
+        let cols: Array<{ name: string, value: string }> = selectableCol.map((c) => {
+          return {"name": c.label, "value": c.val}
         });
-        newVal.setPropValEnums(cols);
+        // console.log([selectableCol, cols]);
+        newVal.setPropValEnums(cols, (sval) => {
+          return !!v.find((optVal) => optVal === sval);
+        });
       } else {
         newVal._primaryVal = v;
       }
@@ -306,6 +303,7 @@ export class Item {
     let newVal: ItemPropVal;
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
+      // console.log([at.key, v]);
       newVal = Item.wrapItemPropVal(v, at);
       // console.log(at.key + ":" + v);
       // if (v === undefined || v === null) {

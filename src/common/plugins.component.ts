@@ -170,7 +170,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * 当前选中的DS plugin 描述信息
    * @param desc
    */
-  public static pluginDesc(desc: Descriptor, pluginCategory: PluginType, itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
+  public static pluginDesc(desc: Descriptor, pluginCategory: PluginType
+    , itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal, updateModel?: boolean): HeteroList[] {
     if (!desc) {
       throw new Error("param desc can not be null");
     }
@@ -253,6 +254,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           // console.log(i);
         }
         i.vals = subFormVals;
+        // i.subFormRawVals = rawVal;
       } else {
         i = Object.assign(new Item(desc), item);
         i.wrapItemVals();
@@ -780,12 +782,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                // enum
-                // db detail
-                // let item: Item = Object.assign(new Item(d), );
-                // let nn = new ValOption();
-                // n.name = biz.detailed.identityName;
-                // n.impl = d.impl;
+                              // enum
+                              // db detail
+                              // let item: Item = Object.assign(new Item(d), );
+                              // let nn = new ValOption();
+                              // n.name = biz.detailed.identityName;
+                              // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
