@@ -152,15 +152,15 @@ enum NodeType {
                   <div *ngIf="selectedTable && selectedTable.tableName">
 
                       <tis-page-header [showBreadcrumbRoot]="false" size="sm" title="表信息">
-<!--                          <tis-header-tool>-->
-<!--                              <button nz-button nzType="default" (click)="editTable(selectedTable)">-->
-<!--                                  <i nz-icon nzType="edit" nzTheme="outline"></i>-->
-<!--                                  编辑-->
-<!--                              </button>&nbsp;-->
-<!--                              <button nz-button nzType="primary" nzDanger (click)="deleteTable()">-->
-<!--                                  <i nz-icon nzType="delete" nzTheme="outline"></i>删除-->
-<!--                              </button>-->
-<!--                          </tis-header-tool>-->
+                          <!--                          <tis-header-tool>-->
+                          <!--                              <button nz-button nzType="default" (click)="editTable(selectedTable)">-->
+                          <!--                                  <i nz-icon nzType="edit" nzTheme="outline"></i>-->
+                          <!--                                  编辑-->
+                          <!--                              </button>&nbsp;-->
+                          <!--                              <button nz-button nzType="primary" nzDanger (click)="deleteTable()">-->
+                          <!--                                  <i nz-icon nzType="delete" nzTheme="outline"></i>删除-->
+                          <!--                              </button>-->
+                          <!--                          </tis-header-tool>-->
                       </tis-page-header>
 
                       <tis-plugins [getCurrentAppCache]="true" [pluginMeta]="selectedTablePluginMeta" [showSaveButton]="updateMode" [disabled]="!updateMode" [formControlSpan]="formControlSpan"
@@ -504,7 +504,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
                 throw new Error("targetNode must be present");
               }
               this.selectedDb = new DbPojo();
-              let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, "selectedTabs", (DATAX_PREFIX_DB + dbName));
+              let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
               this.selectedTablePluginMeta = [m];
               let meta = <ISubDetailTransferMeta>{id: event.name};
 

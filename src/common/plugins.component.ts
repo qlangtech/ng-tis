@@ -231,6 +231,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     h.items.forEach((item) => {
 
       let desc: Descriptor = h.descriptors.get(item.impl);
+      // console.log([item.impl, desc]);
       if (desc.subForm) {
         i = new Item(desc);
         i.displayName = item.displayName;
@@ -240,7 +241,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let subFormVals: { [tabname: string]: { [propKey: string]: ItemPropVal } } = {};
         for (let subFieldPk in rawVal) {
           subFrom = rawVal[subFieldPk];
-          // console.log([subFrom, desc]);
+           // console.log([subFrom, desc]);
           let ii = new Item(desc);
           ii.vals = subFrom;
           ii.wrapItemVals();
@@ -286,12 +287,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-    }).catch((e) => {
-      // console.log("================ error occur");
-      // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
-      callback(false, null, false);
-      throw new Error(e);
-    });
+    })
+    //   .catch((e) => {
+    //   callback(false, null, false);
+    //   throw new Error(e);
+    // });
   }
 
   public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
@@ -642,10 +642,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                               </ul>
                           </nz-dropdown-menu>
                       </ng-container>
-                      <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
-                      <ng-template #helpTpl>
-                          <markdown class="tis-markdown" [data]="descContent"></markdown>
-                      </ng-template>
                   </ng-container>
                   <ng-container *ngSwitchCase="false">
                       <nz-select [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
@@ -656,6 +652,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       </div>
                   </ng-container>
               </ng-container>
+              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
+              <ng-template #helpTpl>
+                  <markdown class="tis-markdown" [data]="descContent"></markdown>
+              </ng-template>
           </nz-form-control>
       </nz-form-item>  `,
   styles: [
@@ -782,12 +782,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                              // enum
-                              // db detail
-                              // let item: Item = Object.assign(new Item(d), );
-                              // let nn = new ValOption();
-                              // n.name = biz.detailed.identityName;
-                              // n.impl = d.impl;
+                // enum
+                // db detail
+                // let item: Item = Object.assign(new Item(d), );
+                // let nn = new ValOption();
+                // n.name = biz.detailed.identityName;
+                // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -833,7 +833,6 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams(metas)}`).then((r) => {
           this.descContent = r.bizresult;
           this.descContentShow = true;
-          // console.log(this.descContentShow);
           this.cdr.detectChanges();
         });
         return;

@@ -21,8 +21,7 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
-import {Descriptor, Item, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor,  PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 
