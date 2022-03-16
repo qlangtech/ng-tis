@@ -249,7 +249,7 @@ export class Item {
     if (at.describable) {
       let d = at.descriptors.get(v.impl);
       if (!d) {
-       // console.log([at, v]);
+        // console.log([at, v]);
         throw new Error(`impl:${v.impl} can not find relevant descriptor`);
       }
       let ii: Item = Object.assign(new Item(d), v);
@@ -262,20 +262,27 @@ export class Item {
           // console.log(v);
           throw new Error("expect val type is array but is not");
         }
+       // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
         if (!selectableCol) {
           throw new Error("selectableCol can not be null");
         }
-        // let cols: Array<{ name: string, value: string }> = v.map((r) => {
-        //   return {name: r, value: r}
-        // });
-        let cols: Array<{ name: string, value: string }> = selectableCol.map((c) => {
-          return {"name": c.label, "value": c.val}
-        });
+        let cols: Array<{ name: string, value: string }> = null;
+        if (selectableCol.length < 1) {
+          cols = v.map((r) => {
+            return {name: r, value: r}
+          });
+          newVal.setPropValEnums(cols, (_) => true);
+        } else {
+          cols = selectableCol.map((c) => {
+            return {"name": c.label, "value": c.val}
+          });
+          newVal.setPropValEnums(cols, (sval) => {
+            return !!v.find((optVal) => optVal === sval);
+          });
+        }
         // console.log([selectableCol, cols]);
-        newVal.setPropValEnums(cols, (sval) => {
-          return !!v.find((optVal) => optVal === sval);
-        });
+
       } else {
         newVal._primaryVal = v;
       }
@@ -419,15 +426,17 @@ export class AttrDesc {
     desVal.options = this.options;
     if (this.describable) {
       desVal.descVal = this.createDescribleVal(new Item(null, updateModel));
-      let displayName = this.eprops[KEY_DEFAULT_VALUE];
-      // displayName
-      if (!updateModel && displayName) {
-        // 在新建时候
-        for (let e of desVal.descVal.descriptors.values()) {
-          if (displayName === e.displayName) {
-            desVal.descVal.impl = e.impl;
-            desVal.descVal.dspt = e;
-            break;
+      if (this.eprops) {
+        let displayName = this.eprops[KEY_DEFAULT_VALUE];
+        // displayName
+        if (!updateModel && displayName) {
+          // 在新建时候
+          for (let e of desVal.descVal.descriptors.values()) {
+            if (displayName === e.displayName) {
+              desVal.descVal.impl = e.impl;
+              desVal.descVal.dspt = e;
+              break;
+            }
           }
         }
       }

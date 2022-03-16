@@ -22,7 +22,7 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, KEY_OPTIONS_ENUM, OptionEnum, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_PLUGIN_MULTI_SELECTION} from "../common/tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, KEY_OPTIONS_ENUM, OptionEnum, PluginMeta, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_PLUGIN_MULTI_SELECTION} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
@@ -153,11 +153,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
 
-  public static dataXReaderSubFormPluginMeta(readerDescName: string, subformFieldName: string, dataXReaderTargetName: string): PluginType {
+  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string, subformFieldName: string, dataXReaderTargetName: string): PluginType {
     return {
       name: "dataxReader", require: true
-      , extraParam: `targetDescriptorName_${readerDescName},subFormFieldName_${subformFieldName},${dataXReaderTargetName}`
+      , extraParam: `targetDescriptorImpl_${readerDescImpl},targetDescriptorName_${readerDescName},subFormFieldName_${subformFieldName},${dataXReaderTargetName}`
     };
+
+    // return {
+    //   name: "dataxReader", require: true
+    //   , extraParam: `${dataXReaderTargetName}`
+    // };
   }
 
   static processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
@@ -285,10 +290,27 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         let item: Item = null;
         let subForm: { string?: ItemPropVal } = null;
         //  let desc: Descriptor = subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
-        let desc: Descriptor = subFormHetero.descriptors.get(readerDescriptorImpl);
 
+        if (!readerDescriptorImpl) {
+          item = subFormHetero.items[0];
+          if (!item) {
+            throw new Error("readerDescriptorImpl is undefined and first item also is undefined");
+          }
+          readerDescriptorImpl = item.impl;
+        }
+
+        if (!readerDescriptorImpl) {
+          throw new Error("readerDescriptorImpl can not be undefined");
+        }
+
+        let desc: Descriptor = subFormHetero.descriptors.get(readerDescriptorImpl);
+        if (!desc) {
+          // console.log(subFormHetero.descriptors.keys());
+          throw new Error("readerDescriptorImpl:" + readerDescriptorImpl);
+        }
         for (let itemIdx = 0; itemIdx < subFormHetero.items.length; itemIdx++) {
           item = subFormHetero.items[itemIdx];
+         // console.log(item);
           for (let tabKey in item.vals) {
             /**==========================
              *START: 删除历史脏数据保护措施
@@ -355,9 +377,10 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   protected initialize(app: CurrentCollection): void {
 
-    DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], this.dto.readerDescriptor.impl
+    // console.log(this.dto.readerDescriptor);
+    DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
       , (subFieldForms: Map<string /*tableName*/, { string?: ItemPropVal }>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-        // console.log(readerDesc);
+        // console.log(subFieldForms);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         readerDesc.subFormMeta.idList.forEach((subformId) => {
@@ -431,7 +454,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   private getPluginMetas(): PluginType[] {
     return [{
       name: "dataxReader", require: true
-      , extraParam: `targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,${this.getDataXReaderTargetName()},maxReaderTableCount_${!this.dto.writerDescriptor || (this.dto.writerDescriptor && this.dto.writerDescriptor.extractProps['supportMultiTable']) ? 9999 : 1}`
+      , extraParam: `targetDescriptorImpl_${this.dto.readerDescriptor.impl},targetDescriptorName_${this.dto.readerDescriptor.displayName},subFormFieldName_selectedTabs,${this.getDataXReaderTargetName()},maxReaderTableCount_${!this.dto.writerDescriptor || (this.dto.writerDescriptor && this.dto.writerDescriptor.extractProps['supportMultiTable']) ? 9999 : 1}`
     }];
   }
 
@@ -492,7 +515,8 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   tableColsSelect(event: MouseEvent, meta: ISubDetailTransferMeta) {
     // console.log(meta);
     let pluginMeta: PluginType[]
-      = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(this.dto.readerDescriptor.displayName, meta.fieldName, this.getDataXReaderTargetName())];
+      = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
+      this.dto.readerDescriptor.displayName, this.dto.readerDescriptor.impl, meta.fieldName, this.getDataXReaderTargetName())];
     // console.log(meta.id);
     let ip = this.subFormHetero.items[0].vals[meta.id];
     if (ip instanceof ItemPropVal) {
@@ -576,6 +600,12 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   private openSubDetailForm(meta: ISubDetailTransferMeta, pluginMeta: PluginType[], hlist: HeteroList[]) {
     let detailId: string = meta.id;
+    // console.log(pluginMeta);
+    pluginMeta = pluginMeta.map((pm) => {
+      let m: PluginMeta = <any>pm;
+      // 主要目的是将subFormPlugin的desc信息去除掉
+      return {name: m.name, require: m.require, extraParam: m.extraParam + ",subformDetailIdValue_" + detailId};
+    });
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
       nzWidth: "60%",
       nzTitle: `设置 ${detailId}`,
