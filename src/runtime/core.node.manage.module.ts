@@ -59,6 +59,7 @@ import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {IncrBuildStep4RunningTabBaseComponent} from "./incr.build.step4.running.tab-base.component";
 import {LineChartComponent} from "./line.chart.component";
+import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component";
 
 
 @NgModule({
@@ -76,7 +77,7 @@ import {LineChartComponent} from "./line.chart.component";
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
     , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent,
     // IncrBuildStep2Component,
-    IncrBuildStep3Component, IncrBuildStep4RunningComponent
+    IncrBuildStep3Component, IncrBuildStep4RunningComponent , IncrBuildStep4StopedComponent
   ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色

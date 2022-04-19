@@ -262,7 +262,7 @@ export class Item {
           // console.log(v);
           throw new Error("expect val type is array but is not");
         }
-       // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
+        // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
         if (!selectableCol) {
           throw new Error("selectableCol can not be null");
@@ -312,41 +312,11 @@ export class Item {
       let v = ovals[at.key];
       // console.log([at.key, v]);
       newVal = Item.wrapItemPropVal(v, at);
-      // console.log(at.key + ":" + v);
-      // if (v === undefined || v === null) {
-      //   return;
-      // }
-      // newVal = at.addNewEmptyItemProp(true);
-      // if (at.describable) {
-      //   let d = at.descriptors.get(v.impl);
-      //   if (!d) {
-      //     throw new Error(`impl:${v.impl} can not find relevant descriptor`);
-      //   }
-      //   let ii: Item = Object.assign(new Item(d), v);
-      //   ii.wrapItemVals();
-      //   // console.log(ii);
-      //   newVal.descVal = at.createDescribleVal(ii);
-      // } else {
-      //   if (at.isMultiSelectableType) {
-      //     if (!Array.isArray(v)) {
-      //       // console.log(v);
-      //       throw new Error("expect val type is array but is not");
-      //     }
-      //     let cols: Array<{ name: string, value: string }> = v.map((r) => {
-      //       return {name: r, value: r}
-      //     });
-      //     newVal.setPropValEnums(cols);
-      //   } else {
-      //     newVal._primaryVal = v;
-      //   }
-      //   // newVal.pk = (at.key === this.dspt.pkField);
-      // }
       if (newVal) {
         newVals[at.key] = (newVal);
       }
     });
     this.vals = newVals;
-    // console.log(this.vals);
   }
 
   public clearPropVals(dspClear = true): void {

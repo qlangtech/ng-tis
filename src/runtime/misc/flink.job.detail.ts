@@ -30,6 +30,19 @@ declare module flink.job.detail {
     name: string;
   }
 
+  export interface IncrJobStatus {
+    savepointPaths: Array<FlinkSavepoint>;
+  }
+
+  export interface FlinkSavepoint {
+    // {
+    //   "createTimestamp":1650173119716,
+    //   "path":"file:///opt/data/savepoint/savepoint_20220417132518248"
+    // }
+    createTimestamp: number;
+    path: string;
+  }
+
 
   export interface JobVertexMetrics {
     bytesRead: number;
@@ -102,6 +115,7 @@ declare module flink.job.detail {
 
   export interface FlinkJobDetail {
     clusterCfg: ClusterCfg;
+    incrJobStatus: IncrJobStatus;
     cancelable: boolean;
     duration: number;
     endTime: number;
