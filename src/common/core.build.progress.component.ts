@@ -136,18 +136,18 @@ export class ProgressTitleComponent {
                   <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
               </ng-template>
 
-              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">-->
-              <!--                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">-->
-              <!--                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">-->
-              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-              <!--                          <tis-progress [val]="t"></tis-progress>-->
-              <!--                      </li>-->
-              <!--                  </ul>-->
-              <!--                  <div style="clear: both"></div>-->
-              <!--              </nz-collapse-panel>-->
-              <!--              <ng-template #joinTpl>-->
-              <!--                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>-->
-              <!--              </ng-template>-->
+              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
+                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">
+                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
+                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
+                          <tis-progress [val]="t"></tis-progress>
+                      </li>
+                  </ul>
+                  <div style="clear: both"></div>
+              </nz-collapse-panel>
+              <ng-template #joinTpl>
+                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>
+              </ng-template>
 
 
               <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
@@ -179,6 +179,8 @@ export class ProgressTitleComponent {
 
           </nz-collapse>
       </nz-spin>
+      {{this.buildTask|json}}
+      {{liveExecLog.joinPhase|json}}
       <!--
       <nz-drawer
               [nzWrapClassName]="'get-gen-cfg-file'"
@@ -340,7 +342,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     if (this.dataxProcess) {
       this.buildTask = new BuildTask();
       this.buildTask.startPhase = 1;
-      this.buildTask.endPhase = 1;
+      this.buildTask.endPhase = 2;
     }
     if (wfid) {
       this.httpPost('/coredefine/full_build_history.ajax'
@@ -368,7 +370,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     this.msgSubject = <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?taskid=${taskid}&logtype=build_status_metrics`)
       .pipe(map((response: MessageEvent) => {
         let json = JSON.parse(response.data);
-       // console.log(json);
+        // console.log(json);
         if (json.logType && json.logType === "FULL") {
           return new WSMessage('full', json);
         } else if (json.consuming) {
@@ -379,7 +381,8 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         }
         // return new WSMessage('build_status_metrics', json);
       }));
-    this.msgSubject.subscribe((response: WSMessage): void => {});
+    this.msgSubject.subscribe((response: WSMessage): void => {
+    });
 
     // this.msgSubject.subscribe((response: WSMessage): void => {
     //   if (this.componentDestroy) {
@@ -437,7 +440,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         this.progressStat = Object.assign(new ProgressStat(), response.data);
         // let now = Date.now();
         // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
-       // console.log(this.progressStat);
+        // console.log(this.progressStat);
         this.consuming = this.progressStat.consumingTime;
         // 是否在执行中
         if (this.progressStat.state === 2 || this.progressStat.state === 22) {
@@ -451,6 +454,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         break;
       case "build_status_metrics":
         let status = response.data;
+        console.log(status);
         this.liveExecLog.dumpPhase = status.dumpPhase;
         this.liveExecLog.joinPhase = status.joinPhase;
         this.liveExecLog.buildPhase = status.buildPhase;

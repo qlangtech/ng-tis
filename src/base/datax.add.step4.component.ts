@@ -174,105 +174,9 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        // if (subForm) {
-        //   r.bizresult.items[0].vals = subForm;
-        // }
-        // console.log(r.bizresult);
         let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
-        //  console.log(h.items);
-        // h.items[0].vals = subForm;
-        // let subFormDesc: Descriptor = h.descriptorList[0];
-        // let result: { [subFormFieldName: string]: Array<{ name: string, value: string }> } = {}; // r.bizresult;
         let hlist: HeteroList[] = [h];
         return hlist;
-        // PluginsComponent.pluginDesc(subFormDesc, pluginMeta, (key, propVal: ItemPropVal) => {
-        //     if (propVal.pk) {
-        //       propVal.primary = meta.id;
-        //       propVal.disabled = true;
-        //       return propVal;
-        //     }
-        //     return propVal;
-        //     // ==================================================
-        //     // if (!subForm) {
-        //     //   return propVal;
-        //     // }
-        //     // // console.log(subForm);
-        //     // let rawProp: ItemPropVal = subForm[key];
-        //     // let rawVal: any;
-        //     //
-        //     // if (propVal.type === TYPE_PLUGIN_MULTI_SELECTION) {
-        //     //   let allCols: Array<{ val: string, label: string }> = propVal.getEProp(KEY_OPTIONS_ENUM);
-        //     //   // console.log([key, result[key], subForm[key]]);
-        //     //   let colItemChecked: (optVal) => boolean = (_) => true;
-        //     //   // TODO:
-        //     //   let fieldDesc: AttrDesc = subFormDesc.attrs.find((attr) => {
-        //     //     return key === attr.key
-        //     //   });
-        //     //   if (!fieldDesc) {
-        //     //     throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
-        //     //   }
-        //     //   let selOpts: Array<OptionEnum> = [];
-        //     //   // console.log(subForm);
-        //     //   // rawProp = subForm[key];
-        //     //
-        //     //   // if (fieldDesc.isMultiSelectableType) {
-        //     //   // let colItemChecked: (optVal) => boolean = (_) => true;
-        //     //   selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
-        //     //   // if (result[key]) {
-        //     //   colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
-        //     //   // }
-        //     //   //  propVal.setPropValEnums(result[key], colItemChecked);
-        //     //   // } else {
-        //     //   //   propVal.primary = rawProp.primary;
-        //     //   // }
-        //     //
-        //     //   propVal.setPropValEnums(allCols.map((c) => {
-        //     //     return {"name": c.label, "value": c.val}
-        //     //   }), colItemChecked);
-        //     // } else if (!propVal.primaryVal) {
-        //     //   console.log([rawProp, propVal]);
-        //     // } else {
-        //     //
-        //     //   if (subForm
-        //     //     && (rawProp = subForm[key]) !== undefined
-        //     //     && (rawVal = rawProp.primary) !== undefined
-        //     //   ) {
-        //     //     propVal.primary = rawVal;
-        //     //   }
-        //     // }
-        //
-        //     // if (result[key]) {
-        //     //   // console.log([key, result[key], subForm[key]]);
-        //     //   let colItemChecked: (optVal) => boolean = (_) => true;
-        //     //   // TODO:
-        //     //   let fieldDesc: AttrDesc = subFormDesc.attrs.find((attr) => {
-        //     //     return key === attr.key
-        //     //   });
-        //     //   if (!fieldDesc) {
-        //     //     throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
-        //     //   }
-        //     //   let selOpts: Array<OptionEnum> = [];
-        //     //   if (subForm) {
-        //     //     rawProp = subForm[key];
-        //     //
-        //     //     if (fieldDesc.isMultiSelectableType) {
-        //     //       // let colItemChecked: (optVal) => boolean = (_) => true;
-        //     //       selOpts = rawProp.getEProp(KEY_OPTIONS_ENUM) || [];
-        //     //       if (result[key]) {
-        //     //         colItemChecked = (optVal) => (selOpts.findIndex((o) => (o.val === optVal)) > -1);
-        //     //       }
-        //     //       //  propVal.setPropValEnums(result[key], colItemChecked);
-        //     //     } else {
-        //     //       propVal.primary = rawProp.primary;
-        //     //     }
-        //     //   }
-        //     //   propVal.setPropValEnums(result[key], colItemChecked);
-        //     // } else {
-        //
-        //     // }
-        //
-        //   }, meta.setted);
-
       });
   }
 
@@ -310,7 +214,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         }
         for (let itemIdx = 0; itemIdx < subFormHetero.items.length; itemIdx++) {
           item = subFormHetero.items[itemIdx];
-         // console.log(item);
+          // console.log(item);
           for (let tabKey in item.vals) {
             /**==========================
              *START: 删除历史脏数据保护措施
@@ -529,6 +433,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       if (this.subFormItemSetterFlag.get(meta.id)) {
         let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], pluginMeta[0]);
         heteroList[0].items[0].vals = cachedVals;
+        // console.log(heteroList);
         this.openSubDetailForm(meta, pluginMeta, heteroList);
         // console.log(cachedVals);
         event.stopPropagation();
@@ -542,58 +447,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       // console.log(hlist[0].items[0]);
       this.openSubDetailForm(meta, pluginMeta, hlist);
     });
-
-    // let metaParam = PluginsComponent.getPluginMetaParams(pluginMeta);
-    // this.httpPost('/coredefine/corenodemanage.ajax'
-    //   , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
-    //   .then((r) => {
-    //     if (!r.success) {
-    //       return;
-    //     }
-    //     let subForm: { string?: ItemPropVal } = this.subFieldForms.get(meta.id);
-    //     // console.log(meta.id);
-    //     // console.log(this.subFieldForms);
-    //     let result = r.bizresult;
-    //     let desc = this.subFormHetero.descriptorList[0];
-    //     let hlist: HeteroList[] = PluginsComponent.pluginDesc(desc, pluginMeta[0], (key, propVal: ItemPropVal) => {
-    //       if (propVal.pk) {
-    //         propVal.primary = meta.id;
-    //         return propVal;
-    //       }
-    //       let rawProp: ItemPropVal;
-    //       let rawVal: any;
-    //       let colItemChecked: (optVal) => boolean = (_) => false;
-    //       if (subForm && (rawProp = subForm[key]) !== undefined && (rawVal = rawProp.primary) !== undefined) {
-    //         if (!(typeof rawVal === 'object')) {
-    //           propVal.primary = rawVal;
-    //         } else {
-    //           let fieldDesc: AttrDesc = desc.attrs.find((attr) => {
-    //             return key === attr.key
-    //           });
-    //           if (!fieldDesc) {
-    //             throw new Error(`fieldKey:${key} relevant AttrDesc can not be null`);
-    //           }
-    //           // MULTI_SELECTABLE: please reference to com.qlangtech.tis.plugin.annotation.FormFieldType
-    //           if (fieldDesc.isMultiSelectableType && result[key]) {
-    //             // console.log(rawVal);
-    //             if (!Array.isArray(rawVal)) {
-    //               throw new Error(`rawProp must be a type of Array,but now is :${typeof rawVal}`);
-    //             }
-    //             let selectedItems: Array<any> = rawVal;
-    //             colItemChecked = (optVal) => (selectedItems.indexOf(optVal) > -1);
-    //           }
-    //         }
-    //       }
-    //
-    //       if (result[key]) {
-    //         // TODO:
-    //         propVal.setPropValEnums(result[key], colItemChecked);
-    //       }
-    //       return propVal;
-    //     }, true);
-    //
-    //     this.openSubDetailForm(meta, pluginMeta, hlist);
-    //   });
     event.stopPropagation();
   }
 
@@ -657,18 +510,40 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        let descMap = PluginsComponent.wrapDescriptors(r.bizresult.subformDescriptor);
-        descMap.forEach((val, key) => {
-          let subTabs: { string: any } = r.bizresult.tabVals;
-          for (let tabName in subTabs) {
 
+        let tabDesc = r.bizresult.subformDescriptor;
+        let subTabs: { string: any } = r.bizresult.tabVals;
+        for (let tabName in subTabs) {
+          if (!tabDesc[tabName]) {
+            throw new Error("table:" + tabName + " relevant descriptor can not be null")
+          }
+          let descMap = PluginsComponent.wrapDescriptors(tabDesc[tabName]);
+          descMap.forEach((val, _) => {
+            // let subTabs: { string: any } = r.bizresult.tabVals;
+            // for (let tabName in subTabs) {
             let ii = new Item(val);
             ii.vals = subTabs[tabName];
             ii.wrapItemVals();
+            // console.log([tabName, ii.vals, subTabs[tabName] , val]);
             this.subFormHetero.items[0].vals[tabName] = <{ [key: string]: ItemPropVal }>ii.vals;
             this.subFormItemSetterFlag.set(tabName, true);
-          }
-        });
+            // }
+          });
+        }
+
+
+        // let descMap = PluginsComponent.wrapDescriptors(r.bizresult.subformDescriptor);
+        // descMap.forEach((val, key) => {
+        //   let subTabs: { string: any } = r.bizresult.tabVals;
+        //   for (let tabName in subTabs) {
+        //     let ii = new Item(val);
+        //     ii.vals = subTabs[tabName];
+        //     ii.wrapItemVals();
+        //     // console.log([tabName, ii.vals, subTabs[tabName] , val]);
+        //     this.subFormHetero.items[0].vals[tabName] = <{ [key: string]: ItemPropVal }>ii.vals;
+        //     this.subFormItemSetterFlag.set(tabName, true);
+        //   }
+        // });
         selected.forEach((meta) => meta.setted = true);
         this.successNotify("已经批量设置了" + selected.length + "张新表，接下来请保存");
       });

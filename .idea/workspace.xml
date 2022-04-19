@@ -2,12 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -305,7 +309,13 @@
       <workItem from="1644814990397" duration="13159000" />
       <workItem from="1646442927194" duration="8259000" />
       <workItem from="1646619959882" duration="25460000" />
-      <workItem from="1646961618210" duration="10193000" />
+      <workItem from="1646961618210" duration="12881000" />
+      <workItem from="1647999665827" duration="1509000" />
+      <workItem from="1648271161783" duration="4623000" />
+      <workItem from="1649024742056" duration="491000" />
+      <workItem from="1649035674468" duration="710000" />
+      <workItem from="1649329146784" duration="148000" />
+      <workItem from="1649395329062" duration="24190000" />
     </task>
     <servers />
   </component>
@@ -428,7 +438,6 @@
         <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
         <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
@@ -437,7 +446,6 @@
         <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step0.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
@@ -532,7 +540,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>520</line>
+          <line>424</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -586,9 +594,9 @@
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>557</line>
-          <option name="timeStamp" value="41" />
+          <url>file://$PROJECT_DIR$/src/runtime/index.query.component.ts</url>
+          <line>25</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

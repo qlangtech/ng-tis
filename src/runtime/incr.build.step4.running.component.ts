@@ -25,6 +25,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
 import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
+import {TisResponseResult} from "../common/tis.plugin";
 
 @Component({
   template: `
@@ -57,8 +58,13 @@ import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
                               <ng-template #spaceSplit>
                                   <nz-divider nzType="vertical"></nz-divider>
                               </ng-template>
-                              <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}</span>
-                              <nz-tag *nzSpaceItem [nzColor]="this.dto.flinkJobDetail.statusColor"><i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync" nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
+                              <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}
+                                  </span>
+                              <span *nzSpaceItem>
+                              <nz-tag [nzColor]="this.dto.flinkJobDetail.statusColor">
+                                  <i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync" nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
+                              <button *ngIf="dto.state === 'STOPED'" (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary">恢复</button>
+                              </span>
                               <span *nzSpaceItem>
                                   <nz-tag style="margin: 0" *ngFor="let s of this.dto.flinkJobDetail.jobVerticesPerState" [nzColor]="s.stateColor">{{s.count}}</nz-tag>
                               </span>
@@ -126,15 +132,31 @@ import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="操作">
+
+
+                  <nz-page-header class="danger-control-title" nzTitle="一般操作">
+                  </nz-page-header>
+
+                  <nz-list class="ant-advanced-search-form ant-advanced-search-form-normal" nzBordered>
+                      <nz-list-item>
+                          <span nz-typography>停止增量实例 <em class="typography-desc">停止过程中会记录当前任务的savepoint，以便重启之用</em></span>
+                          <button nz-button nzType="primary" [disabled]="dto.state !== 'RUNNING'" (click)="incrChannelStop()"><i nz-icon nzType="stop" nzTheme="outline"></i>停止</button>
+                      </nz-list-item>
+                  </nz-list>
                   <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">
                   </nz-page-header>
 
-                  <nz-list class="ant-advanced-search-form" nzBordered>
+                  <nz-list class="ant-advanced-search-form ant-advanced-search-form-danger" nzBordered>
                       <nz-list-item>
                           <span nz-typography>删除增量实例</span>
                           <button nz-button nzType="primary" nzDanger (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
                       </nz-list-item>
                   </nz-list>
+              </nz-tab>
+              <nz-tab nzTitle="Savepoint">
+                  <ng-template nz-tab>
+                      <incr-build-step4-running-savepoint (afterRelaunch)="afterRelaunch($event)" [dto]="this.dto"></incr-build-step4-running-savepoint>
+                  </ng-template>
               </nz-tab>
           </nz-tabset>
           <ng-template #extraTemplate>
@@ -174,10 +196,23 @@ import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
           .ant-advanced-search-form {
               padding: 10px;
               #background: #fbfbfb;
-              border: 2px solid #d97f85;
+              border: 2px solid;
               border-radius: 6px;
               margin-bottom: 10px;
               clear: both;
+          }
+
+          .ant-advanced-search-form-danger {
+              border-color: #d97f85;
+          }
+
+          .ant-advanced-search-form-normal {
+              border-color: #91d5ff;
+          }
+
+          .typography-desc {
+              font-size: 10px;
+              color: #999999;
           }
 
           [nz-row] {
@@ -203,10 +238,6 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   }
 
   ngAfterContentInit(): void {
-    // console.log(this.dto);
-
-    // this.startMonitorMqTagsStatus();
-
   }
 
 
@@ -241,6 +272,28 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     }
   }
 
+  incrChannelStop() {
+    this.modalService.confirm({
+      nzTitle: '停止',
+      nzContent: `是否要停止增量实例'${this.currentApp.appName}'`,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_stop=y&action=core_action").then((r) => {
+          if (r.success) {
+            this.successNotify(`已经成功停止增量实例${this.currentApp.appName}`);
+            //  this.router.navigate(["."], {relativeTo: this.route});
+            // this.nextStep.next(this.dto);
+            // IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
+            this.dto = r.bizresult;
+            this.tabSelectIndex = 0;
+            // });
+          }
+        });
+      }
+    });
+  }
+
   /**
    * 删除增量通道
    */
@@ -264,6 +317,22 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   manageChannel() {
     this.tabSelectIndex = 1;
+  }
+
+
+  route2SavepointTab() {
+    this.tabSelectIndex = 2;
+  }
+
+  afterRelaunch(result: TisResponseResult) {
+    if (result.success) {
+      // this.router.initialNavigation()
+      // this.router.navigate([], {relativeTo: this.route, replaceUrl: true});
+      //  IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
+      this.dto = result.bizresult;
+      this.tabSelectIndex = 0;
+      // });
+    }
   }
 }
 

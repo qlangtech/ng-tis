@@ -32,6 +32,8 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
 import {IncrBuildStep2SetSinkComponent} from "./incr.build.step2.setSink.components";
+import {throwError} from "rxjs";
+import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component";
 
 
 @Component({
@@ -46,7 +48,8 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
   private _incrScript: string;
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
-   multiViewDAG: MultiViewDAG;
+  multiViewDAG: MultiViewDAG;
+
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
     , private _componentFactoryResolver: ComponentFactoryResolver, private _iconService: NzIconService) {
     super(tisService, route, modalService);
@@ -68,17 +71,38 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     configFST.set(IncrBuildStep2SetSinkComponent, {next: IncrBuildStep3Component, pre: IncrBuildStep1Component});
     configFST.set(IncrBuildStep3Component, {next: IncrBuildStep4RunningComponent, pre: IncrBuildStep2SetSinkComponent});
     configFST.set(IncrBuildStep4RunningComponent, {next: IncrBuildStep0Component, pre: IncrBuildStep3Component});
+    // configFST.set(IncrBuildStep4StopedComponent, {next: IncrBuildStep0Component, pre: IncrBuildStep3Component});
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
+
+    // this.route.params.subscribe((_) => {
+    //    console.log("xxxxxx");
+    // });
+
     //  this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
     IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
       let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
-      if (k8sRCCreated) {
-        // 增量已经在集群中运行，显示增量状态
-        this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, incrStatus);
-      } else {
-        // 脚本还未创建
-        this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
+      // console.log(incrStatus.flinkJobDetail);
+      switch (incrStatus.state) {
+        case "NONE":
+          // 脚本还未创建
+          this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
+          break;
+        case "STOPED":
+        case "RUNNING":
+          // 增量已经在集群中运行，显示增量状态
+          this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, incrStatus);
+          break;
+        // this.multiViewDAG.loadComponent(IncrBuildStep4StopedComponent, incrStatus);
+        // break;
+        default:
+          throw new Error("illegal state:" + incrStatus.state);
       }
+
+      // if (k8sRCCreated) {
+      //
+      // } else {
+      //
+      // }
       this.incrScript = incrStatus.incrScriptMainFileContent;
     });
   }
