@@ -131,6 +131,18 @@ import {TisResponseResult} from "../common/tis.plugin";
                       </tis-page>
                   </ng-template>
               </nz-tab>
+              <nz-tab nzTitle="配置">
+                  <ng-template nz-tab>
+                      <h3>基本信息</h3>
+                      <div class="item-block">
+                      <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false" [plugins]="[{name: 'incr-config', require: true}]"></tis-plugins>
+                      </div>
+                      <h3>Source/Sink信息</h3>
+                      <div class="item-block">
+                          <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false" [plugins]="[{    name: 'mq', require: true  }, {    name: 'sinkFactory', require: true  }]"></tis-plugins>
+                      </div>
+                  </ng-template>
+              </nz-tab>
               <nz-tab nzTitle="操作">
 
 
