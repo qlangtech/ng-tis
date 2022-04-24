@@ -644,11 +644,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       </ng-container>
                   </ng-container>
                   <ng-container *ngSwitchCase="false">
-                      <nz-select [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
+                      <nz-select [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                           <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
                       </nz-select>
                       <div *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
-                          <item-prop-val [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
+                          <item-prop-val [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
                       </div>
                   </ng-container>
               </ng-container>

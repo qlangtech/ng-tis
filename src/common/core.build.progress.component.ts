@@ -126,7 +126,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
                       <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
-                          <dt>{{t.name}} <span *ngIf="!t.waiting" class='percent-status'>({{t.processed}} <span *ngIf="t.all>0">/{{t.all}}</span>)</span></dt>
+                          <dt>{{t.name}} <span *ngIf="!t.waiting && t.processed> 0 " class='percent-status'>({{t.processed}} <span *ngIf="t.all>0">/{{t.all}}</span>)</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -139,7 +139,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.joinPhase">
                       <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
-                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
+                          <dt>{{t.name}}<span *ngIf="!t.waiting && t.processed> 0" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -179,8 +179,8 @@ export class ProgressTitleComponent {
 
           </nz-collapse>
       </nz-spin>
-      {{this.buildTask|json}}
-      {{liveExecLog.joinPhase|json}}
+<!--      {{this.buildTask|json}}-->
+<!--      {{liveExecLog.joinPhase|json}}-->
       <!--
       <nz-drawer
               [nzWrapClassName]="'get-gen-cfg-file'"
@@ -197,7 +197,8 @@ export class ProgressTitleComponent {
       -->
       <ng-template #drawerTitle>
           执行日志
-          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>
+          <!--          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>-->
+          <a target="_blank" [href]="'/tjs/coredefine/corenodemanage.ajax?event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i nz-icon nzType="download" nzTheme="outline"></i></a>
       </ng-template>
 
   `,
