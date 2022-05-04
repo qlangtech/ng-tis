@@ -36,7 +36,7 @@ import {TisResponseResult} from "../common/tis.plugin";
               <tis-col title="SavePoint" width="80">
                   <ng-template let-rr="r">
                       <dl class="sp-info">
-                          <dt>路径</dt>
+                          <dt><i nz-icon nzType="file-text" nzTheme="outline"></i> 路径</dt>
                           <dd> {{rr.path}}</dd>
                           <dt>创建时间</dt>
                           <dd> {{rr.createTimestamp | date:'yyyy/MM/dd HH:mm:ss'}} </dd>
@@ -45,7 +45,7 @@ import {TisResponseResult} from "../common/tis.plugin";
               </tis-col>
               <tis-col title="操作">
                   <ng-template let-rr='r'>
-                      <button nz-button nzType="primary" [disabled]="dto.state !== 'STOPED' " (click)="relaunchJob(rr)">恢复任务</button>
+                      <button nz-button nzType="primary" [disabled]="dto.state !== 'STOPED' " (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务</button>
                   </ng-template>
               </tis-col>
           </tis-page>

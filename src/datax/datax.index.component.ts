@@ -40,7 +40,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
                   </li>
 
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>构建</a>
+                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>批量构建</a>
                   </li>
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./incr_build">

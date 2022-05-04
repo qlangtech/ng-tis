@@ -16,10 +16,10 @@
  *   limitations under the License.
  */
 
-import {EventEmitter} from "@angular/core";
+// import {EventEmitter} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 
-
+export const CONST_FORM_LAYOUT_VERTICAL = 3;
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
 export declare type PluginMeta = {
@@ -118,8 +118,8 @@ export class ItemPropVal {
 }
 
 export class Descriptor {
-
-
+  // 表单内嵌深度，深度到达一定深度，表单的布局需要调整一下
+  formLevel: number;
   impl: string;
   implUrl: string;
   displayName: string;
