@@ -633,7 +633,7 @@ export class PluginSubFormComponent {
   }
 
   _saveClick() {
-    this.savePlugin.emit({verifyConfig: true})
+    this.savePlugin.emit({verifyConfig: false})
     // drawerRef.close();
   }
 }

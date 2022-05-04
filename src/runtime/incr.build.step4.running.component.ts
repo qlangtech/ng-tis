@@ -63,7 +63,7 @@ import {TisResponseResult} from "../common/tis.plugin";
                               <span *nzSpaceItem>
                               <nz-tag [nzColor]="this.dto.flinkJobDetail.statusColor">
                                   <i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync" nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
-                              <button *ngIf="dto.state === 'STOPED'" (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary">恢复</button>
+                              <button *ngIf="dto.state === 'STOPED'" (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复</button>
                               </span>
                               <span *nzSpaceItem>
                                   <nz-tag style="margin: 0" *ngFor="let s of this.dto.flinkJobDetail.jobVerticesPerState" [nzColor]="s.stateColor">{{s.count}}</nz-tag>
@@ -143,8 +143,10 @@ import {TisResponseResult} from "../common/tis.plugin";
                       </div>
                   </ng-template>
               </nz-tab>
-              <nz-tab nzTitle="操作">
-
+              <nz-tab [nzTitle]="settingTemplate">
+                  <ng-template #settingTemplate>
+                      <i nz-icon nzType="setting" nzTheme="outline"></i>操作
+                  </ng-template>
 
                   <nz-page-header class="danger-control-title" nzTitle="一般操作">
                   </nz-page-header>
@@ -333,7 +335,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
 
   route2SavepointTab() {
-    this.tabSelectIndex = 2;
+    this.tabSelectIndex = 3;
   }
 
   afterRelaunch(result: TisResponseResult) {

@@ -21,7 +21,7 @@ import {TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_ENUM, TYPE_PLUGIN_SELECTION, ValOption, OptionEnum} from "./tis.plugin";
+import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_ENUM, TYPE_PLUGIN_SELECTION, CONST_FORM_LAYOUT_VERTICAL, ValOption, OptionEnum} from "./tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
@@ -64,7 +64,7 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
                       <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                   </div>
                   <div style="clear: both"></div>
-                  <item-prop-val [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+                  <item-prop-val [formLevel]="1" [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
               </div>
           </ng-template>
           <form nz-form [ngSwitch]="shallInitializePluginItems">
@@ -192,7 +192,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let addDb: PluginsComponent = modalRef.getContentComponent();
     addDb.errorsPageShow = true;
     addDb.getCurrentAppCache = true;
-    addDb.formControlSpan = 20;
+    addDb.formControlSpan = 19;
     addDb.shallInitializePluginItems = false;
     addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
     addDb.setPluginMeta([pluginTp])
@@ -241,7 +241,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let subFormVals: { [tabname: string]: { [propKey: string]: ItemPropVal } } = {};
         for (let subFieldPk in rawVal) {
           subFrom = rawVal[subFieldPk];
-           // console.log([subFrom, desc]);
+          // console.log([subFrom, desc]);
           let ii = new Item(desc);
           ii.vals = subFrom;
           ii.wrapItemVals();
@@ -577,8 +577,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item>
-          <nz-form-label [nzSpan]="5" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
-          <nz-form-control [nzSpan]="formControlSpan" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
+          <nz-form-control [nzSpan]="horizontal ? formControlSpan: null" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <ng-container [ngSwitch]="_pp.primaryVal">
                   <ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
@@ -647,9 +647,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       <nz-select [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
                           <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
                       </nz-select>
-                      <div *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
-                          <item-prop-val [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
-                      </div>
+                      <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' " *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
+                          <item-prop-val [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
+                      </form>
                   </ng-container>
               </ng-container>
               <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
@@ -660,6 +660,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       </nz-form-item>  `,
   styles: [
       `
+          .form-label-verical {
+              margin-top: 8px;
+          }
+
           .field-help {
               cursor: pointer;
               display: inline-block;
@@ -701,6 +705,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   descContent: string = null;
   descContentShow = false;
   asyncHelp = false;
+  @Input()
+  formLevel: number;
 
   @Input()
   pluginMeta: PluginType;
@@ -720,6 +726,14 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
   constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
     super(tisService, modalService, notification);
+  }
+
+  get horizontal(): boolean {
+    return this.formLevel < CONST_FORM_LAYOUT_VERTICAL;
+  }
+
+  get childHorizontal(): boolean {
+    return (this.formLevel + 1) < CONST_FORM_LAYOUT_VERTICAL;
   }
 
   get disabled(): boolean {
@@ -961,7 +975,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="true" [formControlSpan]="20" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)" (afterSave)="afterSave($event)"></tis-plugins>`
+      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="true" [formControlSpan]="19" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)" (afterSave)="afterSave($event)"></tis-plugins>`
 })
 export class SelectionInputAssistComponent extends BasicFormComponent implements OnInit {
 

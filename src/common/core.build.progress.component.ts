@@ -17,18 +17,15 @@
  */
 
 import {AppFormComponent, CurrentCollection, WSMessage} from "./basic.form.component";
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, TemplateRef, ViewChild} from "@angular/core";
 import {TISService, WS_CLOSE_MSG} from "./tis.service";
 
-
-import {NgTerminal} from "ng-terminal";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
-import {ViewGenerateCfgComponent} from "../base/datax.add.step7.confirm.component";
 import {TerminalComponent} from "./terminal.component";
 
 
@@ -179,8 +176,8 @@ export class ProgressTitleComponent {
 
           </nz-collapse>
       </nz-spin>
-<!--      {{this.buildTask|json}}-->
-<!--      {{liveExecLog.joinPhase|json}}-->
+      <!--      {{this.buildTask|json}}-->
+      <!--      {{liveExecLog.joinPhase|json}}-->
       <!--
       <nz-drawer
               [nzWrapClassName]="'get-gen-cfg-file'"
@@ -200,7 +197,6 @@ export class ProgressTitleComponent {
           <!--          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>-->
           <a target="_blank" [href]="'/tjs/coredefine/corenodemanage.ajax?event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i nz-icon nzType="download" nzTheme="outline"></i></a>
       </ng-template>
-
   `,
   styles: [
       `
@@ -340,11 +336,11 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     this.taskid = parseInt(params['taskid'], 10);
 
     let wfid = params['wfid'];
-    if (this.dataxProcess) {
-      this.buildTask = new BuildTask();
-      this.buildTask.startPhase = 1;
-      this.buildTask.endPhase = 2;
-    }
+    // if (this.dataxProcess) {
+    // this.buildTask = new BuildTask();
+    // this.buildTask.startPhase = 1;
+    // this.buildTask.endPhase = 2;
+    // }
     if (wfid) {
       this.httpPost('/coredefine/full_build_history.ajax'
         , `emethod=get_workflow&action=core_action&wfid=${wfid}&taskid=${this.taskid}`).then((r) => {
@@ -358,6 +354,11 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         this.cd.reattach();
       });
     } else {
+      // this.httpPost('/coredefine/full_build_history.ajax'
+      //   , `emethod=get_task_info&action=core_action&taskid=${this.taskid}`).then((r) => {
+      //   this.buildTask = Object.assign(new BuildTask(), r.bizresult.task);
+      //
+      // });
       this.cd.reattach();
     }
 
@@ -439,6 +440,9 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     switch (response.logtype) {
       case "stat":
         this.progressStat = Object.assign(new ProgressStat(), response.data);
+        this.buildTask = new BuildTask();
+        this.buildTask.startPhase = response.data.startPhaseNum;
+        this.buildTask.endPhase = response.data.endPhaseNum;
         // let now = Date.now();
         // console.log(`now:${this.progressStat.now}, createTime:${this.progressStat.createTime}`);
         // console.log(this.progressStat);
@@ -455,7 +459,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         break;
       case "build_status_metrics":
         let status = response.data;
-        console.log(status);
+        // console.log(status);
         this.liveExecLog.dumpPhase = status.dumpPhase;
         this.liveExecLog.joinPhase = status.joinPhase;
         this.liveExecLog.buildPhase = status.buildPhase;
