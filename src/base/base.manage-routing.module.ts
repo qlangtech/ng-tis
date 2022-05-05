@@ -33,6 +33,7 @@ import {DataxWorkerComponent} from "./datax.worker.component";
 import {ProcessMeta} from "../runtime/misc/RCDeployment";
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
+import {ErrorListComponent} from "./error.list.component";
 
 
 const dataXWorkerCfg: { processMeta: ProcessMeta }
@@ -125,6 +126,11 @@ const basemanageRoutes: Routes = [
           {
             path: 'operationlog',
             component: OperationLogComponent,
+            data: {showBreadcrumb: true}
+          },
+          {
+            path: "sys-errors",
+            component: ErrorListComponent,
             data: {showBreadcrumb: true}
           },
           {

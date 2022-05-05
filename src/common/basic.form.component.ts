@@ -246,7 +246,8 @@ export abstract class BasicSidebarDTO {
       <div class="sidebar">
           <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
           <div [ngClass]="{'float-right': true}">
-              <button nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;<button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
+              <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
+              <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
           </div>
       </div>
       <div style="clear: both"></div>
@@ -255,6 +256,7 @@ export abstract class BasicSidebarDTO {
 export class SideBarToolBar extends BasicFormComponent {
   @Output() save = new EventEmitter<any>();
   @Input() deleteDisabled = false;
+  @Input() saveDisabled = false;
   @Output() delete = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
 

@@ -16,22 +16,20 @@
  *   limitations under the License.
  */
 
-import {Component, OnInit, ViewChild, ElementRef, Input, TemplateRef, Inject, Injectable} from '@angular/core';
+import {Injectable, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {TISService} from '../common/tis.service';
 // import {ScriptService} from '../service/script.service';
 import {BasicFormComponent} from '../common/basic.form.component';
-
-declare var CodeMirror: any;
-declare var document: any;
-declare var jQuery: any;
-
-
-import {Subject} from 'rxjs/Subject';
 import {EditorConfiguration} from "codemirror";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+
+declare var CodeMirror: any;
+declare var document: any;
+declare var jQuery: any;
+
 
 // import {Observable} from 'rxjs/Observable';
 
