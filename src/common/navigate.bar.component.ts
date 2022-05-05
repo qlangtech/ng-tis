@@ -85,6 +85,7 @@ import {Application} from "./application";
                           <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
                           <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
                           <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
+                          <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
                       </ul>
                   </nz-dropdown-menu>
               </li>

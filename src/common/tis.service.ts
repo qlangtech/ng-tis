@@ -26,6 +26,9 @@ import * as NProgress from 'nprogress/nprogress.js';
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {TerminalComponent} from "./terminal.component";
+import {ErrorDetailComponent} from "../base/error.detail.component";
 
 declare var TIS: any;
 
@@ -42,9 +45,20 @@ export class TISService {
   private currApp: CurrentCollection;
   public execId: string;
 
+  public static openSysErrorDetail(drawerService: NzDrawerService, logFileName: string) {
+    const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
+      nzWidth: "70%",
+      nzPlacement: "right",
+      nzTitle: "系统异常",
+      nzContent: ErrorDetailComponent,
+      nzWrapClassName: 'get-gen-cfg-file',
+      nzContentParams: {logFileName: logFileName}
+    });
+  }
+
   constructor(protected http: HttpClient
               // , private modalService: NgbModal
-    , public notification: NzNotificationService) {
+    , public notification: NzNotificationService, private drawerService: NzDrawerService) {
   }
 
   // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
@@ -194,21 +208,45 @@ export class TISService {
       return result;
     } else {
       // faild
-      let errs: string[] = result.errormsg;
+      let errs: Array<any> = result.errormsg;
 
       // 在页面上显示错误
       if (!!result.action_error_page_show) {
         return result;
       }
-
-      let errContent = '<ul class="list-ul-msg">' + errs.map((r) => `<li>${r}</li>`).join('') + '</ul>';
-      this.notification.create('error', '错误', errContent, {nzDuration: 6000});
+      let logFileName: string[];
+      let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
+        if (typeof r === 'string') {
+          return `<li>${r}</li>`
+        } else if (typeof r === 'object') {
+          // {
+          //   "logFileName":"20220504130948886",
+          //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
+          // }
+          logFileName = [r.logFileName];
+          return `<li>${r.message} <a>详细</a> </li>`
+        } else {
+          throw new Error('illegal type:' + r);
+        }
+      }).join('') + '</ul>';
+      // console.log(errContent);
+      let nref = this.notification.create('error', '错误', errContent, {nzDuration: 6000, nzStyle: {width: "600px"}})
+      nref.onClick.subscribe((ee) => {
+        let pe = <PointerEvent>ee;
+        let target: any = pe.target;
+        if (target.nodeName === 'A') {
+          // console.log(logFileName);
+          // this.drawerService.create()
+          TISService.openSysErrorDetail(this.drawerService, logFileName[0]);
+        }
+      })
       if (result.errorfields && result.errorfields.length > 0) {
         return result;
       }
       // return result;
     }
   }
+
 
   protected handleError = (error: any): Promise<any> => {
     // console.log(error);

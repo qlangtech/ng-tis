@@ -199,7 +199,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
           this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
         });
     }, (r: TisResponseResult) => {
-      if (!r.success && this.dataXWorkerStatus) {
+      if (!r.success && r.bizresult && this.dataXWorkerStatus) {
         this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
       }
     })
