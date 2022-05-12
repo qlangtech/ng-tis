@@ -195,7 +195,7 @@ export class ProgressTitleComponent {
       <ng-template #drawerTitle>
           执行日志
           <!--          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>-->
-          <a target="_blank" [href]="'/tjs/coredefine/corenodemanage.ajax?event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i nz-icon nzType="download" nzTheme="outline"></i></a>
+          <a target="_blank" [href]="'/tjs/coredefine/corenodemanage.ajax?resulthandler=exec_null&event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i nz-icon nzType="download" nzTheme="outline"></i></a>
       </ng-template>
   `,
   styles: [
