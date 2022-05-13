@@ -38,17 +38,16 @@ import {IndexIncrStatus} from "./misc/RCDeployment";
               -->
           </tis-header-tool>
       </tis-page-header>
-
-
       <nz-result
               nzStatus="success"
               [nzTitle]="'已经成功为'+this.currentApp.name+'创建增量通道'"
               nzSubTitle="接下来请进入增量通道管理页面"
       >
           <div nz-result-extra>
-              <button nz-button nzType="primary" (click)="gotoManage()">进入</button>
+              <button nz-button [nzLoading]="formDisabled" nzType="primary" (click)="gotoManage()">进入</button>
           </div>
-      </nz-result>`
+      </nz-result>
+  `
 })
 export class IncrBuildStep3Component extends AppFormComponent implements AfterContentInit, AfterViewInit {
   @Output() nextStep = new EventEmitter<any>();

@@ -27,12 +27,19 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 // 查看操作日志
 @Component({
   template: `
+      <nz-alert class="tool-bar" *ngIf="showErrlistLink" nzType="info" [nzMessage]="msgTemplate"></nz-alert>
+      <ng-template #msgTemplate>
+          <a target="_blank" routerLink="/base/sys-errors"> <i nz-icon nzType="link" nzTheme="outline"></i> 异常列表</a>
+      </ng-template>
       <tis-codemirror [ngModel]="content" [config]="codeMirrirOpts" [size]="{width:'100%',height:'100%'}"></tis-codemirror>
   `
 })
 export class ErrorDetailComponent extends BasicFormComponent implements OnInit {
   @Input()
   logFileName: string;
+
+  @Input()
+  showErrlistLink = true;
 
   content = '';
 

@@ -45,14 +45,14 @@ export class TISService {
   private currApp: CurrentCollection;
   public execId: string;
 
-  public static openSysErrorDetail(drawerService: NzDrawerService, logFileName: string) {
+  public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
     const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
       nzWidth: "70%",
       nzPlacement: "right",
       nzTitle: "系统异常",
       nzContent: ErrorDetailComponent,
       nzWrapClassName: 'get-gen-cfg-file',
-      nzContentParams: {logFileName: logFileName}
+      nzContentParams: {logFileName: logFileName, showErrlistLink: showErrlistLink}
     });
   }
 
@@ -237,7 +237,7 @@ export class TISService {
         if (target.nodeName === 'A') {
           // console.log(logFileName);
           // this.drawerService.create()
-          TISService.openSysErrorDetail(this.drawerService, logFileName[0]);
+          TISService.openSysErrorDetail(this.drawerService, true, logFileName[0]);
         }
       })
       if (result.errorfields && result.errorfields.length > 0) {
