@@ -55,7 +55,7 @@ export class ErrorListComponent extends BasicFormComponent implements OnInit {
   showBreadcrumb: boolean;
 
   constructor(tisService: TISService, modalService: NzModalService
-              , private router: Router, private route: ActivatedRoute, private drawerService: NzDrawerService) {
+    , private router: Router, private route: ActivatedRoute, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
@@ -82,8 +82,8 @@ export class ErrorListComponent extends BasicFormComponent implements OnInit {
   // 显示详细信息
   public sysErrorDetail(logFileName: string): void {
 
- // console.log(logFileName);
-    TISService.openSysErrorDetail(this.drawerService, logFileName);
+    // console.log(logFileName);
+    TISService.openSysErrorDetail(this.drawerService, false, logFileName);
 
     // this.httpPost(
     //   '/runtime/operation_detail.ajax?action=operation_log_action&event_submit_do_get_detail=y&opid=' + opId, '')
