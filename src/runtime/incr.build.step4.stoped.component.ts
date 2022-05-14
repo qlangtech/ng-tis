@@ -45,7 +45,7 @@ import {TisResponseResult} from "../common/tis.plugin";
               </tis-col>
               <tis-col title="操作">
                   <ng-template let-rr='r'>
-                      <button nz-button nzType="primary" [disabled]="dto.state !== 'STOPED' " (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务</button>
+                      <button nz-button nzType="primary" [disabled]="dto.state !== 'STOPED' && dto.state !== 'DISAPPEAR' " (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务</button>
                   </ng-template>
               </tis-col>
           </tis-page>

@@ -87,6 +87,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
           // 脚本还未创建
           this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
           break;
+        case "DISAPPEAR":
         case "STOPED":
         case "RUNNING":
           // 增量已经在集群中运行，显示增量状态

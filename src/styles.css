@@ -52,7 +52,10 @@ button {
 .tool-bar {
   background-color: #ffffff;
   padding: 8px;
+}
 
+.alter-notice {
+  margin: 12px;
 }
 
 
