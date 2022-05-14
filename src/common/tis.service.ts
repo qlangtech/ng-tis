@@ -224,7 +224,7 @@ export class TISService {
           //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
           // }
           logFileName = [r.logFileName];
-          return `<li>${r.message} <a>详细</a> </li>`
+          return `<li><a>详细</a> ${r.message}  </li>`
         } else {
           throw new Error('illegal type:' + r);
         }
