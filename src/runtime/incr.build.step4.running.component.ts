@@ -39,7 +39,7 @@ import {TisResponseResult} from "../common/tis.plugin";
           </div>
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="基本">
-                  <ng-template nz-tab>
+                  <ng-template nz-tab [ngSwitch]="this.dto.state === 'DISAPPEAR'">
                       <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
                       <!--                      <ng-template #errorTpl>-->
                       <!--                          增量处理节点启动有误-->
@@ -47,95 +47,107 @@ import {TisResponseResult} from "../common/tis.plugin";
                       <!--                      </ng-template>-->
                       <!--                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>-->
 
-                      <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
-                          <nz-descriptions-item nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
-                          <nz-descriptions-item nzTitle="Start Time">{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
-                          <nz-descriptions-item nzTitle="End Time">{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
-                          <nz-descriptions-item nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
-                      </nz-descriptions>
-                      <ng-template #descTitle>
-                          <nz-space [nzSplit]="spaceSplit">
-                              <ng-template #spaceSplit>
-                                  <nz-divider nzType="vertical"></nz-divider>
-                              </ng-template>
-                              <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}
+                      <ng-container *ngSwitchCase="true">
+                          <nz-alert class="alter-notice"
+                                  nzType="warning"
+                                  nzMessage="异常状态"
+                                  [nzDescription]="alterNotice"
+                                  nzShowIcon
+                          ></nz-alert>
+                          <ng-template #alterNotice>服务端获取不到该Job状态信息，可能是因为Flink-Cluster重启导致，请手动 <button  (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复</button></ng-template>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="false">
+
+                          <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
+                              <nz-descriptions-item nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
+                              <nz-descriptions-item nzTitle="Start Time">{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                              <nz-descriptions-item nzTitle="End Time">{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                              <nz-descriptions-item nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
+                          </nz-descriptions>
+                          <ng-template #descTitle>
+                              <nz-space [nzSplit]="spaceSplit">
+                                  <ng-template #spaceSplit>
+                                      <nz-divider nzType="vertical"></nz-divider>
+                                  </ng-template>
+                                  <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}
                                   </span>
-                              <span *nzSpaceItem>
+                                  <span *nzSpaceItem>
                               <nz-tag [nzColor]="this.dto.flinkJobDetail.statusColor">
                                   <i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync" nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
                               <button *ngIf="dto.state === 'STOPED'" (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复</button>
                               </span>
-                              <span *nzSpaceItem>
+                                  <span *nzSpaceItem>
                                   <nz-tag style="margin: 0" *ngFor="let s of this.dto.flinkJobDetail.jobVerticesPerState" [nzColor]="s.stateColor">{{s.count}}</nz-tag>
                               </span>
-                          </nz-space>
-                      </ng-template>
-                      <ng-template #extraTpl>
-                          <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()">操作</button>
-                      </ng-template>
-                      <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
-                          <tis-col title="Name" width="20">
-                              <ng-template let-rr="r">
-                                  <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Status" width="10">
-                              <ng-template let-rr="r">
-                                  <nz-tag [nzColor]="rr.executionStateColor"><i *ngIf="rr.executionStateColor === 'processing'" nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}</nz-tag>
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Bytes Received" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.jobVertexMetrics.bytesRead}}B
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Records Received" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.jobVertexMetrics.recordsRead}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Bytes Sent" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.jobVertexMetrics.bytesWritten}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Records Sent" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.jobVertexMetrics.recordsWritten}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Parallelism" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.parallelism}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Start Time" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="Duration" width="10">
-                              <ng-template let-rr="r">
-                                  {{rr.duration | timeconsume}}
-                              </ng-template>
-                          </tis-col>
-                          <tis-col title="End Time" width="10">
-                              <ng-template let-rr="r">
-                                  <ng-container [ngSwitch]="rr.endTime > 0">
+                              </nz-space>
+                          </ng-template>
+                          <ng-template #extraTpl>
+                              <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()">操作</button>
+                          </ng-template>
+                          <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
+                              <tis-col title="Name" width="20">
+                                  <ng-template let-rr="r">
+                                      <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Status" width="10">
+                                  <ng-template let-rr="r">
+                                      <nz-tag [nzColor]="rr.executionStateColor"><i *ngIf="rr.executionStateColor === 'processing'" nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}</nz-tag>
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Bytes Received" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.bytesRead}}B
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Records Received" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.recordsRead}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Bytes Sent" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.bytesWritten}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Records Sent" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.recordsWritten}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Parallelism" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.parallelism}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Start Time" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Duration" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.duration | timeconsume}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="End Time" width="10">
+                                  <ng-template let-rr="r">
+                                      <ng-container [ngSwitch]="rr.endTime > 0">
                                       <span *ngSwitchCase="true">
                                        {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
                                       </span>
-                                  </ng-container>
-                              </ng-template>
-                          </tis-col>
-                      </tis-page>
+                                      </ng-container>
+                                  </ng-template>
+                              </tis-col>
+                          </tis-page>
+                      </ng-container>
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="配置">
                   <ng-template nz-tab>
                       <h3>基本信息</h3>
                       <div class="item-block">
-                      <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false" [plugins]="[{name: 'incr-config', require: true}]"></tis-plugins>
+                          <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false" [plugins]="[{name: 'incr-config', require: true}]"></tis-plugins>
                       </div>
                       <h3>Source/Sink信息</h3>
                       <div class="item-block">

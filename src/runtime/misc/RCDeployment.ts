@@ -137,7 +137,7 @@ export interface UsingResource {
 export class K8SControllerStatus {
   public k8sReplicationControllerCreated: boolean;
 
-  public state: "NONE" | "STOPED" | "RUNNING";
+  public state: "NONE" | "STOPED" | "RUNNING" | "DISAPPEAR";
   // 由于本地执行器没有安装，导致datax执行器无法执行
   public installLocal: boolean;
   public rcDeployment: RCDeployment;
