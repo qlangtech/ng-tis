@@ -263,6 +263,9 @@ export class Item {
           throw new Error("expect val type is array but is not");
         }
         // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
+        if (!at.eprops) {
+          throw new Error("at.eprops can not be null");
+        }
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
         if (!selectableCol) {
           throw new Error("selectableCol can not be null");
