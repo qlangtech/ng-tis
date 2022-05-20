@@ -264,6 +264,7 @@ export class Item {
         }
         // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
         if (!at.eprops) {
+          console.log(at);
           throw new Error("at.eprops can not be null");
         }
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
