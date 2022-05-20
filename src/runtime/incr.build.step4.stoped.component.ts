@@ -32,6 +32,9 @@ import {TisResponseResult} from "../common/tis.plugin";
   selector: "incr-build-step4-running-savepoint",
   template: `
       <nz-spin size="large" [nzSpinning]="this.formDisabled">
+          <tis-page-header [showBreadcrumb]="false">
+              <button nz-button nzType="primary" (click)="createNewSavepoint()" [disabled]="dto.state !== 'RUNNING' ">创建新记录</button>
+          </tis-page-header>
           <tis-page [rows]="savepoints" [pager]="pager" (go-page)="gotoPage($event)">
               <tis-col title="SavePoint" width="80">
                   <ng-template let-rr="r">
@@ -45,7 +48,20 @@ import {TisResponseResult} from "../common/tis.plugin";
               </tis-col>
               <tis-col title="操作">
                   <ng-template let-rr='r'>
-                      <button nz-button nzType="primary" [disabled]="dto.state !== 'STOPED' && dto.state !== 'DISAPPEAR' " (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务</button>
+                      <button nz-button nz-dropdown [nzDropdownMenu]="menu">
+                          操作
+                          <i nz-icon nzType="down"></i>
+                      </button>
+                      <nz-dropdown-menu #menu="nzDropdownMenu">
+                          <ul nz-menu>
+                              <li nz-menu-item  >
+                                  <button  nz-button nzType="link" [disabled]="dto.state !== 'STOPED' && dto.state !== 'DISAPPEAR' " (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务</button>
+                              </li>
+                              <li nz-menu-item>
+                                  <button  nz-button nzType="link" [disabled]="dto.state !== 'RUNNING'" (click)="discardSavePoint(rr)"><i nz-icon nzType="delete" nzTheme="outline"></i>废弃</button>
+                              </li>
+                          </ul>
+                      </nz-dropdown-menu>
                   </ng-template>
               </tis-col>
           </tis-page>
@@ -99,6 +115,28 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
     });
   }
 
+  discardSavePoint(sp: FlinkSavepoint) {
+    this.modalService.confirm({
+      nzTitle: '删除Savepoint',
+      nzContent: `是否要删除 该路径下的Savepoint：'${sp.path}'`,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        this.httpPost('/coredefine/corenodemanage.ajax'
+          , "event_submit_do_discard_savepoint=y&action=core_action&savepointPath=" + sp.path).then((r) => {
+          if (r.success) {
+            this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
+            this.initialize(null);
+            this.successNotify(`已经成功删除Savepoint${sp.path}`);
+            //  this.router.navigate(["."], {relativeTo: this.route});
+            // this.nextStep.next(this.dto);
+           // this.afterRelaunch.emit(r);
+          }
+        });
+      }
+    });
+  }
+
   public gotoPage(p: number) {
     Pager.go(this.router, this.route, p);
   }
@@ -107,6 +145,26 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
   }
 
   ngOnDestroy(): void {
+  }
+
+
+  createNewSavepoint() {
+    this.modalService.confirm({
+      nzTitle: '创建最新Savepoint',
+      nzContent: `是否要为'${this.currentApp.appName}'创建Savepoint`,
+      nzOkText: '执行',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        this.httpPost('/coredefine/corenodemanage.ajax'
+          , "event_submit_do_create_new_savepoint=y&action=core_action").then((r) => {
+          if (r.success) {
+            this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
+            this.initialize(null);
+            this.successNotify(`已经成功为${this.currentApp.appName}创建Savepoint`);
+          }
+        });
+      }
+    });
   }
 
 
