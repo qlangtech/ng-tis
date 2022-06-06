@@ -18,8 +18,10 @@
 
 // import {EventEmitter} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
+import {NzSelectModeType} from "ng-zorro-antd/select";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
+
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
 export declare type PluginMeta = {
@@ -47,7 +49,7 @@ export class ItemPropVal {
   public _eprops: { string: any };
   private dftVal: any;
   placeholder: string;
-  _primaryVal = '';
+  _primaryVal: any = undefined;
   // 是否是主键
   pk: boolean;
   has_set_primaryVal = false;
@@ -82,6 +84,13 @@ export class ItemPropVal {
     return label ? label : this.key;
   }
 
+  /**
+   * 当
+   */
+  get enumMode(): NzSelectModeType {
+    return this.getEProp('enumMode') || 'default';
+  }
+
   public getEProp(key: string): any {
     return this._eprops[key];
   }
@@ -98,15 +107,19 @@ export class ItemPropVal {
     return this.hasFeedback ? 'error' : '';
   }
 
-  set primary(val: string) {
+  set primary(val: any) {
     this._primaryVal = val;
   }
 
-  get primary(): string {
+  get primary(): any {
     // console.log(this);
     if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
+      // 新增模式下
       this._primaryVal = this.dftVal;
       this.has_set_primaryVal = true;
+    }
+    if (this._primaryVal === undefined) {
+      this._primaryVal = (this.type === TYPE_ENUM && this.enumMode === 'multiple') ? [] : '';
     }
     return this._primaryVal;
     // return this.updateModel ? this._primaryVal : this.dftVal;
