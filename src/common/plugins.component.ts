@@ -26,27 +26,40 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
-import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
+import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 
 @Component({
   selector: 'tis-plugins',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
       <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+          <ng-template #headerController>
+          </ng-template>
           <ng-container *ngIf="this.showSaveButton">
               <!--编辑-->
               <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
               </tis-page-header>
-              <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
-                  <div style="float: right;">
-                      <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
-                  </div>
-                  <div *ngIf="shallInitializePluginItems && this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
-                      <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
-                  </div>
-                  <div style="clear: both;margin-bottom:3px;"></div>
-              </nz-anchor>
+              <ng-container [ngSwitch]="shallInitializePluginItems">
+                  <ng-container *ngSwitchCase="true">
+                      <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
+                          <div style="float: right;">
+                              <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+                          </div>
+                          <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
+                              <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
+                          </div>
+                      </nz-anchor>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="false">
+                      <div style="float: right;">
+                          <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+                      </div>
+                  </ng-container>
+              </ng-container>
+              <div style="clear: both;margin-bottom:3px;"></div>
+
           </ng-container>
           <ng-template #pluginForm let-h="h" let-index="index">
               <div class="extension-point" [id]="h.identity">
@@ -599,9 +612,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                       <!--date-->
                       <input [disabled]="disabled" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                   </ng-container>
-                  <ng-container *ngSwitchCase="5">
+                  <ng-container *ngSwitchCase="fieldTypeEnums">
                       <!--ENUM-->
-                      <nz-select nzShowSearch [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
+                      <nz-select nzShowSearch [nzMode]="  _pp.enumMode " [disabled]="disabled"
+                                 [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label" [nzValue]="e.val"></nz-option>
                        </nz-select>
                   </ng-container>
@@ -622,6 +636,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                  <ng-container *ngSwitchCase="8">
                      <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)" [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
                       <nz-checkbox-group [ngModel]="_pp.getEProp('enum')" (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
+                 </ng-container>
+                   <ng-container *ngSwitchCase="9">
+                       <nz-upload #fileupload
+                                  nzAction="tjs/coredefine/corenodemanage.ajax?action=plugin_action&emethod=upload_file" (nzChange)="handleFileUploadChange(_pp,$event)"
+                                  [nzHeaders]="{}" [nzFileList]="_pp.updateModel?[{'name':_pp.primary,'status':'done' } ]:[]" [nzLimit]="1"
+                       ><button [disabled]="fileupload.nzFileList.length > 0" nz-button><i nz-icon nzType="upload"></i>上传</button></nz-upload>
                  </ng-container>
               </span>
                       <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
@@ -707,6 +727,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   asyncHelp = false;
   @Input()
   formLevel: number;
+
+  fieldTypeEnums = TYPE_ENUM;
 
   @Input()
   pluginMeta: PluginType;
@@ -970,6 +992,14 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         this.cdr.detectChanges();
       });
   }
+
+  handleFileUploadChange(_pp: ItemPropVal, event: NzUploadChangeParam) {
+    if (event.file.status === 'done') {
+      _pp.primary = event.file.response.bizresult.file + ";" + event.file.name;
+      // console.log([event, _pp.primary]);
+    }
+
+  }
 }
 
 @Component({
@@ -984,7 +1014,7 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
   pluginTyps: PluginType[] = [];
   hasSaved: boolean;
 
-  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService) {
+  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService, private drawerRef: NzDrawerRef<any>) {
     super(tisService, modalService, notification);
   }
 
@@ -1014,6 +1044,9 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
 
   afterSave(e: PluginSaveResponse) {
     this.hasSaved = e.saveSuccess;
+    if (e.saveSuccess) {
+      this.drawerRef.close();
+    }
   }
 }
 
