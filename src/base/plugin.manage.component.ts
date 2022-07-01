@@ -25,6 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {IFieldError} from "../common/tis.plugin";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -74,6 +75,29 @@ enum PluginTab {
                           </tis-col>
                           <tis-col title="详细">
                               <ng-template let-item="r">
+                                  <div class="item-block" *ngIf="item.multiClassifier">
+                                      <form nz-form>
+                                          <nz-form-item>
+                                              <nz-form-control [nzValidateStatus]="pluginErrs.get(item.name) ? 'error' :''"
+                                                               [nzErrorTip]="pluginErrs.get(item.name)?pluginErrs.get(item.name).content:''" nzHasFeedback>
+                                                  <nz-select [(ngModel)]="item.selectedClassifier" [ngModelOptions]="{standalone: true}" nzAllowClear nzPlaceHolder="有这些版本的包可选择" nzShowSearch>
+                                                      <ng-container *ngFor="let c of item.arts">
+                                                          <ng-template #t>
+                                                              <div class="tis-tags">
+                                                                  <span>包大小:</span>
+                                                                  <nz-tag>{{c.sizeLiteral}}</nz-tag>
+                                                                  <br/>
+                                                              </div>
+                                                          </ng-template>
+                                                          <nz-option-group [nzLabel]="t">
+                                                              <nz-option [nzValue]="c.classifierName" [nzLabel]="c.classifierName"></nz-option>
+                                                          </nz-option-group>
+                                                      </ng-container>
+                                                  </nz-select>
+                                              </nz-form-control>
+                                          </nz-form-item>
+                                      </form>
+                                  </div>
                                   <div class="item-block">
                                       <markdown [data]="item.excerpt" class="excerpt"></markdown>
                                       <div class="tis-tags" *ngIf="item.dependencies.length >0">
@@ -167,6 +191,8 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
 
   paramObservable: Observable<Params>;
 
+  pluginErrs: Map<string, IFieldError> = new Map();
+
   public static openPluginManage(drawerService: NzDrawerService, extendPoint: string | Array<String>): NzDrawerRef<PluginManageComponent, any> {
     const drawerRef = drawerService.create<PluginManageComponent, {}, {}>({
       nzWidth: "70%",
@@ -247,7 +273,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   installPlugin() {
-
+    this.pluginErrs = new Map();
     let willInstall: Array<any> = this.avaliablePlugs.filter((p) => p.checked);
     if (willInstall.length < 1) {
       this.modalService.error({
@@ -262,6 +288,14 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       .then((r) => {
         if (r.success) {
           this.goto(PluginTab.updateCenter)
+        } else {
+          r.errorfields.forEach((i) => {
+            i.forEach((e) => {
+              e.forEach((fieldErr) => {
+                this.pluginErrs.set(fieldErr.name, fieldErr);
+              })
+            });
+          });
         }
       });
 

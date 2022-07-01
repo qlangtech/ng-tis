@@ -18,7 +18,7 @@
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {TimeConsumePipe} from "../common/date.format.pipe";
+import {ItemPropValPipe, TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {PaginationComponent, TdContentDirective, ThDirective, TisColumn} from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
@@ -132,7 +132,7 @@ import {ErrorDetailComponent} from "../base/error.detail.component";
   declarations: [TerminalComponent, ErrorDetailComponent , PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, SafePipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    TimeConsumePipe, SafePipe, ItemPropValPipe , PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,

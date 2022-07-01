@@ -77,7 +77,11 @@ import {NzUploadChangeParam} from "ng-zorro-antd/upload";
                       <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
                   </div>
                   <div style="clear: both"></div>
-                  <item-prop-val [formLevel]="1" [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled" [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals"></item-prop-val>
+                  <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
+                      <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简" [(ngModel)]="item.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
+                  </div>
+                  <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1" [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
+                                 [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
               </div>
           </ng-template>
           <form nz-form [ngSwitch]="shallInitializePluginItems">
@@ -248,6 +252,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       if (desc.subForm) {
         i = new Item(desc);
         i.displayName = item.displayName;
+      //  i.containAdvance = item.containAdvance;
         let rawVal = item.vals;
         // delete item.vals;
         let subFrom;
@@ -276,8 +281,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
       items.push(i);
     });
-    // console.log(items[0].itemVals);
     h.items = items;
+    console.log(h);
     return h;
   }
 
@@ -333,6 +338,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       d.attrs = attrs;
       descMap.set(impl, d);
     }
+    // console.log(descMap);
     return descMap;
   }
 
@@ -589,7 +595,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   selector: 'item-prop-val',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <nz-form-item>
+      <nz-form-item [hidden]="hide">
           <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
           <nz-form-control [nzSpan]="horizontal ? formControlSpan: null" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <ng-container [ngSwitch]="_pp.primaryVal">
@@ -603,7 +609,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
                       <ng-container [ngSwitch]="disabled ? '' : _pp.getEProp('style') ">
-                          <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'" (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary" [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}" [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
+                          <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'" (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary"
+                                          [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}" [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
                           <textarea *ngSwitchDefault [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
                                     (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
                       </ng-container>
@@ -627,7 +634,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
                       <nz-input-group [nzSuffix]="suffixTemplate">
-                        <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
+                        <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input
+                               [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                       </nz-input-group>
                       <ng-template #suffixTemplate>
                         <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
@@ -668,7 +676,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                           <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
                       </nz-select>
                       <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' " *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
-                          <item-prop-val [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals"></item-prop-val>
+                          <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
+                              <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简" [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
+                          </div>
+                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField "  [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
                       </form>
                   </ng-container>
               </ng-container>
@@ -727,6 +738,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   asyncHelp = false;
   @Input()
   formLevel: number;
+
+  @Input()
+  hide = false;
 
   fieldTypeEnums = TYPE_ENUM;
 

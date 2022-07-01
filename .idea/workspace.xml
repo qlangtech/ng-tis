@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/date.format.pipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/date.format.pipe.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
     </list>
@@ -312,7 +315,8 @@
       <workItem from="1649395329062" duration="62976000" />
       <workItem from="1652674149578" duration="11073000" />
       <workItem from="1653475121808" duration="963000" />
-      <workItem from="1654051101699" duration="15495000" />
+      <workItem from="1654051101699" duration="28141000" />
+      <workItem from="1655168592049" duration="9548000" />
     </task>
     <servers />
   </component>
