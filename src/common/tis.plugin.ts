@@ -45,6 +45,7 @@ export class ItemPropVal {
   required: boolean;
   // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
   descVal: DescribleVal;
+  advance: boolean;
   error: string;
   public _eprops: { string: any };
   private dftVal: any;
@@ -54,6 +55,7 @@ export class ItemPropVal {
   pk: boolean;
   has_set_primaryVal = false;
   disabled = false;
+
 
   constructor(public updateModel = false) {
   }
@@ -135,6 +137,7 @@ export class Descriptor {
   formLevel: number;
   impl: string;
   implUrl: string;
+  containAdvance: boolean;
   displayName: string;
   extendPoint: string;
   attrs: AttrDesc[];
@@ -162,6 +165,7 @@ export class Descriptor {
     let nItem = new Item(des);
     nItem.displayName = des.displayName;
     nItem.implUrl = des.implUrl;
+   // nItem.containAdvance = des.containAdvance;
     des.attrs.forEach((attr) => {
       nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
     });
@@ -196,6 +200,19 @@ export class Item {
   public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } = {};
   displayName = '';
   private _propVals: ItemPropVal[];
+
+  /**
+   * 表单中有高级字段，是否显示全部？
+   */
+  public showAllField = false;
+  // containAdvance = false;
+
+  /**
+   * 字段中是否包含高级字段（可以隐藏）
+   */
+  public get containAdvanceField(): boolean {
+    return this.dspt.containAdvance;
+  }
 
   /**
    * 创建一个新的Item
@@ -262,7 +279,7 @@ export class Item {
     if (at.describable) {
       let d = at.descriptors.get(v.impl);
       if (!d) {
-        // console.log([at, v]);
+        //
         throw new Error(`impl:${v.impl} can not find relevant descriptor`);
       }
       let ii: Item = Object.assign(new Item(d), v);
@@ -277,7 +294,7 @@ export class Item {
         }
         // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
         if (!at.eprops) {
-          console.log(at);
+         // console.log(at);
           throw new Error("at.eprops can not be null");
         }
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
@@ -383,6 +400,7 @@ export class AttrDesc {
   ord: number;
   // 是否是主键
   pk: boolean;
+  advance: boolean;
   /**
    * 当describable为true时descriptors 应该有内容
    * */
@@ -406,6 +424,7 @@ export class AttrDesc {
     let desVal = new ItemPropVal(updateModel);
     desVal.key = this.key;
     desVal.pk = this.pk;
+    desVal.advance = this.advance;
     desVal.eprops = Object.assign({}, this.eprops);
     desVal.required = this.required;
     desVal.type = this.type;
@@ -434,6 +453,7 @@ export class AttrDesc {
   public createDescribleVal(v: Item): DescribleVal {
     let descVal = new DescribleVal(v.dspt, v.updateModel);
     descVal.displayName = v.displayName;
+   // descVal.containAdvance = v.containAdvance;
     // descVal.impl = v.impl;
     descVal.vals = v.vals;
     this.descriptors.forEach((entry) => {

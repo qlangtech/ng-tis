@@ -49,7 +49,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
               <nz-list-item *ngIf="item.type === 'InstallationJob'">
                   <nz-list-item-meta>
                       <nz-list-item-meta-title>
-                          {{item.name}}
+                          {{item.name}} <i *ngIf="item.containClassifier" class="classifier-desc">({{item.classifier}})</i>
                           <ng-container [ngSwitch]="item.status.type">
                               <nz-tag *ngSwitchCase="'Success'" nzColor="success">
                                   <i nz-icon nzType="check-circle"></i>
@@ -74,7 +74,10 @@ import {NzModalService} from "ng-zorro-antd/modal";
                       <div *ngSwitchCase="'Success'">
                       </div>
                       <div *ngSwitchCase="'Installing'">
-                          <nz-progress nzStrokeLinecap="round" nzType="circle" [nzPercent]="item.status.percentage < 1 ? 1 : item.status.percentage"></nz-progress>
+                          <ng-template #percent>
+                              {{item.status.percentage}}% <i class="percentage-desc">{{item.status.download}}</i>
+                          </ng-template>
+                          <nz-progress nzStrokeLinecap="round" [nzFormat]="percent" nzType="circle" [nzPercent]="item.status.percentage < 1 ? 1 : item.status.percentage"></nz-progress>
                       </div>
                       <pre *ngSwitchCase="'Failure'">{{item.status.problemStackTrace}}</pre>
                   </ng-container>
@@ -86,6 +89,15 @@ import {NzModalService} from "ng-zorro-antd/modal";
 
   `, styles: [
       `
+            .percentage-desc {
+                display: block;
+                font-size: 8px;
+                color: #989898;
+            }
+            .classifier-desc {
+                font-size: 7px;
+                color: #989898;
+            }
     `
   ]
 })
