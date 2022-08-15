@@ -248,41 +248,53 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     h.items.forEach((item) => {
 
       let desc: Descriptor = h.descriptors.get(item.impl);
+      if (!desc) {
+       // console.log([he, pm]);
+        throw new Error("desc impl:" + item.impl + " relevant desc can not be null");
+      }
       // console.log([item.impl, desc]);
       if (desc.subForm) {
         i = new Item(desc);
         i.displayName = item.displayName;
-      //  i.containAdvance = item.containAdvance;
+        //  i.containAdvance = item.containAdvance;
         let rawVal = item.vals;
         // delete item.vals;
-        let subFrom;
+        let subFrom: Array<Item>;
+        let subFromItems: Array<Item>;
         let subFormVals: { [tabname: string]: { [propKey: string]: ItemPropVal } } = {};
+
         for (let subFieldPk in rawVal) {
-          subFrom = rawVal[subFieldPk];
+          subFrom = <Array<Item>>rawVal[subFieldPk];
+          subFromItems = new Array<Item>();
+          subFrom.forEach((form) => {
+            let subformDesc: Descriptor = h.descriptors.get(form.impl);
+            if (!subformDesc) {
+             // console.log([he, pm]);
+              throw new Error("desc impl:" + form.impl + " relevant desc can not be null");
+            }
+            let ii = Object.assign(new Item(subformDesc), form);
+            // ii.vals = subFrom;
+            ii.wrapItemVals();
+            subFromItems.push(ii);
+          });
           // console.log([subFrom, desc]);
-          let ii = new Item(desc);
-          ii.vals = subFrom;
-          ii.wrapItemVals();
           // console.log(i.itemVals);
+          // console.log([subFrom, ii.vals]);
           // @ts-ignore
-          subFormVals[subFieldPk] = ii.vals;
-          // console.log({pk: subFieldPk, subForm: subFrom});
-          // console.log([typeof subFieldPk, subFieldPk, subFormVals]);
-          // // @ts-ignore subFieldPk
-          // i.vals["kkkk"] = new ItemPropVal(); // ii.itemVals;
-          // console.log(i);
+          subFormVals[subFieldPk] = subFromItems;
         }
         i.vals = subFormVals;
+        // console.log(i);
         // i.subFormRawVals = rawVal;
       } else {
         i = Object.assign(new Item(desc), item);
         i.wrapItemVals();
       }
-
+      // console.log(i);
       items.push(i);
     });
     h.items = items;
-    console.log(h);
+    // console.log(h);
     return h;
   }
 
@@ -295,6 +307,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
+        // console.log([pm, bizArray]);
         for (let i = 0; i < pm.length; i++) {
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
           _heteroList.push(h);
@@ -303,6 +316,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         //
         // });
       }
+     // console.log(_heteroList);
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     })
@@ -596,8 +610,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
       <nz-form-item [hidden]="hide">
-          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null" [nzRequired]="_pp.required">  {{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
-          <nz-form-control [nzSpan]="horizontal ? formControlSpan: null" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null" [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
+          <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
               <ng-container [ngSwitch]="_pp.primaryVal">
                   <ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
@@ -679,7 +693,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                           <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
                               <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简" [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
                           </div>
-                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField "  [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
+                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
                       </form>
                   </ng-container>
               </ng-container>
@@ -759,6 +773,13 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
   @Input()
   formControlSpan = 13;
+
+  get valSpan(): number {
+    if (this.formLevel > 1) {
+      return 18;
+    }
+    return this.formControlSpan;
+  }
 
   constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
     super(tisService, modalService, notification);

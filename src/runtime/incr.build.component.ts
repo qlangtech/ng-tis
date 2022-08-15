@@ -34,6 +34,7 @@ import {IncrBuildStep0Component} from "./incr.build.step0.component";
 import {IncrBuildStep2SetSinkComponent} from "./incr.build.step2.setSink.components";
 import {throwError} from "rxjs";
 import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component";
+import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 
 @Component({
@@ -68,6 +69,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     configFST.set(IncrBuildStep0Component, {next: IncrBuildStep1ExecEngineSelectComponent, pre: null});
     configFST.set(IncrBuildStep1ExecEngineSelectComponent, {next: IncrBuildStep1Component, pre: IncrBuildStep0Component});
     configFST.set(IncrBuildStep1Component, {next: IncrBuildStep2SetSinkComponent, pre: IncrBuildStep1ExecEngineSelectComponent});
+    configFST.set(IncrBuildStep1ExtendSelectedTabPropsComponent, {next: IncrBuildStep2SetSinkComponent, pre: IncrBuildStep1Component});
     configFST.set(IncrBuildStep2SetSinkComponent, {next: IncrBuildStep3Component, pre: IncrBuildStep1Component});
     configFST.set(IncrBuildStep3Component, {next: IncrBuildStep4RunningComponent, pre: IncrBuildStep2SetSinkComponent});
     configFST.set(IncrBuildStep4RunningComponent, {next: IncrBuildStep0Component, pre: IncrBuildStep3Component});

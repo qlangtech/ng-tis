@@ -27,7 +27,6 @@ export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'da
 export declare type PluginMeta = {
   name: PluginName, require: boolean, extraParam?: string
   // 服务端对目标Item的desc进行过滤
-  // , targetItemDesc?: string
   , descFilter?: (desc: Descriptor) => boolean
 };
 export declare type PluginType = PluginName | PluginMeta;
@@ -165,7 +164,7 @@ export class Descriptor {
     let nItem = new Item(des);
     nItem.displayName = des.displayName;
     nItem.implUrl = des.implUrl;
-   // nItem.containAdvance = des.containAdvance;
+    // nItem.containAdvance = des.containAdvance;
     des.attrs.forEach((attr) => {
       nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
     });
@@ -176,6 +175,17 @@ export class Descriptor {
     // console.log(nItem);
     nitems.push(nItem);
     h.items = nitems;
+  }
+
+
+  public static addNewItemByDescs(h: HeteroList, decs: Array<Descriptor>, updateModel: boolean
+    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
+    let des: Descriptor;
+    let nitems: Item[] = [];
+    for (let index = 0; index < decs.length; index++) {
+      des = decs[index];
+      Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
+    }
   }
 }
 
@@ -197,7 +207,7 @@ export class Item {
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
   // vals: Map<string /**key*/, ItemPropVal> = new Map();
   // 后一种类型支持subform的类型
-  public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } = {};
+  public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } | { [key: string]: Array<Item> }  = {};
   displayName = '';
   private _propVals: ItemPropVal[];
 
@@ -205,6 +215,7 @@ export class Item {
    * 表单中有高级字段，是否显示全部？
    */
   public showAllField = false;
+
   // containAdvance = false;
 
   /**
@@ -294,7 +305,7 @@ export class Item {
         }
         // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
         if (!at.eprops) {
-         // console.log(at);
+          // console.log(at);
           throw new Error("at.eprops can not be null");
         }
         let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
@@ -370,7 +381,7 @@ export class Item {
     }
     this._propVals = [];
     this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
-      let ip: ItemPropVal | { [key: string]: ItemPropVal } = this.vals[attr.key];
+      let ip: ItemPropVal | { [key: string]: ItemPropVal } |  Array<Item> = this.vals[attr.key];
       if (!ip) {
         // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
         ip = attr.addNewEmptyItemProp(this.updateModel);
@@ -453,7 +464,7 @@ export class AttrDesc {
   public createDescribleVal(v: Item): DescribleVal {
     let descVal = new DescribleVal(v.dspt, v.updateModel);
     descVal.displayName = v.displayName;
-   // descVal.containAdvance = v.containAdvance;
+    // descVal.containAdvance = v.containAdvance;
     // descVal.impl = v.impl;
     descVal.vals = v.vals;
     this.descriptors.forEach((entry) => {

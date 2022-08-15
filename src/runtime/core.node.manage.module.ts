@@ -60,6 +60,7 @@ import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {IncrBuildStep4RunningTabBaseComponent} from "./incr.build.step4.running.tab-base.component";
 import {LineChartComponent} from "./line.chart.component";
 import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component";
+import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 
 @NgModule({
@@ -75,7 +76,7 @@ import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component
     CopyOtherCoreComponent
     , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
-    , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent,
+    , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent, IncrBuildStep1ExtendSelectedTabPropsComponent ,
     // IncrBuildStep2Component,
     IncrBuildStep3Component, IncrBuildStep4RunningComponent , IncrBuildStep4StopedComponent
   ],

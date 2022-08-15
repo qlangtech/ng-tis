@@ -91,7 +91,7 @@ import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import {SideBarToolBar} from "./basic.form.component";
 import {K8SReplicsSpecComponent} from "./k8s.replics.spec.component";
 import {DataxAddStep7Component, ViewGenerateCfgComponent} from "../base/datax.add.step7.confirm.component";
-import {DataxAddStep4Component, PluginSubFormComponent} from "../base/datax.add.step4.component";
+import {DataxAddStep4Component, PluginSubFormComponent, SelectedTabsComponent} from "../base/datax.add.step4.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {DataxAddStep1Component} from "../base/datax.add.step1.component";
 import {DataxAddStep2Component} from "../base/datax.add.step2.component";
@@ -137,10 +137,10 @@ import {ErrorDetailComponent} from "../base/error.detail.component";
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
-    , DataxAddStep4Component, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
+    , DataxAddStep4Component, SelectedTabsComponent , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
-  exports: [PluginUpdateCenterComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
+  exports: [PluginUpdateCenterComponent, SelectedTabsComponent , ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
     , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent
     , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

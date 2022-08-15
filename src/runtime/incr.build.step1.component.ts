@@ -21,9 +21,12 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {Descriptor,  PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
+import {IntendDirect} from "../common/MultiViewDAG";
+import {DataxAddStep4Component} from "../base/datax.add.step4.component";
+import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 @Component({
   template: `
@@ -151,7 +154,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   ngOnInit(): void {
-    // console.log(this.dto);
+    // console.log([this.dto.readerDesc.endType, this.dto.writerDesc.endType]);
     if (!this.dto.k8sPluginInitialized) {
       // this.plugins.push({name: 'incr-config', require: true});
     }
@@ -183,16 +186,11 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   createIndexStep1Next() {
-    // if (this.tabSelectIndex === 0) {
-    // 当前正在 '配置' tab
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     e.serverForward = "coredefine:core_action:create_incr_sync_channal";
     this.savePlugin.emit(e);
-    // } else {
-    // 当前正在 '执行脚本' tab
-    // this.compileAndPackageIncr();
-    // }
+
   }
 
   // private compileAndPackageIncr() {
@@ -221,7 +219,14 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
     if (event.saveSuccess) {
       if (event.hasBiz()) {
-        this.dto.incrScriptMainFileContent = event.biz().incrScriptMainFileContent;
+        let biz = event.biz();
+        this.dto.incrSourceDesc = biz.incrSourceDesc;
+        this.dto.incrScriptMainFileContent = biz.incrScriptMainFileContent;
+        if (this.dto.incrSourceDesc.extendSelectedTabProp) {
+          let n: IntendDirect = {dto: this.dto, cpt: IncrBuildStep1ExtendSelectedTabPropsComponent};
+          this.nextStep.emit(n);
+          return;
+        }
       }
       this.nextStep.emit(this.dto);
     }
