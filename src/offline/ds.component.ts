@@ -509,7 +509,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               let meta = <ISubDetailTransferMeta>{id: event.name};
 
               DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
-                , (subFieldForms: Map<string /*tableName*/, { string?: ItemPropVal }>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+                , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
 
                   DataxAddStep4Component.processSubFormHeteroList(this, m, meta, subFieldForms.get(meta.id) // , subFormHetero.descriptorList[0]
                   )

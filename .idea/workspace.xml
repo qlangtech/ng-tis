@@ -2,13 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.update.center.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/date.format.pipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/date.format.pipe.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/core.node.manage.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -316,7 +321,9 @@
       <workItem from="1652674149578" duration="11073000" />
       <workItem from="1653475121808" duration="963000" />
       <workItem from="1654051101699" duration="28141000" />
-      <workItem from="1655168592049" duration="9548000" />
+      <workItem from="1655168592049" duration="13032000" />
+      <workItem from="1657247789537" duration="49757000" />
+      <workItem from="1660005730239" duration="14348000" />
     </task>
     <servers />
   </component>
@@ -507,7 +514,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts</url>
-          <line>94</line>
+          <line>97</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -538,11 +545,6 @@
           <url>file://$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts</url>
           <line>37</line>
           <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/base/datax.add.step4.component.ts</url>
-          <line>425</line>
-          <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/base/datax.worker.running.component.ts</url>
@@ -581,7 +583,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/common/tis.plugin.ts</url>
-          <line>40</line>
+          <line>39</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

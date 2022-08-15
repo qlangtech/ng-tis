@@ -65,9 +65,6 @@ enum PluginTab {
                                       <nz-tag [nzColor]="'green'">免费</nz-tag>
                                       <br/>
                                       <span>版本:</span>{{ item.version }} <br/>
-                                      <span>包大小:</span>
-                                      <nz-tag>{{item.sizeLiteral}}</nz-tag>
-                                      <br/>
                                       <span>打包时间:</span>
                                       <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
                                   </div>
@@ -115,7 +112,7 @@ enum PluginTab {
                       <tis-page [rows]="installedPlugs">
                           <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="15">
                               <ng-template let-item="r">
-                                  <a href="javascript:void(0)">{{item.name}}</a>
+                                  <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc" *ngIf="item.classifier">{{item.classifier}}</i>
                                   <div class="tis-tags">
                                       <span>作者:</span>
                                       <nz-tag>TIS官方</nz-tag>
@@ -157,6 +154,11 @@ enum PluginTab {
       </nz-spin>
   `, styles: [
       `
+            .classifier-desc {
+                display: block;
+                font-size: 7px;
+                color: #989898;
+            }
             .tis-tags {
                 margin-bottom: 5px;
             }

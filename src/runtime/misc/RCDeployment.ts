@@ -20,6 +20,7 @@ import {BasicFormComponent} from "../../common/basic.form.component";
 import {K8SRCSpec, K8SReplicsSpecComponent} from "../../common/k8s.replics.spec.component";
 import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
 import {StepType} from "../../common/steps.component";
+import {Descriptor} from "../../common/tis.plugin";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -147,6 +148,11 @@ export interface PluginExtraProps {
   endType: string;
   extendPoint: string;
   impl: string;
+  displayName: string;
+}
+
+export interface IncrSourceDesc extends PluginExtraProps {
+  extendSelectedTabProp: boolean;
 }
 
 export class IndexIncrStatus extends K8SControllerStatus {
@@ -156,8 +162,11 @@ export class IndexIncrStatus extends K8SControllerStatus {
   public flinkJobDetail: FlinkJobDetail;
   public incrProcess: IncrProcess;
 
+  public incrSourceDesc: IncrSourceDesc;
   public readerDesc: PluginExtraProps;
   public writerDesc: PluginExtraProps;
+
+
 
   public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
     basicForm.httpPost('/coredefine/corenodemanage.ajax'
