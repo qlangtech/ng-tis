@@ -249,7 +249,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
       let desc: Descriptor = h.descriptors.get(item.impl);
       if (!desc) {
-       // console.log([he, pm]);
+        if ((<PluginMeta>pm).skipSubformDescNullError) {
+          return;
+        }
+        // console.log([he, pm]);
         throw new Error("desc impl:" + item.impl + " relevant desc can not be null");
       }
       // console.log([item.impl, desc]);
@@ -269,7 +272,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           subFrom.forEach((form) => {
             let subformDesc: Descriptor = h.descriptors.get(form.impl);
             if (!subformDesc) {
-             // console.log([he, pm]);
+              if ((<PluginMeta>pm).skipSubformDescNullError) {
+                return;
+              }
+              // console.log([he, pm]);
               throw new Error("desc impl:" + form.impl + " relevant desc can not be null");
             }
             let ii = Object.assign(new Item(subformDesc), form);
@@ -309,6 +315,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let bizArray: HeteroList[] = r.bizresult.plugins;
         // console.log([pm, bizArray]);
         for (let i = 0; i < pm.length; i++) {
+          // console.log([bizArray[i], pm[i]]);
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
           _heteroList.push(h);
         }
@@ -316,7 +323,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         //
         // });
       }
-     // console.log(_heteroList);
+      // console.log(_heteroList);
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
     })

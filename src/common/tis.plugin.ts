@@ -25,6 +25,7 @@ export const CONST_FORM_LAYOUT_VERTICAL = 3;
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
 export declare type PluginMeta = {
+  skipSubformDescNullError?: boolean;
   name: PluginName, require: boolean, extraParam?: string
   // 服务端对目标Item的desc进行过滤
   , descFilter?: (desc: Descriptor) => boolean
@@ -181,7 +182,7 @@ export class Descriptor {
   public static addNewItemByDescs(h: HeteroList, decs: Array<Descriptor>, updateModel: boolean
     , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
     let des: Descriptor;
-    let nitems: Item[] = [];
+    // let nitems: Item[] = [];
     for (let index = 0; index < decs.length; index++) {
       des = decs[index];
       Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
@@ -207,7 +208,23 @@ export class Item {
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
   // vals: Map<string /**key*/, ItemPropVal> = new Map();
   // 后一种类型支持subform的类型
-  public vals: { [key: string]: ItemPropVal } | { [key: string]: { [key: string]: ItemPropVal } } | { [key: string]: Array<Item> }  = {};
+  /**
+   * subform format:
+   * <pre>
+   *   vals:{
+   *     tableName:[
+   *      {
+   *       impl:""
+   *       vals:{ k1:v1,k2:v2,k3:v3}
+   *      },{},{}
+   *     ]
+   *   }
+   *
+   * </pre>
+   */
+  public vals: { [key: string]: ItemPropVal }
+    | { [key: string]: { [key: string]: ItemPropVal } }
+    | { [key: string]: Array<Item> } = {};
   displayName = '';
   private _propVals: ItemPropVal[];
 
@@ -353,6 +370,7 @@ export class Item {
     let newVals = {};
     let ovals: any /**map*/ = this.vals;
     let newVal: ItemPropVal;
+    // console.log(this.dspt.attrs);
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
       // console.log([at.key, v]);
@@ -381,7 +399,7 @@ export class Item {
     }
     this._propVals = [];
     this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
-      let ip: ItemPropVal | { [key: string]: ItemPropVal } |  Array<Item> = this.vals[attr.key];
+      let ip: ItemPropVal | { [key: string]: ItemPropVal } | Array<Item> = this.vals[attr.key];
       if (!ip) {
         // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
         ip = attr.addNewEmptyItemProp(this.updateModel);

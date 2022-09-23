@@ -221,8 +221,10 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
       if (event.hasBiz()) {
         let biz = event.biz();
         this.dto.incrSourceDesc = biz.incrSourceDesc;
+        this.dto.incrSinkDesc = biz.incrSinkDesc;
         this.dto.incrScriptMainFileContent = biz.incrScriptMainFileContent;
-        if (this.dto.incrSourceDesc.extendSelectedTabProp) {
+       // console.log(this.dto.incrSourceDesc.extendSelectedTabProp);
+        if (this.dto.incrSourceDesc.extendSelectedTabProp || this.dto.incrSinkDesc.extendSelectedTabProp) {
           let n: IntendDirect = {dto: this.dto, cpt: IncrBuildStep1ExtendSelectedTabPropsComponent};
           this.nextStep.emit(n);
           return;

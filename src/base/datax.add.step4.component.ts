@@ -89,7 +89,8 @@ export class SelectedTabsComponent extends BasicFormComponent {
 
   @Input()
   subFormHetero: HeteroList;
-
+  @Input()
+  skipSubformDescNullError = false;
   @Output()
   onItemSelectAll = new EventEmitter<any>();
 
@@ -100,7 +101,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
   stat: { checkAll: boolean, checkHalf: boolean } = {checkAll: false, checkHalf: false};
 
   @Input()
-  subFieldForms: Map<string /*tableName*/,  Array<Item>> = new Map();
+  subFieldForms: Map<string /*tableName*/, Array<Item>> = new Map();
   @Input()
   dataXReaderTargetName: string;
   subFormItemSetterFlag: Map<string, boolean> = new Map();
@@ -132,19 +133,20 @@ export class SelectedTabsComponent extends BasicFormComponent {
     // console.log(meta);
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
-      this.descriptor.displayName, this.descriptor.impl, meta.fieldName, this.dataXReaderTargetName)];
-    // console.log(meta.id);
+      this.descriptor.displayName, this.descriptor.impl, meta.fieldName, this.dataXReaderTargetName, this.skipSubformDescNullError)];
+    // console.log(pluginMeta);
     let ip = this.subFormHetero.items[0].vals[meta.id];
     if (ip instanceof ItemPropVal) {
       throw new Error("illegal type");
     }
     // console.log(ip);
-    let cachedVals: { [key: string]: ItemPropVal } = <{ [key: string]: ItemPropVal }>ip;
+    let cachedVals: Array<Item> = <Array<Item>>ip;
     // console.log(cachedVals);
     if (cachedVals) {
       if (this.subFormItemSetterFlag.get(meta.id)) {
         let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], pluginMeta[0]);
-        heteroList[0].items[0].vals = cachedVals;
+        // heteroList[0].items[0].vals = cachedVals;
+        heteroList[0].items = cachedVals;
         // console.log(heteroList);
         this.openSubDetailForm(meta, pluginMeta, heteroList);
         // console.log(cachedVals);
@@ -156,7 +158,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
     // console.log([meta, this.subFieldForms.get(meta.id)], this.subFormHetero.descriptorList[0]);
     DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id) // , this.subFormHetero.descriptorList[0]
     ).then((hlist: HeteroList[]) => {
-     // console.log(hlist[0]);
+      // console.log(hlist[0]);
       let h = hlist[0];
       if (h.items.length < 1) {
         // 当给增量流程流程扩展selectTab使用还没有item使用
@@ -168,6 +170,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
           return propVal;
         });
       }
+      //  console.log(hlist);
       this.openSubDetailForm(meta, pluginMeta, hlist);
     });
     event.stopPropagation();
@@ -204,10 +207,14 @@ export class SelectedTabsComponent extends BasicFormComponent {
             // let subTabs: { string: any } = r.bizresult.tabVals;
             // for (let tabName in subTabs) {
             let ii = new Item(val);
-            ii.vals = subTabs[tabName];
+            if (Array.isArray(subTabs[tabName])) {
+              ii.vals = subTabs[tabName][0].vals;
+            } else {
+              throw new Error("subTabs[tabName] must be array,but now is:" + (typeof subTabs[tabName]));
+            }
             ii.wrapItemVals();
-            // console.log([tabName, ii.vals, subTabs[tabName] , val]);
-            this.subFormHetero.items[0].vals[tabName] = <{ [key: string]: ItemPropVal }>ii.vals;
+            // console.log([tabName, ii, ii.vals, subTabs[tabName], val, this.subFormHetero.items[0].vals]);
+            this.subFormHetero.items[0].vals[tabName] = [ii];
             this.subFormItemSetterFlag.set(tabName, true);
             // }
           });
@@ -255,13 +262,13 @@ export class SelectedTabsComponent extends BasicFormComponent {
         return;
       }
       meta.setted = true;
-    //  console.log(hetero.hetero.items.length);
+      //  console.log(hetero.hetero.items.length);
       // for (let itemIndex = 0; itemIndex < hetero.hetero.items.length; itemIndex++) {
       //
       // }
       // console.log(hetero.hetero.items[0].vals);
       // @ts-ignore
-     // this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
+      // this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
       this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items;
       this.subFormItemSetterFlag.set(detailId, true);
     });
@@ -403,20 +410,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
 
-  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string, subformFieldName: string, dataXReaderTargetName: string): PluginType {
+  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string, subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
     return {
+      skipSubformDescNullError: skipSubformDescNullError,
       name: "dataxReader", require: true
       , extraParam: `targetDescriptorImpl_${readerDescImpl},targetDescriptorName_${readerDescName},subFormFieldName_${subformFieldName},${dataXReaderTargetName}`
     };
-
-    // return {
-    //   name: "dataxReader", require: true
-    //   , extraParam: `${dataXReaderTargetName}`
-    // };
   }
 
   static processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
-    , meta: ISubDetailTransferMeta, subForm:  Array<Item>): Promise<HeteroList[]> {
+    , meta: ISubDetailTransferMeta, subForm: Array<Item>): Promise<HeteroList[]> {
     let metaParam = PluginsComponent.getPluginMetaParams([pluginMeta]);
     return baseCpt.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
@@ -495,7 +498,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           throw new Error("readerDescriptorImpl:" + readerDescriptorImpl + ",desc:" + desc.impl + " must has subForm");
         }
 
-       console.log(subFieldForms);
+        // console.log(subFieldForms);
         subFieldFormsCallback(subFieldForms, subFormHetero, desc);
 
         // desc.subFormMeta.idList.forEach((subformId) => {
