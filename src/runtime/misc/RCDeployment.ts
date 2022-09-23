@@ -147,11 +147,12 @@ export class K8SControllerStatus {
 export interface PluginExtraProps {
   endType: string;
   extendPoint: string;
+  supportIncr: boolean;
   impl: string;
   displayName: string;
 }
 
-export interface IncrSourceDesc extends PluginExtraProps {
+export interface IncrDesc extends PluginExtraProps {
   extendSelectedTabProp: boolean;
 }
 
@@ -162,10 +163,10 @@ export class IndexIncrStatus extends K8SControllerStatus {
   public flinkJobDetail: FlinkJobDetail;
   public incrProcess: IncrProcess;
 
-  public incrSourceDesc: IncrSourceDesc;
+  public incrSourceDesc: IncrDesc;
+  public incrSinkDesc: IncrDesc;
   public readerDesc: PluginExtraProps;
   public writerDesc: PluginExtraProps;
-
 
 
   public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {

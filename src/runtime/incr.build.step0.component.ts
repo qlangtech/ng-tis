@@ -62,11 +62,11 @@ export class IncrBuildStep0Component extends AppFormComponent implements AfterCo
         if (r.success) {
           let dto: IndexIncrStatus = r.bizresult;
          // console.log(dto);
-          if (!dto.readerDesc.endType) {
+          if (!dto.readerDesc.supportIncr) {
             this.errNotify(dto.readerDesc.impl + "类型的Source暂时不支持增量同步", 10000);
             return;
           }
-          if (!dto.writerDesc.endType) {
+          if (!dto.writerDesc.supportIncr) {
             // console.log(dto.writerDesc);
             this.errNotify(dto.writerDesc.impl + "类型的Sink暂时不支持增量同步", 10000);
             return;

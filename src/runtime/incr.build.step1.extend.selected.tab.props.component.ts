@@ -43,7 +43,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
                       <selected-tables [direction]="'right'" [items]="items" [disabled]="false" [descriptor]="incrSourceDescriptor" [batchSettableTabs]="[]"
                                        [pluginMetas]="pluginMetas" [subFormHetero]="this.subFormHetero" [stat]="{checkAll: false, checkHalf: false}" [subFieldForms]="subFieldForms"
                                        [dataXReaderTargetName]="'dataxName_' + this.currentApp.name+','+targetItemDesc_incr_process_extend"
-                                       (onItemSelect)="onItemSelect($event)" (onItemSelectAll)="onItemSelectAll($event)"></selected-tables>
+                                       (onItemSelect)="onItemSelect($event)" (onItemSelectAll)="onItemSelectAll($event)" [skipSubformDescNullError]="skipSubformDescNullError"></selected-tables>
                   </ng-template>
               </nz-tab>
               <!--              <nz-tab nzTitle="执行脚本">-->
@@ -80,6 +80,8 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
 
   targetItemDesc_incr_process_extend = 'targetItemDesc_incr_process_extend';
 
+  skipSubformDescNullError = true;
+
   @Input()
   public set dto(status: IndexIncrStatus) {
     this._dto = status;
@@ -88,6 +90,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
     desc.displayName = status.incrSourceDesc.displayName;
     desc.extendPoint = status.incrSourceDesc.extendPoint;
     this.incrSourceDescriptor = desc;
+    //  console.log(this.incrSourceDescriptor);
   }
 
   tabSelectIndex = 0;
@@ -124,7 +127,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
 
     DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas(app), undefined // this.dto.readerDescriptor.impl
       , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-      console.log(subFieldForms);
+        // console.log(subFieldForms);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
 
@@ -146,6 +149,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
     // console.log(this.dto.readerDesc);
     if (this.pluginMetas.length < 1) {
       this.pluginMetas = [{
+        skipSubformDescNullError: this.skipSubformDescNullError,
         name: "dataxReader", require: true
         , extraParam: `targetDescriptorName_${this._dto.readerDesc.displayName},targetDescriptorImpl_${this._dto.readerDesc.impl},${this.targetItemDesc_incr_process_extend},subFormFieldName_selectedTabs,dataxName_${app.name},maxReaderTableCount_9999`
       }];
@@ -165,8 +169,8 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
     // e.notShowBizMsg = true;
     // e.serverForward = "coredefine:core_action:create_incr_sync_channal";
     // this.savePlugin.emit(e);
-   // let desc: Descriptor = this.subFormHetero.descriptorList[0];
-   // console.log(desc);
+    // let desc: Descriptor = this.subFormHetero.descriptorList[0];
+    // console.log(desc);
     for (let index = 0; index < this.items.length; index++) {
       let tabName = this.items[index].key;
       if (!this.subFormHetero.items[0].vals[tabName]) {

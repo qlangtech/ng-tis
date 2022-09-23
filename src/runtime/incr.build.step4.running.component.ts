@@ -82,12 +82,12 @@ import {TisResponseResult} from "../common/tis.plugin";
                               </nz-space>
                           </ng-template>
                           <ng-template #extraTpl>
-                              <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()">操作</button>
+                              <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()"><i nz-icon nzType="setting" nzTheme="outline"></i>操作</button>
                           </ng-template>
                           <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
                               <tis-col title="Name" width="20">
                                   <ng-template let-rr="r">
-                                      <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                                      <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
                                   </ng-template>
                               </tis-col>
                               <tis-col title="Status" width="10">
@@ -342,7 +342,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   }
 
   manageChannel() {
-    this.tabSelectIndex = 1;
+    this.tabSelectIndex = 2;
   }
 
 
