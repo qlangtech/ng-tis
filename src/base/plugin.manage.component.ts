@@ -38,6 +38,11 @@ enum PluginTab {
   template: `
       <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
       </tis-page-header>
+      <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl" nzShowIcon></nz-alert>
+      <ng-template #updateSiteLoadErrTpl>
+          加载远端仓库元数据异常: {{updateSiteLoadErr.action_error_msg}}
+          <button nz-button nzType="primary" (click)="reloadUpdateSite()" [disabled]="this.formDisabled" nzSize="small"><i nz-icon nzType="redo" nzTheme="outline"></i>重试</button>
+      </ng-template>
       <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
               <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
@@ -159,6 +164,7 @@ enum PluginTab {
                 font-size: 7px;
                 color: #989898;
             }
+
             .tis-tags {
                 margin-bottom: 5px;
             }
@@ -182,6 +188,8 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   avaliablePlugs: Array<any> = [];
   installedPlugs: Array<PluginInfo> = [];
   selectedIndex = 0;
+
+  updateSiteLoadErr: UpdateSiteLoadErr;
 
   /**
    * 当前是否在抽屉模式
@@ -249,7 +257,27 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       .then((r) => {
         this.pager = Pager.create(r);
         // this.logs = r.bizresult.rows;
+        let err = this.pager.payload.find((p) => p.updateSiteLoadErr);
+
+        if (err) {
+          this.updateSiteLoadErr = err;
+        }
         this.avaliablePlugs = r.bizresult.rows;
+      });
+  }
+
+  reloadUpdateSite() {
+
+    this.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=plugin_action&emethod=reload_update_site_meta${this.buildExtendPointParam()}`)
+      .then((r) => {
+        if (r.success) {
+          // this.installedPlugs = r.bizresult;
+          this.updateSiteLoadErr = null;
+          this.pager = Pager.create(r);
+          this.avaliablePlugs = r.bizresult.rows;
+          this.selectedIndex = 0;
+        }
       });
   }
 
@@ -341,6 +369,8 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   queryIntalledPlugin(event: { query: string; reset: boolean }) {
     this.fetchInstalledPlugins(event.reset ? null : event.query);
   }
+
+
 }
 
 interface PluginInfo {
@@ -348,4 +378,8 @@ interface PluginInfo {
   version: string;
   website: string;
   checked: boolean;
+}
+
+interface UpdateSiteLoadErr {
+  action_error_msg: string;
 }

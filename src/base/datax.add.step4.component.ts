@@ -154,22 +154,39 @@ export class SelectedTabsComponent extends BasicFormComponent {
         return;
       }
     }
-
-    // console.log([meta, this.subFieldForms.get(meta.id)], this.subFormHetero.descriptorList[0]);
-    DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id) // , this.subFormHetero.descriptorList[0]
-    ).then((hlist: HeteroList[]) => {
-      // console.log(hlist[0]);
+    DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id))
+      .then((hlist: HeteroList[]) => {
       let h = hlist[0];
-      if (h.items.length < 1) {
-        // 当给增量流程流程扩展selectTab使用还没有item使用
-        Descriptor.addNewItemByDescs(h, h.descriptorList, false, (_, propVal) => {
+
+      let oitems = h.items;
+      let items: Array<Item> = [];
+      h.items = items;
+      h.descriptorList.forEach((desc) => {
+        for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
+          if (oitems[itemIdx].impl === desc.impl) {
+            items.push(oitems[itemIdx]);
+            return;
+          }
+        }
+        Descriptor.addNewItemByDescs(h, [desc], false, (_, propVal) => {
           if (propVal.pk) {
             propVal.primary = meta.id;
             propVal.updateModel = true;
           }
           return propVal;
         });
-      }
+      });
+
+      // if (h.items.length < 1) {
+      //   // 当给增量流程流程扩展selectTab使用还没有item使用
+      //   Descriptor.addNewItemByDescs(h, h.descriptorList, false, (_, propVal) => {
+      //     if (propVal.pk) {
+      //       propVal.primary = meta.id;
+      //       propVal.updateModel = true;
+      //     }
+      //     return propVal;
+      //   });
+      // }
       //  console.log(hlist);
       this.openSubDetailForm(meta, pluginMeta, hlist);
     });
