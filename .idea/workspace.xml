@@ -4,13 +4,8 @@
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -322,7 +317,9 @@
       <workItem from="1657247789537" duration="49757000" />
       <workItem from="1660005730239" duration="14759000" />
       <workItem from="1662194941021" duration="5903000" />
-      <workItem from="1663207721355" duration="11371000" />
+      <workItem from="1663207721355" duration="14555000" />
+      <workItem from="1665294344971" duration="609000" />
+      <workItem from="1666057423751" duration="5162000" />
     </task>
     <servers />
   </component>

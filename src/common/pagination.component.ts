@@ -59,14 +59,21 @@ export class Pager {
   public static create(result: TisResponseResult): Pager {
     let biz = result.bizresult;
     if (biz) {
-      return new Pager(biz.curPage, biz.totalPage, biz.totalCount, biz.pageSize);
+      return new Pager(biz.curPage, biz.totalPage, biz.totalCount, biz.pageSize, biz.payload);
     } else {
       return new Pager();
     }
   }
 
-  constructor(public page = 0, public allPage = 0, public totalCount = 0, public pageSize = 10) {
+  constructor(public page = 0, public allPage = 0, public totalCount = 0, public pageSize = 10, private _payload = []) {
 
+  }
+
+  public get payload(): Array<any> {
+    if (!this._payload) {
+      return [];
+    }
+    return this._payload;
   }
 
   get curPage(): number {
@@ -192,7 +199,7 @@ export class TdContentDirective implements OnInit {
   template: `
       <nz-table #tabrows [nzBordered]="bordered" [nzData]="rows" [nzSize]="this.tabSize" [nzShowPagination]="showPagination" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                 (nzPageIndexChange)="searchData()"
-                [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize" >
+                [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
           <thead>
           <tr>
               <th *ngFor="let k of cls" tis-th [key-meta]='k' [nzCustomFilter]="k.searchable">{{k.title}}
