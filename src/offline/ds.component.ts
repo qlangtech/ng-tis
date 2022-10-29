@@ -50,11 +50,7 @@ enum NodeType {
 
 @Component({
   template: `
-      <tis-page-header title="数据源管理">
-          <!--
-          <a routerLink="/offline/datasourcecommits" routerLinkActive="active">datasource变更历史</a>
-          -->
-      </tis-page-header>
+      <tis-page-header title="数据源管理"></tis-page-header>
 
       <nz-layout>
           <nz-sider [nzWidth]="300">
@@ -65,19 +61,6 @@ enum NodeType {
                   <button *nzSpaceItem nz-button nzSize="small" style="width: 4em" (click)="addTableBtnClick()">
                       <i class="fa fa-plus" aria-hidden="true"></i>
                       <i class="fa fa-table" aria-hidden="true"></i></button>
-                  <!--                      <i nz-icon nzType="down"></i>-->
-                  <!--                  <nz-dropdown-menu #menu="nzDropdownMenu">-->
-                  <!--                      <ul nz-menu>-->
-                  <!--                          <li nz-menu-item>-->
-                  <!--                              <a href="javascript:void(0)" (click)="addTableBtnClick()">单个</a>-->
-                  <!--                          </li>-->
-                  <!--                          &lt;!&ndash;-->
-                  <!--                          <li nz-menu-item>-->
-                  <!--                              <a href="javascript:void(0)">批量</a>-->
-                  <!--                          </li> &ndash;&gt;-->
-                  <!--                      </ul>-->
-                  <!--                  </nz-dropdown-menu>-->
-
               </nz-space>
               <nz-input-group [nzSuffix]="suffixIcon">
                   <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
@@ -152,30 +135,10 @@ enum NodeType {
                   <div *ngIf="selectedTable && selectedTable.tableName">
 
                       <tis-page-header [showBreadcrumbRoot]="false" size="sm" title="表信息">
-                          <!--                          <tis-header-tool>-->
-                          <!--                              <button nz-button nzType="default" (click)="editTable(selectedTable)">-->
-                          <!--                                  <i nz-icon nzType="edit" nzTheme="outline"></i>-->
-                          <!--                                  编辑-->
-                          <!--                              </button>&nbsp;-->
-                          <!--                              <button nz-button nzType="primary" nzDanger (click)="deleteTable()">-->
-                          <!--                                  <i nz-icon nzType="delete" nzTheme="outline"></i>删除-->
-                          <!--                              </button>-->
-                          <!--                          </tis-header-tool>-->
                       </tis-page-header>
 
                       <tis-plugins [getCurrentAppCache]="true" [pluginMeta]="selectedTablePluginMeta" [showSaveButton]="updateMode" [disabled]="!updateMode" [formControlSpan]="formControlSpan"
                                    [shallInitializePluginItems]="false" [_heteroList]="selectedTableHeteroList"></tis-plugins>
-
-                      <!--                      <nz-descriptions nzBordered>-->
-                      <!--                          <nz-descriptions-item [nzSpan]="3" nzTitle="表名">{{selectedTable.tableName}}</nz-descriptions-item>-->
-                      <!--                          <nz-descriptions-item [nzSpan]="3" nzTitle="数据库名">{{selectedTable.dbName}}</nz-descriptions-item>-->
-                      <!--                          <nz-descriptions-item [nzSpan]="3" nzTitle="SQL">-->
-                      <!--                              <tis-codemirror name="dumpSql"-->
-                      <!--                                              [ngModel]="selectedTable.selectSql"-->
-                      <!--                                              [size]="{width:800,height:300}"-->
-                      <!--                                              [config]="{readOnly:true,lineWrapping:true,lineNumbers: false}"></tis-codemirror>-->
-                      <!--                          </nz-descriptions-item>-->
-                      <!--                      </nz-descriptions>-->
                   </div>
               </nz-spin>
               <nz-empty *ngIf="!treeNodeClicked && (!selectedTable || !selectedTable.tableName) && (!selectedDb || !selectedDb.dbId)" [nzNotFoundContent]="contentTpl">
