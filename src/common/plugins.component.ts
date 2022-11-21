@@ -68,7 +68,7 @@ import {NzUploadChangeParam} from "ng-zorro-antd/upload";
               </div>
               <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
                   <div style="float:right">
-                      <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link" target="_blank">{{item.impl}}</a></nz-tag>
+                      <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link" target="_blank"><i nz-icon nzType="link" nzTheme="outline"></i>{{item.impl}}</a></nz-tag>
                       <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
                           <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
                       </button>
