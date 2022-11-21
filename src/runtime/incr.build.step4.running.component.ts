@@ -49,12 +49,14 @@ import {TisResponseResult} from "../common/tis.plugin";
 
                       <ng-container *ngSwitchCase="true">
                           <nz-alert class="alter-notice"
-                                  nzType="warning"
-                                  nzMessage="异常状态"
-                                  [nzDescription]="alterNotice"
-                                  nzShowIcon
+                                    nzType="warning"
+                                    nzMessage="异常状态"
+                                    [nzDescription]="alterNotice"
+                                    nzShowIcon
                           ></nz-alert>
-                          <ng-template #alterNotice>服务端获取不到该Job状态信息，可能是因为Flink-Cluster重启导致，请手动 <button  (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复</button></ng-template>
+                          <ng-template #alterNotice>服务端获取不到该Job状态信息，可能是因为Flink-Cluster重启导致，请手动
+                              <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复</button>
+                          </ng-template>
                       </ng-container>
                       <ng-container *ngSwitchCase="false">
 
@@ -87,7 +89,8 @@ import {TisResponseResult} from "../common/tis.plugin";
                           <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
                               <tis-col title="Name" width="20">
                                   <ng-template let-rr="r">
-                                      <a target="_blank" [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                                      <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName" nzOverlayClassName="tooltip-pree"
+                                         [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
                                   </ng-template>
                               </tis-col>
                               <tis-col title="Status" width="10">

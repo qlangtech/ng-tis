@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -320,7 +321,8 @@
       <workItem from="1666057423751" duration="6189000" />
       <workItem from="1666400683554" duration="2008000" />
       <workItem from="1666491808802" duration="589000" />
-      <workItem from="1666576777497" duration="960000" />
+      <workItem from="1666576777497" duration="2390000" />
+      <workItem from="1668824126555" duration="3299000" />
     </task>
     <servers />
   </component>
@@ -338,21 +340,16 @@
         <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline.module.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline.index.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/db.add.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/ds.component.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.module.js" />
@@ -461,9 +458,6 @@
         <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js" />
         <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/db.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline.module.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/ds.component.js" />
         <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
         <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
         <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
