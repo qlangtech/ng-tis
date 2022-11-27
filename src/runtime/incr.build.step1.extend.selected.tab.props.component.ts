@@ -40,7 +40,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectIndex">
               <nz-tab nzTitle="配置">
                   <ng-template nz-tab>
-                      <selected-tables [direction]="'right'" [items]="items" [disabled]="false" [descriptor]="incrSourceDescriptor" [batchSettableTabs]="[]"
+                      <selected-tables [showPagination]="false" [direction]="'right'" [items]="items" [disabled]="false" [descriptor]="incrSourceDescriptor" [batchSettableTabs]="[]"
                                        [pluginMetas]="pluginMetas" [subFormHetero]="this.subFormHetero" [stat]="{checkAll: false, checkHalf: false}" [subFieldForms]="subFieldForms"
                                        [dataXReaderTargetName]="'dataxName_' + this.currentApp.name+','+targetItemDesc_incr_process_extend"
                                        (onItemSelect)="onItemSelect($event)" (onItemSelectAll)="onItemSelectAll($event)" [skipSubformDescNullError]="skipSubformDescNullError"></selected-tables>

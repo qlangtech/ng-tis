@@ -33,7 +33,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 @Component({
   selector: "selected-tables",
   template: `
-      <nz-table #t [nzData]="convertItems(items)" nzSize="small">
+      <nz-table #t [nzData]="convertItems(items)" [nzFrontPagination]="showPagination" nzSize="small">
           <thead>
           <tr>
               <th
@@ -72,6 +72,10 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
   `
 })
 export class SelectedTabsComponent extends BasicFormComponent {
+
+  @Input()
+  showPagination =  true;
+
   @Input()
   items: TransferItem[];
   @Input()
