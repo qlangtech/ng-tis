@@ -71,6 +71,7 @@ export function markedOptionsFactory(): MarkedOptions {
 
 // https://github.com/angular/angular/issues/11075 loadChildren 子模块不支持aot编译的问题讨论
 // router 的配置
+// @ts-ignore
 @NgModule({
   id: 'tisRoot',
   imports: [BrowserModule, FormsModule, TisCommonModule,
