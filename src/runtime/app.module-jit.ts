@@ -30,10 +30,13 @@ import {TISService} from "../common/tis.service";
 //
 // import {ScriptService} from "../service/script.service";
 import {TisCommonModule} from "../common/common.module";
-import {CorenodemanageComponent} from "./corenodemanage.component";
+// import {CorenodemanageComponent} from "./corenodemanage.component";
 import {RootWelcomeComponent} from "./root-welcome-component";
 import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
 import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
+import {WorkspaceModule} from "@zeppelin/pages/workspace/workspace.module";
+import {NzMessageService} from "ng-zorro-antd/message";
+import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
 
 
 // export function offlineModuleFactory() {
@@ -106,7 +109,11 @@ export function markedOptionsFactory(): MarkedOptions {
       {   // datax控制台
         path: 'x/:name',
         loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
-      }
+      },
+      {
+        path: 'zeppelin',
+        loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule)
+      },
     ])
   ],
   declarations: [AppComponent, RootWelcomeComponent
@@ -116,7 +123,10 @@ export function markedOptionsFactory(): MarkedOptions {
   entryComponents: [],
   bootstrap: [AppComponent],
   // bootstrap: [CodemirrorComponent],
-  providers: [TISService, {provide: NZ_I18N, useValue: zh_CN}]
+  providers: [TISService, NzMessageService, {provide: NZ_I18N, useValue: zh_CN}, {
+    provide: TRASH_FOLDER_ID_TOKEN,
+    useValue: '~Trash'
+  }]
 
 })
 export class AppModule {

@@ -5,7 +5,33 @@
   "projects": {
     "ng-tis": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "less",
+          "skipTests": true
+        },
+        "ng-zorro-antd:component": {
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:module": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -26,6 +52,11 @@
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/mathjax",
+                "output": "/"
               }
             ],
             "styles": [
@@ -43,8 +74,21 @@
               "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-yaml.js",
               "node_modules/prismjs/components/prism-json.js",
-              "node_modules/prismjs/components/prism-java.js"
-            ]
+              "node_modules/prismjs/components/prism-java.js",
+              // for zeppelin
+              "node_modules/mathjax/MathJax.js",
+              "node_modules/systemjs/dist/s.js",
+              "node_modules/systemjs/dist/extras/amd.js",
+              "node_modules/systemjs/dist/extras/named-register.js",
+              "node_modules/systemjs/dist/extras/use-default.js"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/zeppelin_styles/theme",
+                "src/zeppelin_styles/theme/dark",
+                "src/zeppelin_styles/theme/light"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -143,6 +187,232 @@
             "production": {
               "devServerTarget": "ng-tis:serve:production"
             }
+          }
+        }
+      }
+    },
+    "zeppelin": {
+      "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "less",
+          "skipTests": true,
+          "changeDetection": "OnPush"
+        },
+        "ng-zorro-antd:component": {
+          "style": "less",
+          "skipTests": true,
+          "changeDetection": "OnPush",
+          "classnameWithModule": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:module": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "projects/zeppelin",
+      "sourceRoot": "projects/zeppelin/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "outputPath": "dist/zeppelin",
+            "index": "projects/zeppelin/src/index.html",
+            "main": "projects/zeppelin/src/main.ts",
+            "polyfills": "projects/zeppelin/src/polyfills.ts",
+            "tsConfig": "projects/zeppelin/tsconfig.app.json",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              "projects/zeppelin/src/favicon.ico",
+              "projects/zeppelin/src/assets"
+            ],
+            "styles": [
+              "projects/zeppelin/src/styles/theme/dark/antd-dark.less",
+              "projects/zeppelin/src/styles/theme/light/antd-light.less",
+              "projects/zeppelin/src/styles.less",
+              "./node_modules/highlight.js/styles/github.css",
+              "./node_modules/monaco-editor/min/vs/editor/editor.main.css",
+              "./node_modules/github-markdown-css/github-markdown.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/zeppelin/src/styles/theme",
+                "projects/zeppelin/src/styles/theme/dark",
+                "projects/zeppelin/src/styles/theme/light"
+              ]
+            },
+            "scripts": [
+              "node_modules/mathjax/MathJax.js",
+              "node_modules/systemjs/dist/s.js",
+              "node_modules/systemjs/dist/extras/amd.js",
+              "node_modules/systemjs/dist/extras/named-register.js",
+              "node_modules/systemjs/dist/extras/use-default.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "10mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/zeppelin/src/environments/environment.ts",
+                  "with": "projects/zeppelin/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "zeppelin:build:production"
+            },
+            "development": {
+              "browserTarget": "zeppelin:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "zeppelin:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/zeppelin/src/test.ts",
+            "polyfills": "projects/zeppelin/src/polyfills.ts",
+            "tsConfig": "projects/zeppelin/tsconfig.spec.json",
+            "karmaConfig": "projects/zeppelin/karma.conf.js",
+            "inlineStyleLanguage": "less",
+            "assets": [
+              "projects/zeppelin/src/favicon.ico",
+              "projects/zeppelin/src/assets"
+            ],
+            "styles": [
+              "projects/zeppelin/src/styles.less"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    },
+    "zeppelin-sdk": {
+      "projectType": "library",
+      "root": "projects/zeppelin-sdk",
+      "sourceRoot": "projects/zeppelin-sdk/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/zeppelin-sdk/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/zeppelin-sdk/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/zeppelin-sdk/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/zeppelin-sdk/src/test.ts",
+            "tsConfig": "projects/zeppelin-sdk/tsconfig.spec.json",
+            "karmaConfig": "projects/zeppelin-sdk/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/zeppelin-sdk/tsconfig.lib.json",
+              "projects/zeppelin-sdk/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "zeppelin-visualization": {
+      "projectType": "library",
+      "root": "projects/zeppelin-visualization",
+      "sourceRoot": "projects/zeppelin-visualization/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/zeppelin-visualization/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/zeppelin-visualization/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/zeppelin-visualization/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/zeppelin-visualization/src/test.ts",
+            "tsConfig": "projects/zeppelin-visualization/tsconfig.spec.json",
+            "karmaConfig": "projects/zeppelin-visualization/karma.conf.js"
           }
         }
       }
