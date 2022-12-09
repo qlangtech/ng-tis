@@ -10,10 +10,10 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { NotebookComponent } from './notebook.component';
+import {NotebookComponent} from './notebook.component';
 import {NotebookTestComponent} from "@zeppelin/pages/workspace/notebook/notebook.test.component";
 
 const routes: Routes = [
@@ -22,8 +22,8 @@ const routes: Routes = [
     component: NotebookComponent
   },
   {
-    path: 'test/test',
-    component: NotebookTestComponent
+    path: 'test/test'
+    , component: NotebookTestComponent
   },
   {
     path: ':noteId/revision/:revisionId',
@@ -35,4 +35,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class NotebookRoutingModule {}
+export class NotebookRoutingModule {
+}

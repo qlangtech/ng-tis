@@ -37,6 +37,8 @@ import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
 import {WorkspaceModule} from "@zeppelin/pages/workspace/workspace.module";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
+import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
+import {loadMonaco} from "@zeppelin/app.module";
 
 
 // export function offlineModuleFactory() {
@@ -126,7 +128,18 @@ export function markedOptionsFactory(): MarkedOptions {
   providers: [TISService, NzMessageService, {provide: NZ_I18N, useValue: zh_CN}, {
     provide: TRASH_FOLDER_ID_TOKEN,
     useValue: '~Trash'
-  }]
+  },
+    {
+      provide: NZ_CODE_EDITOR_CONFIG,
+      useValue: {
+        defaultEditorOption: {
+          scrollBeyondLastLine: false,
+          lineHeight: 20
+        },
+        onLoad: loadMonaco
+      }
+    }
+  ]
 
 })
 export class AppModule {

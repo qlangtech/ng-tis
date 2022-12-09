@@ -1,3 +1,9 @@
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/core";
+
+import {editor} from "monaco-editor";
+import IEditor = editor.IEditor;
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
+
 /**
  *   Licensed to the Apache Software Foundation (ASF) under one
  *   or more contributor license agreements.  See the NOTICE file
@@ -16,14 +22,25 @@
  *   limitations under the License.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren} from "@angular/core";
-
 
 @Component({
-  selector: 'zeppelin-notebooktest',
-  templateUrl: './notebook.test.component.html',
-  styleUrls: ['./notebook.test.component.less'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'zeppelin-notebook',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+      <h1>code-editor</h1>
+      <zeppelin-code-editor [style.height.px]="200"
+                            [class.focused]="true"
+                            [class.dirty]="false"
+                            (nzEditorInitialized)="initializedEditor($event)">
+      </zeppelin-code-editor>
+  `
 })
 export class NotebookTestComponent {
+
+  initializedEditor(control: IEditor | editor.IDiffEditor) {
+    let e = control as IStandaloneCodeEditor;
+
+    e.getModel().setValue("select * from testTable");
+    e.layout();
+  }
 }

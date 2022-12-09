@@ -24,23 +24,24 @@ import {
   TemplateRef,
   ViewEncapsulation
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { combineLatest, fromEvent, BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
+import {combineLatest, fromEvent, BehaviorSubject, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map, takeUntil} from 'rxjs/operators';
 
-import { InputBoolean } from 'ng-zorro-antd/core/util';
+import {InputBoolean} from 'ng-zorro-antd/core/util';
 
 // import {InputBoolean} from "ng-zorro-antd/core/util";
 
-import { CodeEditorService } from './code-editor.service';
-import { DiffEditorOptions, EditorOptions, JoinedEditorOptions, NzEditorMode } from './nz-code-editor.definitions';
+import {CodeEditorService} from './code-editor.service';
+import {DiffEditorOptions, EditorOptions, JoinedEditorOptions, NzEditorMode} from './nz-code-editor.definitions';
 
 // Import types from monaco editor.
-import { editor } from 'monaco-editor';
+import {editor} from 'monaco-editor';
 import IEditor = editor.IEditor;
 import IDiffEditor = editor.IDiffEditor;
 import ITextModel = editor.ITextModel;
-import { warn } from 'ng-zorro-antd/core/logger';
+import {warn} from 'ng-zorro-antd/core/logger';
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -117,9 +118,11 @@ export class CodeEditorComponent implements OnDestroy, AfterViewInit {
     this.onTouch = fn;
   }
 
-  onChange(_value: string): void {}
+  onChange(_value: string): void {
+  }
 
-  onTouch(): void {}
+  onTouch(): void {
+  }
 
   layout(): void {
     this.resize$.next();
@@ -155,10 +158,12 @@ export class CodeEditorComponent implements OnDestroy, AfterViewInit {
     this.ngZone.runOutsideAngular(() => {
       this.editorInstance =
         this.nzEditorMode === 'normal'
-          ? editor.create(this.el, { ...this.editorOptionCached })
+          ? editor.create(this.el, {...this.editorOptionCached})
           : editor.createDiffEditor(this.el, {
-              ...(this.editorOptionCached as DiffEditorOptions)
-            });
+            ...(this.editorOptionCached as DiffEditorOptions)
+          });
+      //  this.editor.getRawOptions().lineHeight
+     // console.log(["this.nzEditorMode", this.nzEditorMode, (this.editorInstance as IStandaloneCodeEditor).getRawOptions()]);
     });
   }
 
@@ -241,7 +246,7 @@ export class CodeEditorComponent implements OnDestroy, AfterViewInit {
 
   private updateOptionToMonaco(): void {
     if (this.editorInstance) {
-      this.editorInstance.updateOptions({ ...this.editorOptionCached });
+      this.editorInstance.updateOptions({...this.editorOptionCached});
     }
   }
 }
