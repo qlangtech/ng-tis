@@ -57,15 +57,15 @@ import {RUNTIME_COMPILER_PROVIDERS} from "@zeppelin/app-runtime-compiler.provide
       multi: true,
       deps: [TicketService]
     },
-    {
-      provide: NZ_CODE_EDITOR_CONFIG,
-      useValue: {
-        defaultEditorOption: {
-          scrollBeyondLastLine: false
-        },
-        onLoad: loadMonaco
-      }
-    },
+    // {
+    //   provide: NZ_CODE_EDITOR_CONFIG,
+    //   useValue: {
+    //     defaultEditorOption: {
+    //       scrollBeyondLastLine: false
+    //     },
+    //     onLoad: loadMonaco
+    //   }
+    // },
     {
       provide: MESSAGE_INTERCEPTOR,
       useClass: AppMessageInterceptor,

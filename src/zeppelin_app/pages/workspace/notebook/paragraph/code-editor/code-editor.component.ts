@@ -24,15 +24,15 @@ import {
   SimpleChanges
 } from '@angular/core';
 
-import { editor, editor as MonacoEditor, IDisposable, KeyCode } from 'monaco-editor';
+import {editor, editor as MonacoEditor, IDisposable, KeyCode} from 'monaco-editor';
 import IStandaloneCodeEditor = MonacoEditor.IStandaloneCodeEditor;
-//import IEditor = monaco.editor.IEditor;
+// import IEditor = monaco.editor.IEditor;
 
-import { InterpreterBindingItem } from '@zeppelin/sdk';
-import { CompletionService, MessageService } from '@zeppelin/services';
+import {InterpreterBindingItem} from '@zeppelin/sdk';
+import {CompletionService, MessageService} from '@zeppelin/services';
 
-import { pt2px } from '@zeppelin/utility/css-unit-conversion';
-import { NotebookParagraphControlComponent } from '../control/control.component';
+import {pt2px} from '@zeppelin/utility/css-unit-conversion';
+import {NotebookParagraphControlComponent} from '../control/control.component';
 import IEditor = editor.IEditor;
 
 @Component({
@@ -64,8 +64,10 @@ export class NotebookParagraphCodeEditorComponent implements OnChanges, OnDestro
   interpreterName: string;
 
   autoAdjustEditorHeight() {
+  //  console.log(["autoAdjustEditorHeight", this.editor])
     if (this.editor) {
       this.ngZone.run(() => {
+       // console.log(["autoAdjustEditorHeight", this.editor.getTopForLineNumber(Number.MAX_SAFE_INTEGER) , this.editor.getRawOptions().lineHeight ])
         this.height =
           this.editor.getTopForLineNumber(Number.MAX_SAFE_INTEGER) + this.editor.getRawOptions().lineHeight * 2;
         this.editor.layout();
@@ -105,6 +107,7 @@ export class NotebookParagraphCodeEditorComponent implements OnChanges, OnDestro
   }
 
   initializedEditor(editor: IEditor) {
+
     this.editor = editor as IStandaloneCodeEditor;
     this.editor.addCommand(
       KeyCode.Escape,
@@ -143,7 +146,7 @@ export class NotebookParagraphCodeEditorComponent implements OnChanges, OnDestro
         readOnly: this.readOnly,
         fontSize: pt2px(this.fontSize),
         renderLineHighlight: this.focus ? 'all' : 'none',
-        minimap: { enabled: false },
+        minimap: {enabled: false},
         lineNumbers: this.lineNumbers ? 'on' : 'off',
         glyphMargin: false,
         folding: false,
@@ -202,10 +205,11 @@ export class NotebookParagraphCodeEditorComponent implements OnChanges, OnDestro
     private ngZone: NgZone,
     private messageService: MessageService,
     private completionService: CompletionService
-  ) {}
+  ) {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const { text, interpreterBindings, language, readOnly, focus, lineNumbers, fontSize } = changes;
+    const {text, interpreterBindings, language, readOnly, focus, lineNumbers, fontSize} = changes;
     if (readOnly || focus || lineNumbers || fontSize) {
       this.updateEditorOptions();
     }
@@ -229,5 +233,6 @@ export class NotebookParagraphCodeEditorComponent implements OnChanges, OnDestro
     this.monacoDisposables.forEach(d => d.dispose());
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+  }
 }

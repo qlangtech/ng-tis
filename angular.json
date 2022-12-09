@@ -65,7 +65,8 @@
               "src/theme.less",
               "node_modules/codemirror/lib/codemirror.css",
               "node_modules/nprogress/nprogress.css",
-              "node_modules/prismjs/themes/prism.css"
+              "node_modules/prismjs/themes/prism.css",
+              "node_modules/monaco-editor/dev/vs/editor/editor.main.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -103,7 +104,7 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
@@ -187,158 +188,6 @@
             "production": {
               "devServerTarget": "ng-tis:serve:production"
             }
-          }
-        }
-      }
-    },
-    "zeppelin": {
-      "projectType": "library",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "less",
-          "skipTests": true,
-          "changeDetection": "OnPush"
-        },
-        "ng-zorro-antd:component": {
-          "style": "less",
-          "skipTests": true,
-          "changeDetection": "OnPush",
-          "classnameWithModule": true
-        },
-        "@schematics/angular:class": {
-          "skipTests": true
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true
-        },
-        "@schematics/angular:guard": {
-          "skipTests": true
-        },
-        "@schematics/angular:module": {
-          "skipTests": true
-        },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
-        }
-      },
-      "root": "projects/zeppelin",
-      "sourceRoot": "projects/zeppelin/src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "outputPath": "dist/zeppelin",
-            "index": "projects/zeppelin/src/index.html",
-            "main": "projects/zeppelin/src/main.ts",
-            "polyfills": "projects/zeppelin/src/polyfills.ts",
-            "tsConfig": "projects/zeppelin/tsconfig.app.json",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              "projects/zeppelin/src/favicon.ico",
-              "projects/zeppelin/src/assets"
-            ],
-            "styles": [
-              "projects/zeppelin/src/styles/theme/dark/antd-dark.less",
-              "projects/zeppelin/src/styles/theme/light/antd-light.less",
-              "projects/zeppelin/src/styles.less",
-              "./node_modules/highlight.js/styles/github.css",
-              "./node_modules/monaco-editor/min/vs/editor/editor.main.css",
-              "./node_modules/github-markdown-css/github-markdown.css"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "projects/zeppelin/src/styles/theme",
-                "projects/zeppelin/src/styles/theme/dark",
-                "projects/zeppelin/src/styles/theme/light"
-              ]
-            },
-            "scripts": [
-              "node_modules/mathjax/MathJax.js",
-              "node_modules/systemjs/dist/s.js",
-              "node_modules/systemjs/dist/extras/amd.js",
-              "node_modules/systemjs/dist/extras/named-register.js",
-              "node_modules/systemjs/dist/extras/use-default.js"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "10mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "10mb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "projects/zeppelin/src/environments/environment.ts",
-                  "with": "projects/zeppelin/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "vendorChunk": true,
-              "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "zeppelin:build:production"
-            },
-            "development": {
-              "browserTarget": "zeppelin:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "zeppelin:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/zeppelin/src/test.ts",
-            "polyfills": "projects/zeppelin/src/polyfills.ts",
-            "tsConfig": "projects/zeppelin/tsconfig.spec.json",
-            "karmaConfig": "projects/zeppelin/karma.conf.js",
-            "inlineStyleLanguage": "less",
-            "assets": [
-              "projects/zeppelin/src/favicon.ico",
-              "projects/zeppelin/src/assets"
-            ],
-            "styles": [
-              "projects/zeppelin/src/styles.less"
-            ],
-            "scripts": []
           }
         }
       }

@@ -22,17 +22,17 @@
                                 (tableHideChange)="setAllParagraphTableHide($event)"
                                 (editorHideChange)="setAllParagraphEditorHide($event)"></zeppelin-notebook-action-bar>
   <div class="flex-container">
-    <div class="sidebar-area"
-        nz-resizable
-        [nzMaxWidth]="!isSidebarOpen ? 40 : 800"
-        [nzMinWidth]="!isSidebarOpen ? 40 : 280"
-        (nzResize)="onResizeSidebar($event)"
-        [style.min-width.px]="!isSidebarOpen ? 40 : sidebarWidth">
-      <zeppelin-notebook-sidebar [note]="note"
-                                (isSidebarOpenChange)="onSidebarOpenChange($event)"
-                                (scrollToParagraph)="onParagraphScrolled($event)"></zeppelin-notebook-sidebar>
-      <nz-resize-handle  *ngIf="isSidebarOpen" nzDirection="right"><div class="sidebar-resize"></div></nz-resize-handle>
-    </div>
+<!--    <div class="sidebar-area"-->
+<!--        nz-resizable-->
+<!--        [nzMaxWidth]="!isSidebarOpen ? 40 : 800"-->
+<!--        [nzMinWidth]="!isSidebarOpen ? 40 : 280"-->
+<!--        (nzResize)="onResizeSidebar($event)"-->
+<!--        [style.min-width.px]="!isSidebarOpen ? 40 : sidebarWidth">-->
+<!--      <zeppelin-notebook-sidebar [note]="note"-->
+<!--                                (isSidebarOpenChange)="onSidebarOpenChange($event)"-->
+<!--                                (scrollToParagraph)="onParagraphScrolled($event)"></zeppelin-notebook-sidebar>-->
+<!--      <nz-resize-handle  *ngIf="isSidebarOpen" nzDirection="right"><div class="sidebar-resize"></div></nz-resize-handle>-->
+<!--    </div>-->
     <div class="notebook-area">
       <div class="extension-area" [ngSwitch]="activatedExtension" *ngIf="activatedExtension!=='hide'">
         <zeppelin-notebook-interpreter-binding *ngSwitchCase="'interpreter'"

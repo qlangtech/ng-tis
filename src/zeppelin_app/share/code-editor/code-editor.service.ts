@@ -51,6 +51,7 @@ export class CodeEditorService {
     @Inject(NZ_CODE_EDITOR_CONFIG) private config: NzCodeEditorConfig,
     @Inject(DOCUMENT) _document: any // tslint:disable-line no-any
   ) {
+   // console.log(config);
     this.document = _document;
     this.option = this.config.defaultEditorOption || {};
   }
