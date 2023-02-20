@@ -23,23 +23,26 @@ import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePlugin
 import {PluginsComponent} from "../common/plugins.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ExecModel} from "./datax.add.step7.confirm.component";
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   selector: 'addapp-form',
   template: `
-      <tis-steps type="createDatax" [step]="0"></tis-steps>
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()" (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
-          <div style="width: 80%;margin: 0 auto;">
-              <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
-                           (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
-          </div>
-      </nz-spin>
-      <!-- Content here -->
+    <tis-steps [type]="dto.processModel" [step]="0"></tis-steps>
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()"
+                           (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
+      <div style="width: 80%;margin: 0 auto;">
+        <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+                     (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
+                     [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+      </div>
+    </nz-spin>
+    <!-- Content here -->
   `
   , styles: [
-      `
+    `
     `
   ]
 })
@@ -59,12 +62,14 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
-    let dataxNameParam = '';
+    let dataxNameParam = `&processModel=${this.dto.processModel}`;
     if (this.dto.dataxPipeName) {
-      dataxNameParam = `&dataxName=${this.dto.dataxPipeName}`;
+      dataxNameParam += `&dataxName=${this.dto.dataxPipeName}`;
     }
+ //console.log(dataxNameParam);
+    //processModel
 
-    this.pluginCategory = {name: 'appSource', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}
+    this.pluginCategory = {name: 'appSource', require: true, extraParam: `update_${this.dto.execModel === ExecModel.Reader},dataxName_${this.dto.dataxPipeName}`  }
 
     this.httpPost('/coredefine/corenodemanage.ajax'
       , 'action=datax_action&emethod=datax_processor_desc' + dataxNameParam)

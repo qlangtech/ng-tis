@@ -26,6 +26,7 @@ import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor} from "../common/tis.plugin";
+import {StepType} from "../common/steps.component";
 
 // import {ExecModel} from "../base/datax.add.step7.confirm.component";
 
@@ -33,10 +34,13 @@ import {Descriptor} from "../common/tis.plugin";
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
+      <tis-page-header *ngIf="this.dto.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
+                       [title]="this.dto.dataxPipeName">
+      </tis-page-header>
       <!--      <tis-plugins [errorsPageShow]="false"-->
       <!--                   [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"-->
       <!--                   [plugins]="[{name: 'dataxReader', require: true, extraParam: 'justGetItemRelevant_true,dataxName_' + this.dto.dataxPipeName}]"></tis-plugins>-->
-      <datax-config *ngIf="dto"  [dtoooo]="dto" [execModel]="execModel"></datax-config>
+      <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
   `,
   styles: [`
   `]
@@ -44,15 +48,26 @@ import {Descriptor} from "../common/tis.plugin";
 export class DataxConfigComponent extends AppFormComponent implements OnInit {
 
   public dto: DataxDTO = null;
-
-
+  stepType: StepType;
+  // public stepType: StepType = StepType.CreateDatax;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
     super(tisService, route, modalService);
+    this.stepType = this.route.snapshot.data["stepType"];
+    if (!this.stepType) {
+      this.stepType = StepType.CreateDatax
+    }
   }
 
   protected initialize(app: CurrentCollection): void {
-    DataxAddComponent.getDataXMeta(this, app).then((dto) => {
+
+    // @ts-ignore
+    // let stepType: StepType = this.route.snapshot.data["stepType"];
+    // if (!stepType) {
+    //   stepType = StepType.CreateDatax
+    // }
+
+    DataxAddComponent.getDataXMeta(this, this.stepType, app).then((dto) => {
       // console.log(dto);
       this.dto = dto;
     });

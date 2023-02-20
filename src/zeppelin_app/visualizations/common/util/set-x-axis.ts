@@ -10,7 +10,7 @@
  * limitations under the License.
  */
 
-import * as G6 from '@antv/g6';
+import * as G2 from '@antv/g2';
 import { get } from 'lodash';
 
 import { Visualization } from '@zeppelin/visualization';
@@ -18,7 +18,7 @@ import { Visualization } from '@zeppelin/visualization';
 export function setChartXAxis(
   visualization: Visualization,
   mode: 'lineChart' | 'multiBarChart' | 'stackedAreaChart',
-  chart: G6.Chart,
+  chart: G2.Chart,
   key: string
 ) {
   const config = visualization.getConfig();

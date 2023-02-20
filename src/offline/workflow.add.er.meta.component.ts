@@ -16,8 +16,23 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {BasicSideBar, ColumnTransfer, ERMetaNode, ERRuleNode, IDataFlowMainComponent, LinkKey, PrimaryIndexColumnName} from '../common/basic.form.component';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  BasicSideBar,
+  ColumnTransfer,
+  ERMetaNode,
+  ERRuleNode,
+  IDataFlowMainComponent,
+  LinkKey,
+  PrimaryIndexColumnName
+} from '../common/basic.form.component';
 import {TISService} from '../common/tis.service';
 
 
@@ -33,184 +48,198 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-spin [nzSpinning]="formDisabled" nzSize="large">
+    <nz-spin [nzSpinning]="formDisabled" nzSize="large">
 
-          <sidebar-toolbar (close)="_closeSidebar($event)"
-                           (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
-          <form class="mete-form" nz-form>
-              <nz-row id="meta-setter">
-                  <nz-col [nzSpan]="7" style="padding: 8px;">
-                      <nz-statistic [nzValue]="this.erMetaNode.dumpnode.tabname" [nzTitle]="titleTplOne"></nz-statistic>
-                      <ng-template #titleTplOne><i nz-icon nzType="table" nzTheme="outline"></i>Table Name</ng-template>
-                  </nz-col>
-                  <nz-col [nzSpan]="17" style="border-left: 1px solid #d0d0d0;">
-                      <nz-form-item class="meta-item">
-                          <nz-form-label [nzSpan]="4">主索引表</nz-form-label>
-                          <nz-form-control class="combine-input" [nzSpan]="13">
-                              <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.primaryIndexTab" nzCheckedChildren="是" nzUnCheckedChildren="否" [ngModelOptions]="{standalone: true}"></nz-switch>
-                              <ng-container *ngIf="this.erMetaNode.primaryIndexTab"><br/>
-                                  <ng-container *ngFor="let pkName of this.erMetaNode.primaryIndexColumnNames">
-                                      <nz-select nzSize="small" class="primary-key" nzPlaceHolder="Select Index Primay column" nzShowSearch nzAllowClear [(ngModel)]="pkName.name" (ngModelChange)="primaryKeyChange(pkName,$event)"
-                                                 [ngModelOptions]="{standalone: true}">
-                                          <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
-                                              <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
-                                          </nz-option>
-                                      </nz-select>
-                                      <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removePrimaryKey(pkName)"></i>
-                                  </ng-container>
-                                  <button nzSize="small" nz-button nzType="dashed" class="primary-key" (click)="addPrimaryIndexColumnName($event)">
-                                      <i nz-icon nzType="plus"></i>添加主键列
-                                  </button>
-                              </ng-container>
-                              <ng-template #primaryIndexTab>
-                                  <i nz-icon nzType="key" nzTheme="outline"></i>
-                              </ng-template>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item *ngIf="this.erMetaNode.primaryIndexTab" class="meta-item">
-                          <nz-form-label [nzSpan]="4">分区键</nz-form-label>
-                          <nz-form-control [nzSpan]="13">
-                              <nz-select nzSize="small" class="primary-key" nzPlaceHolder="分区键" nzShowSearch nzAllowClear [(ngModel)]="erMetaNode.sharedKey"
-                                         [ngModelOptions]="{standalone: true}">
-                                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
-                                      <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
-                                  </nz-option>
-                              </nz-select>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item class="meta-item">
-                          <nz-form-label [nzSpan]="4">监听增量变更</nz-form-label>
-                          <nz-form-control [nzSpan]="13">
-                              <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.monitorTrigger" nzCheckedChildren="开" nzUnCheckedChildren="关" [ngModelOptions]="{standalone: true}"></nz-switch>
-                              &nbsp;
-                              <nz-select nzSize="small" class="primary-key timestamp-select" *ngIf="this.erMetaNode.monitorTrigger"
-                                         nzPlaceHolder="Select TimeVerStamp column" nzShowSearch nzAllowClear [(ngModel)]="this.erMetaNode.timeVerColName" [ngModelOptions]="{standalone: true}">
-                                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
-                                      <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key" nzTheme="outline"></i></span>{{r.key}}
-                                  </nz-option>
-                              </nz-select>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </nz-col>
-              </nz-row>
+      <sidebar-toolbar (close)="_closeSidebar($event)"
+                       (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
+      <form class="mete-form" nz-form>
+        <nz-row id="meta-setter">
+          <nz-col [nzSpan]="7" style="padding: 8px;">
+            <nz-statistic [nzValue]="this.erMetaNode.dumpnode.tabname" [nzTitle]="titleTplOne"></nz-statistic>
+            <ng-template #titleTplOne><i nz-icon nzType="table" nzTheme="outline"></i>Table Name</ng-template>
+          </nz-col>
+          <nz-col [nzSpan]="17" style="border-left: 1px solid #d0d0d0;">
+            <nz-form-item class="meta-item">
+              <nz-form-label [nzSpan]="4">主索引表</nz-form-label>
+              <nz-form-control class="combine-input" [nzSpan]="13">
+                <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.primaryIndexTab" nzCheckedChildren="是"
+                           nzUnCheckedChildren="否" [ngModelOptions]="{standalone: true}"></nz-switch>
+                <ng-container *ngIf="this.erMetaNode.primaryIndexTab"><br/>
+                  <ng-container *ngFor="let pkName of this.erMetaNode.primaryIndexColumnNames">
+                    <nz-select nzSize="small" class="primary-key" nzPlaceHolder="Select Index Primay column"
+                               nzShowSearch nzAllowClear [(ngModel)]="pkName.name"
+                               (ngModelChange)="primaryKeyChange(pkName,$event)"
+                               [ngModelOptions]="{standalone: true}">
+                      <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
+                        <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key"
+                                                         nzTheme="outline"></i></span>{{r.key}}
+                      </nz-option>
+                    </nz-select>
+                    <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button"
+                       (click)="removePrimaryKey(pkName)"></i>
+                  </ng-container>
+                  <button nzSize="small" nz-button nzType="dashed" class="primary-key"
+                          (click)="addPrimaryIndexColumnName($event)">
+                    <i nz-icon nzType="plus"></i>添加主键列
+                  </button>
+                </ng-container>
+                <ng-template #primaryIndexTab>
+                  <i nz-icon nzType="key" nzTheme="outline"></i>
+                </ng-template>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="this.erMetaNode.primaryIndexTab" class="meta-item">
+              <nz-form-label [nzSpan]="4">分区键</nz-form-label>
+              <nz-form-control [nzSpan]="13">
+                <nz-select nzSize="small" class="primary-key" nzPlaceHolder="分区键" nzShowSearch nzAllowClear
+                           [(ngModel)]="erMetaNode.sharedKey"
+                           [ngModelOptions]="{standalone: true}">
+                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
+                    <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key"
+                                                     nzTheme="outline"></i></span>{{r.key}}
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item class="meta-item">
+              <nz-form-label [nzSpan]="4">监听增量变更</nz-form-label>
+              <nz-form-control [nzSpan]="13">
+                <nz-switch nzSize="small" [(ngModel)]="this.erMetaNode.monitorTrigger" nzCheckedChildren="开"
+                           nzUnCheckedChildren="关" [ngModelOptions]="{standalone: true}"></nz-switch>
+                &nbsp;
+                <nz-select nzSize="small" class="primary-key timestamp-select" *ngIf="this.erMetaNode.monitorTrigger"
+                           nzPlaceHolder="Select TimeVerStamp column" nzShowSearch nzAllowClear
+                           [(ngModel)]="this.erMetaNode.timeVerColName" [ngModelOptions]="{standalone: true}">
+                  <nz-option nzCustomContent *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key">
+                    <span class="key-placeholder"><i nz-icon *ngIf="r.pk" nzType="key"
+                                                     nzTheme="outline"></i></span>{{r.key}}
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
 
-              <!--
-              <div style="background: #ECECEC; padding: 30px;">
-                  <nz-row [nzGutter]="20">
-                      <nz-col [nzSpan]="12">
-                          <nz-statistic [nzValue]="erRel.targetNode.tabname" [nzTitle]="'Parent Table'"></nz-statistic>
-                      </nz-col>
-                      <nz-col [nzSpan]="12">
-                          <nz-statistic [nzValue]="erRel.sourceNode.tabname" [nzTitle]="'Child Table'" [nzSuffix]="suffixTplOne"></nz-statistic>
-                          <ng-template #suffixTplOne>
-                              <nz-radio-group [nzSize]="'small'" [(ngModel)]="erRel.cardinality" [nzButtonStyle]="'solid'" [ngModelOptions]="{standalone: true}">
-                                  <label nz-radio-button nzValue="1:1">1:1</label>
-                                  <label nz-radio-button nzValue="1:n">1:N</label>
-                              </nz-radio-group>
-                          </ng-template>
-                      </nz-col>
-                  </nz-row>
-              </div>
-              -->
-              <div id="control-block" class="clear">
-                  <button nz-button nzSize="small" nzType="primary" (click)="addKeyLink()">添加</button>
-              </div>
-              <nz-table #rows nzBordered [nzData]="this.erMetaNode.columnTransferList" [nzShowPagination]="false">
-                  <thead>
-                  <tr>
-                      <th width="6%">
-                          <button nz-button nzSize="small" nzType="link" (click)="deleteLink()"><i nz-icon nzType="delete" nzTheme="outline"></i></button>
-                      </th>
-                      <th width="30%">
-                          Column Name
-                      </th>
-                      <th width="34%">
-                          Transfer func
-                      </th>
-                      <th width="30%">
-                          Params
-                      </th>
-                  </tr>
-                  </thead>
+        <!--
+        <div style="background: #ECECEC; padding: 30px;">
+            <nz-row [nzGutter]="20">
+                <nz-col [nzSpan]="12">
+                    <nz-statistic [nzValue]="erRel.targetNode.tabname" [nzTitle]="'Parent Table'"></nz-statistic>
+                </nz-col>
+                <nz-col [nzSpan]="12">
+                    <nz-statistic [nzValue]="erRel.sourceNode.tabname" [nzTitle]="'Child Table'" [nzSuffix]="suffixTplOne"></nz-statistic>
+                    <ng-template #suffixTplOne>
+                        <nz-radio-group [nzSize]="'small'" [(ngModel)]="erRel.cardinality" [nzButtonStyle]="'solid'" [ngModelOptions]="{standalone: true}">
+                            <label nz-radio-button nzValue="1:1">1:1</label>
+                            <label nz-radio-button nzValue="1:n">1:N</label>
+                        </nz-radio-group>
+                    </ng-template>
+                </nz-col>
+            </nz-row>
+        </div>
+        -->
+        <div id="control-block" class="clear">
+          <button nz-button nzSize="small" nzType="primary" (click)="addKeyLink()">添加</button>
+        </div>
+        <nz-table #rows nzBordered [nzData]="this.erMetaNode.columnTransferList" [nzShowPagination]="false">
+          <thead>
+          <tr>
+            <th width="6%">
+              <button nz-button nzSize="small" nzType="link" (click)="deleteLink()"><i nz-icon nzType="delete"
+                                                                                       nzTheme="outline"></i></button>
+            </th>
+            <th width="30%">
+              Column Name
+            </th>
+            <th width="34%">
+              Transfer func
+            </th>
+            <th width="30%">
+              Params
+            </th>
+          </tr>
+          </thead>
 
-                  <tbody>
-                  <tr *ngFor="let rr of rows.data">
-                      <td align="center">
-                          <label nz-checkbox [(ngModel)]="rr.checked" [ngModelOptions]="{standalone: true}"></label>
-                      </td>
-                      <td>
-                          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.colKey" [ngModelOptions]="{standalone: true}"
-                                     (ngModelChange)="parentKeyChange(rr,$event)">
-                              <nz-option *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
-                          </nz-select>
-                      </td>
-                      <td>
-                          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Transfer" [(ngModel)]="rr.transfer" [ngModelOptions]="{standalone: true}">
-                              <nz-option *ngFor="let r of this.transfers" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
-                          </nz-select>
-                      </td>
-                      <td><input nz-input [(ngModel)]="rr.param" [ngModelOptions]="{standalone: true}"/></td>
-                  </tr>
-                  </tbody>
+          <tbody>
+          <tr *ngFor="let rr of rows.data">
+            <td align="center">
+              <label nz-checkbox [(ngModel)]="rr.checked" [ngModelOptions]="{standalone: true}"></label>
+            </td>
+            <td>
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a column" [(ngModel)]="rr.colKey"
+                         [ngModelOptions]="{standalone: true}"
+                         (ngModelChange)="parentKeyChange(rr,$event)">
+                <nz-option *ngFor="let r of this.cols" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
+              </nz-select>
+            </td>
+            <td>
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Transfer" [(ngModel)]="rr.transfer"
+                         [ngModelOptions]="{standalone: true}">
+                <nz-option *ngFor="let r of this.transfers" [nzLabel]="r.key" [nzValue]="r.key"></nz-option>
+              </nz-select>
+            </td>
+            <td><input nz-input [(ngModel)]="rr.param" [ngModelOptions]="{standalone: true}"/></td>
+          </tr>
+          </tbody>
 
-              </nz-table>
-          </form>
-      </nz-spin>
+        </nz-table>
+      </form>
+    </nz-spin>
   `,
 
   styles: [
-      `
-          .primary-key {
-              width: 60%;
-              margin: 3px 0 3px 0;
-          }
+    `
+      .primary-key {
+        width: 60%;
+        margin: 3px 0 3px 0;
+      }
 
-          .timestamp-select {
-              width: 70%;
-          }
+      .timestamp-select {
+        width: 70%;
+      }
 
 
-          .key-placeholder {
-              display: inline-block;
-              width: 1.5em;
-          }
+      .key-placeholder {
+        display: inline-block;
+        width: 1.5em;
+      }
 
-          .dynamic-delete-button {
-              cursor: pointer;
-              position: relative;
-              top: 4px;
-              font-size: 24px;
-              color: #999;
-              transition: all 0.3s;
-          }
+      .dynamic-delete-button {
+        cursor: pointer;
+        position: relative;
+        top: 4px;
+        font-size: 24px;
+        color: #999;
+        transition: all 0.3s;
+      }
 
-          .dynamic-delete-button:hover {
-              color: #777;
-          }
+      .dynamic-delete-button:hover {
+        color: #777;
+      }
 
-          #meta-setter div {
-              float: left;
-          }
+      #meta-setter div {
+        float: left;
+      }
 
-          #meta-setter {
-              border: 1px solid #d0d0d0;
-          }
+      #meta-setter {
+        border: 1px solid #d0d0d0;
+      }
 
-          #control-block {
-              margin-bottom: 5px;
-              margin-top: 15px;
-          }
+      #control-block {
+        margin-bottom: 5px;
+        margin-top: 15px;
+      }
 
-          .clear {
-              clear: both;
-          }
+      .clear {
+        clear: both;
+      }
 
-          .meta-item {
-              margin-bottom: 0px;
-          }
+      .meta-item {
+        margin-bottom: 0px;
+      }
 
-          .mete-form {
-          }
+      .mete-form {
+      }
     `]
 })
 // ER Meta,
@@ -218,7 +247,9 @@ export class WorkflowAddErMetaComponent
   extends BasicSideBar implements OnInit, AfterContentInit, AfterViewInit {
   // listOfOption: Array<{ label: string; value: string }> = [];
   // listOfTagOptions: any[] = [];
-  erMetaNode: ERMetaNode
+  get erMetaNode(): ERMetaNode {
+   return this._sidebarDTO as ERMetaNode;
+  }
 
   cols: Array<{ key: string, pk: boolean }> = [];
   transfers: Array<{ key: string }> = [];
@@ -273,7 +304,7 @@ export class WorkflowAddErMetaComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): boolean {
 
     let old = graph.findById(nodeid);
 //    old.ermeta = ;
@@ -288,11 +319,13 @@ export class WorkflowAddErMetaComponent
     // 更新label值
     graph.updateItem(old, nmodel);
 
-    this._closeSidebar(null);
+    //this._closeSidebar(null);
+    return true;
   }
 
   initComponent(_: IDataFlowMainComponent, erMetaNode: ERMetaNode): void {
-    this.erMetaNode = erMetaNode;
+    // console.log(erMetaNode);
+   // this.erMetaNode = erMetaNode;
   }
 
 

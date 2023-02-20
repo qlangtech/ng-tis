@@ -1,31 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="">
+    <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/$CACHE_FILE$" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/$PRODUCT_WORKSPACE_FILE$" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/datax/notebook.entry.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/offline/workflow.offline.engine.select.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tis-console.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copyright/qlangtech.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tis-console-nodejs.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy.conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/proxy.conf.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml.orig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/projects/zeppelin-visualization/src/g2-visualization-component-base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/projects/zeppelin-visualization/src/g2-visualization-component-base.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.base.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pager.header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pager.header.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.test.component.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.test.component.less" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.test.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.test.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/code-editor/code-editor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/code-editor/code-editor.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/share/code-editor/code-editor.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/share/header/header.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/share/header/header.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/core/message-listener/message-listener.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/core/message-listener/message-listener.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/paragraph.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/paragraph.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/visualizations/common/util/set-x-axis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/visualizations/common/util/set-x-axis.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/visualizations/g2.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/visualizations/g2.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FavoritesManager">
-    <favorites_list name="tis-console-nodejs" />
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -37,98 +94,40 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="JsFlowSettings">
-    <service-enabled>true</service-enabled>
-    <exe-path />
-    <other-services-enabled>true</other-services-enabled>
-    <auto-save>true</auto-save>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="1RHE6ETZhgMGO7efkeisNqteJXn" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="PropertiesComponent">
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="copyright.profiles" />
-    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
-  </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/src" />
-      <recent name="$PROJECT_DIR$/src/common" />
-    </key>
-    <key name="es6.move.members.recent.items">
-      <recent name="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" />
-      <recent name="$PROJECT_DIR$/src/common/basic.form.component.ts" />
-      <recent name="$PROJECT_DIR$/src/common/tis.plugin.ts" />
-      <recent name="$PROJECT_DIR$/src/common/item.pojo.ts" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/src/base" />
-      <recent name="$PROJECT_DIR$/projects/elements/src" />
-      <recent name="$PROJECT_DIR$/projects/elements" />
-      <recent name="$PROJECT_DIR$/src/datax" />
-    </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="$PROJECT_DIR$/../../mvn_repository" />
+        <option name="userSettingsFile" value="$PROJECT_DIR$/../../apache-maven-3.8.1/conf/settings.xml" />
+      </MavenGeneralSettings>
     </option>
   </component>
-  <component name="RunManager" selected="npm.ng:serve-jit">
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="build:aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build:aot" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="build:elements" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build:elements" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="ng:serve-aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="ng:serve-aot" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="2KURqqFdm4aKZ7lt8mzlsMzK1ND" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
     <configuration name="ng:serve-jit" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -142,357 +141,182 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.ng:serve-jit" />
-        <item itemvalue="npm.ng:serve-aot" />
-        <item itemvalue="npm.build:elements" />
-        <item itemvalue="npm.build" />
-        <item itemvalue="npm.build:aot" />
       </list>
     </recent_temporary>
   </component>
-  <component name="StructureViewFactory">
-    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  <component name="SbtLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="/opt/misc/akka-in-action/chapter-remoting" value="PREVIEW" />
+        <entry key="/opt/misc/akka-in-action/chapter-up-and-running" value="PREVIEW" />
+      </map>
+    </option>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="39c3d091-3ff6-488b-bb0b-2775fa0d1f82" name="Default Changelist" comment="" />
-      <created>1569315444172</created>
+      <changelist id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="" />
+      <created>1672638005695</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1569315444172</updated>
-      <workItem from="1569315446097" duration="2716000" />
-      <workItem from="1571276172110" duration="3536000" />
-      <workItem from="1571536865749" duration="155000" />
-      <workItem from="1574851987513" duration="5817000" />
-      <workItem from="1576461216545" duration="35718000" />
-      <workItem from="1577153632524" duration="163000" />
-      <workItem from="1577161853740" duration="6889000" />
-      <workItem from="1577238710191" duration="12937000" />
-      <workItem from="1578279002341" duration="38480000" />
-      <workItem from="1579069631232" duration="70165000" />
-      <workItem from="1579671696776" duration="94005000" />
-      <workItem from="1580531457163" duration="50617000" />
-      <workItem from="1580875817293" duration="62612000" />
-      <workItem from="1581330085272" duration="11850000" />
-      <workItem from="1581490754535" duration="1527000" />
-      <workItem from="1581511458016" duration="90852000" />
-      <workItem from="1583402998545" duration="28818000" />
-      <workItem from="1583890923850" duration="124123000" />
-      <workItem from="1585552948428" duration="21218000" />
-      <workItem from="1586050599761" duration="38908000" />
-      <workItem from="1593147449416" duration="2055000" />
-      <workItem from="1593408448452" duration="195000" />
-      <workItem from="1593411914282" duration="318000" />
-      <workItem from="1593412737251" duration="111225000" />
-      <workItem from="1594870239072" duration="174097000" />
-      <workItem from="1596089906585" duration="551000" />
-      <workItem from="1596802134809" duration="5959000" />
-      <workItem from="1596935904401" duration="2372000" />
-      <workItem from="1596977684576" duration="1179000" />
-      <workItem from="1597212849283" duration="23157000" />
-      <workItem from="1598783618645" duration="46560000" />
-      <workItem from="1599378283769" duration="15867000" />
-      <workItem from="1599703880395" duration="57400000" />
-      <workItem from="1600219544188" duration="3864000" />
-      <workItem from="1600315375844" duration="1514000" />
-      <workItem from="1600741846005" duration="70194000" />
-      <workItem from="1602304901552" duration="143000" />
-      <workItem from="1602641796431" duration="649000" />
-      <workItem from="1603076106812" duration="2016000" />
-      <workItem from="1603250860059" duration="821000" />
-      <workItem from="1603878265994" duration="558000" />
-      <workItem from="1604023128838" duration="2178000" />
-      <workItem from="1604370092011" duration="1245000" />
-      <workItem from="1604888899551" duration="1083000" />
-      <workItem from="1604969591451" duration="1237000" />
-      <workItem from="1605271449341" duration="328000" />
-      <workItem from="1606203938387" duration="20538000" />
-      <workItem from="1606352401137" duration="8981000" />
-      <workItem from="1606388810838" duration="15390000" />
-      <workItem from="1606719856906" duration="5332000" />
-      <workItem from="1606956896987" duration="294000" />
-      <workItem from="1607317708908" duration="6228000" />
-      <workItem from="1607562790355" duration="15789000" />
-      <workItem from="1607940235275" duration="1409000" />
-      <workItem from="1608091012674" duration="1824000" />
-      <workItem from="1608604624350" duration="643000" />
-      <workItem from="1608625333108" duration="1024000" />
-      <workItem from="1609120383230" duration="5381000" />
-      <workItem from="1609296358926" duration="10487000" />
-      <workItem from="1609837514827" duration="2931000" />
-      <workItem from="1610332904908" duration="1413000" />
-      <workItem from="1611639214223" duration="2428000" />
-      <workItem from="1611717032228" duration="534000" />
-      <workItem from="1611899446185" duration="2086000" />
-      <workItem from="1612421197831" duration="1851000" />
-      <workItem from="1613092889253" duration="411000" />
-      <workItem from="1614651386141" duration="1101000" />
-      <workItem from="1615168634733" duration="1503000" />
-      <workItem from="1615445666449" duration="495000" />
-      <workItem from="1616144253248" duration="642000" />
-      <workItem from="1616554210840" duration="6116000" />
-      <workItem from="1617161921195" duration="25976000" />
-      <workItem from="1618017504461" duration="50587000" />
-      <workItem from="1618444886769" duration="12925000" />
-      <workItem from="1618711511202" duration="14240000" />
-      <workItem from="1618899974981" duration="1258000" />
-      <workItem from="1618908956448" duration="16391000" />
-      <workItem from="1619401708139" duration="24614000" />
-      <workItem from="1620107147551" duration="13501000" />
-      <workItem from="1620265681866" duration="5620000" />
-      <workItem from="1620376125112" duration="892000" />
-      <workItem from="1620620195210" duration="19196000" />
-      <workItem from="1621041728919" duration="4363000" />
-      <workItem from="1621142528394" duration="15702000" />
-      <workItem from="1621299171811" duration="16015000" />
-      <workItem from="1621345331092" duration="102581000" />
-      <workItem from="1622069930429" duration="16518000" />
-      <workItem from="1622519388823" duration="1928000" />
-      <workItem from="1623037992480" duration="32009000" />
-      <workItem from="1623290834446" duration="9257000" />
-      <workItem from="1623552611917" duration="1213000" />
-      <workItem from="1623556167210" duration="18000" />
-      <workItem from="1623571810484" duration="24379000" />
-      <workItem from="1624246818250" duration="3611000" />
-      <workItem from="1624937286232" duration="17863000" />
-      <workItem from="1625357493894" duration="23987000" />
-      <workItem from="1625819507291" duration="8535000" />
-      <workItem from="1625886167154" duration="7176000" />
-      <workItem from="1625983187513" duration="5197000" />
-      <workItem from="1626223822923" duration="998000" />
-      <workItem from="1626305343600" duration="4451000" />
-      <workItem from="1626346481855" duration="460000" />
-      <workItem from="1626413069137" duration="7249000" />
-      <workItem from="1626475718470" duration="5081000" />
-      <workItem from="1627106251573" duration="3153000" />
-      <workItem from="1627187498279" duration="11962000" />
-      <workItem from="1627376500559" duration="1356000" />
-      <workItem from="1627519849977" duration="7525000" />
-      <workItem from="1628325375412" duration="20954000" />
-      <workItem from="1628655051549" duration="2948000" />
-      <workItem from="1628683804713" duration="14787000" />
-      <workItem from="1628943066212" duration="585000" />
-      <workItem from="1629072924290" duration="581000" />
-      <workItem from="1629253983976" duration="8111000" />
-      <workItem from="1629360676465" duration="677000" />
-      <workItem from="1630059157484" duration="1762000" />
-      <workItem from="1630111771017" duration="10036000" />
-      <workItem from="1630141064498" duration="6047000" />
-      <workItem from="1630149798594" duration="2382000" />
-      <workItem from="1630152615592" duration="10484000" />
-      <workItem from="1630550213740" duration="2440000" />
-      <workItem from="1631000336990" duration="6118000" />
-      <workItem from="1631346811883" duration="1262000" />
-      <workItem from="1631604448895" duration="1025000" />
-      <workItem from="1631674509932" duration="814000" />
-      <workItem from="1631853046958" duration="1772000" />
-      <workItem from="1631960652213" duration="2495000" />
-      <workItem from="1632274046241" duration="7047000" />
-      <workItem from="1632531837564" duration="661000" />
-      <workItem from="1632732705920" duration="5337000" />
-      <workItem from="1633508614216" duration="2755000" />
-      <workItem from="1634274979088" duration="1459000" />
-      <workItem from="1634628355226" duration="18334000" />
-      <workItem from="1635210074289" duration="8741000" />
-      <workItem from="1635296696661" duration="2042000" />
-      <workItem from="1635325259145" duration="20480000" />
-      <workItem from="1636263470836" duration="91137000" />
-      <workItem from="1638160239714" duration="4042000" />
-      <workItem from="1638857181091" duration="4896000" />
-      <workItem from="1638935888099" duration="3809000" />
-      <workItem from="1638950665490" duration="6462000" />
-      <workItem from="1639029849284" duration="121561000" />
-      <workItem from="1640062040354" duration="1947000" />
-      <workItem from="1640224989992" duration="25634000" />
-      <workItem from="1641522469319" duration="1279000" />
-      <workItem from="1641544676891" duration="2962000" />
-      <workItem from="1641882951746" duration="1690000" />
-      <workItem from="1642729487779" duration="926000" />
-      <workItem from="1643359030652" duration="22646000" />
-      <workItem from="1644814990397" duration="13159000" />
-      <workItem from="1646442927194" duration="8259000" />
-      <workItem from="1646619959882" duration="25460000" />
-      <workItem from="1646961618210" duration="12881000" />
-      <workItem from="1647999665827" duration="1509000" />
-      <workItem from="1648271161783" duration="4623000" />
-      <workItem from="1649024742056" duration="491000" />
-      <workItem from="1649035674468" duration="710000" />
-      <workItem from="1649329146784" duration="148000" />
-      <workItem from="1649395329062" duration="62976000" />
-      <workItem from="1652674149578" duration="11073000" />
-      <workItem from="1653475121808" duration="963000" />
-      <workItem from="1654051101699" duration="28141000" />
-      <workItem from="1655168592049" duration="13032000" />
-      <workItem from="1657247789537" duration="49757000" />
-      <workItem from="1660005730239" duration="14759000" />
-      <workItem from="1662194941021" duration="5903000" />
-      <workItem from="1663207721355" duration="14555000" />
-      <workItem from="1665294344971" duration="609000" />
-      <workItem from="1666057423751" duration="6189000" />
-      <workItem from="1666400683554" duration="2008000" />
-      <workItem from="1666491808802" duration="589000" />
-      <workItem from="1666576777497" duration="2390000" />
-      <workItem from="1668824126555" duration="5796000" />
-      <workItem from="1669424615426" duration="992000" />
-      <workItem from="1670204501748" duration="43005000" />
-      <workItem from="1670467737908" duration="14992000" />
+      <updated>1672638005695</updated>
+      <workItem from="1672638009333" duration="878000" />
+      <workItem from="1674027401380" duration="1008000" />
+      <workItem from="1674442548239" duration="69363000" />
+      <workItem from="1675572363187" duration="27486000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
     <option name="exactExcludedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step1.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.join.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.union.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
-        <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
-        <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
-        <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
         <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js" />
         <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/tis.service.js" />
+        <option value="$PROJECT_DIR$/src/common/tis.service.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
-        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js.map" />
         <option value="$PROJECT_DIR$/src/test.js" />
         <option value="$PROJECT_DIR$/src/test.js.map" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
         <option value="$PROJECT_DIR$/src/polyfills.js" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
+        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/common/snapshot.link.js" />
+        <option value="$PROJECT_DIR$/src/common/snapshot.link.js.map" />
+        <option value="$PROJECT_DIR$/src/common/steps.component.js" />
+        <option value="$PROJECT_DIR$/src/common/steps.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js" />
+        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js" />
+        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js" />
         <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/steps.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/common.module.js" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
-        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/steps.component.js" />
-        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
-        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
+        <option value="$PROJECT_DIR$/src/common/application.js" />
+        <option value="$PROJECT_DIR$/src/common/application.js.map" />
         <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
-        <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js" />
+        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js" />
+        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
         <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.service.js" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js" />
+        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js" />
+        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
         <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
+        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/membership.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js" />
         <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.er.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.nest.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.service.js" />
+        <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
       </list>
     </option>
     <option name="additionalRoots">
       <list>
         <option value="$PROJECT_DIR$/dist/zeppelin-sdk/zeppelin-sdk.d.ts" />
         <option value="$PROJECT_DIR$/dist/zeppelin-sdk" />
-        <option value="$PROJECT_DIR$/dist/zeppelin-visualization/zeppelin-visualization.d.ts" />
         <option value="$PROJECT_DIR$/dist/zeppelin-visualization" />
+        <option value="$PROJECT_DIR$/dist/zeppelin-visualization/zeppelin-visualization.d.ts" />
       </list>
     </option>
   </component>
   <component name="Vcs.Log.History.Properties">
-    <option name="COLUMN_ORDER">
+    <option name="COLUMN_ID_ORDER">
       <list>
-        <option value="0" />
-        <option value="2" />
-        <option value="3" />
-        <option value="1" />
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
       </list>
     </option>
   </component>
@@ -501,124 +325,10 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/pojo.component.ts</url>
-          <line>21</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/app.component.ts</url>
-          <line>19</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts</url>
-          <line>97</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts</url>
-          <line>37</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts</url>
-          <line>59</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/index.query.component.ts</url>
-          <line>580</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/node_modules_bak/@antv/g6/lib/plugins/grid/index.d.ts</url>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts</url>
-          <line>48</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.ts</url>
-          <line>37</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/base/datax.worker.running.component.ts</url>
-          <line>18</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/base/datax.worker.component.ts</url>
-          <line>31</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/offline/workflow.component.ts</url>
-          <line>23</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/common/schema.expert.create.edit.component.ts</url>
-          <line>25</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/projects/tis-console-lib/src/lib/tis-console-lib.module.ts</url>
-          <line>37</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/core.node.manage.module.ts</url>
-          <line>60</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/incr.build.component.ts</url>
-          <line>26</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/common/tis.plugin.ts</url>
-          <line>40</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/base/plugin.manage.component.ts</url>
-          <line>18</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/offline/ds.component.ts</url>
-          <line>134</line>
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/runtime/index.query.component.ts</url>
-          <line>25</line>
-          <option name="timeStamp" value="42" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/node_modules/ng2-charts/lib/base-chart.directive.d.ts</url>
-          <option name="timeStamp" value="43" />
-        </line-breakpoint>
-      </breakpoints>
-      <default-breakpoints>
-        <breakpoint enabled="true" type="javascript-exception" />
-      </default-breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

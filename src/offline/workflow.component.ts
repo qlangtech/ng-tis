@@ -19,13 +19,14 @@
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {DataxDTO} from "../base/datax.add.component";
 
 export class BasicWFComponent extends BasicFormComponent {
   constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute, notification?: NzNotificationService) {
@@ -39,8 +40,8 @@ export class BasicWFComponent extends BasicFormComponent {
       [`/offline/wf/build_history/`, dataflow.id], {relativeTo: this.route});
   }
 
-  executeWorkflow(dataflow: Dataflow): void {
-    let action = `event_submit_do_execute_workflow=y&action=offline_datasource_action&id=${dataflow.id}`;
+  executeWorkflow(dataflow: Dataflow, dryRun?: boolean): void {
+    let action = `event_submit_do_execute_workflow=y&action=offline_datasource_action&id=${dataflow.id}&dryRun=${dryRun}`;
     this.httpPost('/offline/datasource.ajax', action)
       .then(d => {
         if (d.success) {
@@ -54,7 +55,7 @@ export class BasicWFComponent extends BasicFormComponent {
 
             this.processResult({success: true, 'msg': msg});
           } else {
-           // alert("重复触发了");
+            // alert("重复触发了");
             this.errNotify("重复触发了");
           }
         } else {
@@ -68,46 +69,48 @@ export class BasicWFComponent extends BasicFormComponent {
 @Component({
   // templateUrl: '/offline/workflowList.htm'
   template: `
-      <tis-page-header title="数据流" [result]="result">
-          <tis-header-tool>
-              <button nz-button nzType="primary" (click)="addWorkflowBtnClick()">
-                  <i nz-icon nzType="plus" nzTheme="outline"></i>创建
-              </button>
-          </tis-header-tool>
-      </tis-page-header>
-
-      <tis-page [rows]="workflows" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
-          <tis-col title="名称" width="14">
-              <ng-template let-df='r'>
-                  <a [routerLink]="['/offline','wf_update',df.name]">{{df.name}}</a>
-              </ng-template>
-          </tis-col>
-          <tis-col title="状态" width="14" [field]="'state'">
-          </tis-col>
-          <tis-col title="更新时间" width="14">
-              <ng-template let-df='r'>
-                  {{df.opTime | date: 'yyyy/MM/dd HH:mm'}}
-              </ng-template>
-          </tis-col>
-          <tis-col title="编辑者" width="14">
-              <ng-template let-df='r'>
-                  {{df.opUserName}}
-              </ng-template>
-          </tis-col>
-          <tis-col title="操作" width="14">
-              <ng-template let-df='r'>
-                  <button nz-button nz-dropdown nzShape="circle" [nzDropdownMenu]="menu"
-                          nzPlacement="bottomLeft"><i nz-icon nzType="more" nzTheme="outline"></i></button>
-                  <nz-dropdown-menu #menu="nzDropdownMenu">
-                      <ul nz-menu>
-                          <li nz-menu-item (click)="editTopology(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</li>
-                          <li nz-menu-item (click)="executeWorkflow(df)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建</li>
-                          <li nz-menu-item (click)="buildHistory(df)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史</li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </ng-template>
-          </tis-col>
-      </tis-page>
+    <tis-page-header title="数据流" [result]="result">
+      <tis-header-tool>
+        <button nz-button nzType="primary" (click)="addWorkflowBtnClick()">
+          <i nz-icon nzType="plus" nzTheme="outline"></i>创建
+        </button>
+      </tis-header-tool>
+    </tis-page-header>
+    <tis-page [rows]="workflows" [pager]="pager" [spinning]="formDisabled" (go-page)="gotoPage($event)">
+      <tis-col title="名称" width="14">
+        <ng-template let-df='r'>
+          <a [routerLink]="['/offline','wf_update',df.name]">{{df.name}}</a>
+        </ng-template>
+      </tis-col>
+      <tis-col title="状态" width="14" [field]="'state'">
+      </tis-col>
+      <tis-col title="更新时间" width="14">
+        <ng-template let-df='r'>
+          {{df.opTime | date: 'yyyy/MM/dd HH:mm'}}
+        </ng-template>
+      </tis-col>
+      <tis-col title="编辑者" width="14">
+        <ng-template let-df='r'>
+          {{df.opUserName}}
+        </ng-template>
+      </tis-col>
+      <tis-col title="操作" width="14">
+        <ng-template let-df='r'>
+          <button nz-button nz-dropdown nzShape="circle" [nzDropdownMenu]="menu"
+                  nzPlacement="bottomLeft"><i nz-icon nzType="more" nzTheme="outline"></i></button>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="editProfile(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>基本信息</li>
+              <li nz-menu-item (click)="editTopology(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</li>
+              <li nz-menu-item (click)="executeWorkflow(df)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建
+              </li>
+              <li nz-menu-item (click)="buildHistory(df)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </ng-template>
+      </tis-col>
+    </tis-page>
   `
 })
 // 工作流
@@ -116,12 +119,14 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
   workflows: Dataflow[];
   pager: Pager = new Pager(1, 1, 0);
 
-  // formDisabled: boolean = false;
 
   constructor(protected tisService: TISService, modalService: NzModalService, router: Router, route: ActivatedRoute) {
     super(tisService, modalService, router, route);
   }
 
+  addWorkflowBtnClick(): void {
+    this.router.navigate(['/offline/wf_add']);
+  }
 
   ngOnInit(): void {
     // 查询所有的工作流
@@ -175,9 +180,6 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
     // console.log(this.workflows);
   }
 
-  addWorkflowBtnClick(): void {
-    this.router.navigate(['/offline/wf_add']);
-  }
 
   deleteWorkflow(id: number): void {
     // console.log(id);
@@ -207,11 +209,11 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
   }
 
   confirmWorkflowChange(id: number): void {
-    console.log(id);
+    // console.log(id);
     let action = 'event_submit_do_confirm_workflow_change=y&action=offline_datasource_action&id=' + id;
     this.httpPost('/offline/datasource.ajax', action)
       .then(result => {
-        console.log(result);
+        //  console.log(result);
         this.processResult(result);
         if (result.success) {
           this.goToWorkflowChange();
@@ -226,6 +228,10 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   editTopology(workflow: Dataflow) {
     this.router.navigate([`/offline/wf_update/${workflow.name}`]);
+  }
+
+  editProfile(workflow: Dataflow) {
+    this.router.navigate([`/offline/wf_profile/${workflow.name}/config`]);
   }
 
   gotoPage(page: number) {

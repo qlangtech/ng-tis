@@ -5,7 +5,6 @@ import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginTyp
 import {TISService} from "../common/tis.service";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep4Component} from "../base/datax.add.step4.component";
 import {TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {PluginsComponent} from "../common/plugins.component";
@@ -126,7 +125,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
   protected initialize(app: CurrentCollection): void {
 
     DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas(app), undefined // this.dto.readerDescriptor.impl
-      , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+     , true , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
         // console.log(subFieldForms);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;

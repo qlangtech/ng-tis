@@ -34,11 +34,11 @@ export class MessageListenersManager implements OnDestroy {
   }
 }
 
-export function MessageListener<K extends keyof MessageReceiveDataTypeMap>(op: K) {
+export function MessageListener< K extends keyof MessageReceiveDataTypeMap>(op: K) {
   return function(
     target: MessageListenersManager,
     propertyKey: string,
-    descriptor: TypedPropertyDescriptor<ReceiveArgumentsType<K>>
+    descriptor: TypedPropertyDescriptor<ReceiveArgumentsType<K> >
   ) {
     const oldValue = descriptor.value as ReceiveArgumentsType<K>;
 

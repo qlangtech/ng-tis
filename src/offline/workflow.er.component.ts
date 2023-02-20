@@ -233,6 +233,7 @@ export class WorkflowERComponent
   }
 
   erTabSelect(syncDumpNodes?: boolean) {
+   // console.log(syncDumpNodes);
     this.httpPost(`/offline/datasource.ajax?emethod=get_er_rule&action=offline_datasource_action`
       , `topology=${this.topologyName}&sync=${syncDumpNodes}`)
       .then(result => {
@@ -262,9 +263,9 @@ export class WorkflowERComponent
         // linkList.push(lr);
       });
       let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
-      // console.log(nodeMeta);
+      // console.log([this._nodeTypes,TYPE_DUMP_TABLE,nodeMeta]);
       dumpNodes.forEach((r) => {
-        let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.tabid, r.name);
+        let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.name);
         let m = WorkflowAddComponent.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
         m.label = r.name;
 
@@ -307,6 +308,7 @@ export class WorkflowERComponent
     let erNodes: ERRules = Object.apply({});
     erNodes.dumpNodes = tmpNodes;
     erNodes.linkList = linkList;
+   // console.log(erNodes);
     this.dumpNodes = erNodes;
   }
 
@@ -384,7 +386,7 @@ export class WorkflowERComponent
     });
     this.graph.on('node:click', (evt: any) => {
       let nodeInfo = evt.item._cfg.model;
-      // console.log(evt.item);
+      // console.log(nodeInfo);
       if (this._editMode === MODE_DRAG) {
         // this.nodeClick.emit({'g6': this.graph, 'dumpnode': nodeInfo.nodeMeta, 'ermeta': evt.item.ermeta});
         this.nodeClick.emit({'g6': this.graph, 'dumpnode': nodeInfo.nodeMeta, 'ermeta': nodeInfo.extraMeta});

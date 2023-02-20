@@ -16,7 +16,16 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList} from "@angular/core";
+import {
+  AfterContentInit,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList
+} from "@angular/core";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {PageHeaderLeftComponent} from "./pager.header.component";
 import {TisResponseResult} from "./tis.plugin";
@@ -28,6 +37,7 @@ export enum StepType {
   CreateIndex = "createIndex",
   CreateIncr = "createIncr",
   CreateDatax = "createDatax",
+  CreateWorkflow = "createWorkFlow",
   CreateWorkderOfDataX = "CreateWorkderOfDataX",
   CreateFlinkCluster = "CreateFlinkCluster",
   UpdateDataxWriter = "UpdateDataxWriter",
@@ -38,23 +48,24 @@ export enum StepType {
 @Component({
   selector: 'tis-steps',
   template: `
-      <div class="tis-steps">
-          <h2 class="caption">{{processMap.get(this.type).caption}}</h2>
-          <nz-steps [nzCurrent]="step">
-              <nz-step *ngFor="let s of this.processMap.get(this.type).steps let i = index" [nzTitle]="stepLiteria[i]" [nzDescription]="s"></nz-step>
-          </nz-steps>
-      </div>
+    <div class="tis-steps">
+      <h2 class="caption">{{processMap.get(this.type).caption}}</h2>
+      <nz-steps [nzCurrent]="step">
+        <nz-step *ngFor="let s of this.processMap.get(this.type).steps let i = index" [nzTitle]="stepLiteria[i]"
+                 [nzDescription]="s"></nz-step>
+      </nz-steps>
+    </div>
   `,
   styles: [
-      `
-          .caption {
-              color: #71c4ff;
-              font-size: 22px;
-          }
+    `
+      .caption {
+        color: #71c4ff;
+        font-size: 22px;
+      }
 
-          .tis-steps {
-              margin: 20px 10px 20px 0;
-          }
+      .tis-steps {
+        margin: 20px 10px 20px 0;
+      }
     `
   ]
 })
@@ -70,7 +81,8 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   constructor() {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
-    this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量同步添加", ["引擎选择", "Source/Sink配置", "Stream脚本确认",  "状态确认"]));
+    this.processMap.set(StepType.CreateWorkflow, new CaptionSteps("离线分析实例添加", ["基本信息", "类型选择", "离线引擎设置", "确认"]));
+    this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量同步添加", ["引擎选择", "Source/Sink配置", "Stream脚本确认", "状态确认"]));
     this.processMap.set(StepType.CreateDatax, new CaptionSteps("数据管道添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
     this.processMap.set(StepType.UpdateDataxReader, new CaptionSteps("数据管道 Reader 更 新", ["Reader设置", "Writer设置", "表映射", "确认"]));
     this.processMap.set(StepType.UpdateDataxWriter, new CaptionSteps("数据管道 Writer 更 新", ["Writer设置", "表映射", "确认"]));
@@ -90,29 +102,33 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
 @Component({
   selector: 'tis-steps-tools-bar',
   template: `
-      <tis-page-header [result]="result" [showBreadcrumb]="false">
-          <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
-          <tis-header-tool>
-              <ng-container *ngIf="cancel.observers.length>0">
-                  <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button> &nbsp;
-              </ng-container>
-              <ng-container *ngIf="goBackBtnShow && goBack.observers.length>0">
-                  <button nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步</button> &nbsp;
-              </ng-container>
-              <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
-                  <button nz-button nzType="primary" (click)="goOn.emit($event)"><i nz-icon nzType="step-forward" nzTheme="outline"></i>下一步</button>
-              </ng-container>
-              <ng-content select="final-exec-controller"></ng-content>
-          </tis-header-tool>
-      </tis-page-header>
+    <tis-page-header [result]="result" [showBreadcrumb]="false">
+      <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
+      <tis-header-tool>
+        <ng-container *ngIf="cancel.observers.length>0">
+          <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button>
+          &nbsp;
+        </ng-container>
+        <ng-container *ngIf="goBackBtnShow && goBack.observers.length>0">
+          <button nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步
+          </button> &nbsp;
+        </ng-container>
+        <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
+          <button nz-button nzType="primary" (click)="goOn.emit($event)"><i nz-icon nzType="step-forward"
+                                                                            nzTheme="outline"></i>下一步
+          </button>
+        </ng-container>
+        <ng-content select="final-exec-controller"></ng-content>
+      </tis-header-tool>
+    </tis-page-header>
   `,
   styles: [
-      `
-          tis-page-header-left {
-              color: #b7d6ff;
-              padding-left: 10px;
-              border-left: 6px solid rgba(140, 170, 255, 0.31);
-          }
+    `
+      tis-page-header-left {
+        color: #b7d6ff;
+        padding-left: 10px;
+        border-left: 6px solid rgba(140, 170, 255, 0.31);
+      }
     `
   ]
 })

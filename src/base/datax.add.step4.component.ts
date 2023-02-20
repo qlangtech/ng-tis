@@ -45,6 +45,10 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
               ></th>
               <th>表名
                   <button *ngIf="direction === 'right'" [disabled]="batchSettableTabs.length < 1 " nz-button nzType="primary" (click)="batchSet()" nzSize="small">批量设置</button>
+
+                  <button *ngIf="direction === 'left'" nzSize="small" nz-button (click)="reload()" style=" margin: 5px;">
+                      <i nz-icon nzType="reload" nzTheme="outline"></i>Reload
+                  </button>
               </th>
               <th *ngIf="direction === 'right'">操作</th>
           </tr>
@@ -74,7 +78,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 export class SelectedTabsComponent extends BasicFormComponent {
 
   @Input()
-  showPagination =  true;
+  showPagination = true;
 
   @Input()
   items: TransferItem[];
@@ -97,6 +101,9 @@ export class SelectedTabsComponent extends BasicFormComponent {
   skipSubformDescNullError = false;
   @Output()
   onItemSelectAll = new EventEmitter<any>();
+
+  @Output()
+  onReload = new EventEmitter<any>();
 
   @Output()
   onItemSelect = new EventEmitter<any>();
@@ -160,40 +167,40 @@ export class SelectedTabsComponent extends BasicFormComponent {
     }
     DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id))
       .then((hlist: HeteroList[]) => {
-      let h = hlist[0];
+        let h = hlist[0];
 
-      let oitems = h.items;
-      let items: Array<Item> = [];
-      h.items = items;
-      h.descriptorList.forEach((desc) => {
-        for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
-          if (oitems[itemIdx].impl === desc.impl) {
-            items.push(oitems[itemIdx]);
-            return;
+        let oitems = h.items;
+        let items: Array<Item> = [];
+        h.items = items;
+        h.descriptorList.forEach((desc) => {
+          for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
+            if (oitems[itemIdx].impl === desc.impl) {
+              items.push(oitems[itemIdx]);
+              return;
+            }
           }
-        }
-        Descriptor.addNewItemByDescs(h, [desc], false, (_, propVal) => {
-          if (propVal.pk) {
-            propVal.primary = meta.id;
-            propVal.updateModel = true;
-          }
-          return propVal;
+          Descriptor.addNewItemByDescs(h, [desc], false, (_, propVal) => {
+            if (propVal.pk) {
+              propVal.primary = meta.id;
+              propVal.updateModel = true;
+            }
+            return propVal;
+          });
         });
-      });
 
-      // if (h.items.length < 1) {
-      //   // 当给增量流程流程扩展selectTab使用还没有item使用
-      //   Descriptor.addNewItemByDescs(h, h.descriptorList, false, (_, propVal) => {
-      //     if (propVal.pk) {
-      //       propVal.primary = meta.id;
-      //       propVal.updateModel = true;
-      //     }
-      //     return propVal;
-      //   });
-      // }
-      //  console.log(hlist);
-      this.openSubDetailForm(meta, pluginMeta, hlist);
-    });
+        // if (h.items.length < 1) {
+        //   // 当给增量流程流程扩展selectTab使用还没有item使用
+        //   Descriptor.addNewItemByDescs(h, h.descriptorList, false, (_, propVal) => {
+        //     if (propVal.pk) {
+        //       propVal.primary = meta.id;
+        //       propVal.updateModel = true;
+        //     }
+        //     return propVal;
+        //   });
+        // }
+        //  console.log(hlist);
+        this.openSubDetailForm(meta, pluginMeta, hlist);
+      });
     event.stopPropagation();
   }
 
@@ -302,6 +309,10 @@ export class SelectedTabsComponent extends BasicFormComponent {
   _onItemSelect(data: any) {
     this.onItemSelect.emit(data);
   }
+
+  reload() {
+    this.onReload.emit();
+  }
 }
 
 
@@ -330,6 +341,11 @@ export class SelectedTabsComponent extends BasicFormComponent {
                        [nzShowSelectAll]="true"
                        [nzRenderList]="[renderList, renderList]"
           >
+              <!--              <ng-template #footer let-direction>-->
+              <!--                  <button *ngIf="direction=='left'" nzSize="small" nz-button (click)="reload()" style=" margin: 5px;">-->
+              <!--                      <i nz-icon nzType="reload" nzTheme="outline"></i>Reload-->
+              <!--                  </button>-->
+              <!--              </ng-template>-->
               <ng-template
                       #renderList
                       let-items
@@ -339,51 +355,11 @@ export class SelectedTabsComponent extends BasicFormComponent {
                       let-onItemSelectAll="onItemSelectAll"
                       let-onItemSelect="onItemSelect"
               >
-                  <selected-tables [direction]="direction" [items]="items" [disabled]="disabled" [descriptor]="this.dto.readerDescriptor" [batchSettableTabs]="batchSettableTabs"
+                  <selected-tables (onReload)="this.reload()" [direction]="direction" [items]="items" [disabled]="disabled" [descriptor]="this.dto.readerDescriptor" [batchSettableTabs]="batchSettableTabs"
                                    [pluginMetas]="getPluginMetas()" [subFormHetero]="this.subFormHetero" [stat]="stat" [subFieldForms]="subFieldForms"
                                    [dataXReaderTargetName]="getDataXReaderTargetName" (onItemSelect)="onItemSelect($event)" (onItemSelectAll)="onItemSelectAll($event)"></selected-tables>
-                  <!--                  <nz-table #t [nzData]="convertItems(items)" nzSize="small">-->
-                  <!--                      <thead>-->
-                  <!--                      <tr>-->
-                  <!--                          <th-->
-                  <!--                                  nzShowCheckbox-->
-                  <!--                                  [nzDisabled]="disabled"-->
-                  <!--                                  [nzChecked]="stat.checkAll"-->
-                  <!--                                  [nzIndeterminate]="stat.checkHalf"-->
-                  <!--                                  (nzCheckedChange)="onItemSelectAll($event)"-->
-                  <!--                          ></th>-->
-                  <!--                          <th>表名-->
-                  <!--                              <button *ngIf="direction === 'right'" [disabled]="batchSettableTabs.length < 1 " nz-button nzType="primary" (click)="batchSet()" nzSize="small">批量设置</button>-->
-                  <!--                          </th>-->
-                  <!--                          <th *ngIf="direction === 'right'">操作</th>-->
-                  <!--                      </tr>-->
-                  <!--                      </thead>-->
-                  <!--                      <tbody>-->
-                  <!--                      <tr *ngFor="let data of t.data" (click)="onItemSelect(data)">-->
-                  <!--                          <td-->
-                  <!--                                  nzShowCheckbox-->
-                  <!--                                  [nzChecked]="data.checked"-->
-                  <!--                                  [nzDisabled]="disabled || data.disabled"-->
-                  <!--                                  (nzCheckedChange)="onItemSelect(data)"-->
-                  <!--                          ></td>-->
-                  <!--                          <td>{{ data.title }}</td>-->
-                  <!--                          <td *ngIf="direction === 'right'">-->
-                  <!--                              <ng-container [ngSwitch]="subFormSetted( data.meta)">-->
-                  <!--                                  <nz-tag *ngSwitchCase="true" [nzColor]="'#87d068'"><i nz-icon nzType="check" nzTheme="outline"></i>已设置</nz-tag>-->
-                  <!--                                  <nz-tag *ngSwitchCase="false" [nzColor]="'#999999'"><i nz-icon nzType="warning" nzTheme="outline"></i>未设置</nz-tag>-->
-                  <!--                              </ng-container>-->
-                  <!--                              &lt;!&ndash;                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>&ndash;&gt;-->
-                  <!--                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">设置</button>-->
-                  <!--                          </td>-->
-                  <!--                      </tr>-->
-                  <!--                      </tbody>-->
-                  <!--                  </nz-table>-->
               </ng-template>
           </nz-transfer>
-          <!--          <tis-form [formLayout]="formLayout" [fieldsErr]="errorItem" [labelSpan]="3" [controlerSpan]="19">-->
-          <!--              <tis-ipt #selectTabs title="选择表" name="selectTabs" require="true">-->
-          <!--              </tis-ipt>-->
-          <!--          </tis-form>-->
           <ng-template #drawerTemplate let-data let-drawerRef="drawerRef">
 
           </ng-template>
@@ -416,20 +392,13 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   transferList: TransferItem[] = [];
 
-  get createModel(): boolean {
-    return this.execModel === ExecModel.Create;
-  }
-
-  @Input()
-  set dtoooo(dto: DataxDTO) {
-    this.dto = dto;
-  }
-
-  // savePlugin = new EventEmitter<any>();
-
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
+
+
+  // savePlugin = new EventEmitter<any>();
+
 
   public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string, subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
     return {
@@ -457,9 +426,9 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
 
   static initializeSubFieldForms(baseCpt: BasicFormComponent, pm: PluginType, readerDescriptorImpl: string
-    , subFieldFormsCallback: (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readDesc: Descriptor) => void) {
-    PluginsComponent.initializePluginItems(baseCpt, [pm],
-      (success: boolean, hList: HeteroList[], _) => {
+    , useCache: boolean, subFieldFormsCallback: (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readDesc: Descriptor) => void): Promise<TisResponseResult> {
+    return PluginsComponent.initializePluginItems(baseCpt, [pm],
+      useCache, (success: boolean, hList: HeteroList[], _) => {
         if (!success) {
           return;
         }
@@ -521,21 +490,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
         // console.log(subFieldForms);
         subFieldFormsCallback(subFieldForms, subFormHetero, desc);
-
-        // desc.subFormMeta.idList.forEach((subformId) => {
-        //   let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
-        //   this.transferList.push({
-        //     key: subformId,
-        //     title: subformId,
-        //     direction: direction,
-        //     disabled: false,
-        //     meta: Object.assign({id: `${subformId}`}, desc.subFormMeta)
-        //   });
-        // });
-        // this.transferList = [...this.transferList];
-
-
-        // this.dto.componentCallback.step4.next(this);
       }
     );
   }
@@ -544,20 +498,33 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
     super(tisService, modalService, r, route, notification);
   }
 
+  get createModel(): boolean {
+    return this.execModel === ExecModel.Create;
+  }
+
+  @Input()
+  set dtoooo(dto: DataxDTO) {
+    this.dto = dto;
+  }
 
   ngOnInit(): void {
     this.formLayout = this.createModel ? "vertical" : "horizontal";
     super.ngOnInit();
   }
 
-  protected initialize(app: CurrentCollection): void {
+  protected initialize(_: CurrentCollection): void {
 
     // console.log(this.dto.readerDescriptor);
-    DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
-      , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+    this.initializeSubFieldForms(true);
+  }
+
+  private initializeSubFieldForms(useCache: boolean): Promise<TisResponseResult> {
+    return DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
+      , useCache, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
         // console.log(subFieldForms);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
+        this.transferList.splice(0);
         readerDesc.subFormMeta.idList.forEach((subformId) => {
           let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
           this.transferList.push({
@@ -573,57 +540,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
         this.dto.componentCallback.step4.next(this);
       });
-
-    // PluginsComponent.initializePluginItems(this, this.getPluginMetas(),
-    //   (success: boolean, hList: HeteroList[], _) => {
-    //     if (!success) {
-    //       return;
-    //     }
-    //
-    //     this.subFormHetero = hList[0];
-    //     let item: Item = null;
-    //     let subForm: { string?: ItemPropVal } = null;
-    //     let desc: Descriptor = this.subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
-    //
-    //     for (let itemIdx = 0; itemIdx < this.subFormHetero.items.length; itemIdx++) {
-    //       item = this.subFormHetero.items[itemIdx];
-    //       for (let tabKey in item.vals) {
-    //         /**==========================
-    //          *START: 删除历史脏数据保护措施
-    //          ==========================*/
-    //         if (desc.subForm) {
-    //           if (desc.subFormMeta.idList.findIndex((existKey) => tabKey === existKey) < 0) {
-    //             delete item.vals[tabKey];
-    //             continue;
-    //           }
-    //         }
-    //         /**==========================
-    //          * END : 删除历史脏数据保护措施
-    //          ==========================*/
-    //         // @ts-ignore
-    //         subForm = item.vals[tabKey];
-    //         // console.log(subForm);
-    //         this.subFieldForms.set(tabKey, subForm);
-    //       }
-    //       break;
-    //     }
-    //     if (desc.subForm) {
-    //       desc.subFormMeta.idList.forEach((subformId) => {
-    //         let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
-    //         this.transferList.push({
-    //           key: subformId,
-    //           title: subformId,
-    //           direction: direction,
-    //           disabled: false,
-    //           meta: Object.assign({id: `${subformId}`}, desc.subFormMeta)
-    //         });
-    //       });
-    //       this.transferList = [...this.transferList];
-    //     }
-    //
-    //     this.dto.componentCallback.step4.next(this);
-    //   }
-    // );
   }
 
   getPluginMetas(): PluginType[] {
@@ -726,6 +642,13 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   }
 
 
+  reload() {
+    this.initializeSubFieldForms(false).then((r) => {
+      if (r.success) {
+        this.notification.success("成功", "已经成功刷新列表");
+      }
+    });
+  }
 }
 
 // 子记录点击详细显示

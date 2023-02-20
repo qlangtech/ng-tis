@@ -17,7 +17,7 @@
  */
 
 import {TISService} from './tis.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {Component, EventEmitter, Injectable, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
 // @ts-ignore
@@ -65,7 +65,8 @@ export class BasicFormComponent {
     return !!route.snapshot.data[KEY_show_Bread_crumb];
   }
 
-  constructor(protected tisService: TISService, protected modalService?: NzModalService, protected notification?: NzNotificationService) {
+  constructor(protected tisService: TISService
+    , protected modalService?: NzModalService, protected notification?: NzNotificationService) {
   }
 
   protected confirm(content: string, onOK: () => void): void {
@@ -230,27 +231,27 @@ export abstract class BasicSidebarDTO {
 @Component({
   selector: 'sidebar-toolbar',
   styles: [
-      ` .sidebar {
-          border-bottom: thin solid #999999;
-          padding: 0 0 5px 0;
-          margin: 0 0 18px 0;
-          height: 40px;
-      }
+    ` .sidebar {
+      border-bottom: thin solid #999999;
+      padding: 0 0 5px 0;
+      margin: 0 0 18px 0;
+      height: 40px;
+    }
 
-      .float-right {
-          float: right;
-      }
+    .float-right {
+      float: right;
+    }
     `
   ],
   template: `
-      <div class="sidebar">
-          <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
-          <div [ngClass]="{'float-right': true}">
-              <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
-              <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
-          </div>
+    <div class="sidebar">
+      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
+      <div [ngClass]="{'float-right': true}">
+        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
+        <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
       </div>
-      <div style="clear: both"></div>
+    </div>
+    <div style="clear: both"></div>
   `
 })
 export class SideBarToolBar extends BasicFormComponent {
@@ -289,7 +290,15 @@ export class SideBarToolBar extends BasicFormComponent {
 export abstract class BasicSideBar extends BasicFormComponent {
   @Output() saveClick = new EventEmitter<any>();
   // @Output() onClose = new EventEmitter<any>();
-  @Input() nodeMeta: NodeMeta;
+  // @Input() nodeMeta: NodeMeta;
+  //
+  nodeMeta: NodeMeta;
+ _sidebarDTO :BasicSidebarDTO ;
+  @Input() set sidebarDto(dto: BasicSidebarDTO) {
+    this.nodeMeta = dto.nodeMeta;
+    this._sidebarDTO = dto;
+  }
+
   @Input() g6Graph: any;
   @Input() parentComponent: IDataFlowMainComponent;
 
@@ -311,7 +320,16 @@ export abstract class BasicSideBar extends BasicFormComponent {
 
   public abstract initComponent(addComponent: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void;
 
-  public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: IDataFlowMainComponent, evt: any): void;
+  /**
+   *
+   * @param graph
+   * @param $
+   * @param nodeid
+   * @param addComponent
+   * @param evt
+   * @return 保存是否成功
+   */
+  public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: IDataFlowMainComponent, evt: any): boolean;
 }
 
 export interface IDataFlowMainComponent {
@@ -407,12 +425,12 @@ export class CurrentCollection {
 
 // sidebar 在与主页面传递的dto对象
 export class DumpTable extends BasicSidebarDTO {
-  constructor(nodeMeta: NodeMeta, public nodeid: string, public sqlcontent?: string, public dbid?: string, public tabid?: string, public tabname?: string) {
+  constructor(nodeMeta: NodeMeta, public nodeid: string, public sqlcontent?: string, public dbid?: string, public tabname?: string) {
     super(nodeMeta);
   }
 
-  public get cascaderTabId(): string {
-    return this.tabid + '%' + this.tabname;
+  public get tableName(): string {
+    return this.tabname;
   }
 }
 
@@ -455,7 +473,8 @@ export class ERRuleNode extends BasicSidebarDTO {
   public cardinality: string;
   linkKeyList: LinkKey[] = [];
 
-  constructor(public  rel: { id: string, 'sourceNode': DumpTable, 'targetNode': DumpTable, 'linkrule': { linkKeyList: LinkKey[], cardinality: string } }, public topologyName: string) {
+  constructor(public rel: { id: string, 'sourceNode': DumpTable, 'targetNode': DumpTable
+    , 'linkrule': { linkKeyList: LinkKey[], cardinality: string } }, public topologyName: string) {
     super(null);
     this.cardinality = rel.linkrule.cardinality;
     this.linkKeyList = rel.linkrule.linkKeyList;
@@ -503,7 +522,7 @@ export class Pos {
 }
 
 export class NodeMetaDependency {
-  constructor(public id: string, public tabid: string, public dbid: string
+  constructor(public id: string, public dbid: string
     , public dbName: string, public name: string, public extraSql: string
     , public position?: Pos, public type?: string) {
 

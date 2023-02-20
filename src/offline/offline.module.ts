@@ -21,7 +21,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DatasourceComponent} from "./ds.component";
-import {WorkflowComponent} from "./workflow.component";
+import { WorkflowComponent} from "./workflow.component";
 import {OfflineRoutingModule} from "./offline-routing.module";
 import {OffileIndexComponent} from "./offline.index.component";
 import {DbAddComponent} from "./db.add.component";
@@ -57,6 +57,8 @@ import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.c
 import {IconDefinition} from "@ant-design/icons-angular";
 import {DeleteOutline} from "@ant-design/icons-angular/icons";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
+import {WFControllerComponent} from "./workflow.controller.component";
+import {WorkflowOfflineEngineSelectComponent} from "./workflow.offline.engine.select.component";
 
 
 const icons: IconDefinition[] = [DeleteOutline];
@@ -78,7 +80,7 @@ const icons: IconDefinition[] = [DeleteOutline];
     {provide: NZ_ICONS, useValue: icons}
   ],
   declarations: [
-    WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
+    WorkflowComponent, WorkflowOfflineEngineSelectComponent ,WFControllerComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
     , TableAddComponent, TableAddStep1Component, // TableAddStep2Component,
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent

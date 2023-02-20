@@ -16,7 +16,16 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, TemplateRef, Type, ViewChild, ViewContainerRef} from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ComponentFactoryResolver,
+  OnInit,
+  TemplateRef,
+  Type,
+  ViewChild,
+  ViewContainerRef
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -30,7 +39,7 @@ import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
-import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
+import {DataxAddStep7Component, ExecModel} from "./datax.add.step7.confirm.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";
@@ -43,12 +52,11 @@ import {Subject} from "rxjs";
 
 @Component({
   template: `
-      <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
-          <ng-template #container></ng-template>
-      </nz-spin>
-      <ng-template #proessErr>当前是更新流程不能进入该页面
-      </ng-template>
-      {{ multiViewDAG.lastCpt?.name}}
+    <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
+      <ng-template #container></ng-template>
+    </nz-spin>
+    <ng-template #proessErr>当前是更新流程不能进入该页面</ng-template>
+    {{ multiViewDAG.lastCpt?.name}}
   `
 })
 export class DataxAddComponent extends AppFormComponent implements AfterViewInit, OnInit {
@@ -57,13 +65,14 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
   @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
   multiViewDAG: MultiViewDAG;
 
-  public static getDataXMeta(cpt: BasicFormComponent, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
+  public static getDataXMeta(cpt: BasicFormComponent, stepType: StepType, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
     return cpt.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=get_data_x_meta")
+      , "action=datax_action&emethod=get_data_x_meta&appname=" + app.appName + "&processModel=" + stepType)
       .then((r) => {
         // this.processResult(r);
         if (r.success) {
           let dto = new DataxDTO(execId);
+          dto.processModel = stepType;
           dto.dataxPipeName = app.appName;
           dto.processMeta = r.bizresult.processMeta;
           // this.dto.readerDescriptor = null;
@@ -98,8 +107,8 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           if (!execId) {
             throw new Error("param execId can not be null");
           }
-          DataxAddComponent.getDataXMeta(this, app, execId).then((dto) => {
-            dto.processModel = StepType.UpdateDataxReader;
+          DataxAddComponent.getDataXMeta(this, StepType.UpdateDataxReader, app, execId).then((dto) => {
+            // dto.processModel = StepType.UpdateDataxReader;
             this.multiViewDAG.loadComponent(cpt, dto);
           })
           return;
@@ -108,8 +117,8 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           if (!execId) {
             throw new Error("param execId");
           }
-          DataxAddComponent.getDataXMeta(this, app, execId).then((dto) => {
-            dto.processModel = StepType.UpdateDataxWriter;
+          DataxAddComponent.getDataXMeta(this, StepType.UpdateDataxWriter, app, execId).then((dto) => {
+            // dto.processModel = StepType.UpdateDataxWriter;
             this.multiViewDAG.loadComponent(cpt, dto);
           })
           return;
@@ -195,8 +204,14 @@ class DataxProfile {
   dptId: string;
 }
 
+export interface DataXCfgFile {
+  dbFactoryId?: string;
+  fileName: string;//:"totalpayinfo_0.json"
+}
+
 export class DataxDTO {
 
+  execModel: ExecModel = ExecModel.Create;
   public headerStepShow = true;
 
   dataxPipeName: string;
@@ -210,8 +225,14 @@ export class DataxDTO {
   processModel: StepType = StepType.CreateDatax;
 
   componentCallback: { step3: Subject<DataxAddStep3Component>, step4: Subject<DataxAddStep4Component> }
-   = {step3: new Subject<DataxAddStep3Component>(), step4: new Subject<DataxAddStep4Component>()};
+    = {step3: new Subject<DataxAddStep3Component>(), step4: new Subject<DataxAddStep4Component>()};
   tablePojo: TablePojo;
+
+  public get inWorkflowProcess(): boolean {
+    return this.processModel === StepType.CreateWorkflow;
+  }
+
+  addStep2ComponentCfg = new AddStep2ComponentCfg();
 
   // dataxAddStep3Callback: (_: DataxAddStep3Component) => void;
 
@@ -231,6 +252,21 @@ export class DataxDTO {
     }
     return this.writerDescriptor.impl;
   }
+}
+
+export class AddStep2ComponentCfg {
+  public readerCptNeed = true;
+  public headerCaption = 'Reader & Writer类型';
+  public writerTypeLable = "Writer类型";
+  public writerFilter: string;
+
+  public stepIndex = 0;
+
+  get stepToolbarNeed(): boolean {
+    return true; //this.readerCptNeed;
+  }
+
+  installableExtension: Array<string> = ['com.qlangtech.tis.datax.impl.DataxReader', 'com.qlangtech.tis.datax.impl.DataxWriter'];
 }
 
 export interface DataXCreateProcessMeta {

@@ -26,15 +26,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
-// import {NzFormatEmitEvent, NzModalService, NzNotificationService, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
 import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {DATAX_PREFIX_DB} from "../base/datax.add.base";
 import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
-import {TransferDirection} from "ng-zorro-antd/transfer";
 
 
 const db_model_detailed = "detailed";
@@ -55,9 +53,10 @@ enum NodeType {
       <nz-layout>
           <nz-sider [nzWidth]="300">
               <nz-space class="btn-block">
-                  <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 4em'" (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
+                  <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 5em'" (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
                                       [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'" [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
-                      <i class="fa fa-database" aria-hidden="true"></i> <i nz-icon nzType="down"></i></tis-plugin-add-btn>
+                      <i class="fa fa-database" aria-hidden="true"></i></tis-plugin-add-btn>
+
                   <button *nzSpaceItem nz-button nzSize="small" style="width: 4em" (click)="addTableBtnClick()">
                       <i class="fa fa-plus" aria-hidden="true"></i>
                       <i class="fa fa-table" aria-hidden="true"></i></button>
@@ -197,6 +196,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   treeLoad = false;
   treeNodeClicked = false;
   supportFacade = false;
+  // zeppelinNoteId: string;
   facadeSourceDesc: Array<Descriptor> = [];
 
   pluginsMetas: PluginType[] = [];
@@ -208,6 +208,15 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   updateMode = false;
 
   formControlSpan = 20;
+
+  public static createDB(id: string, detail: any, dataReaderSetted?: boolean, supportDataXReader?: boolean): DbPojo {
+    let db = new DbPojo(id);
+    db.dbName = detail.identityName;
+    db.pluginImpl = detail.impl;
+    db.dataReaderSetted = dataReaderSetted;
+    db.supportDataXReader = supportDataXReader;
+    return db;
+  }
 
   constructor(protected tisService: TISService //
     , private router: Router //
@@ -275,13 +284,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     this.nodes = [];
     for (let db of dbs) {
       let children = [];
-      // if (db.tables) {
-      //   for (let table of db.tables) {
-      //     let c: NzTreeNodeOptions = {'key': `${table.id}`, 'title': table.name, 'isLeaf': true};
-      //     children.push(c);
-      //   }
-      // }
-
       let dbNode: NzTreeNodeOptions = {'key': `${db.id}`, 'title': db.name, 'children': children};
       dbNode[KEY_DB_ID] = `${db.id}`;
       this.nodes.push(dbNode);
@@ -433,7 +435,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
             if (type === NodeType.DB) {
               let detail = biz.detailed;
-              let db = this.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
+              let db = DatasourceComponent.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
 
               let tabs: Array<string> = biz.selectedTabs;
               if (targetNode) {
@@ -454,7 +456,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               this.selectedDb = db;
               this.dataReaderPluginCfg(this.selectedDb);
               if (biz.facade) {
-                this.facdeDb = this.createDB(id, biz.facade);
+                this.facdeDb = DatasourceComponent.createDB(id, biz.facade);
                 this.facdeDb.facade = true;
                 this.createFacadePluginsMetas(db.dbName);
               }
@@ -472,7 +474,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               let meta = <ISubDetailTransferMeta>{id: event.name};
 
               DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
-                , (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+                , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
 
                   DataxAddStep4Component.processSubFormHeteroList(this, m, meta, subFieldForms.get(meta.id) // , subFormHetero.descriptorList[0]
                   )
@@ -503,14 +505,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     this.dataReaderPluginMetas = [{name: 'dataxReader', require: true, extraParam: `update_${true},justGetItemRelevant_true,${selectedDb ? (DATAX_PREFIX_DB + selectedDb.dbName) : ""}`}];
   }
 
-  private createDB(id: string, detail: any, dataReaderSetted?: boolean, supportDataXReader?: boolean) {
-    let db = new DbPojo(id);
-    db.dbName = detail.identityName;
-    db.pluginImpl = detail.impl;
-    db.dataReaderSetted = dataReaderSetted;
-    db.supportDataXReader = supportDataXReader;
-    return db;
-  }
 
   showMessage(result: any) {
     this.processResult(result);
@@ -743,6 +737,13 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     // console.log(event);
     TableAddComponent.findDBNameProp(hlist);
   }
+
+  // openNotebook(event: PluginSaveResponse) {
+  //   let zeppelinNoteId = event.biz();
+  //   let baseUrl = window.location.href.replace(this.router.url, '');
+  //   let newRelativeUrl = this.router.createUrlTree(['zeppelin/notebook', zeppelinNoteId]);
+  //   window.open(baseUrl + newRelativeUrl, '_blank');
+  // }
 }
 
 // export class Node {

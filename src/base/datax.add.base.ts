@@ -77,6 +77,8 @@ export abstract class BasicDataXAddComponent extends AppFormComponent {
   cancel() {
     if (this.dto.processModel === StepType.CreateDatax) {
       this.r.navigate(['/base/applist'], {relativeTo: this.route});
+    } else if (this.dto.processModel === StepType.CreateWorkflow) {
+      this.r.navigate(['/offline/wf'], {relativeTo: this.route});
     } else {
       this.r.navigate(['/x', this.dto.dataxPipeName, "config"], {relativeTo: this.route});
     }

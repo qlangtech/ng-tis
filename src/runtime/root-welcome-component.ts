@@ -37,7 +37,7 @@ import {Application} from "../common/application";
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1>实例</h1>
-                                      dataX,Solr
+                                      dataX
                                   </div>
                               </div>
                           </nz-card>

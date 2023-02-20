@@ -74,6 +74,9 @@ import {NotebookTestComponent} from "@zeppelin/pages/workspace/notebook/notebook
     NoteFormBlockComponent,
     NotebookSidebarComponent
   ],
+  exports: [
+   // NotebookComponent
+  ],
   imports: [
     CommonModule,
     PortalModule,
@@ -99,7 +102,7 @@ import {NotebookTestComponent} from "@zeppelin/pages/workspace/notebook/notebook
     NzGridModule,
     NzRadioModule,
     DragDropModule,
-   // NzCodeEditorModule,
+    // NzCodeEditorModule,
     NzCheckboxModule,
     NzResizableModule
   ]

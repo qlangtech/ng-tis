@@ -47,23 +47,22 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 @Component({
   template: `
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-
           <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()" (delete)="deleteNode()"></sidebar-toolbar>
 
-          <!--          <form class="clear" nz-form [nzLayout]="'vertical'">-->
-          <!--              <div class="item-head"><label>数据库表</label></div>-->
-          <!--              <p>-->
-          <!--                  &lt;!&ndash;                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"&ndash;&gt;-->
-          <!--                  &lt;!&ndash;                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>&ndash;&gt;-->
-          <!--                  <tis-table-select [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>-->
-          <!--              </p>-->
+          <form class="clear" nz-form [nzLayout]="'vertical'">
+              <div class="item-head"><label>数据库表</label></div>
+              <p>
+                  <!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
+                  <!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
+                  <tis-table-select [ngModelOptions]="{standalone: true}" [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>
+              </p>
 
-          <!--              <label>SQL</label>-->
-          <!--              <div>-->
-          <!--                  <tis-codemirror name="sqltext" [(ngModel)]="sql"-->
-          <!--                                  [size]="{width:'100%',height:600}" [config]="sqleditorOption"></tis-codemirror>-->
-          <!--              </div>-->
-          <!--          </form>-->
+              <label>SQL</label>
+              <div>
+                  <tis-codemirror name="sqltext" [(ngModel)]="sql"
+                                  [size]="{width:'100%',height:600}" [config]="sqleditorOption"></tis-codemirror>
+              </div>
+          </form>
 
       </nz-spin>
   `,
@@ -91,9 +90,8 @@ export class WorkflowAddDbtableSetterComponent
 
 
   initComponent(_: WorkflowAddComponent, dumpTab: DumpTable): void {
-
-    if (dumpTab.tabid) {
-      this.cascadervalues = [dumpTab.dbid, dumpTab.cascaderTabId];
+    if (dumpTab.tableName) {
+      this.cascadervalues = [dumpTab.dbid, dumpTab.tableName];
       this.sql = dumpTab.sqlcontent;
     }
     //  console.log(this.cascadervalues);
@@ -131,18 +129,19 @@ export class WorkflowAddDbtableSetterComponent
 
   // 点击保存按钮
   _saveClick() {
-
-    let tab: string = this.cascadervalues[1];
-    let tabinfo: string[] = tab.split('%');
+   console.log(this.cascadervalues);
+    let dbId: string = this.cascadervalues[0];
+    let tabName: string = this.cascadervalues[1];
 
     // console.log(this.dto);
 
     this.saveClick.emit(new DumpTable(this.nodeMeta, this.dto.nodeid
-      , this.sql, this.cascadervalues[0], tabinfo[0], tabinfo[1]));
+      , this.sql, dbId, tabName));
+    this._closeSidebar(null);
   }
 
   public subscribeSaveClick(graph: any, $: any, nodeid: string
-    , addComponent: IDataFlowMainComponent, d: DumpTable): void {
+    , addComponent: IDataFlowMainComponent, d: DumpTable): boolean {
     let old = graph.findById(nodeid);
     let nmodel = {'label': d.tabname, 'nodeMeta': d};
 
@@ -154,6 +153,7 @@ export class WorkflowAddDbtableSetterComponent
     // console.log(model.id);
     addComponent.dumpTabs.set(nodeid, d);
     addComponent.closePanel();
+    return true;
   }
 
   // 删除节点

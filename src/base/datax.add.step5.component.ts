@@ -32,28 +32,31 @@ import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
+import {StepType} from "../common/steps.component";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-      <tis-steps [type]="stepType" [step]="offsetStep(2)"></tis-steps>
-      <!--      <tis-form [fieldsErr]="errorItem">-->
-      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-      <!--              <tis-header-tool>-->
-      <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-      <!--              </tis-header-tool>-->
-      <!--          </tis-page-header>-->
-      <!--      </tis-form>-->
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
-          </tis-steps-tools-bar>
-          <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
-                       [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
-      </nz-spin>
+    <tis-steps [type]="stepType" [step]="offsetStep(2)"></tis-steps>
+    <!--      <tis-form [fieldsErr]="errorItem">-->
+    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+    <!--              <tis-header-tool>-->
+    <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+    <!--              </tis-header-tool>-->
+    <!--          </tis-page-header>-->
+    <!--      </tis-form>-->
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()"
+                           [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
+      </tis-steps-tools-bar>
+      <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
+                   [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false"
+                   [_heteroList]="hlist" #pluginComponent></tis-plugins>
+    </nz-spin>
   `
   , styles: [
-      `
+    `
     `
   ]
 })
@@ -113,6 +116,16 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
     let processMeta: DataXCreateProcessMeta = this.dto.processMeta;
     let n: IntendDirect = null;
+
+    if (this.dto.processModel === StepType.CreateWorkflow) {
+
+      return this.jsonPost(`/offline/datasource.ajax?action=offline_datasource_action&emethod=create_workflow`, {"projectName": this.dto.dataxPipeName})
+        .then((r) => {
+          if (r.success) {
+            this.nextStep.emit(this.dto);
+          }
+        });
+    }
 
     if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
       // ES的Schema编辑是特别定制的

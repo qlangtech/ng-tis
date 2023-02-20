@@ -201,7 +201,7 @@ export class TISService {
 
   private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
     if (result.success) {
-      if (result.msg && result.msg.length > 0 && (!e || !e.notShowBizMsg)) {
+      if (result.msg && result.msg.length > 0 && (!e || !e.notShowBizMsg) && (e && !e.createOrGetNotebook)) {
         let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
         this.notification.create('success', '成功', msgContent, {nzDuration: 6000});
       }

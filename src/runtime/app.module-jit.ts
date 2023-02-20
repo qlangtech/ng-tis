@@ -34,7 +34,7 @@ import {TisCommonModule} from "../common/common.module";
 import {RootWelcomeComponent} from "./root-welcome-component";
 import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
 import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
-import {WorkspaceModule} from "@zeppelin/pages/workspace/workspace.module";
+// import {WorkspaceModule} from "@zeppelin/pages/workspace/workspace.module";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
 import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
@@ -112,9 +112,16 @@ export function markedOptionsFactory(): MarkedOptions {
         path: 'x/:name',
         loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
       },
+      // {
+      //   path: 'zeppelin',
+      //   loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule)
+      // },
       {
-        path: 'zeppelin',
-        loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule)
+        path: 'z/zeppelin',
+        loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+        // component: NotebookwrapperComponent,
+        //  component: PluginManageComponent,
+        outlet: "zeppelin"
       },
     ])
   ],

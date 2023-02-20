@@ -28,6 +28,7 @@ import {
   ViewContainerRef
 } from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
+import {TisResponseResult} from "./tis.plugin";
 
 
 @Directive({selector: '[tis-header-tool-content]'})
@@ -151,7 +152,7 @@ export class PageHeaderComponent implements AfterContentInit {
  // @Input() needRefesh = false;
   @Input() back: string;
   @Input()
-  result: { success: boolean, msg: any[], errormsg: any[] };
+  result: TisResponseResult;// { success: boolean, msg: any[], errormsg: any[] };
   @Input() title: string;
   @Input() size: 'sm' | 'lg' = 'lg';
   @Input() showBreadcrumb = true;

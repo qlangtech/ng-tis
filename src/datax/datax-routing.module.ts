@@ -31,6 +31,7 @@ import {MonitorComponent} from "../runtime/monitor.component";
 import {DataxConfigComponent} from "./datax.config.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {IncrBuildComponent} from "../runtime/incr.build.component";
+import {NotebookEntryComponent} from "./notebook.entry.component";
 
 @Injectable()
 export class DataxCanActivateCollectionManage implements CanActivateChild {
@@ -78,7 +79,7 @@ const dataxNodeRoutes: Routes = [
             component: FullBuildHistoryComponent,
             data: {datax: true}
           },
-          {   // Schema 配置文件一览
+          {
             path: 'update',
             component: DataxAddComponent,
             data: {datax: true}
@@ -103,7 +104,12 @@ const dataxNodeRoutes: Routes = [
           {
             path: 'monitor',
             component: MonitorComponent
-          }, {
+          },
+          {
+            path: 'notebook',
+            component: NotebookEntryComponent
+          }
+          , {
             path: '',
             component: DataxMainComponent
           }
