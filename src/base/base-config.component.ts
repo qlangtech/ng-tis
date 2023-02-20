@@ -23,6 +23,8 @@ import {TISService} from "../common/tis.service";
 import {PluginSaveResponse, TisResponseResult} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {NotebookwrapperComponent} from "../common/plugins.component";
 
 enum PluginCategory {
   Global = 'global',
@@ -34,26 +36,26 @@ enum PluginCategory {
   template: `
       <tis-page-header title="插件配置"></tis-page-header>
       <nz-spin [nzSize]="'large'" [nzSpinning]="this.formDisabled || pluginComponentDisabled">
-          <nz-tabset (nzSelectedIndexChange)="tabChange($event)"  [nzSelectedIndex]="selectedIndex">
+          <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzSelectedIndex]="selectedIndex">
               <nz-tab nzTitle="全局" (nzClick)="goto('global')" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
                       <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['k8s-images','params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
-<!--              <nz-tab nzTitle="实时" (nzClick)="goto('incr')" (nzDeselect)="configDeSelect($event)">-->
-<!--                  <ng-template nz-tab>-->
-<!--                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['incr-config']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>-->
-<!--                  </ng-template>-->
-<!--              </nz-tab>-->
+              <!--              <nz-tab nzTitle="实时" (nzClick)="goto('incr')" (nzDeselect)="configDeSelect($event)">-->
+              <!--                  <ng-template nz-tab>-->
+              <!--                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['incr-config']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>-->
+              <!--                  </ng-template>-->
+              <!--              </nz-tab>-->
               <nz-tab nzTitle="离线" (nzClick)="goto('offline')" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs','flat_table_builder']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['fs']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
           </nz-tabset>
-<!--          <ng-template #extraTemplate>-->
-<!--              <span>扩展点显示<nz-switch [nzLoading]="formDisabled" (ngModelChange)="showExtendsPointChange($event)" [ngModel]="this.showExtensionPoint.open" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch></span>-->
-<!--          </ng-template>-->
+          <!--          <ng-template #extraTemplate>-->
+          <!--              <span>扩展点显示<nz-switch [nzLoading]="formDisabled" (ngModelChange)="showExtendsPointChange($event)" [ngModel]="this.showExtensionPoint.open" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch></span>-->
+          <!--          </ng-template>-->
       </nz-spin>
   `
   ,
@@ -126,4 +128,5 @@ export class BaseConfigComponent extends BasicFormComponent implements OnInit {
         this.showExtensionPoint = {open: event};
       })
   }
+
 }

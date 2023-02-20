@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tis-console-nodejs.iml" filepath="$PROJECT_DIR$/.idea/tis-console-nodejs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tis-console.iml" filepath="$PROJECT_DIR$/tis-console.iml" />
     </modules>
   </component>
 </project>

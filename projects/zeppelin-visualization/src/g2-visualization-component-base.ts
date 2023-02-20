@@ -12,22 +12,21 @@
 
 import { ElementRef, OnDestroy} from '@angular/core';
 
-import * as G6 from '@antv/g6';
+import * as G2 from '@antv/g2';
 
 import { GraphConfig } from '@zeppelin/sdk';
 import { Visualization } from './visualization';
+// import {GraphConfig} from "../../zeppelin-sdk/src/interfaces";
 
-// @Component({
-//   template: ''
-// })
+
 export abstract class G2VisualizationComponentBase implements OnDestroy {
   abstract container: ElementRef<HTMLDivElement>;
-  chart: G6.Chart;
+  chart: G2.Chart;
   config: GraphConfig;
 
   constructor(public visualization: Visualization) {}
 
-  abstract renderBefore(chart: G6.Chart): void;
+  abstract renderBefore(chart: G2.Chart): void;
 
   abstract refreshSetting(): void;
   abstract setScale(): void;
@@ -66,7 +65,7 @@ export abstract class G2VisualizationComponentBase implements OnDestroy {
       this.chart.clear();
     } else {
       if (this.container && this.container.nativeElement) {
-        this.chart = new G6.Chart({
+        this.chart = new G2.Chart({
           forceFit: true,
           container: this.container.nativeElement,
           height: this.config.height || 400,

@@ -16,7 +16,16 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild} from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -26,7 +35,7 @@ import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
-import {DataxDTO} from "./datax.add.component";
+import {DataXCfgFile, DataxDTO} from "./datax.add.component";
 import {CodemirrorComponent} from "../common/codemirror.component";
 
 export enum ExecModel {
@@ -38,120 +47,147 @@ export enum ExecModel {
 @Component({
   selector: "datax-config",
   template: `
-      <tis-steps *ngIf="createModel" [type]="stepType" [step]="offsetStep(4)"></tis-steps>
-      <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-      <!--          <tis-header-tool>-->
-      <!--              <button nz-button nzType="default">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>-->
-      <!--          </tis-header-tool>-->
-      <!--      </tis-page-header>-->
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <ng-container [ngSwitch]="createModel">
-              <tis-steps-tools-bar *ngSwitchCase="true" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()">
-                  <final-exec-controller [ngSwitch]="createDataXStep">
-                      <button *ngSwitchCase="true" nz-button nzType="primary" (click)="createStepNext()"><i nz-icon nzType="rocket" nzTheme="outline"></i>创建</button>
-                      <button *ngSwitchCase="false" nz-button nzType="primary" (click)="updateStepNext()"><i nz-icon nzType="rocket" nzTheme="outline"></i>更新</button>
-                  </final-exec-controller>
-              </tis-steps-tools-bar>
-              <div *ngSwitchCase="false" class="fix-foot">
+    <tis-steps *ngIf="createModel" [type]="stepType" [step]="offsetStep(4)"></tis-steps>
+    <!--      <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+    <!--          <tis-header-tool>-->
+    <!--              <button nz-button nzType="default">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">创建</button>-->
+    <!--          </tis-header-tool>-->
+    <!--      </tis-page-header>-->
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <ng-container [ngSwitch]="createModel">
+        <tis-steps-tools-bar *ngSwitchCase="true" (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0"
+                             (goBack)="goback()">
+          <final-exec-controller [ngSwitch]="createDataXStep">
+            <button *ngSwitchCase="true" nz-button nzType="primary" (click)="createStepNext()"><i nz-icon
+                                                                                                  nzType="rocket"
+                                                                                                  nzTheme="outline"></i>创建
+            </button>
+            <button *ngSwitchCase="false" nz-button nzType="primary" (click)="updateStepNext()"><i nz-icon
+                                                                                                   nzType="rocket"
+                                                                                                   nzTheme="outline"></i>更新
+            </button>
+          </final-exec-controller>
+        </tis-steps-tools-bar>
+        <div *ngSwitchCase="false" class="fix-foot">
 
-                  <ng-container [ngSwitch]="inUpdate">
-                      <button nz-button *ngSwitchCase="false" (click)="startUpdate()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑基本信息</button>&nbsp;
-                      <button nz-button *ngSwitchCase="false" (click)="startEditReader()"><i nz-icon nzType="edit" nzTheme="outline"></i>Reader</button>&nbsp;
-                      <button nz-button *ngSwitchCase="false" (click)="startEditWriter()"><i nz-icon nzType="edit" nzTheme="outline"></i>Writer</button>&nbsp;
-                      <button nz-button *ngSwitchCase="true" nzType="primary" nzDanger (click)="inUpdate = false"><i nz-icon nzType="edit" nzTheme="outline"></i>取消编辑</button>
-                  </ng-container>
-                  &nbsp;
-                  <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()"></button>
-                  <button nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="dataxScriptfiles">
-                      生成脚本文件
-                      <i nz-icon nzType="down"></i>
-                  </button>
-                  <nz-dropdown-menu #dataxScriptfiles="nzDropdownMenu">
-                      <ul nz-menu>
-                          <li nz-menu-item (click)="reGenerate()">DataX配置文件</li>
-                          <li nz-menu-item (click)="reGenerateSqlDDL()">SQL DDL</li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </div>
+          <ng-container [ngSwitch]="inUpdate">
+            <button nz-button *ngSwitchCase="false" (click)="startUpdate()"><i nz-icon nzType="edit"
+                                                                               nzTheme="outline"></i>编辑基本信息
+            </button>&nbsp;
+            <ng-container *ngIf="notWorkFlow">
+              <button nz-button *ngSwitchCase="false" (click)="startEditReader()"><i nz-icon nzType="edit"
+                                                                                     nzTheme="outline"></i>Reader
+              </button>&nbsp;
+            </ng-container>
+            <button nz-button *ngSwitchCase="false" (click)="startEditWriter()"><i nz-icon nzType="edit"
+                                                                                   nzTheme="outline"></i>Writer
+            </button>&nbsp;
+            <button nz-button *ngSwitchCase="true" nzType="primary" nzDanger (click)="inUpdate = false"><i
+              nz-icon
+              nzType="edit"
+              nzTheme="outline"></i>取消编辑
+            </button>
           </ng-container>
-          <h3>DataX脚本文件</h3>
-          <ul class="item-block child-block script-block">
-              <li *ngFor="let f of genCfgFileList">
-                  <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="file-text" nzTheme="outline"></i>{{f}}</button>
-              </li>
-              <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-          </ul>
-          <ng-container *ngIf="createDDLFileList.length > 0">
-              <h3>Create Table DDL</h3>
+          &nbsp;
+          <button nz-button [disabled]="inUpdate" nzType="primary" (click)="reGenerate()"></button>
+          <button nz-button nz-dropdown nzType="primary" [nzDropdownMenu]="dataxScriptfiles">
+            生成脚本文件
+            <i nz-icon nzType="down"></i>
+          </button>
+          <nz-dropdown-menu #dataxScriptfiles="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="reGenerate()">DataX配置文件</li>
+              <li nz-menu-item (click)="reGenerateSqlDDL()">SQL DDL</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </ng-container>
+      <h3>DataX脚本文件</h3>
+      <ul class="item-block child-block script-block">
+        <li *ngFor="let f of genCfgFileList">
+          <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
+            <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
+          </button>
+        </li>
+        <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+      </ul>
+      <ng-container *ngIf="createDDLFileList.length > 0">
+        <h3>Create Table DDL</h3>
 
-              <ul class="child-block item-block script-block">
-                  <li *ngFor="let f of createDDLFileList">
-                      <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="console-sql" nzTheme="outline"></i>{{f}}</button>
-                  </li>
-                  <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-              </ul>
-          </ng-container>
-          <h3>基本信息</h3>
-          <div class="item-block">
-              <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
-                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="inUpdate" [disabled]="!inUpdate"
-                           [plugins]="[{name: 'appSource', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
-          </div>
-          <h3>Reader</h3>
-          <div class="item-block">
-              <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
-                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
-                           [plugins]="[{name: 'dataxReader', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
-              <!--
-                            <datax-reader-table-select *ngIf="dto.processMeta && dto.processMeta.readerRDBMS" [execModel]="readModel" [dtoooo]="dto" [inReadonly]="true"></datax-reader-table-select>
-              -->
-          </div>
-          <h3>Writer</h3>
-          <div class="item-block">
-              <tis-plugins (afterSave)="afterPluginSave($event)" [showExtensionPoint]="{open:false}" [errorsPageShow]="false"
-                           [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"
-                           [plugins]="[{name: 'dataxWriter', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
-          </div>
-      </nz-spin>
+        <ul class="child-block item-block script-block">
+          <li *ngFor="let f of createDDLFileList">
+            <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
+                                                                                             nzType="console-sql"
+                                                                                             nzTheme="outline"></i>{{f}}
+            </button>
+          </li>
+          <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+        </ul>
+      </ng-container>
+      <h3>基本信息</h3>
+      <div class="item-block">
+        <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
+                     [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="inUpdate"
+                     [disabled]="!inUpdate"
+                     [plugins]="[{name: 'appSource', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
+      </div>
+      <ng-container *ngIf="notWorkFlow ">
+        <h3>Reader</h3>
+        <div class="item-block">
+          <tis-plugins (afterSave)="afterPluginSave($event)" [errorsPageShow]="false"
+                       [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false"
+                       [disabled]="true"
+                       [plugins]="[{name: 'dataxReader', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
+        </div>
+      </ng-container>
+      <h3>Writer</h3>
+      <div class="item-block">
+        <tis-plugins (afterSave)="afterPluginSave($event)" [showExtensionPoint]="{open:false}"
+                     [errorsPageShow]="false"
+                     [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false"
+                     [disabled]="true"
+                     [plugins]="[{name: 'dataxWriter', require: true, extraParam: pluginExtraParam}]"></tis-plugins>
+      </div>
+    </nz-spin>
   `
   , styles: [
-      `     .script-block {
-            max-height: 200px;
-            overflow-y: auto
-        }
+    `     .script-block {
+      max-height: 200px;
+      overflow-y: auto
+    }
 
-        .fix-foot {
-            z-index: 100;
-            padding: 6px;
-            background-color: #f1f1f1;
-            height: 40px;
-            text-align: center;
-            position: fixed;
-            bottom: 0px;
-            width: 100%;
-        }
+    .fix-foot {
+      z-index: 100;
+      padding: 6px;
+      background-color: #f1f1f1;
+      height: 40px;
+      text-align: center;
+      position: fixed;
+      bottom: 0px;
+      width: 100%;
+    }
 
-        .child-block {
-            list-style-type: none;
-        }
+    .child-block {
+      list-style-type: none;
+    }
 
-        .child-block li {
-            display: inline-block;
-            width: 20%;
-            padding-right: 8px;
-        }
+    .child-block li {
+      display: inline-block;
+      width: 20%;
+      padding-right: 8px;
+    }
 
-        .editable-cell {
-            position: relative;
-            padding: 5px 12px;
-            cursor: pointer;
-        }
+    .editable-cell {
+      position: relative;
+      padding: 5px 12px;
+      cursor: pointer;
+    }
 
-        .editable-row:hover .editable-cell {
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-            padding: 4px 11px;
-        }
+    .editable-row:hover .editable-cell {
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 4px 11px;
+    }
 
 
 
@@ -164,11 +200,11 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   @Input()
   execModel: ExecModel = ExecModel.Create;
   inUpdate = false;
-  genCfgFileList: Array<string> = [];
+  genCfgFileList: Array<DataXCfgFile> = [];
   createDDLFileList: Array<string> = [];
   lastestGenFileTime: number;
 
-  readModel = ExecModel.Reader;
+  // readModel = ExecModel.Reader;
 
   @Input()
   set dtoooo(dto: DataxDTO) {
@@ -204,15 +240,16 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   private generate_datax_cfgs(getExist: boolean): Promise<GenerateCfgs> {
     let url = '/coredefine/corenodemanage.ajax';
     return this.httpPost(url, 'action=datax_action&emethod=generate_datax_cfgs&dataxName='
-      + this.dto.dataxPipeName + "&getExist=" + (getExist)).then((r) => {
-      if (r.success) {
-        let cfgs: GenerateCfgs = r.bizresult;
-        this.genCfgFileList = cfgs.dataxFiles;
-        this.createDDLFileList = cfgs.createDDLFiles;
-        this.lastestGenFileTime = cfgs.genTime;
-        return r.bizresult;
-      }
-    });
+      + this.dto.dataxPipeName + "&getExist=" + (getExist) + "&processModel=" + this.dto.processModel)
+      .then((r) => {
+        if (r.success) {
+          let cfgs: GenerateCfgs = r.bizresult;
+          this.genCfgFileList = cfgs.dataxFiles;
+          this.createDDLFileList = cfgs.createDDLFiles;
+          this.lastestGenFileTime = cfgs.genTime;
+          return r.bizresult;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -223,7 +260,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
    * 更新DataX配置
    */
   updateStepNext() {
-    this.jsonPost("/coredefine/corenodemanage.ajax?action=datax_action&emethod=update_datax&dataxName=" + this.dto.dataxPipeName
+    this.jsonPost("/coredefine/corenodemanage.ajax?action=datax_action&emethod=update_datax&dataxName=" + this.dto.dataxPipeName + "&processModel=" + this.dto.processModel
       , this.dto.profile)
       .then((r) => {
         this.processResult(r);
@@ -236,6 +273,14 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   // 执行下一步
+  get notWorkFlow(): boolean {
+    return this.stepType !== StepType.CreateWorkflow;
+  }
+
+  get isWorkFlow(): boolean {
+    return this.stepType === StepType.CreateWorkflow;
+  }
+
   public createStepNext(): void {
     this.jsonPost("/coredefine/corenodemanage.ajax?action=datax_action&emethod=create_datax&dataxName=" + this.dto.dataxPipeName
       , this.dto.profile)
@@ -258,19 +303,30 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       });
   }
 
-  viewDataXCfg(fileName: string) {
-    this.viewGenFile(fileName, {'formatMode': 'application/ld+json', 'titlePrefix': 'DataX Config File ', 'type': GenCfgFileType.datax});
+  viewDataXCfg(fileName: DataXCfgFile) {
+    this.viewGenFile(fileName, {
+      'formatMode': 'application/ld+json',
+      'titlePrefix': 'DataX Config File ',
+      'type': GenCfgFileType.datax
+    });
   }
 
   viewCreateDDLFile(createDDLName: string) {
-    this.viewGenFile(createDDLName
-      , {'formatMode': 'text/x-sql', 'titlePrefix': 'Table create DDL file For Writer ', 'type': GenCfgFileType.createDDL, 'editable': true, updateMethod: "save_table_create_ddl"});
+    this.viewGenFile({"fileName": createDDLName}
+      , {
+        'formatMode': 'text/x-sql',
+        'titlePrefix': 'Table create DDL file For Writer ',
+        'type': GenCfgFileType.createDDL,
+        'editable': true,
+        updateMethod: "save_table_create_ddl"
+      });
   }
 
-  private viewGenFile(fileName: string, opt: GenCfgFileOpt) {
+  private viewGenFile(fileName: DataXCfgFile, opt: GenCfgFileOpt) {
 
-    this.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName + "&fileName=" + fileName + "&fileType=" + opt.type)
+    this.jsonPost("/coredefine/corenodemanage.ajax?" + "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName
+      + "&fileType=" + opt.type + "&processModel=" + this.dto.processModel
+      , fileName)
       .then((r) => {
         this.processResult(r);
         if (r.success) {
@@ -279,10 +335,15 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
             nzWidth: "800px",
             // nzHeight: "80%",
             nzPlacement: "right",
-            nzTitle: `${opt.titlePrefix} '${fileName}' `,
+            nzTitle: `${opt.titlePrefix} '${fileName.fileName}' `,
             nzContent: ViewGenerateCfgComponent,
             nzWrapClassName: 'get-gen-cfg-file',
-            nzContentParams: {fileMeta: Object.assign({fileName: fileName, dataxName: this.dto.dataxPipeName}, r.bizresult), formatMode: opt.formatMode, editMeta: opt}
+            nzContentParams: {
+              fileMeta: Object.assign({
+                fileName: fileName,
+                dataxName: this.dto.dataxPipeName
+              }, r.bizresult), formatMode: opt.formatMode, editMeta: opt
+            }
           });
         }
       });
@@ -298,15 +359,16 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
 
   reGenerateSqlDDL() {
     let url = '/coredefine/corenodemanage.ajax';
-    return this.httpPost(url, 'action=datax_action&emethod=regenerate_sql_ddl_cfgs&dataxName=' + this.dto.dataxPipeName)
+    return this.httpPost(url, 'action=datax_action&emethod=regenerate_sql_ddl_cfgs&dataxName='
+      + this.dto.dataxPipeName + '&processModel=' + this.dto.processModel)
       .then((r) => {
-      if (r.success) {
-        let cfgs: GenerateCfgs = r.bizresult;
-        this.createDDLFileList = cfgs.createDDLFiles;
-        this.lastestGenFileTime = cfgs.genTime;
-        this.tisService.notification.success("成功", `最新生成${cfgs.createDDLFiles.length}个Create Table DDL文件`);
-      }
-    });
+        if (r.success) {
+          let cfgs: GenerateCfgs = r.bizresult;
+          this.createDDLFileList = cfgs.createDDLFiles;
+          this.lastestGenFileTime = cfgs.genTime;
+          this.tisService.notification.success("成功", `最新生成${cfgs.createDDLFiles.length}个Create Table DDL文件`);
+        }
+      });
   }
 
   startUpdate() {
@@ -329,10 +391,14 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       throw new Error("in valid execId");
     }
     this.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=create_update_process&execId=" + execId)
+      , "action=datax_action&emethod=create_update_process&execId=" + execId + "&processModel=" + this.dto.processModel)
       .then((r) => {
         if (r.success) {
-          this.r.navigate(['../update'], {relativeTo: this.route, fragment: execType, queryParams: {"execId": r.bizresult}});
+          this.r.navigate(['../update'], {
+            relativeTo: this.route,
+            fragment: execType,
+            queryParams: {"execId": r.bizresult}
+          });
         }
       });
   }
@@ -359,7 +425,7 @@ interface GenCfgFileOpt {
 }
 
 class GenerateCfgs {
-  dataxFiles: Array<string>;
+  dataxFiles: Array<DataXCfgFile>;
   createDDLFiles: Array<string>;
   genTime: number;
 }
@@ -367,14 +433,18 @@ class GenerateCfgs {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-page-header *ngIf="editMeta.editable" class="recent-using-tool" [nzGhost]="false">
-          <nz-page-header-extra>
-              <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
-          </nz-page-header-extra>
-      </nz-page-header>
-      <div class="item-block" style="height: 90%;">
-          <tis-codemirror #codemirror [name]="'script'" [config]="{mode: formatMode ,lineNumbers: true}" [size]="{width:null,height:'100%'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
-      </div>
+    <nz-page-header *ngIf="editMeta.editable" class="recent-using-tool" [nzGhost]="false">
+      <nz-page-header-extra>
+        <button nz-button [disabled]="this.formDisabled" nzType="primary" (click)="saveContent()"><i nz-icon
+                                                                                                     nzType="save"
+                                                                                                     nzTheme="outline"></i>保存
+        </button>
+      </nz-page-header-extra>
+    </nz-page-header>
+    <div class="item-block" style="height: 90%;">
+      <tis-codemirror #codemirror [name]="'script'" [config]="{mode: formatMode ,lineNumbers: true}"
+                      [size]="{width:null,height:'100%'}" [(ngModel)]="fileMeta.content"></tis-codemirror>
+    </div>
   `
   , styles: [`
   `]

@@ -188,6 +188,18 @@ export class Descriptor {
       Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
     }
   }
+
+  public get notebook(): NotebookMeta {
+    let note: NotebookMeta = this.extractProps["notebook"];
+    return note;
+  }
+}
+
+export interface NotebookMeta {
+  // 是否可用
+  ability: boolean;
+  // 服务端是否激活
+  activate: boolean;
 }
 
 export interface TisResponseResult {
@@ -232,15 +244,6 @@ export class Item {
    * 表单中有高级字段，是否显示全部？
    */
   public showAllField = false;
-
-  // containAdvance = false;
-
-  /**
-   * 字段中是否包含高级字段（可以隐藏）
-   */
-  public get containAdvanceField(): boolean {
-    return this.dspt.containAdvance;
-  }
 
   /**
    * 创建一个新的Item
@@ -352,6 +355,17 @@ export class Item {
     }
     return newVal;
   }
+
+
+  // containAdvance = false;
+
+  /**
+   * 字段中是否包含高级字段（可以隐藏）
+   */
+  public get containAdvanceField(): boolean {
+    return this.dspt.containAdvance;
+  }
+
 
   constructor(public dspt: Descriptor, public updateModel = false) {
     if (dspt) {
@@ -498,14 +512,6 @@ export class HeteroList {
   descriptors: Map<string /* impl */, Descriptor> = new Map();
   private _descriptorList: Array<Descriptor>;
 
-  public get descriptorList(): Array<Descriptor> {
-    if (!this._descriptorList) {
-      this._descriptorList = Array.from(this.descriptors.values());
-    }
-    return this._descriptorList;
-  }
-
-
   identityId: string;
   // item 可选数量
   cardinality: string;
@@ -515,6 +521,14 @@ export class HeteroList {
   items: Item[] = [];
 
   pluginCategory: PluginType;
+
+  public get descriptorList(): Array<Descriptor> {
+    if (!this._descriptorList) {
+      this._descriptorList = Array.from(this.descriptors.values());
+    }
+    return this._descriptorList;
+  }
+
 
   public get identity(): string {
     return this.extensionPoint.replace(/\./g, '-');
@@ -564,6 +578,8 @@ export interface OptionEnum {
 
 export class SavePluginEvent {
   // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
+  // 创建notebook
+  public createOrGetNotebook = false;
   public verifyConfig = false;
   public notShowBizMsg = false;
   // 顺带要在服务端执行一段脚本

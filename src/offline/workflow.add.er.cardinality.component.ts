@@ -180,14 +180,15 @@ export class WorkflowAddErCardinalityComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): boolean {
 
     let old = graph.findById(nodeid);
     old.linkrule = {'linkKeyList': this.linkKeyList, 'cardinality': this.erRel.cardinality};
     // = this.linkKeyList;
     // console.log(old);
 
-    this._closeSidebar(null);
+    // this._closeSidebar(null);
+    return true;
   }
 
   initComponent(_: IDataFlowMainComponent, erRuleNode: ERRuleNode): void {

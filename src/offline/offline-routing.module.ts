@@ -24,6 +24,10 @@ import {RouterModule, Routes} from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {BuildProgressComponent} from "../common/core.build.progress.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
+import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
+import {WFControllerComponent} from "./workflow.controller.component";
+import {DataxConfigComponent} from "../datax/datax.config.component";
+import {StepType} from "../common/steps.component";
 
 const coreNodeRoutes: Routes = [
   {
@@ -35,6 +39,7 @@ const coreNodeRoutes: Routes = [
           {
             path: 'ds',
             component: DatasourceComponent,
+            canActivate: [WorkspaceGuard],
           },
           {
             path: 'wf',
@@ -52,11 +57,23 @@ const coreNodeRoutes: Routes = [
           },
           {
             path: 'wf_add',
-            component: WorkflowAddComponent
+            component: WFControllerComponent
+          },
+          {
+            path: 'wf_profile/:name/update',
+            component: WFControllerComponent,
+            data: {updateProfile: true}
           },
           {
             path: 'wf_update/:name',
             component: WorkflowAddComponent
+          },
+          {
+            path: 'wf_profile/:name/config',
+            component: DataxConfigComponent,
+            data: {stepType: StepType.CreateWorkflow}
+            // component: WFControllerComponent,
+            // data: {updateProfile: true}
           },
           {
             path: 'wf_update/:name/build_history/:wfid/:taskid',

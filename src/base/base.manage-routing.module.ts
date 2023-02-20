@@ -34,6 +34,7 @@ import {ProcessMeta} from "../runtime/misc/RCDeployment";
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
+import {NotebookwrapperComponent} from "../common/plugins.component";
 
 
 const dataXWorkerCfg: { processMeta: ProcessMeta }
@@ -83,8 +84,7 @@ const basemanageRoutes: Routes = [
                 component: BaseConfigComponent
               }
             ]
-          }
-          ,
+          },
           {
             path: 'plugin-manage',
             children: [
@@ -162,10 +162,10 @@ const basemanageRoutes: Routes = [
             data: dataXWorkerCfg
           }
         ]
-      }
-    ]
-  },
+      },
 
+    ]
+  }
 ];
 
 @NgModule({

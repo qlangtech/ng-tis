@@ -115,8 +115,8 @@ export class WorkflowAddUnionComponent
     };
   }
 
-  subscribeSaveClick(graph: any, $: any, model: any, _: IDataFlowMainComponent): void {
-
+  subscribeSaveClick(graph: any, $: any, model: any, _: IDataFlowMainComponent): boolean {
+    return true;
   }
 
   initComponent(_: IDataFlowMainComponent): void {

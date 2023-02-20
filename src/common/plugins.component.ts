@@ -16,12 +16,42 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from "@angular/core";
 import {TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
-import {ActivatedRoute} from "@angular/router";
-import {AttrDesc, Descriptor, HeteroList, Item, ItemPropVal, PluginMeta, PluginName, PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult, TYPE_ENUM, TYPE_PLUGIN_SELECTION, CONST_FORM_LAYOUT_VERTICAL, ValOption, OptionEnum} from "./tis.plugin";
+import {ActivatedRoute, Router} from "@angular/router";
+import {
+  AttrDesc,
+  Descriptor,
+  HeteroList,
+  Item,
+  ItemPropVal,
+  PluginMeta,
+  PluginName,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent,
+  TisResponseResult,
+  TYPE_ENUM,
+  TYPE_PLUGIN_SELECTION,
+  CONST_FORM_LAYOUT_VERTICAL,
+  ValOption,
+  OptionEnum
+} from "./tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
@@ -29,112 +59,130 @@ import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzUploadChangeParam} from "ng-zorro-antd/upload";
+import {NzSafeAny} from "ng-zorro-antd/core/types";
 
 @Component({
   selector: 'tis-plugins',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
-          <ng-template #headerController>
-          </ng-template>
-          <ng-container *ngIf="this.showSaveButton">
-              <!--编辑-->
-              <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
-              </tis-page-header>
-              <ng-container [ngSwitch]="shallInitializePluginItems">
-                  <ng-container *ngSwitchCase="true">
-                      <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
-                          <div style="float: right;">
-                              <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
-                          </div>
-                          <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
-                              <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
-                          </div>
-                      </nz-anchor>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="false">
-                      <div style="float: right;">
-                          <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
-                      </div>
-                  </ng-container>
-              </ng-container>
-              <div style="clear: both;margin-bottom:3px;"></div>
-
+    <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+      <ng-template #headerController>
+      </ng-template>
+      <ng-container *ngIf="this.showSaveButton">
+        <!--编辑-->
+        <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
+        </tis-page-header>
+        <ng-container [ngSwitch]="shallInitializePluginItems">
+          <ng-container *ngSwitchCase="true">
+            <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
+              <div style="float: right;">
+                <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+              </div>
+              <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
+                <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity" [nzTitle]="h.caption"></nz-link>
+              </div>
+            </nz-anchor>
           </ng-container>
-          <ng-template #pluginForm let-h="h" let-index="index">
-              <div class="extension-point" [id]="h.identity">
-                  <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
-                      <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a></nz-tag>
-              </div>
-              <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
-                  <div style="float:right">
-                      <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link" target="_blank"><i nz-icon nzType="link" nzTheme="outline"></i>{{item.impl}}</a></nz-tag>
-                      <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button nzType="link">
-                          <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
-                      </button>
-                  </div>
-                  <div>
-                      <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验</button>
-                  </div>
-                  <div style="clear: both"></div>
-                  <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
-                      <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简" [(ngModel)]="item.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
-                  </div>
-                  <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1" [pluginMeta]="plugins[index]" [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
-                                 [formControlSpan]="formControlSpan" [pp]="pp" *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
-              </div>
-          </ng-template>
-          <form nz-form [ngSwitch]="shallInitializePluginItems">
-              <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
-                  <nz-collapse-panel *ngFor="let h of _heteroList;let i = index" [nzHeader]="h.caption" [nzActive]="true" [nzDisabled]="!shallInitializePluginItems">
-                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
-                      <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                          <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
-                                              [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
-                                              (afterPluginAddClose)="updateHeteroListDesc(h)"
-                                              (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
+          <ng-container *ngSwitchCase="false">
+            <div style="float: right;">
+              <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+            </div>
+          </ng-container>
+        </ng-container>
+        <div style="clear: both;margin-bottom:3px;"></div>
 
-                      </ng-container>
-                  </nz-collapse-panel>
-              </nz-collapse>
-              <ng-container *ngSwitchCase="false">
-                  <ng-container *ngFor="let h of _heteroList;let i = index">
-                      <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
-                  </ng-container>
-              </ng-container>
-          </form>
-      </nz-spin>
-      <!--
-            {{this._heteroList | json}}
-      -->
+      </ng-container>
+      <ng-template #pluginForm let-h="h" let-index="index">
+        <div class="extension-point" [id]="h.identity">
+          <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
+            <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a></nz-tag>
+        </div>
+        <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
+          <div style="float:right">
+            <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link"
+                                                               target="_blank"><i nz-icon nzType="link"
+                                                                                  nzTheme="outline"></i>{{item.impl}}
+            </a></nz-tag>
+            <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)" nz-button
+                    nzType="link">
+              <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
+            </button>
+          </div>
+          <div>
+            <button *ngIf="item.dspt.veriflable" nz-button nzSize="small" (click)="configCheck(h , item,$event)"><i
+              nz-icon nzType="check" nzTheme="outline"></i>校验
+            </button> &nbsp;
+            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button nzSize="small"
+                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book" nzTheme="outline"></i>Notebook
+            </button>
+          </div>
+          <div style="clear: both"></div>
+          <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
+            <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                       [(ngModel)]="item.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
+          </div>
+          <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1" [pluginMeta]="plugins[index]"
+                         [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
+                         [formControlSpan]="formControlSpan" [pp]="pp"
+                         *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
+        </div>
+      </ng-template>
+      <form nz-form [ngSwitch]="shallInitializePluginItems">
+        <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
+          <nz-collapse-panel *ngFor="let h of _heteroList;let i = index" [nzHeader]="h.caption" [nzActive]="true"
+                             [nzDisabled]="!shallInitializePluginItems">
+            <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
+            <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
+              <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
+                                  [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
+                                  (afterPluginAddClose)="updateHeteroListDesc(h)"
+                                  (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i>
+              </tis-plugin-add-btn>
+
+            </ng-container>
+          </nz-collapse-panel>
+        </nz-collapse>
+        <ng-container *ngSwitchCase="false">
+          <ng-container *ngFor="let h of _heteroList;let i = index">
+            <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
+          </ng-container>
+        </ng-container>
+      </form>
+    </nz-spin>
+    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a
+      target="_blank" href="https://tis.pub/docs/install/zeppelin/install">文档</a>
+    </ng-template>
+    <!--
+          {{this._heteroList | json}}
+    -->
   `,
   styles: [
-      `
-          .plugin-link {
-              text-decoration: underline;
-          }
+    `
+      .plugin-link {
+        text-decoration: underline;
+      }
 
-          .plugin-link:hover {
-              background-color: #b7d6ff;
-          }
+      .plugin-link:hover {
+        background-color: #b7d6ff;
+      }
 
-          .extension-point {
-              margin-bottom: 10px;
-          }
+      .extension-point {
+        margin-bottom: 10px;
+      }
 
-          .item-block {
-              border: 1px solid #9c9c9c;
-              margin-bottom: 10px;
-              padding: 5px;
-          }
+      .item-block {
+        border: 1px solid #9c9c9c;
+        margin-bottom: 10px;
+        padding: 5px;
+      }
 
-          .plugins-nav nz-link {
-              display: inline-block;
-          }
+      .plugins-nav nz-link {
+        display: inline-block;
+      }
 
-          nz-select {
-              width: 100%;
-          }
+      nz-select {
+        width: 100%;
+      }
     `
   ]
 })
@@ -154,20 +202,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   errorsPageShow = false;
 
   // 如果该插件用在DbAddComponent中作为添加组件用
-  @Input()
-  shallInitializePluginItems = true;
+  @Input() shallInitializePluginItems = true;
 
-  @Input()
-  itemChangeable = true;
+  @Input() itemChangeable = true;
 
-  @Input()
-  _heteroList: HeteroList[] = [];
+  @Input() _heteroList: HeteroList[] = [];
   private _plugins: PluginType[] = [];
 
-  @Output()
-  afterInit: EventEmitter<HeteroList[]> = new EventEmitter<HeteroList[]>();
-  @Input()
-  formControlSpan = 13;
+  @Output() afterInit: EventEmitter<HeteroList[]> = new EventEmitter<HeteroList[]>();
+  @Input() formControlSpan = 13;
 
   // notShowBizMsg: 不需要在客户端显示成功信息
   @Input() savePlugin: EventEmitter<SavePluginEvent>;
@@ -181,6 +224,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
   @Output() afterSave = new EventEmitter<PluginSaveResponse>();
+
+  @Output() startNotebook = new EventEmitter<PluginSaveResponse>();
+
+  @ViewChild('notebookNotActivate', {read: TemplateRef, static: true}) notebookNotActivate: TemplateRef<NzSafeAny>;
+  @Input() disableNotebook = false;
 
 
   /**
@@ -211,6 +259,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.getCurrentAppCache = true;
     addDb.formControlSpan = 19;
     addDb.shallInitializePluginItems = false;
+    addDb.disableNotebook = true;
     addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
     addDb.setPluginMeta([pluginTp])
     addDb.showSaveButton = true;
@@ -305,11 +354,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   public static initializePluginItems(ctx: BasicFormComponent, pm: PluginType[]
-    , callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void) {
+    , useCache: boolean, callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void): Promise<TisResponseResult> {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
-    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta;
+    let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
 
-    ctx.jsonPost(url, {}).then((r) => {
+    return ctx.jsonPost(url, {}).then((r) => {
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
@@ -319,18 +368,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
           _heteroList.push(h);
         }
-        // bizArray.forEach((he) => {
-        //
-        // });
       }
-      // console.log(_heteroList);
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
-      // this.ajaxOccur.emit(new PluginSaveResponse(false, false));
+      return r;
     })
-    //   .catch((e) => {
-    //   callback(false, null, false);
-    //   throw new Error(e);
-    // });
   }
 
   public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
@@ -370,7 +411,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
 
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}&getNotebook=${savePluginEvent.createOrGetNotebook}`;
 
 
     let items: Array<Item[]> = [];
@@ -427,6 +468,27 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
   }
 
+  openNotebook(h: HeteroList, item: Item, event: MouseEvent) {
+
+    if (!item.dspt.notebook.activate) {
+      this.modalService.warning({
+        nzTitle: "错误",
+        nzContent: this.notebookNotActivate,
+        nzOkText: "知道啦"
+      });
+      return;
+    }
+
+    let savePlugin = new SavePluginEvent();
+    savePlugin.createOrGetNotebook = true;
+    if (!h.pluginCategory) {
+      throw new Error("pluginCategory can not be null");
+    }
+    let nh = Object.assign(new HeteroList(), h);
+    nh.items = [item];
+    this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
+  }
+
   @Input()
   set plugins(metas: PluginType[]) {
     // console.log(metas);
@@ -453,9 +515,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
+  constructor(tisService: TISService, private router: Router, route: ActivatedRoute, modalService: NzModalService
     , notification: NzNotificationService
-    , private cdr: ChangeDetectorRef) {
+    , private cdr: ChangeDetectorRef, private drawerService: NzDrawerService) {
     super(tisService, route, modalService, notification);
     this.cdr.detach();
   }
@@ -492,7 +554,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public initializePluginItems() {
     // console.log("ddd");
-    PluginsComponent.initializePluginItems(this, this.plugins, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
+    PluginsComponent.initializePluginItems(this, this.plugins, true, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
       if (success) {
         this.showExtensionPoint.open = showExtensionPoint;
         this._heteroList = hList;
@@ -532,15 +594,33 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
-      if (!savePluginEvent.verifyConfig) {
+      if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
         this.afterSave.emit(new PluginSaveResponse(r.success, false, r.bizresult));
       } else {
-        if (r.success) {
+        if (savePluginEvent.verifyConfig && r.success) {
           if (!r.msg || r.msg.length < 1) {
             this.notification.create('success', '校验成功', "表单配置无误");
           }
         }
+
+        if (savePluginEvent.createOrGetNotebook && r.success) {
+          if (this.startNotebook.observers.length > 0) {
+            this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
+          } else {
+            const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
+              nzWidth: "80%",
+              nzPlacement: "right",
+              nzContent: NotebookwrapperComponent,
+              nzContentParams: {},
+              nzClosable: false
+            });
+            // this.router.navigate()
+
+            this.router.navigate(["/", {outlets: {"zeppelin": `z/zeppelin/notebook/${r.bizresult}`}}], {relativeTo: this.route})
+          }
+        }
       }
+
       if (!this.errorsPageShow && r.success) {
         // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
         if (this.showSaveButton && r.msg.length > 0) {
@@ -581,11 +661,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     hlist.items = newArr;
   }
 
-
-  reload() {
-
-  }
-
   startScroll(event: NzAnchorLinkComponent) {
     // console.log(event);
   }
@@ -611,136 +686,197 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 }
 
+@Component({
+  selector: "notebook-cpt",
+  template: `
+    <router-outlet (activate)="active($event)" name="zeppelin"></router-outlet>
+  `
+  , styles: [
+    `
+    `
+  ]
+})
+export class NotebookwrapperComponent implements OnInit {
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+  }
+
+  ngOnInit(): void {
+    // console.log(this.router.config);
+    // console.log(this.route.pathFromRoot);
+  }
+
+  active(event: any) {
+    // console.log(event);
+  }
+}
+
 // 如果不加这个component的话在父组件中添加一个新的item，之前已经输入值的input控件上的值就会消失，确实很奇怪
 @Component({
   selector: 'item-prop-val',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <nz-form-item [hidden]="hide">
-          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null" [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp" nz-icon nzType="question-circle" nzTheme="twotone" (click)="toggleDescContentShow()"></i></nz-form-label>
-          <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus" [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
-              <ng-container [ngSwitch]="_pp.primaryVal">
-                  <ng-container *ngSwitchCase="true">
-              <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}" [ngSwitch]="_pp.type">
+    <nz-form-item [hidden]="hide">
+      <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
+                     [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help" *ngIf="descContent || asyncHelp"
+                                                                 nz-icon nzType="question-circle" nzTheme="twotone"
+                                                                 (click)="toggleDescContentShow()"></i></nz-form-label>
+      <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
+                       [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+        <ng-container [ngSwitch]="_pp.primaryVal">
+          <ng-container *ngSwitchCase="true">
+              <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}"
+                    [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
-                      <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"/>
+                      <input *ngIf="_pp.primaryVal" nz-input [disabled]="disabled" [(ngModel)]="_pp.primary"
+                             [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"
+                             [placeholder]="_pp.placeholder"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="4">
-                       <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
+                       <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary"
+                                        [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
                       <ng-container [ngSwitch]="disabled ? '' : _pp.getEProp('style') ">
-                          <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'" (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary"
-                                          [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}" [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
-                          <textarea *ngSwitchDefault [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key"
-                                    (ngModelChange)="inputValChange(_pp,$event)" [placeholder]="_pp.placeholder"></textarea>
+                          <tis-codemirror class="ant-input" *ngSwitchCase="'codemirror'"
+                                          (change)="inputValChange(_pp,$event)" [(ngModel)]="_pp.primary"
+                                          [config]="{ mode:_pp.getEProp('mode'), lineNumbers: false}"
+                                          [size]="{width:'100%',height:_pp.getEProp('rows')*20}"></tis-codemirror>
+                          <textarea *ngSwitchDefault [disabled]="disabled" [rows]="_pp.getEProp('rows')" nz-input
+                                    [(ngModel)]="_pp.primary" [name]="_pp.key"
+                                    (ngModelChange)="inputValChange(_pp,$event)"
+                                    [placeholder]="_pp.placeholder"></textarea>
                       </ng-container>
                   </ng-container>
                   <ng-container *ngSwitchCase="3">
                       <!--date-->
-                      <input [disabled]="disabled" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
+                      <input [disabled]="disabled" *ngIf="_pp.primaryVal" nz-input [(ngModel)]="_pp.primary"
+                             [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="fieldTypeEnums">
                       <!--ENUM-->
                       <nz-select nzShowSearch [nzMode]="  _pp.enumMode " [disabled]="disabled"
-                                 [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
-                           <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label" [nzValue]="e.val"></nz-option>
+                                 [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"
+                                 nzAllowClear>
+                           <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label"
+                                      [nzValue]="e.val"></nz-option>
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="6">
-                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
+                      <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key"
+                                 (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.options" [nzLabel]="e.name" [nzValue]="e.name"></nz-option>
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
                       <nz-input-group [nzSuffix]="suffixTemplate">
-                        <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password" *ngIf="_pp.primaryVal" nz-input
+                        <input [disabled]="disabled" [type]="passwordVisible ? 'text' : 'password'" nz-input
+                               placeholder="input password" *ngIf="_pp.primaryVal" nz-input
                                [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                       </nz-input-group>
                       <ng-template #suffixTemplate>
-                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+                        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                           (click)="passwordVisible = !passwordVisible"></i>
                       </ng-template>
                   </ng-container>
                  <ng-container *ngSwitchCase="8">
-                     <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)" [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
-                      <nz-checkbox-group [ngModel]="_pp.getEProp('enum')" (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
+                     <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']" (ngModelChange)="updateAllChecked(_pp)"
+                            [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
+                      <nz-checkbox-group [ngModel]="_pp.getEProp('enum')"
+                                         (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
                  </ng-container>
                    <ng-container *ngSwitchCase="9">
                        <nz-upload #fileupload
-                                  nzAction="tjs/coredefine/corenodemanage.ajax?action=plugin_action&emethod=upload_file" (nzChange)="handleFileUploadChange(_pp,$event)"
-                                  [nzHeaders]="{}" [nzFileList]="_pp.updateModel?[{'name':_pp.primary,'status':'done' } ]:[]" [nzLimit]="1"
+                                  nzAction="tjs/coredefine/corenodemanage.ajax?action=plugin_action&emethod=upload_file"
+                                  (nzChange)="handleFileUploadChange(_pp,$event)"
+                                  [nzHeaders]="{}"
+                                  [nzFileList]="_pp.updateModel?[{'name':_pp.primary,'status':'done' } ]:[]"
+                                  [nzLimit]="1"
                        ><button [disabled]="fileupload.nzFileList.length > 0" nz-button><i nz-icon nzType="upload"></i>上传</button></nz-upload>
                  </ng-container>
               </span>
-                      <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle" nzTheme="outline"></i></a>
-                      <ng-container *ngIf="this.createRouter && !this.disabled">
-                          <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link" [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
-                          <nz-dropdown-menu #menu="nzDropdownMenu">
-                              <ul nz-menu>
-                                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                                      <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus" nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}</a>
-                                  </li>
-                                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
-                                      <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
-                                      <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link" nzTheme="outline"></i>管理</a>
-                                  </li>
-                                  <li nz-menu-item>
-                                      <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
-                                  </li>
-                              </ul>
-                          </nz-dropdown-menu>
-                      </ng-container>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="false">
-                      <nz-select [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl" (ngModelChange)="changePlugin(_pp,$event)">
-                          <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName" [nzValue]="e.impl"></nz-option>
-                      </nz-select>
-                      <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' " *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
-                          <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
-                              <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简" [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
-                          </div>
-                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1" [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp" *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
-                      </form>
-                  </ng-container>
-              </ng-container>
-              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info" [nzDescription]="helpTpl" nzCloseable></nz-alert>
-              <ng-template #helpTpl>
-                  <markdown class="tis-markdown" [data]="descContent"></markdown>
-              </ng-template>
-          </nz-form-control>
-      </nz-form-item>  `,
+            <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle"
+                                                                             nzTheme="outline"></i></a>
+            <ng-container *ngIf="this.createRouter && !this.disabled">
+              <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link"
+                      [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                    <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus"
+                                                               nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
+                    </a>
+                  </li>
+                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
+                    <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link"
+                                                                                                nzTheme="outline"></i>管理</a>
+                    <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link"
+                                                                                                   nzTheme="outline"></i>管理</a>
+                  </li>
+                  <li nz-menu-item>
+                    <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <nz-select [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl"
+                       (ngModelChange)="changePlugin(_pp,$event)">
+              <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName"
+                         [nzValue]="e.impl"></nz-option>
+            </nz-select>
+            <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
+                  *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
+              <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
+                <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                           [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
+              </div>
+              <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
+                             [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
+                             *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
+            </form>
+          </ng-container>
+        </ng-container>
+        <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info"
+                  [nzDescription]="helpTpl" nzCloseable></nz-alert>
+        <ng-template #helpTpl>
+          <markdown class="tis-markdown" [data]="descContent"></markdown>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>  `,
   styles: [
-      `
-          .form-label-verical {
-              margin-top: 8px;
-          }
+    `
+      .form-label-verical {
+        margin-top: 8px;
+      }
 
-          .field-help {
-              cursor: pointer;
-              display: inline-block;
-              width: 20px;
-              height: 16px;
-          }
+      .field-help {
+        cursor: pointer;
+        display: inline-block;
+        width: 20px;
+        height: 16px;
+      }
 
-          .assist-btn i {
-              margin-left: 2px;
-          }
+      .assist-btn i {
+        margin-left: 2px;
+      }
 
-          .sub-prop {
-              clear: both;
-              margin-left: 0px;
-              background-color: #f6f6f6;
-              padding: 3px;
-              border-left: 1px solid #cccccc;
-              border-bottom: 1px solid #cccccc;
-              border-right: 1px solid #cccccc;
-          }
+      .sub-prop {
+        clear: both;
+        margin-left: 0px;
+        background-color: #f6f6f6;
+        padding: 3px;
+        border-left: 1px solid #cccccc;
+        border-bottom: 1px solid #cccccc;
+        border-right: 1px solid #cccccc;
+      }
 
-          .has-help-url {
-              width: calc(100% - 10em);
-              display: inline-block;
-          }
+      .has-help-url {
+        width: calc(100% - 10em);
+        display: inline-block;
+      }
     `
   ]
 })
@@ -767,6 +903,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
   @Input()
   pluginMeta: PluginType;
+  @Input()
+  formControlSpan = 13;
 
   @Input()
   set disabled(val: boolean) {
@@ -778,8 +916,6 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     this._pluginImpl = val;
   }
 
-  @Input()
-  formControlSpan = 13;
 
   get valSpan(): number {
     if (this.formLevel > 1) {
@@ -851,7 +987,11 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         let desc = PluginsComponent.wrapDescriptors(r.bizresult);
         desc.forEach((d) => {
           // console.log(targetPlugin);
-          let pluginTp: PluginType = {name: targetPlugin.hetero, require: true, extraParam: "append_true,targetItemDesc_" + d.displayName};
+          let pluginTp: PluginType = {
+            name: targetPlugin.hetero,
+            require: true,
+            extraParam: "append_true,targetItemDesc_" + d.displayName
+          };
           if (targetPlugin.extraParam) {
             pluginTp.extraParam += (',' + targetPlugin.extraParam);
           }
@@ -1047,7 +1187,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="true" [formControlSpan]="19" [plugins]="pluginTyps" (ajaxOccur)="whenAjaxOccur($event)" (afterSave)="afterSave($event)"></tis-plugins>`
+    <tis-plugins [getCurrentAppCache]="true" [showSaveButton]="true" [formControlSpan]="19" [plugins]="pluginTyps"
+                 (ajaxOccur)="whenAjaxOccur($event)" (afterSave)="afterSave($event)"></tis-plugins>`
 })
 export class SelectionInputAssistComponent extends BasicFormComponent implements OnInit {
 

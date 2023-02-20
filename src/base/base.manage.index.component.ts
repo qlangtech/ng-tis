@@ -17,19 +17,44 @@
  */
 
 import {TISService} from '../common/tis.service';
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {PluginSaveResponse} from "../common/tis.plugin";
+import {NotebookwrapperComponent} from "../common/plugins.component";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
   // templateUrl: '/runtime/baseManageIndex.htm'
   template: `
-    <my-navigate></my-navigate>
-    <div class="body_content">
-      <router-outlet></router-outlet>
-    </div>
+      <my-navigate></my-navigate>
+      <div class="body_content">
+          <router-outlet></router-outlet>
+      </div>
+<!--      <router-outlet name="zeppelin"></router-outlet>-->
+      <!--   -->
   `
 })
-export class BaseMangeIndexComponent {
-  constructor(private tisService: TISService) {
+export class BaseMangeIndexComponent implements OnInit {
+  constructor(private router: Router, private route: ActivatedRoute, private tisService: TISService, private drawerService: NzDrawerService) {
 
   }
+
+  ngOnInit(): void {
+    // console.log(this.router.config);
+    console.log(this.route.pathFromRoot);
+  }
+
+  // goZeppelin() {
+  // }
+  //
+  // openNotebook() {
+  //   const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
+  //     nzWidth: "80%",
+  //     nzPlacement: "right",
+  //     nzTitle: `插件管理`,
+  //     nzContent: NotebookwrapperComponent,
+  //     nzContentParams: {}
+  //   });
+  //   this.router.navigate(["/", {outlets: {"zeppelin": 'z/zeppelin/notebook/2HMEN4XX3'}}], {relativeTo: this.route})
+  // }
 }

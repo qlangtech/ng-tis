@@ -35,22 +35,24 @@ import {ActivatedRoute, Router} from "@angular/router";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-      <tis-steps *ngIf="dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
-      <!--      <tis-form [fieldsErr]="errorItem">-->
-      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-      <!--              <tis-header-tool>-->
-      <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-      <!--              </tis-header-tool>-->
-      <!--          </tis-page-header>-->
-      <!--      </tis-form>-->
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0" (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
-          <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                       [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[this.pluginCategory]" #pluginComponent></tis-plugins>
-      </nz-spin>
+    <tis-steps *ngIf="dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+    <!--      <tis-form [fieldsErr]="errorItem">-->
+    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+    <!--              <tis-header-tool>-->
+    <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+    <!--              </tis-header-tool>-->
+    <!--          </tis-page-header>-->
+    <!--      </tis-form>-->
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <tis-steps-tools-bar [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0"
+                           (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
+      <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
+                   [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[this.pluginCategory]"
+                   #pluginComponent></tis-plugins>
+    </nz-spin>
   `
   , styles: [
-      `
+    `
     `
   ]
 })
@@ -75,7 +77,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
 
     let desc: Descriptor = (rw === 'reader') ? dto.readerDescriptor : dto.writerDescriptor;
 
-    return baseForm.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_${rw}_plugin_info&dataxName=${dto.dataxPipeName}&`, desc)
+    return baseForm.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_${rw}_plugin_info&dataxName=${dto.dataxPipeName}&processModel=${dto.processModel}`, desc)
       .then((r) => {
         if (r.success) {
           if (r.bizresult) {
@@ -123,8 +125,12 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
     if (!this.dto.readerDescriptor) {
       throw new Error("readerDescriptor can not be null");
     }
-    this.pluginCategory = {name: 'dataxReader', require: true
-      , "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName)}
+    this.pluginCategory = {
+      name: 'dataxReader',
+      require: true
+      ,
+      "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName)
+    }
     super.ngOnInit();
   }
 

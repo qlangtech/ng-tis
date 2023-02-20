@@ -16,9 +16,36 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, Type, ViewChild} from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  ElementRef, EventEmitter, Input,
+  OnInit,
+  Output,
+  Type,
+  ViewChild
+} from '@angular/core';
 
-import {BasicFormComponent, BasicSideBar, BasicSidebarDTO, DumpTable, ERMetaNode, ERRuleNode, IDataFlowMainComponent, JoinNode, LinkKey, NodeMeta, NodeMetaConfig, NodeMetaDependency, Option} from '../common/basic.form.component';
+import {
+  BasicFormComponent,
+  BasicSideBar,
+  BasicSidebarDTO,
+  DumpTable,
+  ERMetaNode,
+  ERRuleNode,
+  IDataFlowMainComponent,
+  JoinNode,
+  LinkKey,
+  NodeMeta,
+  NodeMetaConfig,
+  NodeMetaDependency,
+  Option
+} from '../common/basic.form.component';
 
 import {TISService} from '../common/tis.service';
 
@@ -49,6 +76,7 @@ import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {TerminalComponent} from "../common/terminal.component";
+import {DataxDTO} from "../base/datax.add.component";
 // import {} from 'ng-sidebar';
 // import {Droppable} from '@shopify/draggable';
 // @ts-ignore
@@ -59,7 +87,7 @@ export const TYPE_DUMP_TABLE = 'table';
 // console.log(Draggable)
 // console.log(G6);
 
-//
+
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
@@ -87,7 +115,8 @@ export const TYPE_DUMP_TABLE = 'table';
                               <div class="body_vtoolsbar">
                                   <ul #draggableblock class="processon-widget list-unstyled">
                                       <li *ngFor="let n of _nodeTypesAry">
-                                          <img [width]="n.width" [height]="n.height" [src]="n.imgPath" [attr.type]="n.type"/>
+                                          <img [width]="n.width" [height]="n.height" [src]="n.imgPath"
+                                               [attr.type]="n.type"/>
                                           <label>{{n.label}}</label>
                                       </li>
                                   </ul>
@@ -101,7 +130,8 @@ export const TYPE_DUMP_TABLE = 'table';
                       </nz-tab>
                       <nz-tab *ngIf="!!topologyName" nzTitle="ER">
                           <ng-template nz-tab>
-                              <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)" [topologyName]="topologyName"
+                              <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)"
+                                          [topologyName]="topologyName"
                                           [_nodeTypes]="_nodeTypes" (nodeClick)="erNodesNodeClick($event)"></offline-er>
                           </ng-template>
                       </nz-tab>
@@ -112,86 +142,87 @@ export const TYPE_DUMP_TABLE = 'table';
                               nzPlacement="bottomLeft">操作 <i nz-icon nzType="down"></i></button>
                       <nz-dropdown-menu #menu="nzDropdownMenu">
                           <ul nz-menu>
-                              <li nz-menu-item (click)="executeWorkflow(this.workflow)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建</li>
-                              <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史</li>
+                              <li nz-menu-item (click)="executeWorkflow(this.workflow)"><i nz-icon nzType="play-circle"
+                                                                                           nzTheme="outline"></i>构建
+                              </li>
+                              <li nzTooltipTitle="初始化相关Schema表，不进行数据分析处理，用以初步验证编写脚本是否正确" nz-tooltip [nzTooltipPlacement]="['topLeft', 'leftTop']"
+                                  nz-menu-item (click)="executeWorkflow(this.workflow , true)">
+                                <i nz-icon  nzType="play-square" nzTheme="outline"></i>DryRun
+                              </li>
+                              <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets"
+                                                                                        nzTheme="outline"></i>构建历史
+                              </li>
                           </ul>
                       </nz-dropdown-menu> &nbsp;
-                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()"><i nz-icon nzType="sync" nzTheme="outline"></i>同步数据表</button>
+                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()"><i nz-icon
+                                                                                                    nzType="sync"
+                                                                                                    nzTheme="outline"></i>同步数据表
+                      </button>
                       &nbsp;
-                      <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save" nzTheme="outline"></i>保存</button>
+                      <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save"
+                                                                                     nzTheme="outline"></i>保存
+                      </button>
                   </ng-template>
 
 
               </nz-spin>
           </div>
       </div>
-
-      <nz-modal [(nzVisible)]="isSaveTopologyDialogVisible" nzTitle="设置数据流名称"
-                (nzOnCancel)="handleSaveTopologyDialogCancel($event)" (nzOnOk)="handleSaveTopologyDialogOk()">
-          <form nz-form [formGroup]="validateSaveTopologyDialogForm" (ngSubmit)="submitSaveTopologyDialogForm()">
-              <nz-form-item>
-                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="topologyName">名称</nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入合法的数据流名称">
-                      <input nz-input formControlName="topologyName" id="topologyName"/>
-                  </nz-form-control>
-              </nz-form-item>
-          </form>
-      </nz-modal>
   `,
   styles: [
-      `
-          @CHARSET "UTF-8";
-          .clear {
-              clear: both;
-          }
+    `
+      @CHARSET "UTF-8";
+      .clear {
+        clear: both;
+      }
 
-          .ant-drawer-body {
-              padding: 0px;
-          }
+      .ant-drawer-body {
+        padding: 0px;
+      }
 
-          .list-unstyled {
-              padding-left: 10px;
-          }
+      .list-unstyled {
+        padding-left: 10px;
+      }
 
-          .list-unstyled li {
-              display: inline-block;
-              cursor: pointer;
-              margin-top: 20px;
-              text-align: center;
-              widht: 60px;
-          }
+      .list-unstyled li {
+        display: inline-block;
+        cursor: pointer;
+        margin-top: 20px;
+        text-align: center;
+        widht: 60px;
+      }
 
-          .list-unstyled li label {
-              display: block;
-          }
+      .list-unstyled li label {
+        display: block;
+      }
 
 
-          .control-bar {
-              margin: 10px 10px 10px 0px;
-          }
+      .control-bar {
+        margin: 10px 10px 10px 0px;
+      }
 
-          /*============统一配置==================*/
+      /*============统一配置==================*/
 
-          .designer_body {
-              position: relative;
-              min-height: 300px;
-          }
+      .designer_body {
+        position: relative;
+        min-height: 300px;
+      }
 
-          .body_vtoolsbar {
-              position: absolute;
-              width: 79px;
-          }
+      .body_vtoolsbar {
+        position: absolute;
+        width: 79px;
+      }
 
-          .body_container {
-              margin-left: 80px;
-              border-left: 1px solid #CBCCCC;
-          }
+      .body_container {
+        margin-left: 80px;
+        border-left: 1px solid #CBCCCC;
+      }
 
-          #body_layout {
-              overflow: scroll;
-              position: relative;
-              z-index: 0;
-          }
+      #body_layout {
+        overflow: scroll;
+        position: relative;
+        z-index: 0;
+      }
     `]
 })
 export class WorkflowAddComponent extends BasicWFComponent
@@ -209,12 +240,12 @@ export class WorkflowAddComponent extends BasicWFComponent
   // workflow: any;
   isAdd = true;
   // title: string = '创建';
- // public _opened = false;
+  // public _opened = false;
 
-  isSaveTopologyDialogVisible = false;
+//  isSaveTopologyDialogVisible = false;
 
-  validateSaveTopologyDialogForm: FormGroup;
-  topologyName: string;
+//  validateSaveTopologyDialogForm: FormGroup;
+
   workflow: Dataflow;
   // erNodes: ERRules;
   // g6graph
@@ -233,6 +264,18 @@ export class WorkflowAddComponent extends BasicWFComponent
   @ViewChild(WorkflowERComponent, {static: false}) erRuleComponent: WorkflowERComponent;
   tabSelectedIndex = 0;
 
+
+  @Output()
+  public nextStep = new EventEmitter<any>();
+  @Output()
+  protected preStep = new EventEmitter<any>();
+  @Input()
+  public dto: DataxDTO;
+
+  get topologyName(): string {
+    return this.dto.dataxPipeName;
+  }
+
   public static addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
 
     let model = {
@@ -250,11 +293,6 @@ export class WorkflowAddComponent extends BasicWFComponent
     return model;
   }
 
-
-  get pageTitle(): string {
-    return (this.isAdd ? "添加数据流" : (this.topologyName));
-  }
-
   public static addEdge(data: { edges: any[] }, id: string, sourceId: string, targetId: string, style?: any): void {
 
     style = !style ? {
@@ -269,6 +307,9 @@ export class WorkflowAddComponent extends BasicWFComponent
     });
   }
 
+  get pageTitle(): string {
+    return (this.isAdd ? "添加 " + this.topologyName : this.topologyName);
+  }
 
   constructor(tisService: TISService, //
               private _componentFactoryResolver: ComponentFactoryResolver,
@@ -291,7 +332,7 @@ export class WorkflowAddComponent extends BasicWFComponent
   }
 
   closePanel(): void {
-   // this._opened = true;
+    // this._opened = true;
   }
 
   // 保存图形
@@ -313,7 +354,12 @@ export class WorkflowAddComponent extends BasicWFComponent
       let deges: any[] = [];
       g6._cfg.edges.forEach((r: any) => {
         // console.log(r._cfg.model);
-        deges.push({'id': r._cfg.model.id, 'sourceNode': r._cfg.model.sourceNode._cfg.model, 'targetNode': r._cfg.model.targetNode._cfg.model, 'linkrule': r.linkrule});
+        deges.push({
+          'id': r._cfg.model.id,
+          'sourceNode': r._cfg.model.sourceNode._cfg.model,
+          'targetNode': r._cfg.model.targetNode._cfg.model,
+          'linkrule': r.linkrule
+        });
       });
 
       let postData = {'nodes': dumpNodes, 'edges': deges, 'topologyName': this.topologyName};
@@ -334,47 +380,48 @@ export class WorkflowAddComponent extends BasicWFComponent
         this.notification.create('error', '错误', '请选择节点');
         return;
       }
-      if (this.isAdd) {
-        // 打开输入名称对话框
-        this.isSaveTopologyDialogVisible = true;
-      } else {
-        this.applyTopology2Server(() => {
-        });
-      }
+      // if (this.isAdd) {
+      // 打开输入名称对话框
+      //this.isSaveTopologyDialogVisible = true;
+      // } else {
+      this.applyTopology2Server(() => {
+      });
+      //}
     }
   }
 
-  handleSaveTopologyDialogCancel(evt: any) {
-    this.isSaveTopologyDialogVisible = false;
-  }
+  // handleSaveTopologyDialogCancel(evt: any) {
+  //   this.isSaveTopologyDialogVisible = false;
+  // }
 
-  submitSaveTopologyDialogForm() {
-    for (const i in this.validateSaveTopologyDialogForm.controls) {
-      this.validateSaveTopologyDialogForm.controls[i].markAsDirty();
-      this.validateSaveTopologyDialogForm.controls[i].updateValueAndValidity();
-    }
-  }
+  // submitSaveTopologyDialogForm() {
+  //   for (const i in this.validateSaveTopologyDialogForm.controls) {
+  //     this.validateSaveTopologyDialogForm.controls[i].markAsDirty();
+  //     this.validateSaveTopologyDialogForm.controls[i].updateValueAndValidity();
+  //   }
+  // }
 
   handleSaveTopologyDialogOk() {
-    this.submitSaveTopologyDialogForm();
-    if (!this.validateSaveTopologyDialogForm.valid) {
-      return;
-    }
+    // this.submitSaveTopologyDialogForm();
+    // if (!this.validateSaveTopologyDialogForm.valid) {
+    //   return;
+    // }
     this.applyTopology2Server((topologyName) => {
-      this.topologyName = topologyName;
+      //  this.topologyName = topologyName;
     });
   }
 
   private applyTopology2Server(saveSuccessCallback: (topologyName) => void): void {
     // 关闭对话框
-    this.isSaveTopologyDialogVisible = false;
+    // this.isSaveTopologyDialogVisible = false;
     let j = this.graph.save();
+    j.topologyName = this.topologyName;
     // console.log(j);
     // console.log(`topologyName:${this.topologyName}`);
-    j = $.extend(j, this.validateSaveTopologyDialogForm.getRawValue());
-    if (!this.isAdd) {
-      j.topologyName = this.topologyName;
-    }
+    // j = $.extend(j, this.validateSaveTopologyDialogForm.getRawValue());
+    //  if (!this.isAdd) {
+
+    //  }
     this.jsonPost(`/offline/datasource.ajax?emethod=${this.isAdd ? 'save' : 'update'}_topology&action=offline_datasource_action`, j)
       .then(result => {
         if (result.success) {
@@ -417,15 +464,14 @@ export class WorkflowAddComponent extends BasicWFComponent
 
   ngOnInit(): void {
 
-    this.validateSaveTopologyDialogForm = this.fb.group({
-      topologyName: [null, [Validators.required]]
-    });
-
-    // let f: Observable<string> = this.route.fragment;
-    // f.subscribe((frag) => {
-    //   this.tabSelectedIndex = (frag === 'er') ? 1 : 0;
-    // })
-
+    let params = this.route.snapshot.params;
+    // 有参数即为更新模式
+    let name = params['name'];
+    if (name && !this.dto) {
+      this.isAdd = false;
+      this.dto = new DataxDTO();
+      this.dto.dataxPipeName = name;
+    }
   }
 
   private drawNodes(g6graph: any, nmetas: NodeMetaConfig[], dumpNodes: NodeMetaDependency[]): void {
@@ -458,7 +504,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     // dump 节点
     let tabNodeMeta = this.getNodeMeta(TYPE_DUMP_TABLE);
     dumpNodes.forEach((d) => {
-      let tabNode = new DumpTable(tabNodeMeta, d.id, d.extraSql, d.dbid, d.tabid, d.name);
+      let tabNode = new DumpTable(tabNodeMeta, d.id, d.extraSql, d.dbid, d.name);
       dumpMode = WorkflowAddComponent.addItem2UI(d.id, d.position.x, d.position.y, tabNodeMeta, tabNode);
       dumpMode.label = d.name;
 
@@ -588,7 +634,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
 
   _toggleSidebar(): void {
-   // this._opened = !this._opened;
+    // this._opened = !this._opened;
   }
 
   ngAfterViewInit(): void {
@@ -640,13 +686,12 @@ export class WorkflowAddComponent extends BasicWFComponent
     //   }]
     // });
     // graph.render();
-    let params = this.route.snapshot.params;
-    // 有参数即为更新模式
-    this.topologyName = params['name'];
+
     if (this.topologyName !== undefined) {
+
       // this.isAdd = false;
       // setTimeout(() => {
-      this.isAdd = false;
+
 
       // });
       let action = `emethod=get_workflow_topology&action=offline_datasource_action&topology=${this.topologyName}`;
@@ -716,8 +761,8 @@ export class WorkflowAddComponent extends BasicWFComponent
     });
 
     this.graph.on('node:click', (evt: any) => {
-
       let nodeinfo = evt.item._cfg;
+
 
       let nmeta: BasicSidebarDTO = nodeinfo.model.nodeMeta;
       clientPos.nodemeta = this.getNodeMeta(nmeta.nodeMeta.type);
@@ -730,25 +775,31 @@ export class WorkflowAddComponent extends BasicWFComponent
   // selectNode 用于在update流程下传输selectNode对象
   private openSideBar(g6graph: any, nodeid: any, component: Type<any>, nmeta: BasicSidebarDTO): void {
     // console.log(component);
+    // throw new Error(nodeid);
     let contentParams: any = {"parentComponent": this, "g6Graph": g6graph};
     if (nmeta) {
-      contentParams.nodeMeta = nmeta.nodeMeta;
+      contentParams.sidebarDto = nmeta;
     }
+    // console.log(nmeta);
     const drawerRef = this.drawerService.create<BasicSideBar, {}, {}>({
       nzWidth: "40%",
       nzPlacement: "right",
       nzTitle: '',
       nzClosable: false,
       nzContent: component,
-     // nzWrapClassName: 'get-gen-cfg-file',
+      // nzWrapClassName: 'get-gen-cfg-file',
       nzContentParams: contentParams
     });
+    // drawerRef.getContentComponent().initComponent(this, nmeta);
     drawerRef.afterOpen.subscribe(() => {
       let sideBar = drawerRef.getContentComponent();
       sideBar.initComponent(this, nmeta);
 
       sideBar.saveClick.subscribe((d: any) => {
-        sideBar.subscribeSaveClick(g6graph, $, nodeid, this, d);
+        if (sideBar.subscribeSaveClick(g6graph, $, nodeid, this, d)) {
+          // console.log("subscribeSaveClick");
+          drawerRef.close();
+        }
       });
 
       // 关闭对话框
@@ -828,11 +879,12 @@ export class WorkflowAddComponent extends BasicWFComponent
     this.openSideBar(e.g6, nodeid, WorkflowAddErCardinalityComponent, emeta);
 
     // this.setSizebarView(WorkflowAddErCardinalityComponent);
-   // this._opened = true;
+    // this._opened = true;
 
   }
 
   erNodesNodeClick(e: { 'g6': any, 'dumpnode': DumpTable /**点击的nodeid*/, 'ermeta': ERMetaNode }) {
+    // console.log(e);
     // 'dumpnode': nodeInfo.nodeMeta
     let dumpNode = e.dumpnode;
     if (!dumpNode) {
@@ -842,14 +894,18 @@ export class WorkflowAddComponent extends BasicWFComponent
     if (!emeta) {
       emeta = new ERMetaNode(dumpNode, this.topologyName);
     }
-    // console.log(e.ermeta);
+    // console.log([emeta, dumpNode]);
     // let emeta = new ERMetaNode(dumpNode, this.topologyName);
     this.openSideBar(e.g6, dumpNode.nodeid, WorkflowAddErMetaComponent, emeta);
-   // this._opened = true;
+    // this._opened = true;
   }
 
   syncTabs() {
     this.erRuleComponent.erTabSelect(true);
+  }
+
+  dryRun(workflow: Dataflow) {
+
   }
 }
 

@@ -13,21 +13,21 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, Input,
   OnDestroy,
   OnInit,
   QueryList,
   ViewChildren
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { isNil } from 'lodash';
-import { Subject } from 'rxjs';
-import { distinctUntilKeyChanged, map, startWith, takeUntil } from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
+import {isNil} from 'lodash';
+import {Subject} from 'rxjs';
+import {distinctUntilKeyChanged, map, startWith, takeUntil} from 'rxjs/operators';
 
-import { NzResizeEvent } from 'ng-zorro-antd/resizable';
+import {NzResizeEvent} from 'ng-zorro-antd/resizable';
 
-import { MessageListener, MessageListenersManager } from '@zeppelin/core';
-import { Permissions } from '@zeppelin/interfaces';
+import {MessageListener, MessageListenersManager} from '@zeppelin/core';
+import {Permissions} from '@zeppelin/interfaces';
 import {
   DynamicFormParams,
   InterpreterBindingItem,
@@ -45,8 +45,8 @@ import {
   TicketService
 } from '@zeppelin/services';
 
-import { scrollIntoViewIfNeeded } from '@zeppelin/utility/element';
-import { NotebookParagraphComponent } from './paragraph/paragraph.component';
+import {scrollIntoViewIfNeeded} from '@zeppelin/utility/element';
+import {NotebookParagraphComponent} from './paragraph/paragraph.component';
 
 @Component({
   selector: 'zeppelin-notebook',
@@ -76,6 +76,8 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
   sidebarAnimationFrame = -1;
   isSidebarOpen = false;
 
+
+
   @MessageListener(OP.NOTE)
   getNote(data: MessageReceiveDataTypeMap[OP.NOTE]) {
     const note = data.note;
@@ -84,7 +86,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
     } else {
       this.removeParagraphFromNgZ();
       this.note = note;
-      const { paragraphId } = this.activatedRoute.snapshot.params;
+      const {paragraphId} = this.activatedRoute.snapshot.params;
       if (paragraphId) {
         this.note = this.cleanParagraphExcept(paragraphId);
         this.initializeLookAndFeel();
@@ -118,7 +120,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
 
   @MessageListener(OP.PARAGRAPH_REMOVED)
   removeParagraph(data: MessageReceiveDataTypeMap[OP.PARAGRAPH_REMOVED]) {
-    const { paragraphId } = this.activatedRoute.snapshot.params;
+    const {paragraphId} = this.activatedRoute.snapshot.params;
     if (paragraphId || this.revisionView) {
       return;
     }
@@ -128,7 +130,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
 
   @MessageListener(OP.PARAGRAPH_ADDED)
   addParagraph(data: MessageReceiveDataTypeMap[OP.PARAGRAPH_ADDED]) {
-    const { paragraphId } = this.activatedRoute.snapshot.params;
+    const {paragraphId} = this.activatedRoute.snapshot.params;
     if (paragraphId || this.revisionView) {
       return;
     }
@@ -164,7 +166,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
 
   @MessageListener(OP.SET_NOTE_REVISION)
   setNoteRevision() {
-    const { noteId } = this.activatedRoute.snapshot.params;
+    const {noteId} = this.activatedRoute.snapshot.params;
     this.router.navigate(['/notebook', noteId]).then();
   }
 
@@ -216,9 +218,9 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
     this.noteRevisions = data.revisionList;
     if (this.noteRevisions) {
       if (this.noteRevisions.length === 0 || this.noteRevisions[0].id !== 'Head') {
-        this.noteRevisions.splice(0, 0, { id: 'Head', message: 'Head' });
+        this.noteRevisions.splice(0, 0, {id: 'Head', message: 'Head'});
       }
-      const { revisionId } = this.activatedRoute.snapshot.params;
+      const {revisionId} = this.activatedRoute.snapshot.params;
       if (revisionId) {
         this.currentRevision = this.noteRevisions.find(r => r.id === revisionId).message;
       } else {
@@ -305,8 +307,8 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
     const config = targetParagraph.config || {};
     config.editorHide = true;
     config.tableHide = false;
-    const paragraphs = [{ ...targetParagraph, config }];
-    return { ...this.note, paragraphs };
+    const paragraphs = [{...targetParagraph, config}];
+    return {...this.note, paragraphs};
   }
 
   setAllParagraphTableHide(tableHide: boolean) {
@@ -344,7 +346,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
     this.isSidebarOpen = isSidebarOpen;
   }
 
-  onResizeSidebar({ width }: NzResizeEvent): void {
+  onResizeSidebar({width}: NzResizeEvent): void {
     cancelAnimationFrame(this.sidebarAnimationFrame);
     this.sidebarAnimationFrame = requestAnimationFrame(() => {
       this.sidebarWidth = width!;
@@ -366,6 +368,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
   }
 
   ngOnInit() {
+   // console.log(this.activatedRoute.queryParamMap);
     this.activatedRoute.queryParamMap
       .pipe(
         startWith(this.activatedRoute.snapshot.queryParamMap),
@@ -385,7 +388,7 @@ export class NotebookComponent extends MessageListenersManager implements OnInit
         this.noteVarShareService.clear();
       });
     this.activatedRoute.params.pipe(takeUntil(this.destroy$)).subscribe(param => {
-      const { noteId, revisionId } = param;
+      const {noteId, revisionId} = param;
       if (revisionId) {
         this.messageService.noteRevision(noteId, revisionId);
       } else {

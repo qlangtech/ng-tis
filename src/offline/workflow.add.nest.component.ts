@@ -157,8 +157,9 @@ export class WorkflowAddNestComponent
   }
 
   // 执行保存流程
-  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): void {
+  subscribeSaveClick(graph: any, $: any, nodeid: any, _: IDataFlowMainComponent): boolean {
 
+    return true;
   }
 
   initComponent(_: IDataFlowMainComponent): void {

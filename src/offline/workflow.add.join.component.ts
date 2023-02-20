@@ -34,7 +34,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
           <sidebar-toolbar (close)="_closeSidebar($event)"
                            (save)="_saveClick()" (delete)="_deleteNode()"></sidebar-toolbar>
-          <tis-form [fieldsErr]="errorItem" formLayout="vertical">
+          <tis-form *ngIf="joinNodeForm" [fieldsErr]="errorItem" formLayout="vertical">
               <tis-page-header [showBreadcrumb]="false" [result]="result">
               </tis-page-header>
               <tis-ipt #nodeName title="名称" name="exportName" require="true">
@@ -145,7 +145,7 @@ export class WorkflowAddJoinComponent
   }
 
   // 点击保存之后处理逻辑
-  public subscribeSaveClick(graph: any, $: any /*jquery*/, nodeid: string, addComponent: IDataFlowMainComponent, evt: JoinNodeForm): void {
+  public subscribeSaveClick(graph: any, $: any /*jquery*/, nodeid: string, addComponent: IDataFlowMainComponent, evt: JoinNodeForm): boolean {
     let old = graph.findById(nodeid);
 
     let nmodel = {'label': evt.nodeName, 'nodeMeta': this.joinNodeForm.dto};
@@ -178,7 +178,7 @@ export class WorkflowAddJoinComponent
     // 更新label值
     graph.updateItem(old, nmodel);
     addComponent.closePanel();
-
+    return true;
   }
 
 

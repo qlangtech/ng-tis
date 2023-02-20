@@ -14,7 +14,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { WorkspaceComponent } from './workspace.component';
-import { WorkspaceGuard } from './workspace.guard';
+import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
+// import { WorkspaceGuard } from './workspace.guard';
 
 const routes: Routes = [
   {

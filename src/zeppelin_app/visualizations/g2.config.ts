@@ -10,7 +10,7 @@
  * limitations under the License.
  */
 
-import * as G6 from '@antv/g6';
+import * as G2 from '@antv/g2';
 
 const DEFAULT_COLOR = '#03578c';
 const COLOR_PLATE_8 = ['#03578c', '#179bd4', '#bf4f07', '#005041', '#8543E0', '#57c2e9', '#03138c', '#8c0357'];
@@ -123,7 +123,7 @@ const zeppelinTheme = {
 };
 
 export function setTheme() {
-  // const theme = G6.Util.deepMix(G6.Global, zeppelinTheme);
-  // // tslint:disable-next-line:no-any
-  // (G6.Global as any).setTheme(theme);
+  const theme = G2.Util.deepMix(G2.Global, zeppelinTheme);
+  // tslint:disable-next-line:no-any
+  (G2.Global as any).setTheme(theme);
 }

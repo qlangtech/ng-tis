@@ -29,7 +29,7 @@ import { DomSanitizer, SafeHtml, SafeUrl } from '@angular/platform-browser';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-// import { default as AnsiUp } from 'ansi_up';
+ import { default as AnsiUp } from 'ansi_up';
 import * as hljs from 'highlight.js';
 import { NzResizeEvent } from 'ng-zorro-antd/resizable';
 import { utils, writeFile, WorkSheet, WritingOptions } from 'xlsx';
@@ -255,8 +255,10 @@ export class NotebookParagraphResultComponent implements OnInit, AfterViewInit, 
   }
 
   renderText(): void {
-   // const ansiUp = new AnsiUp();
-    this.plainText = ""; // this.sanitizer.bypassSecurityTrustHtml(ansiUp.ansi_to_html(this.result.data));
+    const ansiUp = new AnsiUp();
+    this.plainText =  this.sanitizer.bypassSecurityTrustHtml(ansiUp.ansi_to_html(this.result.data));
+
+   // this.plainText =  this.sanitizer.bypassSecurityTrustHtml(this.result.data);
   }
 
   renderImg(): void {

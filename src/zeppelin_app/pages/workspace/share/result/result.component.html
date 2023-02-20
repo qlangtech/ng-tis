@@ -9,7 +9,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <div class="setting-bar" *ngIf="result.type === datasetType.TABLE && !published">
   <div class="visualization-selector">
     <nz-radio-group [(ngModel)]="config?.graph.mode" (ngModelChange)="switchMode($event)" nzButtonStyle="solid">
