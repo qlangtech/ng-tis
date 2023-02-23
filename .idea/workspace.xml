@@ -5,76 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/$CACHE_FILE$" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/$PRODUCT_WORKSPACE_FILE$" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/datax/notebook.entry.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/offline/workflow.offline.engine.select.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tis-console.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/copyright/qlangtech.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/tis-console-nodejs.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml.orig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projects/zeppelin-visualization/src/g2-visualization-component-base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/projects/zeppelin-visualization/src/g2-visualization-component-base.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.index.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.base.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/pager.header.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pager.header.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datax/datax.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.cardinality.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.er.meta.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.nest.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.union.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.er.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/core/message-listener/message-listener.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/core/message-listener/message-listener.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/paragraph.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/paragraph/paragraph.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/share/result/result.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/visualizations/common/util/set-x-axis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/visualizations/common/util/set-x-axis.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/visualizations/g2.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/visualizations/g2.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +97,7 @@
       <workItem from="1672638009333" duration="878000" />
       <workItem from="1674027401380" duration="1008000" />
       <workItem from="1674442548239" duration="69363000" />
-      <workItem from="1675572363187" duration="27486000" />
+      <workItem from="1675572363187" duration="28826000" />
     </task>
     <servers />
   </component>
