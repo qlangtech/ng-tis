@@ -265,7 +265,7 @@ export class WorkflowERComponent
       let nodeMeta = this._nodeTypes.get(TYPE_DUMP_TABLE);
       // console.log([this._nodeTypes,TYPE_DUMP_TABLE,nodeMeta]);
       dumpNodes.forEach((r) => {
-        let n = new DumpTable(nodeMeta, r.id, r.extraSql, r.dbid, r.name);
+        let n = new DumpTable(nodeMeta, r.id, r.dbid, r.name);
         let m = WorkflowAddComponent.addItem2UI(r.id, r.position.x, r.position.y, nodeMeta, n);
         m.label = r.name;
 

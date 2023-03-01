@@ -424,9 +424,18 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       });
   }
 
-
+  /**
+   *
+   * @param baseCpt
+   * @param pm
+   * @param readerDescriptorImpl
+   * @param useCache
+   * @param subFieldFormsCallback
+   */
   static initializeSubFieldForms(baseCpt: BasicFormComponent, pm: PluginType, readerDescriptorImpl: string
-    , useCache: boolean, subFieldFormsCallback: (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readDesc: Descriptor) => void): Promise<TisResponseResult> {
+    , useCache: boolean
+    , subFieldFormsCallback: (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readDesc: Descriptor) => void): Promise<TisResponseResult> {
+  // console.log(pm);
     return PluginsComponent.initializePluginItems(baseCpt, [pm],
       useCache, (success: boolean, hList: HeteroList[], _) => {
         if (!success) {
@@ -450,7 +459,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!readerDescriptorImpl) {
           throw new Error("readerDescriptorImpl can not be undefined");
         }
-
+ //console.log([subFormHetero.descriptors,readerDescriptorImpl]);
         let desc: Descriptor = subFormHetero.descriptors.get(readerDescriptorImpl);
         if (!desc) {
           // console.log(subFormHetero.descriptors.keys());
@@ -562,6 +571,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   public createStepNext(): void {
     let savePluginEvent = new SavePluginEvent();
     savePluginEvent.notShowBizMsg = true;
+   // console.log(this.subFormHetero.items[0].vals);
     PluginsComponent.postHeteroList(this, this.getPluginMetas(), [this.subFormHetero], savePluginEvent, true, (result) => {
       if (result.success) {
         this.nextStep.emit(this.dto);

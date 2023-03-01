@@ -24,7 +24,7 @@ import {ActivatedRoute} from '@angular/router';
 // @ts-ignore
 import * as $ from 'jquery';
 import {NzModalRef} from "ng-zorro-antd/modal";
-import {HeteroList, ItemPropVal, TisResponseResult} from "../common/tis.plugin";
+import {DataBase, HeteroList, Item, ItemPropVal, SuccessAddedDBTabs, TisResponseResult} from "../common/tis.plugin";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {DataxAddStep3Component} from "../base/datax.add.step3.component";
 import {DataxAddStep4Component} from "../base/datax.add.step4.component";
@@ -37,21 +37,12 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 @Component({
   // templateUrl: '/offline/tableaddstep.htm'
   template: `
-      <tis-msg [result]="result"></tis-msg>
+    <tis-msg [result]="result"></tis-msg>
 
-      <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
-          <ng-template #container></ng-template>
-      </nz-spin>
-      {{ multiViewDAG.lastCpt?.name}}
-      <!--      <div>-->
-      <!--          <tableAddStep1 *ngIf="currentIndex===0"-->
-      <!--                         (nextStep)="goToNextStep($event)"-->
-      <!--                         [tablePojo]="tablePojo"></tableAddStep1>-->
-      <!--          <tableAddStep2 *ngIf="currentIndex===1" (previousStep)="goToPreviousStep($event)"-->
-      <!--                         (processSuccess)="processTableAddSuccess($event)"-->
-      <!--                         [step1Form]="step1Form"-->
-      <!--                         [tablePojo]="tablePojo"></tableAddStep2>-->
-      <!--      </div>-->
+    <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
+      <ng-template #container></ng-template>
+    </nz-spin>
+    {{ multiViewDAG.lastCpt?.name}}
   `
 })
 export class TableAddComponent extends BasicFormComponent implements OnInit {
@@ -119,7 +110,18 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
     dataXDto.componentCallback.step4.subscribe((cpt) => {
       cpt.execModel = ExecModel.Reader;
       cpt.nextStep.subscribe(() => {
-        this.activeModal.close();
+
+        //console.log( );
+        let hasSetItem = false;
+        cpt.subFormHetero.items.forEach((item: Item) => {
+          this.activeModal.close(new SuccessAddedDBTabs(dataXDto.tablePojo, <{ [key: string]: Array<Item> }>item.vals));
+          hasSetItem = true;
+        })
+
+        if (!hasSetItem) {
+          throw new Error(" cpt.subFormHetero.items.length:" + cpt.subFormHetero.items.length);
+        }
+
         this.successNotify("数据源:" + dataXDto.tablePojo.dbName + "已完成表导入设置");
       })
     });
@@ -159,7 +161,6 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
         });
     }
   }
-
 
 
   goToNextStep(form: TablePojo) {

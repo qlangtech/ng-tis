@@ -19,11 +19,21 @@
 // import {EventEmitter} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {NzSelectModeType} from "ng-zorro-antd/select";
+import {TablePojo} from "../offline/table.add.component";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
 export const KEY_OPTIONS_ENUM = "enum";
-export declare type PluginName = 'mq' | 'k8s-config' | 'fs' | 'datasource' | 'dataxReader' | 'params-cfg' | 'appSource' | 'dataxWriter' | 'datax-worker';
+export declare type PluginName =
+  'mq'
+  | 'k8s-config'
+  | 'fs'
+  | 'datasource'
+  | 'dataxReader'
+  | 'params-cfg'
+  | 'appSource'
+  | 'dataxWriter'
+  | 'datax-worker';
 export declare type PluginMeta = {
   skipSubformDescNullError?: boolean;
   name: PluginName, require: boolean, extraParam?: string
@@ -545,7 +555,7 @@ export class HeteroList {
 }
 
 export class PluginSaveResponse {
-  constructor(public  saveSuccess: boolean, public formDisabled: boolean, private bizResult?: any) {
+  constructor(public saveSuccess: boolean, public formDisabled: boolean, private bizResult?: any) {
 
   }
 
@@ -586,6 +596,44 @@ export class SavePluginEvent {
   // namespace:corename:method
   public serverForward;
   public basicModule: BasicFormComponent;
+}
+
+export interface DataType {
+  typeDesc: string;
+}
+
+export interface IColumnMeta {
+  key: string;
+  pk: boolean;
+  index: number;
+
+  nullable: boolean;
+
+  comment: string;
+
+  type: DataType;
+}
+
+//{ tableid?: number, dbId?: string, dbName?: string, isNew: boolean }
+export class DataBase {
+  constructor(public dbId: string, public dbName: string) {
+  }
+}
+
+export class SuccessAddedDBTabs {
+  public db: DataBase;
+
+  constructor(tab: TablePojo, private tabs: { [key: string]: Array<Item> }) {
+    this.db = new DataBase(tab.dbId, tab.dbName);
+  }
+
+  public get tabKeys(): Array<string> {
+    let tabs: Array<string> = [];
+    for (let tabName in this.tabs) {
+      tabs.push(tabName);
+    }
+    return tabs;
+  }
 }
 
 

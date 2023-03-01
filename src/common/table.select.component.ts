@@ -16,13 +16,24 @@
  *   limitations under the License.
  */
 
-import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output
+} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzSelectSizeType} from "ng-zorro-antd/select";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {NzCascaderOption} from "ng-zorro-antd/cascader";
-import {DatasourceComponent} from "../offline/ds.component";
+import {DatasourceComponent, KEY_DB_ID} from "../offline/ds.component";
+import {DataBase, IColumnMeta, SuccessAddedDBTabs} from "./tis.plugin";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'tis-table-select',
@@ -34,11 +45,20 @@ import {DatasourceComponent} from "../offline/ds.component";
     }
   ],
   template: `
-      <nz-cascader [nzLoadData]="loadData" [style]="nzStyle" [nzSize]="this.nzSize" name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="value"
-                   (ngModelChange)="onCascaderChanges($event)"></nz-cascader>
+    <nz-cascader [nzLoadData]="loadData" [style]="nzStyle" [nzSize]="this.nzSize" name="dbTable" class="clear"
+                 [nzOptionRender]="renderTpl"
+                 [nzOptions]="cascaderOptions" [(ngModel)]="value"
+                 (ngModelChange)="onCascaderChanges($event)"></nz-cascader>
+
+    <ng-template #renderTpl let-option let-index="index">
+      {{ option.label }}
+      <button *ngIf="index===0" (click)="manageDbTable(option,$event)" nz-button nzSize="small" nzType="link">
+        <i nz-icon nzType="edit" nzTheme="outline"></i></button>
+    </ng-template>
+
   `
 })
-export class TableSelectComponent extends BasicFormComponent implements OnInit, ControlValueAccessor {
+export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   cascaderOptions: NzCascaderOption[] = [];
   // 应该是这样的结构 [dumpTab.dbid, dumpTab.cascaderTabId];
   cascadervalues: any = {};
@@ -47,12 +67,27 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
   @Input()
   nzStyle: string;
-  @Output() onCascaderSQLChanges = new EventEmitter<string>();
-  private onChangeCallback: (_: any) => void = function () {
+  @Output() onCascaderSQLChanges = new EventEmitter<Array<IColumnMeta>>();
+  private onChangeCallback: (val: Array<any>) => void = function (val: Array<any>) {
+
   };
 
-  constructor(tisService: TISService) {
-    super(tisService);
+  constructor(tisService: TISService, modalService: NzModalService) {
+    super(tisService, modalService);
+  }
+
+  manageDbTable(opt: NzCascaderOption, e: MouseEvent): void {
+    // console.log(opt);
+    let db = new DataBase(opt.value, opt.label);
+    // console.log(opt);
+    DatasourceComponent.openAddTableDialog(this, db).then((r: SuccessAddedDBTabs) => {
+      opt.children = r.tabKeys.map((tab) => {
+        return {value: tab, label: tab, isLeaf: true}
+      });
+    }, (_) => {
+    });
+
+    e.stopPropagation();
   }
 
   get value() {
@@ -68,12 +103,12 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
   /** load data async execute by `nzLoadData` method */
   loadData(node: NzCascaderOption, index: number): PromiseLike<void> {
-    console.log([node, index]);
+    // console.log([node, index]);
     if (index === 0) {
       let action = `emethod=get_datasource_db_by_id&action=offline_datasource_action&id=${node.value}`;
 
-      let cpt :BasicFormComponent = node.basicCpt;
-      if(!cpt){
+      let cpt: BasicFormComponent = node.basicCpt;
+      if (!cpt) {
         throw new Error("cpt can not be null");
       }
 
@@ -92,28 +127,6 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
     } else {
       return Promise.resolve();
     }
-
-    // let tabidtuple = evt[1].split('%');
-    // let action = `emethod=get_datasource_table_by_id&action=offline_datasource_action&id=${tabidtuple[0]}`;
-    // this.httpPost('/offline/datasource.ajax', action)
-    //   .then((result) => {
-    //     let r = result.bizresult;
-    //     // this.sql = r.selectSql;
-    //     this.onCascaderSQLChanges.emit(r.selectSql);
-    //   });
-    // return new Promise(resolve => {
-    //   setTimeout(() => {
-    //     // if (index < 0) {
-    //     //   // if index less than 0 it is root node
-    //     //   node.children = provinces;
-    //     // } else if (index === 0) {
-    //     //   node.children = cities[node.value];
-    //     // } else {
-    //     //   node.children = scenicspots[node.value];
-    //     // }
-    //     resolve();
-    //   }, 1000);
-    // });
   }
 
   registerOnChange(fn: any): void {
@@ -128,29 +141,53 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
   writeValue(obj: any): void {
     this.cascadervalues = obj;
+    if (obj && Array.isArray(obj)) {
+      this.onCascaderChanges(obj);
+    }
   }
 
   onCascaderChanges(evt: any[]) {
-   // console.log(evt);
-   // let tabidtuple = evt[1].split('%');
-    let action = `emethod=get_datasource_table_by_id&action=offline_datasource_action&id=${evt[0]}&tabName=${evt[1]}`;
-    this.httpPost('/offline/datasource.ajax', action)
+
+    TableSelectComponent.reflectTabCols(this, evt[0], evt[1]).then((cols: Array<IColumnMeta>) => {
+      this.onCascaderSQLChanges.emit(cols);
+    });
+
+  }
+
+  public static reflectTabCols(cpt: BasicFormComponent, dbId: string, tabName: string): Promise<Array<IColumnMeta>> {
+    let action = `emethod=get_datasource_table_cols&action=offline_datasource_action&id=${dbId}&tabName=${tabName}`;
+    return cpt.httpPost('/offline/datasource.ajax', action)
       .then((result) => {
-        let r = result.bizresult;
-        // this.sql = r.selectSql;
-        this.onCascaderSQLChanges.emit(r.selectSql);
+        if (result.success) {
+          let r = result.bizresult;
+          return <Array<IColumnMeta>>r
+        } else {
+          return Promise.reject(result);
+        }
+        // this.onCascaderSQLChanges.emit(<Array<IColumnMeta>>r);
       });
+  }
+
+  ngAfterViewInit(): void {
+    // console.log(this.cascadervalues);
+    // this.onCascaderChanges(this.cascadervalues);
+  }
+
+  ngAfterContentInit(): void {
 
   }
 
   ngOnInit(): void {
 
-    let action = 'event_submit_do_get_datasource_info=y&action=offline_datasource_action';
+    let action = 'event_submit_do_get_datasource_info=y&action=offline_datasource_action&filterSupportReader=true';
     this.httpPost('/offline/datasource.ajax', action)
       .then(result => {
         if (result.success) {
           this.cascaderOptions = [];
-          const dbs = result.bizresult.dbs;
+          const dbs = result.bizresult.dbsSupportDataXReader;
+          if (!Array.isArray(dbs) || dbs.length < 1) {
+            throw new Error("dbsSupportDataXReader can not be empty");
+          }
           for (let db of dbs) {
             let children = [];
             if (db.tables) {
@@ -163,11 +200,12 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
                 children.push(c);
               }
             }
-            let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name , "basicCpt" : this };
+            let dbNode: NzCascaderOption = {'value': `${db.id}`, 'label': db.name, "basicCpt": this};
             this.cascaderOptions.push(dbNode);
           }
-          //       console.log(this.cascaderOptions);
         }
       });
+
+
   }
 }
