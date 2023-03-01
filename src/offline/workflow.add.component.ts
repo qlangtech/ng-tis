@@ -504,7 +504,7 @@ export class WorkflowAddComponent extends BasicWFComponent
     // dump 节点
     let tabNodeMeta = this.getNodeMeta(TYPE_DUMP_TABLE);
     dumpNodes.forEach((d) => {
-      let tabNode = new DumpTable(tabNodeMeta, d.id, d.extraSql, d.dbid, d.name);
+      let tabNode = new DumpTable(tabNodeMeta, d.id, d.dbid, d.name);
       dumpMode = WorkflowAddComponent.addItem2UI(d.id, d.position.x, d.position.y, tabNodeMeta, tabNode);
       dumpMode.label = d.name;
 

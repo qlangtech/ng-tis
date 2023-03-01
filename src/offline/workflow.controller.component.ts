@@ -4,8 +4,6 @@ import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-import {WorkflowComponent} from "./workflow.component";
-import {WorkflowOfflineEngineSelectComponent} from "./workflow.offline.engine.select.component";
 import {DataxAddStep2Component} from "../base/datax.add.step2.component";
 import {AddStep2ComponentCfg, DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -18,13 +16,12 @@ import {DataxAddStep7Component, ExecModel} from "../base/datax.add.step7.confirm
 
 @Component({
   template: `
-      <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流','/offline/wf']" [title]="this.currentApp.appName">
-      </tis-page-header>
-      <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
-          <ng-template #container></ng-template>
-      </nz-spin>
-      {{ multiViewDAG.lastCpt?.name}}
-
+    <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流','/offline/wf']" [title]="this.currentApp.appName">
+    </tis-page-header>
+    <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
+      <ng-template #container></ng-template>
+    </nz-spin>
+    {{ multiViewDAG.lastCpt?.name}}
   `
 })
 export class WFControllerComponent extends BasicFormComponent implements OnInit {

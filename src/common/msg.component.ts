@@ -17,6 +17,7 @@
  */
 
 import {AfterContentInit, Component, Input} from "@angular/core";
+import {TisResponseResult} from "./tis.plugin";
 
 
 // implements OnInit, AfterContentInit
@@ -56,8 +57,9 @@ import {AfterContentInit, Component, Input} from "@angular/core";
   ]
 })
 export class TisMsgComponent implements AfterContentInit {
+  TisResponseResult
   @Input()
-  result: { success: boolean, msg: any[], errormsg: any[] }
+  result: TisResponseResult
     = {success: false, msg: [], errormsg: []};
 
   public get showSuccessMsg(): boolean {

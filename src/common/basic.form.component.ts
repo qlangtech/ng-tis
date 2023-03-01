@@ -425,7 +425,7 @@ export class CurrentCollection {
 
 // sidebar 在与主页面传递的dto对象
 export class DumpTable extends BasicSidebarDTO {
-  constructor(nodeMeta: NodeMeta, public nodeid: string, public sqlcontent?: string, public dbid?: string, public tabname?: string) {
+  constructor(nodeMeta: NodeMeta, public nodeid: string, public dbid?: string, public tabname?: string) {
     super(nodeMeta);
   }
 
@@ -523,7 +523,7 @@ export class Pos {
 
 export class NodeMetaDependency {
   constructor(public id: string, public dbid: string
-    , public dbName: string, public name: string, public extraSql: string
+    , public dbName: string, public name: string
     , public position?: Pos, public type?: string) {
 
   }

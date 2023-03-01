@@ -41,36 +41,39 @@ import {TISService} from '../common/tis.service';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {IColumnMeta} from "../common/tis.plugin";
 
 
 //
 @Component({
   template: `
       <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-          <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()" (delete)="deleteNode()"></sidebar-toolbar>
+          <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()"
+                           (delete)="deleteNode()"></sidebar-toolbar>
 
           <form class="clear" nz-form [nzLayout]="'vertical'">
               <div class="item-head"><label>数据库表</label></div>
               <p>
-                  <!--                  <nz-cascader name="dbTable" class="clear" [nzOptions]="cascaderOptions" [(ngModel)]="cascadervalues"-->
-                  <!--                               (ngModelChange)="onCascaderChanges($event)"></nz-cascader>-->
-                  <tis-table-select [ngModelOptions]="{standalone: true}" [(ngModel)]="cascadervalues" (onCascaderSQLChanges)="this.sql=$event"></tis-table-select>
+                  <tis-table-select [ngModelOptions]="{standalone: true}" [(ngModel)]="cascadervalues"
+                                    (onCascaderSQLChanges)="this.colsMeta=$event"></tis-table-select>
               </p>
 
-              <label>SQL</label>
-              <div>
-                  <tis-codemirror name="sqltext" [(ngModel)]="sql"
-                                  [size]="{width:'100%',height:600}" [config]="sqleditorOption"></tis-codemirror>
-              </div>
+              <ng-container *ngIf="this.colsMeta">
+                  <div class="item-head"><label>列</label></div>
+                  <p>
+                    <table-cols-meta [colsMeta]="this.colsMeta"></table-cols-meta>
+
+                  </p>
+              </ng-container>
           </form>
 
       </nz-spin>
   `,
 
   styles: [
-      `.clear {
-          clear: both;
-      }`]
+    `.clear {
+      clear: both;
+    }`]
 })
 export class WorkflowAddDbtableSetterComponent
   extends BasicSideBar implements OnInit, AfterContentInit, AfterViewInit {
@@ -78,7 +81,9 @@ export class WorkflowAddDbtableSetterComponent
   // cascaderOptions: NzCascaderOption[] = [];
   cascadervalues: any = {};
   private dto: DumpTable;
-  sql = 'select * from usertable;';
+
+
+  colsMeta: Array<IColumnMeta>;
 
   constructor(tisService: TISService, //
               modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
@@ -92,7 +97,6 @@ export class WorkflowAddDbtableSetterComponent
   initComponent(_: WorkflowAddComponent, dumpTab: DumpTable): void {
     if (dumpTab.tableName) {
       this.cascadervalues = [dumpTab.dbid, dumpTab.tableName];
-      this.sql = dumpTab.sqlcontent;
     }
     //  console.log(this.cascadervalues);
     this.dto = dumpTab;
@@ -105,38 +109,16 @@ export class WorkflowAddDbtableSetterComponent
   ngAfterContentInit(): void {
   }
 
-  get sqleditorOption(): any {
-    return {
-      'readOnly': true,
-    };
-  }
-
-  onChanges(event: any) {
-
-  }
-
-  // onCascaderChanges(evt: any[]) {
-  //
-  //   let tabidtuple = evt[1].split('%');
-  //   let action = `emethod=get_datasource_table_by_id&action=offline_datasource_action&id=${tabidtuple[0]}`;
-  //   this.httpPost('/offline/datasource.ajax', action)
-  //     .then((result) => {
-  //       let r = result.bizresult;
-  //       this.sql = r.selectSql;
-  //     });
-  //
-  // }
-
   // 点击保存按钮
   _saveClick() {
-   console.log(this.cascadervalues);
+    console.log(this.cascadervalues);
     let dbId: string = this.cascadervalues[0];
     let tabName: string = this.cascadervalues[1];
 
     // console.log(this.dto);
 
     this.saveClick.emit(new DumpTable(this.nodeMeta, this.dto.nodeid
-      , this.sql, dbId, tabName));
+      , dbId, tabName));
     this._closeSidebar(null);
   }
 

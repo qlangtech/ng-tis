@@ -27,19 +27,29 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
+import {
+  DataBase,
+  Descriptor,
+  HeteroList, IColumnMeta,
+  Item,
+  PluginSaveResponse,
+  PluginType, SuccessAddedDBTabs,
+  TisResponseResult
+} from "../common/tis.plugin";
 import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {DATAX_PREFIX_DB} from "../base/datax.add.base";
 import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
 
+import {TableSelectComponent} from "../common/table.select.component";
+
 
 const db_model_detailed = "detailed";
 const db_model_facade = "facade";
 
 const key_tabs_fetch = "tabsFetch";
-const KEY_DB_ID = "dbId";
+export const KEY_DB_ID = "dbId";
 
 enum NodeType {
   DB = 'db',
@@ -48,136 +58,178 @@ enum NodeType {
 
 @Component({
   template: `
-      <tis-page-header title="数据源管理"></tis-page-header>
+    <tis-page-header title="数据源管理"></tis-page-header>
 
-      <nz-layout>
-          <nz-sider [nzWidth]="300">
-              <nz-space class="btn-block">
-                  <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 5em'" (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
-                                      [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'" [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
-                      <i class="fa fa-database" aria-hidden="true"></i></tis-plugin-add-btn>
+    <nz-layout>
+      <nz-sider [nzWidth]="300">
+        <nz-space class="btn-block">
+          <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 5em'"
+                              (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
+                              [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'"
+                              [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-database" aria-hidden="true"></i></tis-plugin-add-btn>
 
-                  <button *nzSpaceItem nz-button nzSize="small" style="width: 4em" (click)="addTableBtnClick()">
-                      <i class="fa fa-plus" aria-hidden="true"></i>
-                      <i class="fa fa-table" aria-hidden="true"></i></button>
-              </nz-space>
-              <nz-input-group [nzSuffix]="suffixIcon">
-                  <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
-              </nz-input-group>
-              <ng-template #suffixIcon>
-                  <i nz-icon nzType="search"></i>
-              </ng-template>
-              <nz-spin style="width:100%;min-height: 300px;" [nzSize]="'large'" [nzSpinning]="treeLoad">
-                  <nz-tree #dbtree [nzData]="nodes"
-                           [nzSearchValue]="searchValue"
-                           (nzClick)="nzDSTreeClickEvent($event)"
-                           (nzExpandChange)="nzEvent($event)">
-                  </nz-tree>
-              </nz-spin>
-          </nz-sider>
-          <nz-content>
-              <nz-spin *ngIf="treeNodeClicked " style="width:100%;min-height: 200px" [nzSize]="'large'" [nzSpinning]="this.formDisabled">
-                  <div *ngIf="selectedDb && selectedDb.dbId">
+          <button *nzSpaceItem nz-button nzSize="small" style="width: 4em" (click)="addTableBtnClick()">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-table" aria-hidden="true"></i></button>
+        </nz-space>
+        <nz-input-group [nzSuffix]="suffixIcon">
+          <input type="text" nz-input placeholder="Search" [(ngModel)]="searchValue"/>
+        </nz-input-group>
+        <ng-template #suffixIcon>
+          <i nz-icon nzType="search"></i>
+        </ng-template>
+        <nz-spin style="width:100%;min-height: 300px;" [nzSize]="'large'" [nzSpinning]="treeLoad">
+          <nz-tree #dbtree [nzData]="nodes"
+                   [nzSearchValue]="searchValue"
+                   (nzClick)="nzDSTreeClickEvent($event)"
+                   (nzExpandChange)="nzEvent($event)">
+          </nz-tree>
+        </nz-spin>
+      </nz-sider>
+      <nz-content>
+        <nz-spin *ngIf="treeNodeClicked " style="width:100%;min-height: 200px" [nzSize]="'large'"
+                 [nzSpinning]="this.formDisabled">
+          <div *ngIf="selectedDb && selectedDb.dbId">
 
-                      <tis-page-header [showBreadcrumbRoot]="false" size="sm" [title]="'数据库'">
+            <tis-page-header [showBreadcrumbRoot]="false" size="sm" [title]="'数据库'">
 
-                      </tis-page-header>
+            </tis-page-header>
 
-                      <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" (nzSelectedIndexChange)="selectedIndexChange()" [nzTabBarExtraContent]="extraTemplate">
-                          <nz-tab nzTitle="明细">
-                              <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
-                                           [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [disabled]="!updateMode" [plugins]="pluginsMetas"></tis-plugins>
-                          </nz-tab>
-                          <nz-tab *ngIf="facdeDb" [nzTitle]="'门面'">
-                              <ng-template nz-tab>
-                                  <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)" [errorsPageShow]="false"
-                                               [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [disabled]="!updateMode" [plugins]="facadePluginsMetas"></tis-plugins>
-                              </ng-template>
-                          </nz-tab>
-                          <nz-tab *ngIf="this.selectedDb && this.selectedDb.dataReaderSetted" [nzTitle]="'抽取配置'">
-                              <ng-template nz-tab>
-                                  <tis-plugins [errorsPageShow]="false" (afterSave)="afterSave($event)" (afterInit)="afterDataReaderInit($event)"
-                                               [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false" [showSaveButton]="updateMode" [disabled]="!updateMode"
-                                               [plugins]="dataReaderPluginMetas"></tis-plugins>
-                              </ng-template>
-                          </nz-tab>
-                      </nz-tabset>
-                      <ng-template #extraTemplate>
-                          <nz-space>
-                              <ng-container *ngIf="supportFacade && !this.facdeDb">
+            <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" (nzSelectedIndexChange)="selectedIndexChange()"
+                       [nzTabBarExtraContent]="extraTemplate">
+              <nz-tab nzTitle="明细">
+                <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)"
+                             [errorsPageShow]="false"
+                             [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false"
+                             [showSaveButton]="updateMode" [disabled]="!updateMode"
+                             [plugins]="pluginsMetas"></tis-plugins>
+              </nz-tab>
+              <nz-tab *ngIf="facdeDb" [nzTitle]="'门面'">
+                <ng-template nz-tab>
+                  <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)"
+                               [errorsPageShow]="false"
+                               [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false"
+                               [showSaveButton]="updateMode" [disabled]="!updateMode"
+                               [plugins]="facadePluginsMetas"></tis-plugins>
+                </ng-template>
+              </nz-tab>
+              <nz-tab *ngIf="this.selectedDb && this.selectedDb.dataReaderSetted" [nzTitle]="'抽取配置'">
+                <ng-template nz-tab>
+                  <tis-plugins [errorsPageShow]="false" (afterSave)="afterSave($event)"
+                               (afterInit)="afterDataReaderInit($event)"
+                               [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false"
+                               [showSaveButton]="updateMode" [disabled]="!updateMode"
+                               [plugins]="dataReaderPluginMetas"></tis-plugins>
+                </ng-template>
+              </nz-tab>
+            </nz-tabset>
+            <ng-template #extraTemplate>
+              <nz-space>
+                <ng-container *ngIf="supportFacade && !this.facdeDb">
                               <span *nzSpaceItem>
                                   <button [disabled]="this.updateMode" nz-button nzType="default" nz-dropdown
-                                          [nzDropdownMenu]="dbFacadeAdd" [disabled]="facdeDb != null">添加门面配置<i nz-icon nzType="down"></i></button>
+                                          [nzDropdownMenu]="dbFacadeAdd" [disabled]="facdeDb != null">添加门面配置<i
+                                    nz-icon nzType="down"></i></button>
                                   <nz-dropdown-menu #dbFacadeAdd="nzDropdownMenu">
                                       <ul nz-menu>
                                           <li nz-menu-item *ngFor="let d of facadeSourceDesc">
                                               <!--addDbBtnClick(d) -->
-                                              <a href="javascript:void(0)" (click)="addFacadeDB(d)">{{d.displayName}}</a>
+                                              <a href="javascript:void(0)"
+                                                 (click)="addFacadeDB(d)">{{d.displayName}}</a>
                                           </li>
                                       </ul>
                                   </nz-dropdown-menu>
                               </span>
-                              </ng-container>
-                              <span *nzSpaceItem>
-                                  <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</button>
+                </ng-container>
+                <span *nzSpaceItem>
+                                  <button nz-button [disabled]="this.updateMode" (click)="editDb()"><i nz-icon
+                                                                                                       nzType="edit"
+                                                                                                       nzTheme="outline"></i>编辑</button>
                               </span>
-                              <span *nzSpaceItem>
-                                  <button nz-button [disabled]="this.updateMode" nzType="primary" nzDanger (click)="deleteDb()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除{{dbType}}</button>
+                <span *nzSpaceItem>
+                                  <button nz-button [disabled]="this.updateMode" nzType="primary" nzDanger
+                                          (click)="deleteDb()"><i nz-icon nzType="delete"
+                                                                  nzTheme="outline"></i>删除{{dbType}}</button>
                               </span>
-                              <span *nzSpaceItem>
+                <span *nzSpaceItem>
                                   <button *ngIf="updateMode" nz-button (click)="this.updateMode=false">取消</button>
                               </span>
-                          </nz-space>
-                      </ng-template>
+              </nz-space>
+            </ng-template>
+          </div>
+
+          <div *ngIf="selectedTable && selectedTable.tableName">
+
+            <tis-page-header [showBreadcrumbRoot]="false" size="sm" title="表信息">
+            </tis-page-header>
+
+
+            <nz-tabset>
+
+              <nz-tab nzTitle="基本配置">
+                <ng-template nz-tab>
+                  <tis-plugins [getCurrentAppCache]="true" [pluginMeta]="selectedTablePluginMeta"
+                               [showSaveButton]="updateMode" [disabled]="!updateMode"
+                               [formControlSpan]="formControlSpan"
+                               [shallInitializePluginItems]="false"
+                               [_heteroList]="selectedTableHeteroList"></tis-plugins>
+                </ng-template>
+              </nz-tab>
+              <nz-tab (nzClick)="colsMetaClick(selectedTable)" nzTitle="列">
+                <ng-template nz-tab>
+                  <div style="margin-left: 40px;width: 70%">
+                    <table-cols-meta *ngIf="this.colsMeta" [colsMeta]="this.colsMeta"></table-cols-meta>
                   </div>
+                </ng-template>
+              </nz-tab>
 
-                  <div *ngIf="selectedTable && selectedTable.tableName">
 
-                      <tis-page-header [showBreadcrumbRoot]="false" size="sm" title="表信息">
-                      </tis-page-header>
+            </nz-tabset>
 
-                      <tis-plugins [getCurrentAppCache]="true" [pluginMeta]="selectedTablePluginMeta" [showSaveButton]="updateMode" [disabled]="!updateMode" [formControlSpan]="formControlSpan"
-                                   [shallInitializePluginItems]="false" [_heteroList]="selectedTableHeteroList"></tis-plugins>
-                  </div>
-              </nz-spin>
-              <nz-empty *ngIf="!treeNodeClicked && (!selectedTable || !selectedTable.tableName) && (!selectedDb || !selectedDb.dbId)" [nzNotFoundContent]="contentTpl">
-                  <ng-template #contentTpl>
-                      <span>请选择右侧数据节点</span>
-                  </ng-template>
-              </nz-empty>
-          </nz-content>
-      </nz-layout>
+
+          </div>
+        </nz-spin>
+        <nz-empty
+          *ngIf="!treeNodeClicked && (!selectedTable || !selectedTable.tableName) && (!selectedDb || !selectedDb.dbId)"
+          [nzNotFoundContent]="contentTpl">
+          <ng-template #contentTpl>
+            <span>请选择右侧数据节点</span>
+          </ng-template>
+        </nz-empty>
+      </nz-content>
+    </nz-layout>
   `,
   styles: [`
-      .tis-item .ant-descriptions-item-label {
-          width: 20%;
-      }
+    .tis-item .ant-descriptions-item-label {
+      width: 20%;
+    }
 
-      .btn-block {
-          padding: 5px;
-      }
+    .btn-block {
+      padding: 5px;
+    }
 
-      .btn-block button {
-          margin: 0 10px 0 0;
-      }
+    .btn-block button {
+      margin: 0 10px 0 0;
+    }
 
-      nz-content {
-          padding: 10px;
-      }
+    nz-content {
+      padding: 10px;
+    }
 
-      nz-sider {
-          background: white;
-          height: 650px;
-          padding: 10px;
-      }
+    nz-sider {
+      background: white;
+      height: 650px;
+      padding: 10px;
+    }
 
-      pre {
-          white-space: pre-wrap; /*css-3*/
-          white-space: -moz-pre-wrap; /*Mozilla,since1999*/
-          white-space: -o-pre-wrap; /*Opera7*/
-          word-wrap: break-word; /*InternetExplorer5.5+*/
-          width: 600px;
-      }
+    pre {
+      white-space: pre-wrap; /*css-3*/
+      white-space: -moz-pre-wrap; /*Mozilla,since1999*/
+      white-space: -o-pre-wrap; /*Opera7*/
+      word-wrap: break-word; /*InternetExplorer5.5+*/
+      width: 600px;
+    }
   `]
 })
 // 数据源管理
@@ -208,6 +260,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   updateMode = false;
 
   formControlSpan = 20;
+  colsMeta: Array<IColumnMeta>;
 
   public static createDB(id: string, detail: any, dataReaderSetted?: boolean, supportDataXReader?: boolean): DbPojo {
     let db = new DbPojo(id);
@@ -356,6 +409,34 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     return addDb;
   }
 
+  public static openAddTableDialog(cpt: BasicFormComponent, db: DataBase): Promise<SuccessAddedDBTabs> {
+
+    let modalRef = cpt.openDialog(TableAddComponent, {nzTitle: "添加表", nzWidth: "1000px"});
+    let pm = modalRef.getContentComponent().processMode;
+    // console.log(this.selectedDb);
+    // if (this.selectedDb && this.selectedDb.dbId) {
+    //   pm.dbId = this.selectedDb.dbId;
+    //   pm.dbName = this.selectedDb.dbName;
+    // } else if (this.selectedTable && this.selectedTable.tableName) {
+    //   pm.dbId = `${this.selectedTable.dbId}`;
+    //   pm.dbName = this.selectedTable.dbName;
+    // }
+    if (db) {
+      pm.dbId = db.dbId;
+      pm.dbName = db.dbName;
+    }
+
+    // console.log([pm, this.selectedTable]);
+
+    return modalRef.afterClose.toPromise().then((r: SuccessAddedDBTabs) => {
+      if (r) {
+        return r;
+      } else {
+        return Promise.reject("none")
+      }
+    });
+  }
+
   // 添加表按钮点击响应
   public addTableBtnClick(): void {
 
@@ -366,47 +447,61 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       }
     }
 
-    let modalRef = this.openDialog(TableAddComponent, {nzTitle: "添加表", nzWidth: "1000px"});
-    let pm = modalRef.getContentComponent().processMode;
+    // let modalRef = this.openDialog(TableAddComponent, {nzTitle: "添加表", nzWidth: "1000px"});
+    // let pm = modalRef.getContentComponent().processMode;
     // console.log(this.selectedDb);
+    let pm: DataBase;
     if (this.selectedDb && this.selectedDb.dbId) {
-      pm.dbId = this.selectedDb.dbId;
-      pm.dbName = this.selectedDb.dbName;
+      pm = new DataBase(this.selectedDb.dbId, this.selectedDb.dbName);
+
     } else if (this.selectedTable && this.selectedTable.tableName) {
-      pm.dbId = `${this.selectedTable.dbId}`;
-      pm.dbName = this.selectedTable.dbName;
+      // pm.dbId = ;
+      // pm.dbName = ;
+      pm = new DataBase(`${this.selectedTable.dbId}`, this.selectedTable.dbName);
     }
+
+
+    DatasourceComponent.openAddTableDialog(this, pm).then((r: SuccessAddedDBTabs) => {
+      // 添加表成功
+      //   "createTime":1595853047656,
+      //   "dbId":67,
+      //   "gitTag":"purchase_match_info",
+      //   "id":104,
+      //   "name":"purchase_match_info",
+      //   "opTime":1595853047656,
+      //   "syncOnline":0,
+      //  let ntable = r.bizresult;
+      // console.log(ntable);
+      let dbid = r.db.dbId;//`${ntable.dbId}`;
+      let dbNode: NzTreeNode = this.dbtree.getTreeNodeByKey(dbid);
+      if (dbNode) {
+        dbNode.isExpanded = (true);
+        let dnode = this.nodes.filter((n) => n.key === dbid);
+        // console.log(dnode);
+        if (dnode.length > 0) {
+          // let children: NzTreeNodeOptions[] = ;
+          let n: NzTreeNodeOptions[] = [];
+
+          r.tabKeys.forEach((tab) => {
+            n.push(this.createTreeNodeOptions(tab, r.db.dbId))
+          });
+
+
+          dnode[0].children = n; //n.concat(dnode[0].children);
+        }
+        this.nodes = [].concat(this.nodes);
+        // console.log(dnode);
+      }
+    })
+
 
     // console.log([pm, this.selectedTable]);
 
-    modalRef.afterClose.subscribe((r: TisResponseResult) => {
-      if (r && r.success) {
-        // 添加表成功
-        //   "createTime":1595853047656,
-        //   "dbId":67,
-        //   "gitTag":"purchase_match_info",
-        //   "id":104,
-        //   "name":"purchase_match_info",
-        //   "opTime":1595853047656,
-        //   "syncOnline":0,
-        let ntable = r.bizresult;
-        // console.log(ntable);
-        let dbid = `${ntable.dbId}`;
-        let dbNode: NzTreeNode = this.dbtree.getTreeNodeByKey(dbid);
-        if (dbNode) {
-          dbNode.isExpanded = (true);
-          let dnode = this.nodes.filter((n) => n.key === dbid);
-          // console.log(dnode);
-          if (dnode.length > 0) {
-            // let children: NzTreeNodeOptions[] = ;
-            let n: NzTreeNodeOptions[] = [{'key': `${ntable.tabId}`, 'title': ntable.tableName, 'isLeaf': true}];
-            dnode[0].children = n.concat(dnode[0].children);
-          }
-          this.nodes = [].concat(this.nodes);
-          // console.log(dnode);
-        }
-      }
-    });
+    // modalRef.afterClose.subscribe((r: TisResponseResult) => {
+    //   if (r && r.success) {
+    //
+    //   }
+    // });
   }
 
 
@@ -443,9 +538,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
                 targetNode.clearChildren();
                 let n: NzTreeNodeOptions[] = [];
                 tabs.forEach((tab) => {
-                  let t: NzTreeNodeOptions = {'key': tab, 'title': tab, 'isLeaf': true};
-                  t[KEY_DB_ID] = event.dbId;
-                  n.push(t);
+
+                  n.push(this.createTreeNodeOptions(tab, event.dbId));
                 });
                 if (n.length > 0) {
                   targetNode.addChildren(n);
@@ -463,8 +557,13 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             } else if (type === NodeType.TAB) {
               let descs: Map<string /* impl */, Descriptor> = PluginsComponent.wrapDescriptors(biz);
               let desc: Descriptor = descs.values().next().value;
+              //  console.log([biz, descs, desc]);
               let dbName = targetNode.parentNode.title;
-              this.selectedTable = {tableName: event.name, dbName: dbName, dbId: parseInt(targetNode.parentNode.key, 10)};
+              this.selectedTable = {
+                tableName: event.name,
+                dbName: dbName,
+                dbId: parseInt(targetNode.parentNode.key, 10)
+              };
               if (!targetNode) {
                 throw new Error("targetNode must be present");
               }
@@ -473,16 +572,16 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
               this.selectedTablePluginMeta = [m];
               let meta = <ISubDetailTransferMeta>{id: event.name};
 
-              DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
-                , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+              // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
+              //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
 
-                  DataxAddStep4Component.processSubFormHeteroList(this, m, meta, subFieldForms.get(meta.id) // , subFormHetero.descriptorList[0]
-                  )
-                    .then((hlist: HeteroList[]) => {
-                      // this.openSubDetailForm(meta, pluginMeta, hlist);
-                      this.selectedTableHeteroList = hlist;
-                    });
+              DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null // , subFormHetero.descriptorList[0]
+              )
+                .then((hlist: HeteroList[]) => {
+                  // this.openSubDetailForm(meta, pluginMeta, hlist);
+                  this.selectedTableHeteroList = hlist;
                 });
+              //  });
             }
           } else {
             this.processResult(result);
@@ -493,16 +592,40 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     });
   }
 
+  /**
+   * 创建Tab的叶子节点
+   * @param tab
+   * @param dbId
+   * @private
+   */
+  private createTreeNodeOptions(tab: string, dbId: string) {
+    let t: NzTreeNodeOptions = {'key': tab, 'title': tab, 'isLeaf': true};
+    t[KEY_DB_ID] = dbId;
+    return t;
+  }
+
   private createDetailedPluginsMetas(dbName: string) {
-    this.pluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${dbName},type_${db_model_detailed},update_true`}];
+    this.pluginsMetas = [{
+      name: 'datasource',
+      'require': true,
+      'extraParam': `dsname_${dbName},type_${db_model_detailed},update_true`
+    }];
   }
 
   private createFacadePluginsMetas(dbName: string) {
-    this.facadePluginsMetas = [{name: 'datasource', 'require': true, 'extraParam': `dsname_${dbName},type_${db_model_facade},update_true`}];
+    this.facadePluginsMetas = [{
+      name: 'datasource',
+      'require': true,
+      'extraParam': `dsname_${dbName},type_${db_model_facade},update_true`
+    }];
   }
 
   private dataReaderPluginCfg(selectedDb: DbPojo) {
-    this.dataReaderPluginMetas = [{name: 'dataxReader', require: true, extraParam: `update_${true},justGetItemRelevant_true,${selectedDb ? (DATAX_PREFIX_DB + selectedDb.dbName) : ""}`}];
+    this.dataReaderPluginMetas = [{
+      name: 'dataxReader',
+      require: true,
+      extraParam: `update_${true},justGetItemRelevant_true,${selectedDb ? (DATAX_PREFIX_DB + selectedDb.dbName) : ""}`
+    }];
   }
 
 
@@ -531,27 +654,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     return (this.selectedDbIndex === 1);
   }
 
-  /**
-   * 编辑table配置
-   */
-  // editTable(): void {
-
-  //
-  // }
-
-  editTable(table: any) {
-    // let dialog = this.openDialog(TableAddComponent, {nzTitle: "更新数据表"});
-    // dialog.getContentComponent().processMode
-    //   = {tableid: this.selectedTable.tabId, 'title': '更新数据表', isNew: false};
-    //
-    // dialog.afterClose.subscribe((r: TisResponseResult) => {
-    //   if (r && r.success) {
-    //     let biz = r.bizresult;
-    //     // this.notify.success("成功", `表${biz.tableName}更新成功`, {nzDuration: 6000});
-    //     this.successNotify(`表${biz.tableName}更新成功`);
-    //   }
-    // })
-  }
 
   /**
    * 删除一个db
@@ -744,6 +846,12 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   //   let newRelativeUrl = this.router.createUrlTree(['zeppelin/notebook', zeppelinNoteId]);
   //   window.open(baseUrl + newRelativeUrl, '_blank');
   // }
+  colsMetaClick(selectedTable: { tableName?: string; dbId?: number; dbName?: string }) {
+    TableSelectComponent.reflectTabCols(this, `${selectedTable.dbId}`, selectedTable.tableName)
+      .then((cols: Array<IColumnMeta>) => {
+        this.colsMeta = cols;
+      });
+  }
 }
 
 // export class Node {
