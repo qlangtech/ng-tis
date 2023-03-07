@@ -47,27 +47,27 @@ import {IColumnMeta} from "../common/tis.plugin";
 //
 @Component({
   template: `
-      <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-          <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()"
-                           (delete)="deleteNode()"></sidebar-toolbar>
+    <nz-spin [nzSpinning]="formDisabled" nzSize="large">
+      <sidebar-toolbar (close)="_closeSidebar($event)" (save)="_saveClick()"
+                       (delete)="deleteNode()"></sidebar-toolbar>
 
-          <form class="clear" nz-form [nzLayout]="'vertical'">
-              <div class="item-head"><label>数据库表</label></div>
-              <p>
-                  <tis-table-select [ngModelOptions]="{standalone: true}" [(ngModel)]="cascadervalues"
-                                    (onCascaderSQLChanges)="this.colsMeta=$event"></tis-table-select>
-              </p>
+      <form class="clear" nz-form [nzLayout]="'vertical'">
+        <div class="item-head"><label>数据库表</label></div>
+        <p>
+          <tis-table-select [ngModelOptions]="{standalone: true}" [(ngModel)]="cascadervalues"
+                            (onCascaderSQLChanges)="this.colsMeta=$event"></tis-table-select>
+        </p>
 
-              <ng-container *ngIf="this.colsMeta">
-                  <div class="item-head"><label>列</label></div>
-                  <p>
-                    <table-cols-meta [colsMeta]="this.colsMeta"></table-cols-meta>
+        <ng-container *ngIf="this.colsMeta">
+          <div class="item-head"><label>列</label></div>
+          <p>
+            <table-cols-meta [colsMeta]="this.colsMeta"></table-cols-meta>
 
-                  </p>
-              </ng-container>
-          </form>
+          </p>
+        </ng-container>
+      </form>
 
-      </nz-spin>
+    </nz-spin>
   `,
 
   styles: [
@@ -111,7 +111,7 @@ export class WorkflowAddDbtableSetterComponent
 
   // 点击保存按钮
   _saveClick() {
-    console.log(this.cascadervalues);
+   // console.log(this.cascadervalues);
     let dbId: string = this.cascadervalues[0];
     let tabName: string = this.cascadervalues[1];
 
@@ -142,9 +142,12 @@ export class WorkflowAddDbtableSetterComponent
   deleteNode() {
 
     let id = this.dto.nodeid;
-    let node = this.g6Graph.findById(id);
-    this.g6Graph.removeItem(node);
-    this.parentComponent.dumpTabs.delete(id);
+    // let node = this.g6Graph.findById(id);
+    // this.g6Graph.removeItem(node);
+
+    this.parentComponent.removeDumpNode(id);
+
+
     this._closeSidebar(null);
   }
 }

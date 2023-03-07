@@ -293,7 +293,8 @@ export abstract class BasicSideBar extends BasicFormComponent {
   // @Input() nodeMeta: NodeMeta;
   //
   nodeMeta: NodeMeta;
- _sidebarDTO :BasicSidebarDTO ;
+  _sidebarDTO: BasicSidebarDTO;
+
   @Input() set sidebarDto(dto: BasicSidebarDTO) {
     this.nodeMeta = dto.nodeMeta;
     this._sidebarDTO = dto;
@@ -335,6 +336,16 @@ export abstract class BasicSideBar extends BasicFormComponent {
 export interface IDataFlowMainComponent {
   readonly dumpTabs: Map<string, DumpTable>;
   readonly joinNodeMap: Map<string /*id*/, JoinNode>;
+
+  removeDumpNode(nodeId: string): void;
+
+  removeJoinNode(nodeId: string): void;
+
+  /**
+   * 可选的依赖节点
+   */
+  dependencyOption(selfJoinNodeId: string): Array<Option>;
+
 
   closePanel(): void;
 
@@ -473,8 +484,9 @@ export class ERRuleNode extends BasicSidebarDTO {
   public cardinality: string;
   linkKeyList: LinkKey[] = [];
 
-  constructor(public rel: { id: string, 'sourceNode': DumpTable, 'targetNode': DumpTable
-    , 'linkrule': { linkKeyList: LinkKey[], cardinality: string } }, public topologyName: string) {
+  constructor(public rel: {
+    id: string, 'sourceNode': DumpTable, 'targetNode': DumpTable, 'linkrule': { linkKeyList: LinkKey[], cardinality: string }
+  }, public topologyName: string) {
     super(null);
     this.cardinality = rel.linkrule.cardinality;
     this.linkKeyList = rel.linkrule.linkKeyList;

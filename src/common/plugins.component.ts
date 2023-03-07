@@ -47,6 +47,7 @@ import {
   SavePluginEvent,
   TisResponseResult,
   TYPE_ENUM,
+  PARAM_END_TYPE,
   TYPE_PLUGIN_SELECTION,
   CONST_FORM_LAYOUT_VERTICAL,
   ValOption,
@@ -134,6 +135,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
             <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
             <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
               <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
+                                  [endType]="h.endType"
                                   [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
                                   (afterPluginAddClose)="updateHeteroListDesc(h)"
                                   (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i>
@@ -447,7 +449,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       o = pt;
       if (o.name && o.descFilter && h.identityId === o.name) {
         meta = o;
-        return meta.descFilter(desc);
+        return meta.descFilter.localDescFilter(desc);
       }
     }
     return true;
@@ -671,8 +673,14 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   updateHeteroListDesc(h: HeteroList) {
+    let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint;
+    let entype = h.endType;
+    if (entype) {
+      params += `${PARAM_END_TYPE}${entype}`
+    }
+
     let url = "/coredefine/corenodemanage.ajax";
-    this.httpPost(url, "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint)
+    this.httpPost(url, params)
       .then((r) => {
         if (r.success) {
           let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
@@ -975,7 +983,11 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
               nzOkText: '开始安装',
               nzCancelText: '取消',
               nzOnOk: () => {
-                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension);
+                let endType = null;
+                if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
+                  endType = this.pluginMeta.descFilter.endType();
+                }
+                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType);
                 drawerRef.afterClose.subscribe(() => {
                   // this.afterPluginAddClose.emit();
                 })
@@ -1000,12 +1012,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                // enum
-                // db detail
-                // let item: Item = Object.assign(new Item(d), );
-                // let nn = new ValOption();
-                // n.name = biz.detailed.identityName;
-                // n.impl = d.impl;
+                              // enum
+                              // db detail
+                              // let item: Item = Object.assign(new Item(d), );
+                              // let nn = new ValOption();
+                              // n.name = biz.detailed.identityName;
+                              // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -1214,8 +1226,10 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
         name: tp.hetero
         , require: true
         , extraParam: extraParam
-        , descFilter: (desc) => {
-          return desc.displayName === tp.descName;
+        , descFilter: {
+          localDescFilter: (desc) => {
+            return desc.displayName === tp.descName;
+          }
         }
       });
     }

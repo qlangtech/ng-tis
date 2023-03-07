@@ -25,7 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {IFieldError} from "../common/tis.plugin";
+import {IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -38,17 +38,37 @@ enum PluginTab {
   template: `
       <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
       </tis-page-header>
-      <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl" nzShowIcon></nz-alert>
+      <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl"
+                nzShowIcon></nz-alert>
       <ng-template #updateSiteLoadErrTpl>
           加载远端仓库元数据异常: {{updateSiteLoadErr.action_error_msg}}
-          <button nz-button nzType="primary" (click)="reloadUpdateSite()" [disabled]="this.formDisabled" nzSize="small"><i nz-icon nzType="redo" nzTheme="outline"></i>重试</button>
+          <button nz-button nzType="primary" (click)="reloadUpdateSite()" [disabled]="this.formDisabled" nzSize="small">
+              <i
+                      nz-icon nzType="redo" nzTheme="outline"></i>重试
+          </button>
       </ng-template>
+
+      <div nz-row nzJustify="start" nzAlign="middle" class="filter-container">
+          <div nz-col nzSpan="18" *ngIf="_extendPoint && _extendPoint.length>0">
+              <label><i nz-icon nzType="filter" nzTheme="outline"></i>扩展点：</label>
+              <nz-select class="filter-extendpoint" [(ngModel)]="filterExtendPoint" [nzSize]="'small'"
+                         nzMode="multiple">
+                  <nz-option *ngFor="let option of _extendPoint" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+          </div>
+          <div nz-col nzSpan="6" *ngIf="this.endType">
+              <label><i nz-icon nzType="filter" nzTheme="outline"></i>端类型：</label>
+              <nz-switch [(ngModel)]="filterEndType" (ngModelChange)="refreshPluginList()"
+                         [nzCheckedChildren]="this.endType"></nz-switch>
+          </div>
+      </div>
       <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
           <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
               <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
                   <ng-template nz-tab>
                       <nz-affix class="tool-bar" [nzOffsetTop]="20">
-                          <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary" (click)="installPlugin()">
+                          <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary"
+                                  (click)="installPlugin()">
                               <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
                           </button>
                       </nz-affix>
@@ -80,9 +100,14 @@ enum PluginTab {
                                   <div class="item-block" *ngIf="item.multiClassifier">
                                       <form nz-form>
                                           <nz-form-item>
-                                              <nz-form-control [nzValidateStatus]="pluginErrs.get(item.name) ? 'error' :''"
-                                                               [nzErrorTip]="pluginErrs.get(item.name)?pluginErrs.get(item.name).content:''" nzHasFeedback>
-                                                  <nz-select [(ngModel)]="item.selectedClassifier" [ngModelOptions]="{standalone: true}" nzAllowClear nzPlaceHolder="有这些版本的包可选择" nzShowSearch>
+                                              <nz-form-control
+                                                      [nzValidateStatus]="pluginErrs.get(item.name) ? 'error' :''"
+                                                      [nzErrorTip]="pluginErrs.get(item.name)?pluginErrs.get(item.name).content:''"
+                                                      nzHasFeedback>
+                                                  <nz-select [(ngModel)]="item.selectedClassifier"
+                                                             [ngModelOptions]="{standalone: true}"
+                                                             nzAllowClear nzPlaceHolder="有这些版本的包可选择"
+                                                             nzShowSearch>
                                                       <ng-container *ngFor="let c of item.arts">
                                                           <ng-template #t>
                                                               <div class="tis-tags">
@@ -92,7 +117,8 @@ enum PluginTab {
                                                               </div>
                                                           </ng-template>
                                                           <nz-option-group [nzLabel]="t">
-                                                              <nz-option [nzValue]="c.classifierName" [nzLabel]="c.classifierName"></nz-option>
+                                                              <nz-option [nzValue]="c.classifierName"
+                                                                         [nzLabel]="c.classifierName"></nz-option>
                                                           </nz-option-group>
                                                       </ng-container>
                                                   </nz-select>
@@ -104,7 +130,8 @@ enum PluginTab {
                                       <markdown [data]="item.excerpt" class="excerpt"></markdown>
                                       <div class="tis-tags" *ngIf="item.dependencies.length >0">
                                           <span>依赖:</span>
-                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
+                                              :{{d.value}}</nz-tag>
                                       </div>
                                   </div>
                               </ng-template>
@@ -117,7 +144,8 @@ enum PluginTab {
                       <tis-page [rows]="installedPlugs">
                           <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="15">
                               <ng-template let-item="r">
-                                  <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc" *ngIf="item.classifier">{{item.classifier}}</i>
+                                  <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc"
+                                                                                   *ngIf="item.classifier">{{item.classifier}}</i>
                                   <div class="tis-tags">
                                       <span>作者:</span>
                                       <nz-tag>TIS官方</nz-tag>
@@ -138,7 +166,8 @@ enum PluginTab {
                                       <markdown [data]="item.excerpt" class="excerpt"></markdown>
                                       <div class="tis-tags" *ngIf="item.dependencies.length >0">
                                           <span>依赖:</span>
-                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}:{{d.value}}</nz-tag>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
+                                              :{{d.value}}</nz-tag>
                                       </div>
                                       <div class="tis-tags">
                                       </div>
@@ -158,27 +187,35 @@ enum PluginTab {
           </ng-template>
       </nz-spin>
   `, styles: [
-      `
-            .classifier-desc {
-                display: block;
-                font-size: 7px;
-                color: #989898;
-            }
+    `
+      .classifier-desc {
+        display: block;
+        font-size: 7px;
+        color: #989898;
+      }
 
-            .tis-tags {
-                margin-bottom: 5px;
-            }
+      .tis-tags {
+        margin-bottom: 5px;
+      }
 
-            .tis-tags span {
-                display: inline-block;
-                margin-right: 5px;
-                color: #b7b7b7;
-            }
+      .tis-tags span {
+        display: inline-block;
+        margin-right: 5px;
+        color: #b7b7b7;
+      }
 
-            .excerpt {
-                color: #5e5e5e;
-                padding: 5px 0 5px 0px;
-            }
+      .excerpt {
+        color: #5e5e5e;
+        padding: 5px 0 5px 0px;
+      }
+
+      .filter-container {
+        margin: 10px 0px 10px 0px;
+      }
+
+      .filter-extendpoint {
+        width: 80%;
+      }
     `
   ]
 })
@@ -197,25 +234,64 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   drawerModel = false;
 
   // 目标扩展点接口名
-  extendPoint: string | Array<String>;
+  _extendPoint: Array<string>;
+
+  endType: string;
+  filterEndType: boolean = true;
 
   paramObservable: Observable<Params>;
 
   pluginErrs: Map<string, IFieldError> = new Map();
 
-  public static openPluginManage(drawerService: NzDrawerService, extendPoint: string | Array<String>): NzDrawerRef<PluginManageComponent, any> {
+  /**
+   *
+   * @param drawerService
+   * @param extendPoint
+   * @param endType 数据端类型，如：mysql，sqlserver，oracle 等
+   */
+  public static openPluginManage(drawerService: NzDrawerService, extendPoint: string | Array<string>, endType: string): NzDrawerRef<PluginManageComponent, any> {
     const drawerRef = drawerService.create<PluginManageComponent, {}, {}>({
       nzWidth: "70%",
       nzPlacement: "right",
       nzTitle: `插件管理`,
       nzContent: PluginManageComponent,
-      nzContentParams: {drawerModel: true, extendPoint: extendPoint}
+      nzContentParams: {drawerModel: true, extendPoint: extendPoint, endType: endType}
     });
     return drawerRef;
   }
 
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
+  }
+
+
+  set extendPoint(val: string | Array<string>) {
+    if (Array.isArray(val)) {
+      this._extendPoint = [...val];
+    } else {
+      this._extendPoint = [val];
+    }
+    this._filterExtendPoint = [...this._extendPoint];
+  }
+
+  _filterExtendPoint: Array<string>;
+
+  get filterExtendPoint(): Array<string> {
+    return this._filterExtendPoint;
+  }
+
+  set filterExtendPoint(vals: Array<string>) {
+    this._filterExtendPoint = vals;
+    this.refreshPluginList();
+  }
+
+  refreshPluginList(): void {
+    //console.log(this.selectedIndex);
+    if (this.selectedIndex === 1) {
+      this.goto(PluginTab.installed);
+    } else if (this.selectedIndex === 0) {
+      this.goto(PluginTab.avail);
+    }
   }
 
   get canInstall(): boolean {
@@ -233,6 +309,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       let tab = params["tab"];
       switch (tab) {
         case PluginTab.updateCenter:
+          // 当前安装状态
           this.selectedIndex = 2;
           break;
         case PluginTab.installed: {
@@ -292,10 +369,13 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   private buildExtendPointParam(): string {
-    //  console.log(this.extendPoint);
-    let isArray = Array.isArray(this.extendPoint);
-    let epParam: Array<string> = isArray ? <Array<string>>this.extendPoint : [<string>this.extendPoint];
-    return !!this.extendPoint ? (epParam).map((e) => `&extendpoint=${e}`).join('') : '';
+
+    let epParam: Array<string> = this.filterExtendPoint;
+    let params = !!this._extendPoint ? (epParam).map((e) => `&extendpoint=${e}`).join('') : '';
+    if (this.filterEndType && this.endType) {
+      params += `${PARAM_END_TYPE}${this.endType}`;
+    }
+    return params;
   }
 
   goPage(event: number) {

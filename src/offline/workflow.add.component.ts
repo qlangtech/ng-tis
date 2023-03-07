@@ -92,82 +92,83 @@ export const TYPE_DUMP_TABLE = 'table';
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
 
-      <!--      <nz-drawer-->
-      <!--              [nzBodyStyle]="{ height: 'calc(100% - 20px)', overflow: 'auto', 'padding-bottom': '20px' }"-->
-      <!--              [nzMaskClosable]="false"-->
-      <!--              [nzClosable]="false"-->
-      <!--              [nzWidth]="900"-->
-      <!--              [nzVisible]="_opened"-->
-      <!--              (nzOnClose)="_toggleSidebar()"-->
-      <!--      >-->
-      <!--          <ng-container *nzDrawerContent>-->
-      <!--              <ng-h tis-index-add-flow></ng-h>-->
-      <!--          </ng-container>-->
-      <!--      </nz-drawer>-->
+    <!--      <nz-drawer-->
+    <!--              [nzBodyStyle]="{ height: 'calc(100% - 20px)', overflow: 'auto', 'padding-bottom': '20px' }"-->
+    <!--              [nzMaskClosable]="false"-->
+    <!--              [nzClosable]="false"-->
+    <!--              [nzWidth]="900"-->
+    <!--              [nzVisible]="_opened"-->
+    <!--              (nzOnClose)="_toggleSidebar()"-->
+    <!--      >-->
+    <!--          <ng-container *nzDrawerContent>-->
+    <!--              <ng-h tis-index-add-flow></ng-h>-->
+    <!--          </ng-container>-->
+    <!--      </nz-drawer>-->
 
-      <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle" [result]="result"></tis-page-header>
-      <div>
-          <div id="processon_designer" class="processon-designer">
-              <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-                  <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectedIndex">
-                      <nz-tab nzTitle="DF">
-                          <div class="designer_body clear">
-                              <div class="body_vtoolsbar">
-                                  <ul #draggableblock class="processon-widget list-unstyled">
-                                      <li *ngFor="let n of _nodeTypesAry">
-                                          <img [width]="n.width" [height]="n.height" [src]="n.imgPath"
-                                               [attr.type]="n.type"/>
-                                          <label>{{n.label}}</label>
-                                      </li>
-                                  </ul>
-                              </div>
-                              <div class="body_container">
-                                  <div id="body_layout" class="processon-booth">
-                                      <div id="canvas_container"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </nz-tab>
-                      <nz-tab *ngIf="!!topologyName" nzTitle="ER">
-                          <ng-template nz-tab>
-                              <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)"
-                                          [topologyName]="topologyName"
-                                          [_nodeTypes]="_nodeTypes" (nodeClick)="erNodesNodeClick($event)"></offline-er>
-                          </ng-template>
-                      </nz-tab>
-                  </nz-tabset>
-                  <ng-template #extraTemplate>
+    <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle" [result]="result"></tis-page-header>
+    <div>
+      <div id="processon_designer" class="processon-designer">
+        <nz-spin [nzSpinning]="formDisabled" nzSize="large">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectedIndex">
+            <nz-tab nzTitle="DF">
+              <div class="designer_body clear">
+                <div class="body_vtoolsbar">
+                  <ul #draggableblock class="processon-widget list-unstyled">
+                    <li *ngFor="let n of _nodeTypesAry">
+                      <img [width]="n.width" [height]="n.height" [src]="n.imgPath"
+                           [attr.type]="n.type"/>
+                      <label>{{n.label}}</label>
+                    </li>
+                  </ul>
+                </div>
+                <div class="body_container">
+                  <div id="body_layout" class="processon-booth">
+                    <div id="canvas_container"></div>
+                  </div>
+                </div>
+              </div>
+            </nz-tab>
+            <nz-tab *ngIf="!!topologyName" nzTitle="ER">
+              <ng-template nz-tab>
+                <offline-er #erComponent (edgeClick)="erNodesEdgeClick($event)"
+                            [topologyName]="topologyName"
+                            [_nodeTypes]="_nodeTypes" (nodeClick)="erNodesNodeClick($event)"></offline-er>
+              </ng-template>
+            </nz-tab>
+          </nz-tabset>
+          <ng-template #extraTemplate>
 
-                      <button *ngIf="this.workflow" nz-button nz-dropdown [nzDropdownMenu]="menu"
-                              nzPlacement="bottomLeft">操作 <i nz-icon nzType="down"></i></button>
-                      <nz-dropdown-menu #menu="nzDropdownMenu">
-                          <ul nz-menu>
-                              <li nz-menu-item (click)="executeWorkflow(this.workflow)"><i nz-icon nzType="play-circle"
-                                                                                           nzTheme="outline"></i>构建
-                              </li>
-                              <li nzTooltipTitle="初始化相关Schema表，不进行数据分析处理，用以初步验证编写脚本是否正确" nz-tooltip [nzTooltipPlacement]="['topLeft', 'leftTop']"
-                                  nz-menu-item (click)="executeWorkflow(this.workflow , true)">
-                                <i nz-icon  nzType="play-square" nzTheme="outline"></i>DryRun
-                              </li>
-                              <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets"
-                                                                                        nzTheme="outline"></i>构建历史
-                              </li>
-                          </ul>
-                      </nz-dropdown-menu> &nbsp;
-                      <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()"><i nz-icon
-                                                                                                    nzType="sync"
-                                                                                                    nzTheme="outline"></i>同步数据表
-                      </button>
-                      &nbsp;
-                      <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save"
-                                                                                     nzTheme="outline"></i>保存
-                      </button>
-                  </ng-template>
+            <button *ngIf="this.workflow" nz-button nz-dropdown [nzDropdownMenu]="menu"
+                    nzPlacement="bottomLeft">操作 <i nz-icon nzType="down"></i></button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item (click)="executeWorkflow(this.workflow)"><i nz-icon nzType="play-circle"
+                                                                             nzTheme="outline"></i>构建
+                </li>
+                <li nzTooltipTitle="初始化相关Schema表，不进行数据分析处理，用以初步验证编写脚本是否正确" nz-tooltip
+                    [nzTooltipPlacement]="['topLeft', 'leftTop']"
+                    nz-menu-item (click)="executeWorkflow(this.workflow , true)">
+                  <i nz-icon nzType="play-square" nzTheme="outline"></i>DryRun
+                </li>
+                <li nz-menu-item (click)="buildHistory(this.workflow)"><i nz-icon nzType="snippets"
+                                                                          nzTheme="outline"></i>构建历史
+                </li>
+              </ul>
+            </nz-dropdown-menu> &nbsp;
+            <button *ngIf="this.tabSelectedIndex === 1" nz-button (click)="syncTabs()"><i nz-icon
+                                                                                          nzType="sync"
+                                                                                          nzTheme="outline"></i>同步数据表
+            </button>
+            &nbsp;
+            <button nz-button nzType="primary" (click)="saveTopology()"><i nz-icon nzType="save"
+                                                                           nzTheme="outline"></i>保存
+            </button>
+          </ng-template>
 
 
-              </nz-spin>
-          </div>
+        </nz-spin>
       </div>
+    </div>
   `,
   styles: [
     `
@@ -275,6 +276,55 @@ export class WorkflowAddComponent extends BasicWFComponent
   get topologyName(): string {
     return this.dto.dataxPipeName;
   }
+
+  /**
+   *
+   * @param selfJoinNodeId 需要将自身节点过滤掉
+   */
+  dependencyOption(selfJoinNodeId: string): Array<Option> {
+    let listOfOption: Array<Option> = [];
+    this.dumpTabs.forEach((t: DumpTable, key: string) => {
+      listOfOption.push(new Option(key, t.tabname));
+    });
+    this.joinNodeMap.forEach((t: JoinNode, key: string) => {
+      // 需要将本节点过滤
+      if (selfJoinNodeId === key) {
+        return;
+      }
+      listOfOption.push(new Option(key, t.exportName));
+    });
+    return listOfOption;
+  }
+
+  removeDumpNode(nodeId: string): void {
+    this.dumpTabs.delete(nodeId);
+    let node = this.graph.findById(nodeId);
+    this.graph.removeItem(node);
+    this.filterDependencies(nodeId);
+  }
+
+  /**
+   * 处理所有join节点，如果被删除的节点有被依赖到的话则需要删除
+   * @param nodeId
+   * @private
+   */
+  private filterDependencies(nodeId: string) {
+    for (let join of this.joinNodeMap.values()) {
+      let matchIndex = -1;
+      if ((matchIndex = join.dependencies.findIndex((opt) => opt.value === nodeId)) > -1) {
+        join.dependencies.splice(matchIndex, 1);
+      }
+    }
+  }
+
+  removeJoinNode(nodeId: string): void {
+    let node = this.graph.findById(nodeId);
+    //  console.log(node);
+    this.graph.removeItem(node);
+    this.joinNodeMap.delete(nodeId);
+    this.filterDependencies(nodeId);
+  }
+
 
   public static addItem2UI(id: string, x: number, y: number, meta: NodeMeta, nmeta: BasicSidebarDTO): any {
 
@@ -431,6 +481,8 @@ export class WorkflowAddComponent extends BasicWFComponent
             // 跳转到ER编辑Tab
             this.modal.confirm({
               nzTitle: '尚未定义ER关系，是否现在定义?',
+              nzCancelText: "跳过",
+              nzOkText: "开始",
               nzOnOk: () => {
                 this.tabSelectedIndex = 1;
               },
@@ -443,6 +495,7 @@ export class WorkflowAddComponent extends BasicWFComponent
           if (!biz.erPrimaryTabSet) {
             this.modal.confirm({
               nzTitle: '尚未定义DF的主表，是否现在定义主表?',
+              nzCancelText: "跳过",
               nzOnOk: () => {
                 this.tabSelectedIndex = 1;
               },

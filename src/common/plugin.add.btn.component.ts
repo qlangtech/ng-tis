@@ -29,29 +29,31 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <ng-container [ngSwitch]="this.descriptors.length> 0 ">
-          <ng-container *ngSwitchCase="true">
-              <button [style]="btnStyle" nz-button nz-dropdown [nzSize]="btnSize" [nzDropdownMenu]="menu" [disabled]="this.disabled">
-                  <ng-content></ng-content>
-              </button>
-              <nz-dropdown-menu #menu="nzDropdownMenu">
-                  <ul nz-menu>
-                      <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-                          <a href="javascript:void(0)" >{{d.displayName}}</a>
-                      </li>
-                      <li nz-menu-divider></li>
-                      <li nz-menu-item (click)="addNewPlugin()">
-                          <a href="javascript:void(0)" ><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
-                      </li>
-                  </ul>
-              </nz-dropdown-menu>
-          </ng-container>
-          <ng-container *ngSwitchCase="false">
-              <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()" [disabled]="this.disabled">
-                  <i nz-icon nzType="api" nzTheme="outline"></i>添加
-              </button>
-          </ng-container>
+    <ng-container [ngSwitch]="this.descriptors.length> 0 ">
+      <ng-container *ngSwitchCase="true">
+        <button [style]="btnStyle" nz-button nz-dropdown [nzSize]="btnSize" [nzDropdownMenu]="menu"
+                [disabled]="this.disabled">
+          <ng-content></ng-content>
+        </button>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
+              <a href="javascript:void(0)">{{d.displayName}}</a>
+            </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="addNewPlugin()">
+              <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
       </ng-container>
+      <ng-container *ngSwitchCase="false">
+        <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
+                [disabled]="this.disabled">
+          <i nz-icon nzType="api" nzTheme="outline"></i>添加
+        </button>
+      </ng-container>
+    </ng-container>
 
   `
 })
@@ -59,7 +61,11 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   @Input()
   descriptors: Array<Descriptor> = [];
   @Input()
-  extendPoint: string | Array<String>;
+  extendPoint: string | Array<string>;
+
+  @Input()
+  endType: string;
+
   @Input()
   disabled: boolean;
 
@@ -76,7 +82,6 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   afterPluginAddClose = new EventEmitter<Descriptor>();
 
 
-
   constructor(tisService: TISService
     , private drawerService: NzDrawerService) {
     super(tisService);
@@ -87,7 +92,8 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   }
 
   addNewPlugin() {
-    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint);
+    // console.log(this.extendPoint);
+    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint, this.endType);
 
     drawerRef.afterClose.subscribe(() => {
       this.afterPluginAddClose.emit();
