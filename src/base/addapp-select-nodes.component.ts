@@ -152,7 +152,7 @@ export class AddappSelectNodesComponent extends BasicFormComponent implements On
     this.jsonPost(url, {}).then((r) => {
       // console.log(r.bizresult);
       let nodelist: any = r.bizresult;
-      if (!(nodelist instanceof Array)) {
+      if (!(Array.isArray(nodelist) )) {
         throw new Error("nodelist is not an Array");
       }
 

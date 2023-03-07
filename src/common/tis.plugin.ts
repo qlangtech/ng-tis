@@ -23,9 +23,12 @@ import {TablePojo} from "../offline/table.add.component";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
+export const PARAM_END_TYPE = "&endType=";
+
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName =
   'mq'
+  | 'sinkFactory'
   | 'k8s-config'
   | 'fs'
   | 'datasource'
@@ -38,7 +41,11 @@ export declare type PluginMeta = {
   skipSubformDescNullError?: boolean;
   name: PluginName, require: boolean, extraParam?: string
   // 服务端对目标Item的desc进行过滤
-  , descFilter?: (desc: Descriptor) => boolean
+  , descFilter?:
+    { // 插件安装panel需要过滤的端类型
+      endType?: () => string,
+      localDescFilter: (desc: Descriptor) => boolean
+    }
 };
 export declare type PluginType = PluginName | PluginMeta;
 
@@ -532,12 +539,25 @@ export class HeteroList {
 
   pluginCategory: PluginType;
 
+  public static isDescFilterDefined(type: PluginType): type is PluginMeta {
+    return !!(<PluginMeta>type).descFilter;
+  }
+
   public get descriptorList(): Array<Descriptor> {
     if (!this._descriptorList) {
       this._descriptorList = Array.from(this.descriptors.values());
     }
     return this._descriptorList;
   }
+
+  public get endType(): string {
+    if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
+      return this.pluginCategory.descFilter.endType();
+    }
+    return null;
+  }
+
+
 
 
   public get identity(): string {
