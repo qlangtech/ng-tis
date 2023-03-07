@@ -20,6 +20,7 @@
 import {BasicFormComponent} from "./basic.form.component";
 import {NzSelectModeType} from "ng-zorro-antd/select";
 import {TablePojo} from "../offline/table.add.component";
+import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
@@ -204,6 +205,11 @@ export class Descriptor {
       des = decs[index];
       Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
     }
+  }
+
+  public get eprops(): PluginExtraProps {
+    let extraProps: PluginExtraProps = <any>this.extractProps;
+    return extraProps;
   }
 
   public get notebook(): NotebookMeta {
@@ -556,8 +562,6 @@ export class HeteroList {
     }
     return null;
   }
-
-
 
 
   public get identity(): string {

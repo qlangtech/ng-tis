@@ -28,6 +28,7 @@ import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
+import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -125,11 +126,15 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
     if (!this.dto.readerDescriptor) {
       throw new Error("readerDescriptor can not be null");
     }
+    let eprops: PluginExtraProps = this.dto.readerDescriptor.eprops;
     this.pluginCategory = {
       name: 'dataxReader',
-      require: true
-      ,
-      "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName)
+      require: true,
+      "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName),
+      descFilter: {
+        endType: () => eprops.endType,
+        localDescFilter: (_) => true
+      }
     }
     super.ngOnInit();
   }

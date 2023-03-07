@@ -5,17 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/tis.have.not.prepared.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-select-nodes.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.join.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.guard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.guard.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/services/base-url.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/services/base-url.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +106,7 @@
       <workItem from="1672638009333" duration="878000" />
       <workItem from="1674027401380" duration="1008000" />
       <workItem from="1674442548239" duration="69363000" />
-      <workItem from="1675572363187" duration="103840000" />
+      <workItem from="1675572363187" duration="117199000" />
     </task>
     <servers />
   </component>
@@ -271,5 +270,17 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/app.module-jit.ts</url>
+          <line>31</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -12,7 +12,7 @@
 
 import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {NgModule} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router, RouterModule} from '@angular/router';
 
@@ -22,7 +22,7 @@ import {Router, RouterModule} from '@angular/router';
 import {NzMessageModule, NzMessageService} from 'ng-zorro-antd/message';
 import {WorkspaceComponent} from './workspace.component';
 
-import {WorkspaceRoutingModule} from './workspace-routing.module';
+import { WorkspaceRoutingModule} from './workspace-routing.module';
 import {NzFormModule} from 'ng-zorro-antd/form';
 import {ShareModule} from "@zeppelin/share";
 import {HeliumManagerModule} from "@zeppelin/helium-manager";
@@ -35,9 +35,10 @@ import {AppMessageInterceptor} from "@zeppelin/app-message.interceptor";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {RUNTIME_COMPILER_PROVIDERS} from "@zeppelin/app-runtime-compiler.providers";
+import {TISHaveNotPreparedComponent} from "@zeppelin/pages/workspace/tis.have.not.prepared.component";
 
 @NgModule({
-  declarations: [WorkspaceComponent],
+  declarations: [WorkspaceComponent, TISHaveNotPreparedComponent],
   imports: [
     CommonModule,
     WorkspaceRoutingModule,
@@ -57,15 +58,6 @@ import {RUNTIME_COMPILER_PROVIDERS} from "@zeppelin/app-runtime-compiler.provide
       multi: true,
       deps: [TicketService]
     },
-    // {
-    //   provide: NZ_CODE_EDITOR_CONFIG,
-    //   useValue: {
-    //     defaultEditorOption: {
-    //       scrollBeyondLastLine: false
-    //     },
-    //     onLoad: loadMonaco
-    //   }
-    // },
     {
       provide: MESSAGE_INTERCEPTOR,
       useClass: AppMessageInterceptor,
@@ -79,3 +71,5 @@ import {RUNTIME_COMPILER_PROVIDERS} from "@zeppelin/app-runtime-compiler.provide
 })
 export class WorkspaceModule {
 }
+
+

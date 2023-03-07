@@ -812,15 +812,18 @@ export class NotebookwrapperComponent implements OnInit {
               <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu>
                   <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                    <a (click)="openPluginDialog(_pp , p )"><i nz-icon nzType="plus"
-                                                               nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
+                    <a (click)="openPluginDialog(_pp , p )">
+                      <i nz-icon nzType="plus"
+                       nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
                     </a>
                   </li>
                   <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
-                    <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink"><i nz-icon nzType="link"
-                                                                                                nzTheme="outline"></i>管理</a>
-                    <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)"><i nz-icon nzType="link"
-                                                                                                   nzTheme="outline"></i>管理</a>
+                    <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink">
+                      <i nz-icon nzType="link"
+                         nzTheme="outline"></i>管理</a>
+                    <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)">
+                      <i nz-icon nzType="link"
+                         nzTheme="outline"></i>管理</a>
                   </li>
                   <li nz-menu-item>
                     <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload" nzTheme="outline"></i>刷新</a>
@@ -972,7 +975,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
     let descName = targetPlugin.descName;
     let url = "/coredefine/corenodemanage.ajax";
-
+    //console.log(this.pluginMeta);
     this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
       .then((r) => {
         if (!r.success) {
@@ -984,6 +987,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
               nzCancelText: '取消',
               nzOnOk: () => {
                 let endType = null;
+
                 if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
                   endType = this.pluginMeta.descFilter.endType();
                 }
