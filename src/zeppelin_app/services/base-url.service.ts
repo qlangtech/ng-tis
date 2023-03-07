@@ -30,7 +30,7 @@ export class BaseUrlService {
   getWebsocketUrl() {
     const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     let wsUrl = `${wsProtocol}//${location.hostname}:${this.getPort()}${this.skipTrailingSlash(this.locationPath)}/ws`;
-    console.log(wsUrl);
+   // console.log(wsUrl);
     return wsUrl;
   }
 

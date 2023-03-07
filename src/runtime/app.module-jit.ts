@@ -20,42 +20,19 @@ import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
-// import {HttpModule, JsonpModule} from "@angular/http";
-// import {NZ_I18N, zh_CN} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import {AppComponent} from "./app.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TISService} from "../common/tis.service";
-//
-// import {ScriptService} from "../service/script.service";
 import {TisCommonModule} from "../common/common.module";
-// import {CorenodemanageComponent} from "./corenodemanage.component";
 import {RootWelcomeComponent} from "./root-welcome-component";
 import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
 import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
-// import {WorkspaceModule} from "@zeppelin/pages/workspace/workspace.module";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
 import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
 import {loadMonaco} from "@zeppelin/app.module";
-
-
-// export function offlineModuleFactory() {
-//   return import("../offline/offline.module").then(mod => mod.OfflineModule);
-// }
-//
-// export function usrModuleFactory() {
-//   return import("../user/user.module").then(mod => mod.UserModule);
-// }
-//
-// export function coreModuleFactory() {
-//   return import("./core.node.manage.module").then(mod => mod.CoreNodeManageModule);
-// }
-//
-// export function baseModuleFactory() {
-//   return import("../base/base.manage.module").then(mod => mod.BasiManageModule);
-// }
 
 registerLocaleData(zh);
 
@@ -65,10 +42,6 @@ export function markedOptionsFactory(): MarkedOptions {
   renderer.link = (href: string | null, title: string | null, text: string) => {
     return `<a href="${href}" target="_blank">${text}</a>`;
   };
-  // renderer.code = (code: string, language: string | undefined, isEscaped: boolean) => {
-  //   return '<code></code>';
-  // };
-
   return {
     renderer: renderer
   };
@@ -112,15 +85,9 @@ export function markedOptionsFactory(): MarkedOptions {
         path: 'x/:name',
         loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
       },
-      // {
-      //   path: 'zeppelin',
-      //   loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule)
-      // },
       {
         path: 'z/zeppelin',
         loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
-        // component: NotebookwrapperComponent,
-        //  component: PluginManageComponent,
         outlet: "zeppelin"
       },
     ])
@@ -132,10 +99,12 @@ export function markedOptionsFactory(): MarkedOptions {
   entryComponents: [],
   bootstrap: [AppComponent],
   // bootstrap: [CodemirrorComponent],
-  providers: [TISService, NzMessageService, {provide: NZ_I18N, useValue: zh_CN}, {
-    provide: TRASH_FOLDER_ID_TOKEN,
-    useValue: '~Trash'
-  },
+  providers: [TISService, NzMessageService
+    , {provide: NZ_I18N, useValue: zh_CN},
+    {
+      provide: TRASH_FOLDER_ID_TOKEN,
+      useValue: '~Trash'
+    },
     {
       provide: NZ_CODE_EDITOR_CONFIG,
       useValue: {

@@ -10,11 +10,12 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {Component, NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { WorkspaceComponent } from './workspace.component';
+import {WorkspaceComponent} from './workspace.component';
 import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
+import {TISHaveNotPreparedComponent} from "@zeppelin/pages/workspace/tis.have.not.prepared.component";
 // import { WorkspaceGuard } from './workspace.guard';
 
 const routes: Routes = [
@@ -66,11 +67,19 @@ const routes: Routes = [
           import('@zeppelin/pages/workspace/notebook-repos/notebook-repos.module').then(m => m.NotebookReposModule)
       }
     ]
-  }
+  },
+  {
+    path: 'tis-have-not-prepared',
+    component: TISHaveNotPreparedComponent
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class WorkspaceRoutingModule {}
+export class WorkspaceRoutingModule {
+}
+
+
+
