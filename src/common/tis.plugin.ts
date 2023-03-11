@@ -546,7 +546,8 @@ export class HeteroList {
   pluginCategory: PluginType;
 
   public static isDescFilterDefined(type: PluginType): type is PluginMeta {
-    return !!(<PluginMeta>type).descFilter;
+    let filter = (<PluginMeta>type).descFilter;
+    return !!filter && !!filter.endType;
   }
 
   public get descriptorList(): Array<Descriptor> {
@@ -557,6 +558,7 @@ export class HeteroList {
   }
 
   public get endType(): string {
+    console.log(this.pluginCategory);
     if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
       return this.pluginCategory.descFilter.endType();
     }

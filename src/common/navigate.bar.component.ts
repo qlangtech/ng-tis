@@ -306,6 +306,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       if (r.success) {
         this.userProfile = r.bizresult.usr;
         this.tisMeta = r.bizresult.tisMeta;
+        this.tisService.tisMeta = this.tisMeta;
         if (!r.bizresult.sysInitialized) {
           this.openInitSystemDialog();
         }
@@ -390,7 +391,7 @@ interface UserProfile {
   name: string;
 }
 
-interface TISMeta {
+export interface TISMeta {
   buildVersion?: string;
   createTime?: string;
 }

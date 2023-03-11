@@ -152,7 +152,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
       </form>
     </nz-spin>
     <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a
-      target="_blank" href="https://tis.pub/docs/install/zeppelin/install">文档</a>
+      target="_blank" [href]="'https://tis.pub/docs/'+this.appMeta.buildVersion+'install/zeppelin/install'">文档</a>
     </ng-template>
     <!--
           {{this._heteroList | json}}
@@ -935,7 +935,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     return this.formControlSpan;
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
+  constructor(tisService: TISService, modalService: NzModalService
+              , private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
     super(tisService, modalService, notification);
   }
 
