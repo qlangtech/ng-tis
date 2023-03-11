@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.guard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/workspace.guard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/services/ticket.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/services/ticket.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig-aot.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig-aot.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +99,7 @@
       <workItem from="1674027401380" duration="1008000" />
       <workItem from="1674442548239" duration="69363000" />
       <workItem from="1675572363187" duration="124946000" />
-      <workItem from="1678345989258" duration="5029000" />
+      <workItem from="1678345989258" duration="7110000" />
     </task>
     <servers />
   </component>
