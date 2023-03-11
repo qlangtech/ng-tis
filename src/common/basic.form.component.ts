@@ -33,6 +33,7 @@ import {LogType} from "../runtime/misc/RCDeployment";
 
 import {AppType} from "./application";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {TISMeta} from "./navigate.bar.component";
 
 /**
  * Created by baisui on 2017/4/12 0012.
@@ -103,6 +104,10 @@ export class BasicFormComponent {
 
   get appNotAware(): boolean {
     return !this.tisService.currentApp;
+  }
+
+  get appMeta(): TISMeta {
+    return this.tisService.tisMeta;
   }
 
   protected clearProcessResult(): void {

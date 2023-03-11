@@ -10,18 +10,19 @@
  * limitations under the License.
  */
 
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { forkJoin, BehaviorSubject, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {forkJoin, BehaviorSubject, Subject} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
+import {NzMessageService} from 'ng-zorro-antd/message';
 
-import { ITicket, ITicketWrapped, IZeppelinVersion } from '@zeppelin/interfaces';
-import { ConfigurationsInfo } from '@zeppelin/sdk';
+import {ITicket, ITicketWrapped, IZeppelinVersion} from '@zeppelin/interfaces';
+import {ConfigurationsInfo} from '@zeppelin/sdk';
 
-import { BaseUrlService } from './base-url.service';
+import {BaseUrlService} from './base-url.service';
+import {TisResponseResult} from "../../common/tis.plugin";
 
 @Injectable({
   providedIn: 'root'
@@ -40,14 +41,19 @@ export class TicketService {
 
   getTicket() {
     return forkJoin([
-      this.httpClient.get<ITicket>(`${this.baseUrlService.getRestApiBase()}/security/ticket`),
-      this.getZeppelinVersion()
+      // this.httpClient.get<ITicket>(`${this.baseUrlService.getRestApiBase()}/security/ticket`),
+      this.httpClient.get<TisResponseResult>(`/tjs/runtime/addapp.ajax?action=login_action&emethod=get_zeppelin_status`),
+      // this.getZeppelinVersion()
     ]).pipe(
-      tap(data => {
-        const [ticket, version] = data;
-        this.version = version;
-        this.setTicket(ticket);
+      map((val) => {
+        const [result] = val;
+        return result;
       })
+      // tap(data => {
+      // const [ticket, version] = data;
+      // this.version = version;
+      // this.setTicket(ticket);
+      // })
     );
   }
 
@@ -61,7 +67,7 @@ export class TicketService {
       screenUsername = ticket.principal.match(re)[1];
     }
     this.originTicket = ticket;
-    this.ticket = { ...ticket, screenUsername, ...{ init: true } };
+    this.ticket = {...ticket, screenUsername, ...{init: true}};
     this.ticket$.next(this.ticket);
   }
 
@@ -109,5 +115,6 @@ export class TicketService {
     private baseUrlService: BaseUrlService,
     private router: Router,
     private nzMessageService: NzMessageService
-  ) {}
+  ) {
+  }
 }

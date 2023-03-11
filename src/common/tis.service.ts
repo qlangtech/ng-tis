@@ -29,6 +29,7 @@ import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
+import {TISMeta} from "./navigate.bar.component";
 
 declare var TIS: any;
 
@@ -44,6 +45,7 @@ export class TISService {
   // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
   public execId: string;
+  _tisMeta: TISMeta;
 
   public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
     const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
@@ -59,6 +61,17 @@ export class TISService {
   constructor(protected http: HttpClient
               // , private modalService: NgbModal
     , public notification: NzNotificationService, private drawerService: NzDrawerService) {
+  }
+
+  public set tisMeta(meta: TISMeta) {
+    this._tisMeta = meta;
+  }
+
+  public get tisMeta(): TISMeta {
+    if(!this._tisMeta){
+      throw new Error("_tisMeta can not be null");
+    }
+    return this._tisMeta;
   }
 
   // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
@@ -252,7 +265,11 @@ export class TISService {
     // console.log(error);
     if (error instanceof HttpErrorResponse) {
       let err: HttpErrorResponse = error;
-      this.notification.create('error', '错误', `系统发生错误，请联系系统管理员<br> ${err.message} <br> ${err.error} `, {nzPlacement: 'topLeft', nzDuration: 60000, nzStyle: {width: "800px"}});
+      this.notification.create('error', '错误', `系统发生错误，请联系系统管理员<br> ${err.message} <br> ${err.error} `, {
+        nzPlacement: 'topLeft',
+        nzDuration: 60000,
+        nzStyle: {width: "800px"}
+      });
     }
     // console.log(this);
 

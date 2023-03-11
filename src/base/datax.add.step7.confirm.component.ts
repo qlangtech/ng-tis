@@ -339,10 +339,13 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
             nzContent: ViewGenerateCfgComponent,
             nzWrapClassName: 'get-gen-cfg-file',
             nzContentParams: {
+              processModel: this.dto.processModel,
               fileMeta: Object.assign({
-                fileName: fileName,
+                fileName: fileName.fileName,
                 dataxName: this.dto.dataxPipeName
-              }, r.bizresult), formatMode: opt.formatMode, editMeta: opt
+              }, r.bizresult)
+              , formatMode: opt.formatMode
+              , editMeta: opt
             }
           });
         }
@@ -455,13 +458,18 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
   @Input()
   fileMeta: { content?: string, fileName?: string } = {};
 
+
+  @Input()
+  processModel: StepType;
+
   @Input()
   formatMode: string;
 
   @Input()
   editMeta: EditMeta = {};
 
-  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
+  constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService
+              , route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, route, modalService, notification);
     this.getCurrentAppCache = true;
     // this.cd.detach()
@@ -492,8 +500,9 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
     if (!this.editMeta.editable) {
       throw new Error("must be editable");
     }
-    this.jsonPost("/coredefine/corenodemanage.ajax?event_submit_do_" + this.editMeta.updateMethod + "=y&action=datax_action"
+    this.jsonPost("/coredefine/corenodemanage.ajax?event_submit_do_" + this.editMeta.updateMethod + "=y&action=datax_action&processModel="+ this.processModel
       , post).then((result) => {
+      this.cd.detectChanges();
       if (result.success) {
         this.drawerRef.close();
       }

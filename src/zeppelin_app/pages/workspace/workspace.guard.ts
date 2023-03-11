@@ -20,9 +20,10 @@ import {
   UrlTree
 } from '@angular/router';
 import {of, Observable} from 'rxjs';
-import {catchError, mapTo, tap} from 'rxjs/operators';
+import {catchError, mapTo, map, tap} from 'rxjs/operators';
 
 import {MessageService, TicketService} from '@zeppelin/services';
+import {TisResponseResult} from "../../../common/tis.plugin";
 
 @Injectable({
   providedIn: 'root'
@@ -35,14 +36,19 @@ export class WorkspaceGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
- // console.log(this.route);
- //    return this.ticketService.getTicket().pipe(
- //      mapTo(true),
- //      tap(() => this.messageService.bootstrap()),
- //      catchError(() => of(this.router.parseUrl('/z/zeppelin/tis-have-not-prepared')))
- //    );
-    this.messageService.bootstrap();
-    return true;
+    // console.log(this.route);
+    return this.ticketService.getTicket().pipe(
+      //  mapTo(true),
+      map((val: TisResponseResult) => {
+        if (val.bizresult) {
+          this.messageService.bootstrap();
+        }
+        return true;
+      }),
+      //  tap((val) => this.messageService.bootstrap()),
+      //   catchError(() => of(this.router.parseUrl('/z/zeppelin/tis-have-not-prepared')))
+    );
+    // this.messageService.bootstrap();
+    // return true;
   }
 }
