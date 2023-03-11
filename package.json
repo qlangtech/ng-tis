@@ -6,7 +6,7 @@
     "build": "tsc  -p ./src",
     "build:watch": "tsc -p ./src/ -w",
     "build:e2e": "tsc -p e2e/",
-    "ng:serve-aot": "ng build zeppelin-sdk --aot ---configuration production  && ng build zeppelin-visualization --aot ---configuration production  && ng build --aot ---configuration production ",
+    "ng:serve-aot": "ng build zeppelin-sdk ---configuration production  && ng build zeppelin-visualization ---configuration production  && ng build --aot ---configuration production ",
     "ng:serve-jit": "ng serve  --proxy-config proxy.conf.json",
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js_bak",
     "rollup": "rollup -c rollup-config.js_bak",
