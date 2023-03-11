@@ -11,7 +11,39 @@
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
       "../node_modules/@types/"
-    ]
+    ],
+    "paths": {
+      "@zeppelin/*": [
+        "./src/zeppelin_app/*",
+        "./src/environments/*"
+      ],
+      "@zeppelin/helium": [
+        "./dist/zeppelin-helium"
+      ],
+      "@zeppelin/helium/*": [
+        "./dist/zeppelin-helium/*"
+      ],
+      "@zeppelin/visualization": [
+        "dist/zeppelin-visualization"
+      ],
+      "@zeppelin/visualization/*": [
+        "dist/zeppelin-visualization/*"
+      ],
+      "@zeppelin/sdk": [
+        "dist/zeppelin-sdk"
+      ],
+      "@zeppelin/sdk/*": [
+        "dist/zeppelin-sdk/*"
+      ],
+      "zeppelin-sdk": [
+        "dist/zeppelin-sdk/zeppelin-sdk",
+        "dist/zeppelin-sdk"
+      ],
+      "zeppelin-visualization": [
+        "dist/zeppelin-visualization/zeppelin-visualization",
+        "dist/zeppelin-visualization"
+      ]
+    }
   },
   "files": [
     "src/offline/offline.module.ts",
