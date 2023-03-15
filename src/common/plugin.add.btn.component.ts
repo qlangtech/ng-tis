@@ -67,6 +67,9 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   endType: string;
 
   @Input()
+  filterTags: Array<string>;
+
+  @Input()
   disabled: boolean;
 
   @Input()
@@ -93,7 +96,7 @@ export class PluginAddBtnComponent extends BasicFormComponent {
 
   addNewPlugin() {
     // console.log(this.extendPoint);
-    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint, this.endType);
+    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint, this.endType, this.filterTags);
 
     drawerRef.afterClose.subscribe(() => {
       this.afterPluginAddClose.emit();

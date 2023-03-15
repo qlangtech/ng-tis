@@ -41,7 +41,7 @@ export class BaseMangeIndexComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.router.config);
-    console.log(this.route.pathFromRoot);
+   // console.log(this.route.pathFromRoot);
   }
 
   // goZeppelin() {

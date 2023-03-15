@@ -258,7 +258,7 @@ export class AddStep2ComponentCfg {
   public readerCptNeed = true;
   public headerCaption = 'Reader & Writer类型';
   public writerTypeLable = "Writer类型";
-  public writerFilter: string;
+  public writerPluginTag: string ='';
 
   public stepIndex = 0;
 

@@ -6,7 +6,7 @@
     "build": "tsc  -p ./src",
     "build:watch": "tsc -p ./src/ -w",
     "build:e2e": "tsc -p e2e/",
-    "ng:serve-aot": "ng build zeppelin-sdk ---configuration production  && ng build zeppelin-visualization ---configuration production  && ng build --aot ---configuration production ",
+    "ng:serve-aot": "npm run build-project:sdk && npm run build-project:vis && ng build --aot ---configuration production ",
     "ng:serve-jit": "ng serve  --proxy-config proxy.conf.json",
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js_bak",
     "rollup": "rollup -c rollup-config.js_bak",
@@ -23,6 +23,8 @@
     "pretest:once": "npm run build",
     "test:once": "karma start karma.conf.js --single-run",
     "lint": "tslint ./src/**/*.ts -t verbose",
+    "build-project:sdk": " ng build --project zeppelin-sdk",
+    "build-project:vis": " ng build --project zeppelin-visualization",
     "build:elements": "ng build --prod --project elements --output-hashing none && npm run pack:elements && cp projects/elements/package.json dist/elements",
     "pack:elements": "cat ./dist/elements/{runtime,polyfills,main}-es5.js > dist/elements/elements.js && ls -lah dist/elements/elements.js"
   },

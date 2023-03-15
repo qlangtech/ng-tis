@@ -68,7 +68,7 @@ export class TISService {
   }
 
   public get tisMeta(): TISMeta {
-    if(!this._tisMeta){
+    if (!this._tisMeta) {
       throw new Error("_tisMeta can not be null");
     }
     return this._tisMeta;
@@ -214,7 +214,11 @@ export class TISService {
 
   private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
     if (result.success) {
-      if (result.msg && result.msg.length > 0 && (!e || !e.notShowBizMsg) && (e && !e.createOrGetNotebook)) {
+     // console.log([result.msg, e, (result.msg && result.msg.length > 0) , ( e === undefined || !e.notShowBizMsg) , ( (e === undefined) || !e.createOrGetNotebook)]);
+      if ( (result.msg && result.msg.length > 0)
+        && (e === undefined || !e.notShowBizMsg)
+        && ((e === undefined) || !e.createOrGetNotebook)) {
+     //   console.log([result.msg, this.notification]);
         let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
         this.notification.create('success', '成功', msgContent, {nzDuration: 6000});
       }

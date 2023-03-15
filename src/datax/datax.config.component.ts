@@ -19,22 +19,19 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {TISService} from '../common/tis.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
+import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
-import {PluginsComponent} from "../common/plugins.component";
-import {Descriptor} from "../common/tis.plugin";
 import {StepType} from "../common/steps.component";
-
-// import {ExecModel} from "../base/datax.add.step7.confirm.component";
 
 
 @Component({
+  selector: "datax-cfg" ,
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-page-header *ngIf="this.dto.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
+      <tis-page-header *ngIf="this.dto?.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
                        [title]="this.dto.dataxPipeName">
       </tis-page-header>
       <!--      <tis-plugins [errorsPageShow]="false"-->

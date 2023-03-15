@@ -39,9 +39,13 @@ import {NzModalService} from "ng-zorro-antd/modal";
                       <a routerLink="./notebook">
                           <i class="fa fa-book fa-2x" aria-hidden="true"></i>Notebook</a>
                   </li>
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>
-                  </li>
+<!--                  <li nz-menu-item nzMatchRouter>-->
+<!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
+<!--                  </li>-->
+
+                <li nz-menu-item nzMatchRouter>
+                  <a routerLink="./manage"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>管理</a>
+                </li>
 
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>批量构建</a>

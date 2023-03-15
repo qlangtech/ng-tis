@@ -128,14 +128,17 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, K8sPodState, LogType, RcHpaStatus}
                   </ng-template>
               </nz-tab>
               <nz-tab nzTitle="操作" (nzSelect)="manageSelect()">
-                  <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">
-                  </nz-page-header>
-                  <nz-list class="ant-advanced-search-form" nzBordered>
-                      <nz-list-item>
-                          <span nz-typography>删除{{this.dto.processMeta.pageHeader}}</span>
-                          <button nz-button nzType="primary" (click)="dataXWorkerDelete()" nzDanger><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>
-                      </nz-list-item>
-                  </nz-list>
+
+                <control-prompt panelType="danger-delete" [procDesc]="this.dto.processMeta.pageHeader" (controlClick)="dataXWorkerDelete()" ></control-prompt>
+
+<!--                  <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">-->
+<!--                  </nz-page-header>-->
+<!--                  <nz-list class="ant-advanced-search-form" nzBordered>-->
+<!--                      <nz-list-item>-->
+<!--                          <span nz-typography>删除{{this.dto.processMeta.pageHeader}}</span>-->
+<!--                          <button nz-button nzType="primary" (click)="dataXWorkerDelete()" nzDanger><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>-->
+<!--                      </nz-list-item>-->
+<!--                  </nz-list>-->
               </nz-tab>
           </nz-tabset>
 
