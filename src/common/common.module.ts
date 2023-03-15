@@ -15,7 +15,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-import { NzUploadModule } from 'ng-zorro-antd/upload';
+import {NzUploadModule} from 'ng-zorro-antd/upload';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ItemPropValPipe, TimeConsumePipe} from "../common/date.format.pipe";
@@ -26,7 +26,13 @@ import {NavigateBarComponent} from "./navigate.bar.component";
 import {RouterModule} from "@angular/router";
 import {OperationLogComponent} from "./operation.log.component";
 import {PluginDescCallbackPipe, SafePipe} from "./safe.pipe";
-import {FinalExecControllerComponent, PageHeaderComponent, PageHeaderLeftComponent, TisHeaderTool, TisHeaderToolContent} from "./pager.header.component";
+import {
+  FinalExecControllerComponent,
+  PageHeaderComponent,
+  PageHeaderLeftComponent,
+  TisHeaderTool,
+  TisHeaderToolContent
+} from "./pager.header.component";
 import {TisMsgComponent} from "./msg.component";
 import {FormComponent, InputContentDirective, TisInputProp, TisInputTool} from "./form.component";
 import {CodemirrorComponent} from "./codemirror.component";
@@ -36,7 +42,12 @@ import {LocalStorageModule} from 'angular-2-local-storage';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
-import {ItemPropValComponent, NotebookwrapperComponent, PluginsComponent, SelectionInputAssistComponent} from "./plugins.component";
+import {
+  ItemPropValComponent,
+  NotebookwrapperComponent,
+  PluginsComponent,
+  SelectionInputAssistComponent
+} from "./plugins.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzFormModule} from 'ng-zorro-antd/form';
@@ -52,7 +63,10 @@ import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzBackTopModule} from 'ng-zorro-antd/back-top';
-import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from "./schema.expert.create.edit.component";
+import {
+  SchemaExpertAppCreateEditComponent,
+  SchemaVisualizingEditComponent
+} from "./schema.expert.create.edit.component";
 import {NzTransferModule} from 'ng-zorro-antd/transfer';
 import {NzTagModule} from 'ng-zorro-antd/tag';
 import {NzAlertModule} from 'ng-zorro-antd/alert';
@@ -107,6 +121,7 @@ import {PluginUpdateCenterComponent} from "../base/plugin.update.center.componen
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
+import {ControlPanelComponent} from "./control.panel.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries
@@ -123,26 +138,26 @@ import {ErrorDetailComponent} from "../base/error.detail.component";
       storageType: 'localStorage'
     }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule,
     // NgxTisCommonLibModule ,
-    NzUploadModule ,
+    NzUploadModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule, NzPageHeaderModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzIconModule, NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
   declarations: [
-    NotebookwrapperComponent,
-    TerminalComponent, ErrorDetailComponent , PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
+    NotebookwrapperComponent, ControlPanelComponent,
+    TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, SafePipe, ItemPropValPipe , PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    TimeConsumePipe, SafePipe, ItemPropValPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
     TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
-    , DataxAddStep4Component, SelectedTabsComponent , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
+    , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
-  exports: [PluginUpdateCenterComponent, SelectedTabsComponent , ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
+  exports: [ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
     , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent
     , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

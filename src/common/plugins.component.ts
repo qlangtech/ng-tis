@@ -814,7 +814,7 @@ export class NotebookwrapperComponent implements OnInit {
                   <li nz-menu-item *ngFor="let p of createRouter.plugin">
                     <a (click)="openPluginDialog(_pp , p )">
                       <i nz-icon nzType="plus"
-                       nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
+                         nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
                     </a>
                   </li>
                   <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
@@ -936,7 +936,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   constructor(tisService: TISService, modalService: NzModalService
-              , private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
+    , private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
     super(tisService, modalService, notification);
   }
 
@@ -992,7 +992,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                 if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
                   endType = this.pluginMeta.descFilter.endType();
                 }
-                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType);
+                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType, []);
                 drawerRef.afterClose.subscribe(() => {
                   // this.afterPluginAddClose.emit();
                 })
@@ -1017,12 +1017,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                              // enum
-                              // db detail
-                              // let item: Item = Object.assign(new Item(d), );
-                              // let nn = new ValOption();
-                              // n.name = biz.detailed.identityName;
-                              // n.impl = d.impl;
+                // enum
+                // db detail
+                // let item: Item = Object.assign(new Item(d), );
+                // let nn = new ValOption();
+                // n.name = biz.detailed.identityName;
+                // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;

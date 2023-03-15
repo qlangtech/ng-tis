@@ -18,7 +18,16 @@
 
 import {Injectable, NgModule} from '@angular/core';
 
-import {ActivatedRoute, ActivatedRouteSnapshot, CanActivateChild, Router, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivateChild,
+  Router,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+  UrlTree
+} from '@angular/router';
 
 import {OperationLogComponent} from "../common/operation.log.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
@@ -32,6 +41,7 @@ import {DataxConfigComponent} from "./datax.config.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {IncrBuildComponent} from "../runtime/incr.build.component";
 import {NotebookEntryComponent} from "./notebook.entry.component";
+import {PipelineControllerComponent} from "./pipeline.controller.component";
 
 @Injectable()
 export class DataxCanActivateCollectionManage implements CanActivateChild {
@@ -97,6 +107,11 @@ const dataxNodeRoutes: Routes = [
             path: 'operationlog',
             component: OperationLogComponent
           },
+          {
+            path: 'manage',
+            component: PipelineControllerComponent
+          }
+          ,
           {
             path: 'config',
             component: DataxConfigComponent

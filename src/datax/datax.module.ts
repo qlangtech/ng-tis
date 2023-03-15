@@ -46,6 +46,7 @@ import {DataxMainComponent} from "./datax.main.component";
 import {DataxConfigComponent} from "./datax.config.component";
 import {CoreNodeManageModule} from "../runtime/core.node.manage.module";
 import {NotebookEntryComponent} from "./notebook.entry.component";
+import {PipelineControllerComponent} from "./pipeline.controller.component";
 
 @NgModule({
   id: 'datax',
@@ -53,7 +54,7 @@ import {NotebookEntryComponent} from "./notebook.entry.component";
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
     , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
   ],
-  declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent, NotebookEntryComponent],
+  declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent, PipelineControllerComponent ,NotebookEntryComponent],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}

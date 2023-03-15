@@ -60,8 +60,7 @@ export class WFControllerComponent extends BasicFormComponent implements OnInit 
     addStepCptCfg.installableExtension = ['com.qlangtech.tis.datax.impl.DataxWriter'];
     addStepCptCfg.headerCaption = "离线引擎选择";
     addStepCptCfg.writerTypeLable = "引擎类型";
-    addStepCptCfg.writerFilter =
-      "com.qlangtech.tis.fullbuild.taskflow.IFlatTableBuilderDescriptor";
+    addStepCptCfg.writerPluginTag = "offline_parser";
     addStepCptCfg.stepIndex = 1;
     dto.processModel = StepType.CreateWorkflow;
 

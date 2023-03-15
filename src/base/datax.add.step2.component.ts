@@ -72,6 +72,7 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
         </tis-ipt>
         <tis-ipt title="插件安装" require="false">
           <tis-plugin-add-btn (afterPluginAddClose)="ngOnInit()"
+                              [filterTags]="['offline_parser']"
                               [extendPoint]="this.dto.addStep2ComponentCfg.installableExtension"
                               [descriptors]="[]">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
         </tis-ipt>
@@ -103,7 +104,7 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
 
   public static getDataXReaderWriterEnum(baseForm: BasicFormComponent, cfg: AddStep2ComponentCfg): Promise<DataXReaderWriterEnum> {
     return baseForm.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=datax_action&emethod=get_supported_reader_writer_types&writerDescFilter=' + cfg.writerFilter)
+      , 'action=datax_action&emethod=get_supported_reader_writer_types&writerPluginTag=' + cfg.writerPluginTag)
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc);
