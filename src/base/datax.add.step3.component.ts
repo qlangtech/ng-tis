@@ -78,7 +78,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
 
     let desc: Descriptor = (rw === 'reader') ? dto.readerDescriptor : dto.writerDescriptor;
 
-    return baseForm.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_${rw}_plugin_info&dataxName=${dto.dataxPipeName}&processModel=${dto.processModel}`, desc)
+    return baseForm.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_${rw}_plugin_info&dataxName=${dto.dataxPipeName}&${DataxDTO.KEY_PROCESS_MODEL}=${dto.processModel}`, desc)
       .then((r) => {
         if (r.success) {
           if (r.bizresult) {

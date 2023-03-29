@@ -57,15 +57,8 @@ export class DataxConfigComponent extends AppFormComponent implements OnInit {
   }
 
   protected initialize(app: CurrentCollection): void {
-
-    // @ts-ignore
-    // let stepType: StepType = this.route.snapshot.data["stepType"];
-    // if (!stepType) {
-    //   stepType = StepType.CreateDatax
-    // }
-
     DataxAddComponent.getDataXMeta(this, this.stepType, app).then((dto) => {
-      // console.log(dto);
+       console.log(dto);
       this.dto = dto;
     });
   }

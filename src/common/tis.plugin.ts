@@ -40,7 +40,9 @@ export declare type PluginName =
   | 'datax-worker';
 export declare type PluginMeta = {
   skipSubformDescNullError?: boolean;
-  name: PluginName, require: boolean, extraParam?: string
+  name: PluginName, require: boolean
+  // key1_val1,key2_val2
+  , extraParam?: string
   // 服务端对目标Item的desc进行过滤
   , descFilter?:
     { // 插件安装panel需要过滤的端类型
@@ -215,6 +217,10 @@ export class Descriptor {
   public get notebook(): NotebookMeta {
     let note: NotebookMeta = this.extractProps["notebook"];
     return note;
+  }
+
+  public get supportBatch(): boolean {
+    return !!this.extractProps["supportBatch"];
   }
 }
 
@@ -558,7 +564,7 @@ export class HeteroList {
   }
 
   public get endType(): string {
-    console.log(this.pluginCategory);
+   // console.log(this.pluginCategory);
     if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
       return this.pluginCategory.descFilter.endType();
     }

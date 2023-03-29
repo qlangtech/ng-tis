@@ -63,6 +63,7 @@ import {NzPopoverModule} from 'ng-zorro-antd/popover';
 import {NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzBackTopModule} from 'ng-zorro-antd/back-top';
+// import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
 import {
   SchemaExpertAppCreateEditComponent,
   SchemaVisualizingEditComponent

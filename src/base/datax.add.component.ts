@@ -67,7 +67,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
 
   public static getDataXMeta(cpt: BasicFormComponent, stepType: StepType, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
     return cpt.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=get_data_x_meta&appname=" + app.appName + "&processModel=" + stepType)
+      , "action=datax_action&emethod=get_data_x_meta&appname=" + app.appName + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + stepType)
       .then((r) => {
         // this.processResult(r);
         if (r.success) {
@@ -210,7 +210,7 @@ export interface DataXCfgFile {
 }
 
 export class DataxDTO {
-
+  static KEY_PROCESS_MODEL = 'processModel';
   execModel: ExecModel = ExecModel.Create;
   public headerStepShow = true;
 
@@ -227,6 +227,19 @@ export class DataxDTO {
   componentCallback: { step3: Subject<DataxAddStep3Component>, step4: Subject<DataxAddStep4Component> }
     = {step3: new Subject<DataxAddStep3Component>(), step4: new Subject<DataxAddStep4Component>()};
   tablePojo: TablePojo;
+
+  /**
+   * 支持批量操作
+   */
+  public get supportBatch(): boolean {
+
+    if (this.processModel === StepType.CreateWorkflow) {
+      return this.writerDescriptor.supportBatch;
+    }
+
+    return this.writerDescriptor.supportBatch && this.readerDescriptor && this.readerDescriptor.supportBatch;
+  }
+
 
   public get inWorkflowProcess(): boolean {
     return this.processModel === StepType.CreateWorkflow;
@@ -258,7 +271,7 @@ export class AddStep2ComponentCfg {
   public readerCptNeed = true;
   public headerCaption = 'Reader & Writer类型';
   public writerTypeLable = "Writer类型";
-  public writerPluginTag: string ='';
+  public writerPluginTag: string = '';
 
   public stepIndex = 0;
 
