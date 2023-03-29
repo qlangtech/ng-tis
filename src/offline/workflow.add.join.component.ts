@@ -59,6 +59,9 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
         <tis-ipt #sql title="SQL" name="sql" require="true">
           <tis-codemirror class="ant-input" [name]="sql.name" [size]="{width:null,height:600}"
                           [(ngModel)]="joinNodeForm.joinSql"></tis-codemirror>
+
+<!--          <nz-code-editor class="editor" [ngModel]="joinNodeForm.joinSql" [nzEditorOption]="{ language: 'sql' }"></nz-code-editor>-->
+
         </tis-ipt>
       </tis-form>
     </div>

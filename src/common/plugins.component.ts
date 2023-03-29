@@ -319,14 +319,16 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
         for (let subFieldPk in rawVal) {
           subFrom = <Array<Item>>rawVal[subFieldPk];
+          // console.log([subFrom, subFieldPk]);
           subFromItems = new Array<Item>();
           subFrom.forEach((form) => {
             let subformDesc: Descriptor = h.descriptors.get(form.impl);
+            // console.log([h.descriptors, form.impl]);
             if (!subformDesc) {
               if ((<PluginMeta>pm).skipSubformDescNullError) {
                 return;
               }
-              // console.log([he, pm]);
+
               throw new Error("desc impl:" + form.impl + " relevant desc can not be null");
             }
             let ii = Object.assign(new Item(subformDesc), form);

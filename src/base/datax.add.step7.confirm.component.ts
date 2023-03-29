@@ -102,15 +102,18 @@ export enum ExecModel {
           </nz-dropdown-menu>
         </div>
       </ng-container>
-      <h3>DataX脚本文件</h3>
-      <ul class="item-block child-block script-block">
-        <li *ngFor="let f of genCfgFileList">
-          <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
-            <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
-          </button>
-        </li>
-        <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-      </ul>
+
+      <ng-container *ngIf=" dto.supportBatch">
+        <h3>DataX脚本文件</h3>
+        <ul class="item-block child-block script-block">
+          <li *ngFor="let f of genCfgFileList">
+            <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
+              <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
+            </button>
+          </li>
+          <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+        </ul>
+      </ng-container>
       <ng-container *ngIf="createDDLFileList.length > 0">
         <h3>Create Table DDL</h3>
 
@@ -188,9 +191,6 @@ export enum ExecModel {
       border-radius: 4px;
       padding: 4px 11px;
     }
-
-
-
     `
   ]
 })
@@ -228,8 +228,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     if (!this.dto) {
       throw new Error("dto can not be null");
     }
-    this.pluginExtraParam = `update_${!this.createModel},justGetItemRelevant_true,dataxName_${this.dto.dataxPipeName}`;
-    // console.log(this.pluginExtraParam);
+    this.pluginExtraParam = `update_${!this.createModel},justGetItemRelevant_true,dataxName_${this.dto.dataxPipeName},${DataxDTO.KEY_PROCESS_MODEL}_${this.dto.processModel}`;
+
     super.ngOnInit();
   }
 
@@ -238,9 +238,14 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   private generate_datax_cfgs(getExist: boolean): Promise<GenerateCfgs> {
+    //console.log([this.dto.readerDescriptor, this.dto.writerDescriptor]);
+    if (!this.dto.supportBatch) {
+      return;
+    }
+
     let url = '/coredefine/corenodemanage.ajax';
     return this.httpPost(url, 'action=datax_action&emethod=generate_datax_cfgs&dataxName='
-      + this.dto.dataxPipeName + "&getExist=" + (getExist) + "&processModel=" + this.dto.processModel)
+      + this.dto.dataxPipeName + "&getExist=" + (getExist) + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel)
       .then((r) => {
         if (r.success) {
           let cfgs: GenerateCfgs = r.bizresult;
@@ -260,7 +265,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
    * 更新DataX配置
    */
   updateStepNext() {
-    this.jsonPost("/coredefine/corenodemanage.ajax?action=datax_action&emethod=update_datax&dataxName=" + this.dto.dataxPipeName + "&processModel=" + this.dto.processModel
+    this.jsonPost("/coredefine/corenodemanage.ajax?action=datax_action&emethod=update_datax&dataxName="
+      + this.dto.dataxPipeName + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel
       , this.dto.profile)
       .then((r) => {
         this.processResult(r);
@@ -325,7 +331,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   private viewGenFile(fileName: DataXCfgFile, opt: GenCfgFileOpt) {
 
     this.jsonPost("/coredefine/corenodemanage.ajax?" + "action=datax_action&emethod=get_gen_cfg_file&dataxName=" + this.dto.dataxPipeName
-      + "&fileType=" + opt.type + "&processModel=" + this.dto.processModel
+      + "&fileType=" + opt.type + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel
       , fileName)
       .then((r) => {
         this.processResult(r);
@@ -363,7 +369,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   reGenerateSqlDDL() {
     let url = '/coredefine/corenodemanage.ajax';
     return this.httpPost(url, 'action=datax_action&emethod=regenerate_sql_ddl_cfgs&dataxName='
-      + this.dto.dataxPipeName + '&processModel=' + this.dto.processModel)
+      + this.dto.dataxPipeName + '&' + DataxDTO.KEY_PROCESS_MODEL + '=' + this.dto.processModel)
       .then((r) => {
         if (r.success) {
           let cfgs: GenerateCfgs = r.bizresult;
@@ -394,7 +400,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       throw new Error("in valid execId");
     }
     this.httpPost("/coredefine/corenodemanage.ajax"
-      , "action=datax_action&emethod=create_update_process&execId=" + execId + "&processModel=" + this.dto.processModel)
+      , "action=datax_action&emethod=create_update_process&execId=" + execId + "&"
+      + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel)
       .then((r) => {
         if (r.success) {
           this.r.navigate(['../update'], {
@@ -469,7 +476,7 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
   editMeta: EditMeta = {};
 
   constructor(private drawerRef: NzDrawerRef<{ hetero: HeteroList }>, tisService: TISService
-              , route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
+    , route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, route, modalService, notification);
     this.getCurrentAppCache = true;
     // this.cd.detach()
@@ -500,7 +507,9 @@ export class ViewGenerateCfgComponent extends AppFormComponent implements AfterV
     if (!this.editMeta.editable) {
       throw new Error("must be editable");
     }
-    this.jsonPost("/coredefine/corenodemanage.ajax?event_submit_do_" + this.editMeta.updateMethod + "=y&action=datax_action&processModel="+ this.processModel
+    this.jsonPost("/coredefine/corenodemanage.ajax?event_submit_do_"
+      + this.editMeta.updateMethod + "=y&action=datax_action&"
+      + DataxDTO.KEY_PROCESS_MODEL + "=" + this.processModel
       , post).then((result) => {
       this.cd.detectChanges();
       if (result.success) {

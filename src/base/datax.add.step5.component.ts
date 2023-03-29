@@ -23,7 +23,7 @@ import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DataXCreateProcessMeta} from "./datax.add.component";
+import {DataXCreateProcessMeta, DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
@@ -80,7 +80,9 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
-    this.pluginCategory = {name: 'dataxWriter', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName};
+    let extraParam = 'dataxName_' + this.dto.dataxPipeName;
+    extraParam += (',' + DataxDTO.KEY_PROCESS_MODEL + '_' + this.dto.processModel);
+    this.pluginCategory = {name: 'dataxWriter', require: true, extraParam: extraParam};
     super.ngOnInit();
   }
 
