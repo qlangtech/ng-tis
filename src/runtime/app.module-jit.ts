@@ -90,6 +90,10 @@ export function markedOptionsFactory(): MarkedOptions {
         loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
         outlet: "zeppelin"
       },
+      {
+        path: 'z/zpl',
+        loadChildren: () => import('../zeppelin_app/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+      },
     ])
   ],
   declarations: [AppComponent, RootWelcomeComponent
