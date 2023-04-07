@@ -36,20 +36,19 @@
   <name>tis</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <tisasm-maven-plugin.version>1.0.7</tisasm-maven-plugin.version>
-
+<!--    <tisasm-maven-plugin.version>1.0.7</tisasm-maven-plugin.version>-->
   </properties>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>com.qlangtech.tis</groupId>
-        <artifactId>tisasm-maven-plugin</artifactId>
-        <configuration>
-          <appendDeplpyFileName>ng-tis.tar.gz</appendDeplpyFileName>
-        </configuration>
-      </plugin>
-    </plugins>
+<!--    <plugins>-->
+<!--      <plugin>-->
+<!--        <groupId>com.qlangtech.tis</groupId>-->
+<!--        <artifactId>tisasm-maven-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <appendDeplpyFileName>ng-tis.tar.gz</appendDeplpyFileName>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--    </plugins>-->
   </build>
 
 </project>
