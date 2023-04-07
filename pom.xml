@@ -29,14 +29,14 @@
   </parent>
 
   <groupId>com.qlangtech.tis</groupId>
-  <artifactId>tis</artifactId>
+  <artifactId>ng-tis</artifactId>
 
 
   <packaging>pom</packaging>
   <name>tis</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <tisasm-maven-plugin.version>1.0.6</tisasm-maven-plugin.version>
+    <tisasm-maven-plugin.version>1.0.7</tisasm-maven-plugin.version>
 
   </properties>
 
