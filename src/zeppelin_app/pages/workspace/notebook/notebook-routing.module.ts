@@ -16,6 +16,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {NotebookComponent} from './notebook.component';
 import {NotebookTestComponent} from "@zeppelin/pages/workspace/notebook/notebook.test.component";
 
+//console.log("NotebookRoutingModule");
 const routes: Routes = [
   {
     path: ':noteId',

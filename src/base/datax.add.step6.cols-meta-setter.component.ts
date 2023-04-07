@@ -57,7 +57,7 @@ import {ActivatedRoute, Router} from "@angular/router";
                       </tis-col>
                       <tis-col title="Type">
                           <ng-template let-u='r'>
-                              {{u.type.collapse}}
+                              {{u.type.typeDesc}}
                           </ng-template>
                       </tis-col>
                   </tis-page>

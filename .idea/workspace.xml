@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/zeppelin_app/pages/workspace/notebook/notebook-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig-aot.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig-aot.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +62,17 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="npm.ng:serve-jit">
+    <configuration name="ng:serve-aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve-aot" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="ng:serve-jit" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -73,6 +86,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.ng:serve-jit" />
+        <item itemvalue="npm.ng:serve-aot" />
       </list>
     </recent_temporary>
   </component>
@@ -103,7 +117,7 @@
       <workItem from="1678579439090" duration="27761000" />
       <workItem from="1679019229638" duration="668000" />
       <workItem from="1679278023347" duration="21097000" />
-      <workItem from="1679887880071" duration="3412000" />
+      <workItem from="1679887880071" duration="17909000" />
     </task>
     <servers />
   </component>
