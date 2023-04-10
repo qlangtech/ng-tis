@@ -36,7 +36,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
               <button (click)="noteEntryClick(note)" nz-button nzType="link" nzSize="large"><i nz-icon nzType="book" nzTheme="outline"></i>Notebook of {{note.displayName}}</button>
           </li>
       </ul>
-      <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a target="_blank" href="https://tis.pub/docs/install/zeppelin/install">文档</a>
+      <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a target="_blank" href="https://tis.pub/docs/install/zeppelin">文档</a>
       </ng-template>
   `,
   styles: [

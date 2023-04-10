@@ -152,7 +152,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
       </form>
     </nz-spin>
     <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a
-      target="_blank" [href]="'https://tis.pub/docs/'+this.appMeta.buildVersion+'install/zeppelin/install'">文档</a>
+      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>
     </ng-template>
     <!--
           {{this._heteroList | json}}

@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/notebook.entry.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/notebook.entry.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +115,9 @@
       <workItem from="1678579439090" duration="27761000" />
       <workItem from="1679019229638" duration="668000" />
       <workItem from="1679278023347" duration="21097000" />
-      <workItem from="1679887880071" duration="20815000" />
+      <workItem from="1679887880071" duration="21358000" />
+      <workItem from="1681003957146" duration="27000" />
+      <workItem from="1681094565539" duration="126000" />
     </task>
     <servers />
   </component>
