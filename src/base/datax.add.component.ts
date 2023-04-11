@@ -31,7 +31,6 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {MultiViewDAG} from "../common/MultiViewDAG";
-// import { NzSafeAny} from "ng-zorro-antd";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
 import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
