@@ -155,4 +155,15 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     }
     this.nextStep.emit(n);
   }
+
+
+  goback() {
+    if (this.dto.processMeta.readerRDBMS) {
+      super.goback();
+      return;
+    } else {
+      let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep3Component};
+      this.nextStep.emit(next);
+    }
+  }
 }
