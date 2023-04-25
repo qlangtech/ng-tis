@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +120,11 @@
       <workItem from="1681003957146" duration="27000" />
       <workItem from="1681094565539" duration="695000" />
       <workItem from="1681172726150" duration="709000" />
-      <workItem from="1681185878824" duration="1513000" />
+      <workItem from="1681185878824" duration="2233000" />
+      <workItem from="1681188437702" duration="1246000" />
+      <workItem from="1681371431183" duration="3285000" />
+      <workItem from="1681965532789" duration="6120000" />
+      <workItem from="1682302234923" duration="3440000" />
     </task>
     <servers />
   </component>

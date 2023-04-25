@@ -33,7 +33,7 @@ import {Application} from "../common/application";
               <nz-content style=" opacity: 0.8;">
                   <div nz-row [nzGutter]="8">
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true" (click)="gotoIndexList()">
+                          <nz-card id="pipeline" [nzHoverable]="true" (click)="gotoIndexList()">
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1>实例</h1>
@@ -43,7 +43,7 @@ import {Application} from "../common/application";
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true" (click)="routerTo('/offline/wf')">
+                          <nz-card id="dataflow" [nzHoverable]="true" (click)="routerTo('/offline/wf')">
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
@@ -53,7 +53,7 @@ import {Application} from "../common/application";
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true" (click)="routerTo('/offline/ds')">
+                          <nz-card id="datasource" [nzHoverable]="true" (click)="routerTo('/offline/ds')">
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
@@ -65,7 +65,7 @@ import {Application} from "../common/application";
                   </div>
                   <div nz-row [nzGutter]="8">
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true" (click)="routerTo('/base/basecfg')">
+                          <nz-card id="basecfg" [nzHoverable]="true" (click)="routerTo('/base/basecfg')">
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1><i nz-icon nzType="setting" nzTheme="outline"></i>插件配置</h1>
@@ -75,7 +75,7 @@ import {Application} from "../common/application";
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
+                          <nz-card id="operationlog" [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
                               <div class="tis-card-content">
                                   <div class="compose">
                                       <h1><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
@@ -85,7 +85,7 @@ import {Application} from "../common/application";
                           </nz-card>
                       </div>
                       <div nz-col nzSpan="8">
-                          <nz-card [nzHoverable]="true">
+                          <nz-card id="users" [nzHoverable]="true">
                               <div class="tis-card-content">
                                   <h1 class="compose"><i nz-icon nzType="user" nzTheme="outline"></i>会员</h1>
                               </div>
