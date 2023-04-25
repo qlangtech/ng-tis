@@ -41,6 +41,7 @@ export class BasicWFComponent extends BasicFormComponent {
   }
 
   executeWorkflow(dataflow: Dataflow, dryRun?: boolean): void {
+
     let action = `event_submit_do_execute_workflow=y&action=offline_datasource_action&id=${dataflow.id}&dryRun=${dryRun}`;
     this.httpPost('/offline/datasource.ajax', action)
       .then(d => {
@@ -50,7 +51,7 @@ export class BasicWFComponent extends BasicFormComponent {
             let msg: any = [];
             msg.push({
               'content': '数据流构建已经触发'
-              , 'link': {'content': `查看构建状态(${taskid})`, 'href': `./build_history/${dataflow.id}/${taskid}`}
+              , 'link': {'content': `查看构建状态(${taskid})`, 'href': `/offline/wf_update/${dataflow.name}/build_history/${dataflow.id}/${taskid}`}
             });
 
             this.processResult({success: true, 'msg': msg});
@@ -199,7 +200,7 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
     let action = 'event_submit_do_delete_workflow_change=y&action=offline_datasource_action&id=' + id;
     this.httpPost('/offline/datasource.ajax', action)
       .then(result => {
-        console.log(result);
+       // console.log(result);
         this.processResult(result);
         if (result.success) {
           // this.initWorkflows(result.bizresult);

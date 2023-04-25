@@ -77,6 +77,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {TerminalComponent} from "../common/terminal.component";
 import {DataxDTO} from "../base/datax.add.component";
+import {TisResponseResult} from "../common/tis.plugin";
 // import {} from 'ng-sidebar';
 // import {Droppable} from '@shopify/draggable';
 // @ts-ignore
@@ -385,8 +386,65 @@ export class WorkflowAddComponent extends BasicWFComponent
     // this._opened = true;
   }
 
-  // 保存图形
+  executeWorkflow(dataflow: Dataflow, dryRun?: boolean) {
+    this._saveTopology().then((biz) => {
+      if(!biz.er){
+        dataflow.id = biz.biz.bizresult.id;
+        super.executeWorkflow(dataflow, dryRun);
+      }else{
+
+      }
+    })
+
+  }
+
   saveTopology() {
+    this._saveTopology().then(r => {
+
+      let result = r.biz;
+
+      if (r.er) {
+        this.router.navigate(['/offline/wf']);
+        this.notification.create('success', '成功', result.msg[0]);
+      } else {
+
+        let biz = result.bizresult;
+        if (!biz.erExist) {
+          // 跳转到ER编辑Tab
+          this.modal.confirm({
+            nzTitle: '尚未定义ER关系，是否现在定义?',
+            nzCancelText: "跳过",
+            nzOkText: "开始",
+            nzOnOk: () => {
+              this.tabSelectedIndex = 1;
+            },
+            nzOnCancel: () => {
+              this.notifyAndRedirect(result);
+            }
+          });
+          return;
+        }
+        if (!biz.erPrimaryTabSet) {
+          this.modal.confirm({
+            nzTitle: '尚未定义DF的主表，是否现在定义主表?',
+            nzCancelText: "跳过",
+            nzOnOk: () => {
+              this.tabSelectedIndex = 1;
+            },
+            nzOnCancel: () => {
+              this.notifyAndRedirect(result);
+            }
+          });
+          return;
+        }
+        this.notifyAndRedirect(result);
+      }
+
+    });
+  }
+
+  // 保存图形
+  _saveTopology(): Promise<{ er: boolean, biz: TisResponseResult }> {
     if (this.erRuleComponent) {
       let g6 = this.erRuleComponent.g6Graph;
       let dumpNodes: any[] = [];
@@ -403,7 +461,6 @@ export class WorkflowAddComponent extends BasicWFComponent
       });
       let deges: any[] = [];
       g6._cfg.edges.forEach((r: any) => {
-        // console.log(r._cfg.model);
         deges.push({
           'id': r._cfg.model.id,
           'sourceNode': r._cfg.model.sourceNode._cfg.model,
@@ -413,16 +470,14 @@ export class WorkflowAddComponent extends BasicWFComponent
       });
 
       let postData = {'nodes': dumpNodes, 'edges': deges, 'topologyName': this.topologyName};
-      // postData = $.extend(postData, {});
-      // console.log(postData);
-      this.jsonPost(`/offline/datasource.ajax?emethod=save_er_rule&action=offline_datasource_action`
-        , postData)
-        .then(result => {
-          if (result.success) {
-            this.router.navigate(['/offline/wf']);
-            this.notification.create('success', '成功', result.msg[0]);
-          }
-        });
+      return this.jsonPost(`/offline/datasource.ajax?emethod=save_er_rule&action=offline_datasource_action`, postData).then((result) => {
+        if (result.success) {
+          return {er: true, biz: result};
+        } else {
+          return Promise.reject();
+        }
+      });
+
     } else {
 
       let j = this.graph.save();
@@ -430,84 +485,24 @@ export class WorkflowAddComponent extends BasicWFComponent
         this.notification.create('error', '错误', '请选择节点');
         return;
       }
-      // if (this.isAdd) {
-      // 打开输入名称对话框
-      //this.isSaveTopologyDialogVisible = true;
-      // } else {
-      this.applyTopology2Server(() => {
+      return this.applyTopology2Server().then(result => {
+        if (result.success) {
+          return {er: false, biz: result};
+        } else {
+          return Promise.reject();
+        }
       });
-      //}
     }
   }
 
-  // handleSaveTopologyDialogCancel(evt: any) {
-  //   this.isSaveTopologyDialogVisible = false;
-  // }
 
-  // submitSaveTopologyDialogForm() {
-  //   for (const i in this.validateSaveTopologyDialogForm.controls) {
-  //     this.validateSaveTopologyDialogForm.controls[i].markAsDirty();
-  //     this.validateSaveTopologyDialogForm.controls[i].updateValueAndValidity();
-  //   }
-  // }
-
-  handleSaveTopologyDialogOk() {
-    // this.submitSaveTopologyDialogForm();
-    // if (!this.validateSaveTopologyDialogForm.valid) {
-    //   return;
-    // }
-    this.applyTopology2Server((topologyName) => {
-      //  this.topologyName = topologyName;
-    });
-  }
-
-  private applyTopology2Server(saveSuccessCallback: (topologyName) => void): void {
+  private applyTopology2Server(): Promise<TisResponseResult> {
     // 关闭对话框
     // this.isSaveTopologyDialogVisible = false;
     let j = this.graph.save();
     j.topologyName = this.topologyName;
-    // console.log(j);
-    // console.log(`topologyName:${this.topologyName}`);
-    // j = $.extend(j, this.validateSaveTopologyDialogForm.getRawValue());
-    //  if (!this.isAdd) {
 
-    //  }
-    this.jsonPost(`/offline/datasource.ajax?emethod=${this.isAdd ? 'save' : 'update'}_topology&action=offline_datasource_action`, j)
-      .then(result => {
-        if (result.success) {
-          saveSuccessCallback(j.topologyName);
-          let biz = result.bizresult;
-          if (!biz.erExist) {
-            // 跳转到ER编辑Tab
-            this.modal.confirm({
-              nzTitle: '尚未定义ER关系，是否现在定义?',
-              nzCancelText: "跳过",
-              nzOkText: "开始",
-              nzOnOk: () => {
-                this.tabSelectedIndex = 1;
-              },
-              nzOnCancel: () => {
-                this.notifyAndRedirect(result);
-              }
-            });
-            return;
-          }
-          if (!biz.erPrimaryTabSet) {
-            this.modal.confirm({
-              nzTitle: '尚未定义DF的主表，是否现在定义主表?',
-              nzCancelText: "跳过",
-              nzOnOk: () => {
-                this.tabSelectedIndex = 1;
-              },
-              nzOnCancel: () => {
-                this.notifyAndRedirect(result);
-              }
-            });
-            return;
-          }
-          this.notifyAndRedirect(result);
-        }
-      });
+    return this.jsonPost(`/offline/datasource.ajax?emethod=${this.isAdd ? 'save' : 'update'}_topology&action=offline_datasource_action`, j);
   }
 
   private notifyAndRedirect(result) {
