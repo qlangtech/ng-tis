@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +122,13 @@
       <workItem from="1681188437702" duration="1246000" />
       <workItem from="1681371431183" duration="3285000" />
       <workItem from="1681965532789" duration="6120000" />
-      <workItem from="1682302234923" duration="3440000" />
+      <workItem from="1682302234923" duration="5476000" />
+      <workItem from="1683169508249" duration="990000" />
+      <workItem from="1683182862510" duration="1849000" />
+      <workItem from="1683522896130" duration="2371000" />
+      <workItem from="1684029804369" duration="629000" />
+      <workItem from="1684381023292" duration="724000" />
+      <workItem from="1684633201960" duration="632000" />
     </task>
     <servers />
   </component>

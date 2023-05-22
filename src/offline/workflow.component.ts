@@ -26,7 +26,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Pager} from "../common/pagination.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {DataxDTO} from "../base/datax.add.component";
+// import {DataxDTO} from "../base/datax.add.component";
 
 export class BasicWFComponent extends BasicFormComponent {
   constructor(tisService: TISService, modalService: NzModalService, protected router: Router, protected route: ActivatedRoute, notification?: NzNotificationService) {
@@ -218,7 +218,6 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
         this.processResult(result);
         if (result.success) {
           this.goToWorkflowChange();
-          // this.initWorkflows(result.bizresult);
         }
       });
   }
