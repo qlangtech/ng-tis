@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/web.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +59,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.ng:serve-jit">
     <configuration name="ng:serve-aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -129,6 +134,12 @@
       <workItem from="1684029804369" duration="629000" />
       <workItem from="1684381023292" duration="724000" />
       <workItem from="1684633201960" duration="632000" />
+      <workItem from="1684740389878" duration="644000" />
+      <workItem from="1684808754059" duration="431000" />
+      <workItem from="1685341426420" duration="1281000" />
+      <workItem from="1685523744667" duration="1233000" />
+      <workItem from="1685596661859" duration="451000" />
+      <workItem from="1686294231674" duration="540000" />
     </task>
     <servers />
   </component>
