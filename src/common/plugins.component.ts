@@ -51,7 +51,7 @@ import {
   TYPE_PLUGIN_SELECTION,
   CONST_FORM_LAYOUT_VERTICAL,
   ValOption,
-  OptionEnum
+  OptionEnum, DescribleVal
 } from "./tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -348,6 +348,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       } else {
         i = Object.assign(new Item(desc), item);
         i.wrapItemVals();
+        //  console.log(i);
       }
       // console.log(i);
       items.push(i);
@@ -675,25 +676,51 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   updateHeteroListDesc(h: HeteroList) {
-    let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint;
-    let entype = h.endType;
+
+    PluginsComponent.getAllDesc(this, h.extensionPoint, h.endType)
+      .then((descMap) => {
+        if (h.descriptors.size !== descMap.size) {
+          h.updateDescriptor(descMap);
+          this.cdr.detectChanges();
+        }
+      });
+    // let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint;
+    // let entype = h.endType;
+    // if (entype) {
+    //   params += `${PARAM_END_TYPE}${entype}`
+    // }
+    //
+    // let url = "/coredefine/corenodemanage.ajax";
+    // this.httpPost(url, params)
+    //   .then((r) => {
+    //     if (r.success) {
+    //       let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
+    //       if (h.descriptors.size !== descMap.size) {
+    //         h.updateDescriptor(descMap);
+    //         this.cdr.detectChanges();
+    //       }
+    //     }
+    //   });
+  }
+
+
+  static getAllDesc(form: BasicFormComponent, extensionPoint: string, entype: string): Promise<Map<string /* impl */, Descriptor>> {
+    let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + extensionPoint;
+
     if (entype) {
       params += `${PARAM_END_TYPE}${entype}`
     }
 
     let url = "/coredefine/corenodemanage.ajax";
-    this.httpPost(url, params)
+    return form.httpPost(url, params)
       .then((r) => {
         if (r.success) {
           let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
-          if (h.descriptors.size !== descMap.size) {
-            h.updateDescriptor(descMap);
-            this.cdr.detectChanges();
-          }
+          return descMap;
         }
       });
-
   }
+
 }
 
 @Component({
@@ -835,11 +862,25 @@ export class NotebookwrapperComponent implements OnInit {
             </ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="false">
-            <nz-select [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl"
-                       (ngModelChange)="changePlugin(_pp,$event)">
+
+            <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl"
+                       (ngModelChange)="changePlugin(_pp,$event)"
+                       [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
               <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName"
                          [nzValue]="e.impl"></nz-option>
             </nz-select>
+
+            <button *ngIf="_pp.descVal.extensible" nz-button nzType="link" (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload" nzTheme="outline"></i></button>
+
+            <ng-template #renderExtraPluginTemplate>
+              <nz-divider></nz-divider>
+              <div class="container">
+                <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
+                        (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus" nzTheme="outline"></i>添加
+                </button>
+              </div>
+            </ng-template>
+
             <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
                   *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
               <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
@@ -888,6 +929,11 @@ export class NotebookwrapperComponent implements OnInit {
 
       .has-help-url {
         width: calc(100% - 10em);
+        display: inline-block;
+      }
+
+      .desc-prop-descs {
+        width: calc(100% - 4em);
         display: inline-block;
       }
     `
@@ -940,6 +986,58 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   constructor(tisService: TISService, modalService: NzModalService
     , private cdr: ChangeDetectorRef, private drawerService: NzDrawerService, notification: NzNotificationService) {
     super(tisService, modalService, notification);
+  }
+
+  freshDescPropDescriptors(pluginImpl: string, ip: ItemPropVal){
+    let descVal = ip.descVal;
+    this.getAllDesc(pluginImpl, ip.key)
+      .then((descMap) => {
+        if (descVal.descriptors.size !== descMap.size) {
+          descVal.descriptors = descMap;
+          // h.updateDescriptor(descMap);
+          this.cdr.detectChanges();
+          // this.notification
+          this.notification.create('success', '成功', "已经成功更新\""+ ip.label+"\"的可选项");
+        }else{
+          this.notification.create('warning', '通知',  "\""+ ip.label + "\"的可选项并没有变化");
+        }
+      });
+  }
+
+  addNewPlugin(pluginImpl: string, ip: ItemPropVal) {
+    // console.log(descVal);
+    let descVal = ip.descVal;
+    const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, descVal.extendPoint, null, []);
+
+    drawerRef.afterClose.subscribe((result) => {
+      this.freshDescPropDescriptors(pluginImpl,ip);
+      // this.getAllDesc(pluginImpl, ip.key)
+      //   .then((descMap) => {
+      //     if (descVal.descriptors.size !== descMap.size) {
+      //       descVal.descriptors = descMap;
+      //       // h.updateDescriptor(descMap);
+      //       this.cdr.detectChanges();
+      //     }
+      //   });
+      // console.log(result);
+      // descVal.descriptors
+      // descVal.dspt
+      // this.afterPluginAddClose.emit();
+    })
+  }
+
+  private getAllDesc(extImpl: string, field: string): Promise<Map<string /* impl */, Descriptor>> {
+    let params = "action=plugin_action&emethod=get_descs_by_field_of_desc&extImpl=" + extImpl + "&field=" + field;
+
+
+    let url = "/coredefine/corenodemanage.ajax";
+    return this.httpPost(url, params)
+      .then((r) => {
+        if (r.success) {
+          let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
+          return descMap;
+        }
+      });
   }
 
   get horizontal(): boolean {
