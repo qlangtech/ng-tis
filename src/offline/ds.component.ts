@@ -66,7 +66,8 @@ enum NodeType {
           <tis-plugin-add-btn (afterPluginAddClose)="initComponents(false)" *nzSpaceItem [btnStyle]="'width: 5em'"
                               (addPlugin)="addDbBtnClick($event)" [btnSize]="'small'"
                               [extendPoint]="'com.qlangtech.tis.plugin.ds.DataSourceFactory'"
-                              [descriptors]="datasourceDesc"><i class="fa fa-plus" aria-hidden="true"></i>
+                              [descriptors]="datasourceDesc">
+            <i class="fa fa-plus" aria-hidden="true"></i>
             <i class="fa fa-database" aria-hidden="true"></i></tis-plugin-add-btn>
 
           <button *nzSpaceItem nz-button nzSize="small" style="width: 4em" (click)="addTableBtnClick()">

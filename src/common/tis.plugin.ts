@@ -336,6 +336,7 @@ export class Item {
       return;
     }
     let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
+   // console.log([at.key, at]);
     if (at.describable) {
       let d = at.descriptors.get(v.impl);
       if (!d) {
@@ -344,7 +345,7 @@ export class Item {
       }
       let ii: Item = Object.assign(new Item(d), v);
       ii.wrapItemVals();
-      // console.log(ii);
+      // console.log([ii,at]);
       newVal.descVal = at.createDescribleVal(ii);
     } else {
       if (at.isMultiSelectableType) {
@@ -416,7 +417,7 @@ export class Item {
     // console.log(this.dspt.attrs);
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
-      // console.log([at.key, v]);
+      console.log([at.key, v, at]);
       newVal = Item.wrapItemPropVal(v, at);
       if (newVal) {
         newVals[at.key] = (newVal);
@@ -465,6 +466,8 @@ export class DescribleVal
   // displayName: string;
   // vals: string[] | DescribleVal[];
   descriptors: Map<string /* impl */, Descriptor> = new Map();
+  extendPoint: string;
+  extensible: boolean;
 }
 
 export class AttrDesc {
@@ -478,6 +481,9 @@ export class AttrDesc {
    * */
   descriptors: Map<string /*impl*/, Descriptor>;
   describable: boolean;
+  extendPoint: string;
+  // 实现类型是否可以在运行期添加
+  extensible: boolean;
   type: number;
   options: Array<ValOption>;
   required: boolean;
@@ -523,7 +529,10 @@ export class AttrDesc {
   }
 
   public createDescribleVal(v: Item): DescribleVal {
+    // console.log(v);
     let descVal = new DescribleVal(v.dspt, v.updateModel);
+    descVal.extensible = this.extensible;
+    descVal.extendPoint = this.extendPoint;
     descVal.displayName = v.displayName;
     // descVal.containAdvance = v.containAdvance;
     // descVal.impl = v.impl;
@@ -564,7 +573,7 @@ export class HeteroList {
   }
 
   public get endType(): string {
-   // console.log(this.pluginCategory);
+    // console.log(this.pluginCategory);
     if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
       return this.pluginCategory.descFilter.endType();
     }
