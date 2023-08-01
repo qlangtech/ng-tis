@@ -67,18 +67,9 @@ export class LatestSelectedIndex {
         throw new Error(`Error Type:${app.appType}`);
     }
     if (_localStorageService) {
-      let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(tisService, _localStorageService);// _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-      // if (!popularSelected) {
-      //   popularSelected = new LatestSelectedIndex();
-      // } else {
-      //   // Object.assign()
-      //   popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected);
-      // }
-      // console.log(app);
+      let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(tisService, _localStorageService);
       popularSelected.add(new SelectedIndex(app.projectName, app.appType));
       _localStorageService.set(popularSelected.localLatestIndexKey, popularSelected);
-      // console.log(popularSelected.popularLatestSelected);
-      // this.collectionOptionList = popularSelected.popularLatestSelected;
       return popularSelected.popularLatestSelected;
     }
   }

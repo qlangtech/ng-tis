@@ -29,6 +29,7 @@ export const PARAM_END_TYPE = "&endType=";
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName =
   'mq'
+  | 'incr-config'
   | 'sinkFactory'
   | 'k8s-config'
   | 'fs'

@@ -58,16 +58,18 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                         nzShowIcon
               ></nz-alert>
               <ng-template #alterNotice>服务端获取不到该Job状态信息，可能是因为Flink-Cluster重启导致，请手动
-                <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i nz-icon
-                                                                                                    nzType="rollback"
-                                                                                                    nzTheme="outline"></i>恢复
+                <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i
+                  nz-icon
+                  nzType="rollback"
+                  nzTheme="outline"></i>恢复
                 </button>
               </ng-template>
             </ng-container>
             <ng-container *ngSwitchCase="false">
 
               <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
-                <nz-descriptions-item nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
+                <nz-descriptions-item
+                  nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
                 <nz-descriptions-item
                   nzTitle="Start Time">{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
                 <nz-descriptions-item
@@ -98,22 +100,30 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                 </nz-space>
               </ng-template>
               <ng-template #extraTpl>
-                <button *ngIf="this.dto.flinkJobDetail.cancelable" nz-button (click)="manageChannel()"><i nz-icon
-                                                                                                          nzType="setting"
-                                                                                                          nzTheme="outline"></i>操作
-                </button>
+                <nz-space *ngIf="this.dto.flinkJobDetail.cancelable">
+                  <button [nzLoading]="this.formDisabled" (click)="reload()" *nzSpaceItem nz-button><i nz-icon
+                                                                                                       nzType="reload"
+                                                                                                       nzTheme="outline"></i>
+                  </button>
+                  <button *nzSpaceItem nz-button [nzLoading]="this.formDisabled" (click)="manageChannel()"><i nz-icon
+                                                                                                              nzType="setting"
+                                                                                                              nzTheme="outline"></i>操作
+                  </button>
+                </nz-space>
               </ng-template>
               <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
                 <tis-col title="Name" width="20">
                   <ng-template let-rr="r">
-                    <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName" nzOverlayClassName="tooltip-pree"
+                    <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName"
+                       nzOverlayClassName="tooltip-pree"
                        [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
                   </ng-template>
                 </tis-col>
                 <tis-col title="Status" width="10">
                   <ng-template let-rr="r">
-                    <nz-tag [nzColor]="rr.executionStateColor"><i *ngIf="rr.executionStateColor === 'processing'"
-                                                                  nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}
+                    <nz-tag [nzColor]="rr.executionStateColor"><i
+                      *ngIf="rr.executionStateColor === 'processing'"
+                      nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}
                     </nz-tag>
                   </ng-template>
                 </tis-col>
@@ -321,6 +331,15 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     })
   }
 
+  reload() {
+    IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
+    //  if(this.dto.state !== incrStatus.state){
+        this.dto = incrStatus;
+        this.successNotify("状态已更新");
+     // }
+    }, false);
+  }
+
   public startMonitorMqTagsStatus(logtype: string) {
     // console.log(this.currentApp);
     this.msgSubject = this.getWSMsgSubject(logtype);
@@ -403,6 +422,8 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
       // });
     }
   }
+
+
 }
 
 interface TisIncrStatus {
