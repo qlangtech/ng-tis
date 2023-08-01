@@ -184,7 +184,12 @@ export class IndexIncrStatus extends K8SControllerStatus {
    * 增量处理节点启动有异常
    */
   public get incrProcessLaunchHasError(): boolean {
-    return this.k8sReplicationControllerCreated && this.incrProcess && !this.incrProcess.incrGoingOn && !!this.rcDeployment && !!this.rcDeployment.status && this.rcDeployment.status.readyReplicas > 0;
+    return this.k8sReplicationControllerCreated
+      && this.incrProcess
+      && !this.incrProcess.incrGoingOn
+      && !!this.rcDeployment
+      && !!this.rcDeployment.status
+      && this.rcDeployment.status.readyReplicas > 0;
   }
 
   public getFirstPod(): K8sPodState {

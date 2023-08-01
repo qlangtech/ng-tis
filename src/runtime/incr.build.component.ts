@@ -79,7 +79,7 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     // this.route.params.subscribe((_) => {
     //    console.log("xxxxxx");
     // });
-
+//console.log("ddddddddddd");
     //  this.multiViewDAG.loadComponent(IncrBuildStep1Component, null);
     IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
       let k8sRCCreated = incrStatus.k8sReplicationControllerCreated;
