@@ -417,7 +417,7 @@ export class Item {
     // console.log(this.dspt.attrs);
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
-      console.log([at.key, v, at]);
+     // console.log([at.key, v, at]);
       newVal = Item.wrapItemPropVal(v, at);
       if (newVal) {
         newVals[at.key] = (newVal);

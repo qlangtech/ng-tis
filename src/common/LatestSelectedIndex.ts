@@ -20,6 +20,7 @@ import {CurrentCollection} from "./basic.form.component";
 import {Application, AppType} from "./application";
 import {LocalStorageService} from "angular-2-local-storage";
 import {Router} from "@angular/router";
+import {TISService} from "./tis.service";
 
 const maxQueueSize = 8;
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
@@ -36,18 +37,24 @@ export class SelectedIndex {
 export class LatestSelectedIndex {
   private _queue: Array<SelectedIndex> = [];
 
-  public static popularSelectedIndex(_localStorageService: LocalStorageService): LatestSelectedIndex {
-    let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+  constructor(public localLatestIndexKey: string) {
+  }
+
+  public static popularSelectedIndex(tisService: TISService, _localStorageService: LocalStorageService): LatestSelectedIndex {
+    let tisVer = tisService.containMeta ? tisService.tisMeta.buildVersion : '';
+    let localLatestIndexKey = KEY_LOCAL_STORAGE_LATEST_INDEX + "_" + tisVer;
+    let popularSelected: LatestSelectedIndex = _localStorageService.get(localLatestIndexKey);
 
     if (popularSelected) {
-      popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected); // $.extend(, );
+      popularSelected = Object.assign(new LatestSelectedIndex(localLatestIndexKey), popularSelected); // $.extend(, );
     } else {
-      popularSelected = new LatestSelectedIndex();
+      popularSelected = new LatestSelectedIndex(localLatestIndexKey);
+      _localStorageService.set(localLatestIndexKey, popularSelected);
     }
     return popularSelected;
   }
 
-  public static routeToApp(_localStorageService: LocalStorageService, r: Router, app: Application): Array<SelectedIndex> {
+  public static routeToApp(tisService: TISService, _localStorageService: LocalStorageService, r: Router, app: Application): Array<SelectedIndex> {
     // console.log(app);
     switch (app.appType) {
       case AppType.DataX:
@@ -60,16 +67,16 @@ export class LatestSelectedIndex {
         throw new Error(`Error Type:${app.appType}`);
     }
     if (_localStorageService) {
-      let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-      if (!popularSelected) {
-        popularSelected = new LatestSelectedIndex();
-      } else {
-        // Object.assign()
-        popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected);
-      }
+      let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(tisService, _localStorageService);// _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
+      // if (!popularSelected) {
+      //   popularSelected = new LatestSelectedIndex();
+      // } else {
+      //   // Object.assign()
+      //   popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected);
+      // }
       // console.log(app);
       popularSelected.add(new SelectedIndex(app.projectName, app.appType));
-      _localStorageService.set(KEY_LOCAL_STORAGE_LATEST_INDEX, popularSelected);
+      _localStorageService.set(popularSelected.localLatestIndexKey, popularSelected);
       // console.log(popularSelected.popularLatestSelected);
       // this.collectionOptionList = popularSelected.popularLatestSelected;
       return popularSelected.popularLatestSelected;

@@ -149,6 +149,6 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     //   this.router.navigate(['/x', app.projectName]);
     // }
     // _localStorageService: LocalStorageService, r: Router, app: Application
-    LatestSelectedIndex.routeToApp(this._localStorageService, this.router, app);
+    LatestSelectedIndex.routeToApp(this.tisService,this._localStorageService, this.router, app);
   }
 }

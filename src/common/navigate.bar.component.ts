@@ -40,155 +40,155 @@ import {Application} from "./application";
 @Component({
   selector: 'my-navigate',
   template: `
-      <div class="logo" [ngSwitch]="appHasNotDefine">
-          <a *ngSwitchCase="true" class="navbar-brand" routerLink="/">
-              <svg version="1.1"
-                   preserveAspectRatio="xMinYMin meet"
-                   xmlns="http://www.w3.org/2000/svg"
-                   width="50" height="31"
-                   xmlns:xlink="http://www.w3.org/1999/xlink">
+    <div class="logo" [ngSwitch]="appHasNotDefine">
+      <a *ngSwitchCase="true" class="navbar-brand" routerLink="/">
+        <svg version="1.1"
+             preserveAspectRatio="xMinYMin meet"
+             xmlns="http://www.w3.org/2000/svg"
+             width="50" height="31"
+             xmlns:xlink="http://www.w3.org/1999/xlink">
 
-                  <image xlink:href="/images/icon/tis-log.svg" width="50" height="31"/>
-              </svg>
+          <image xlink:href="/images/icon/tis-log.svg" width="50" height="31"/>
+        </svg>
+      </a>
+      <ng-container *ngSwitchCase="false">
+        <a class="navbar-brand" routerLink="/base/applist">
+          <i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
+      </ng-container>
+    </div>
+
+    <ul class="nav-items" nz-menu nzTheme="dark" nzMode="horizontal" [ngSwitch]="appHasNotDefine">
+      <ng-container *ngSwitchCase="true">
+        <li nz-menu-item>
+          <a nz-dropdown [nzDropdownMenu]="myIndex">
+            我的实例
+            <i nz-icon nzType="down"></i>
           </a>
-          <ng-container *ngSwitchCase="false">
-              <a class="navbar-brand" routerLink="/base/applist">
-                  <i class="fa fa-home fa-2x" aria-hidden="true"></i></a>
-          </ng-container>
-      </div>
+          <nz-dropdown-menu #myIndex="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item><a routerLink="/base/applist"><i class="fa fa-list-ul"
+                                                                aria-hidden="true"></i>列表</a></li>
+              <li nz-menu-item><a routerLink="/base/dataxadd"><i class="fa fa-plus" aria-hidden="true"></i>添加</a></li>
+            </ul>
+          </nz-dropdown-menu>
+        </li>
+        <li nz-menu-item>
+          <a nz-dropdown [nzDropdownMenu]="baseManage">
+            基础管理
+            <i nz-icon nzType="down"></i>
+          </a>
+          <nz-dropdown-menu #baseManage="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
+              <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
+              <li nz-menu-item><a routerLink="/base/flink-cluster">Flink Cluster</a></li>
+              <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
+              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
+              <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
+              <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
+            </ul>
+          </nz-dropdown-menu>
+        </li>
 
-      <ul class="nav-items" nz-menu nzTheme="dark" nzMode="horizontal" [ngSwitch]="appHasNotDefine">
-          <ng-container *ngSwitchCase="true">
-              <li nz-menu-item>
-                  <a nz-dropdown [nzDropdownMenu]="myIndex">
-                      我的实例
-                      <i nz-icon nzType="down"></i>
-                  </a>
-                  <nz-dropdown-menu #myIndex="nzDropdownMenu">
-                      <ul nz-menu nzSelectable>
-                          <li nz-menu-item><a routerLink="/base/applist"><i class="fa fa-list-ul"
-                                                                            aria-hidden="true"></i>列表</a></li>
-                          <li nz-menu-item><a routerLink="/base/dataxadd"><i class="fa fa-plus" aria-hidden="true"></i>添加</a></li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </li>
-              <li nz-menu-item>
-                  <a nz-dropdown [nzDropdownMenu]="baseManage">
-                      基础管理
-                      <i nz-icon nzType="down"></i>
-                  </a>
-                  <nz-dropdown-menu #baseManage="nzDropdownMenu">
-                      <ul nz-menu nzSelectable>
-                          <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
-                          <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
-                          <li nz-menu-item><a routerLink="/base/flink-cluster">Flink Cluster</a></li>
-                          <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
-                          <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
-                          <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
-                          <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </li>
-
-              <li nz-menu-item>
-                  <a nz-dropdown [nzDropdownMenu]="offlineManage">
-                      离线数据
-                      <i nz-icon nzType="down"></i>
-                  </a>
-                  <nz-dropdown-menu #offlineManage="nzDropdownMenu">
-                      <ul nz-menu nzSelectable>
-                          <li nz-menu-item><a routerLink="/offline/ds">数据源管理</a></li>
-                          <li nz-menu-item><a routerLink="/offline/wf">DF管理</a></li>
-                      </ul>
-                  </nz-dropdown-menu>
-              </li>
-          </ng-container>
-          <ng-container *ngSwitchCase="false">
-              <li class="index-select-block" nz-menu-item nzMatchRouter>
-                  <nz-select name="selectedCollection"
-                             style="width: 100%;"
-                             [compareWith]="selectedCollectionCompareFn"
-                             [nzSize]="'large'"
-                             [ngModel]="app"
-                             nzPlaceHolder="请选择"
-                             [nzDropdownMatchSelectWidth]="false"
-                             nzShowSearch
-                             (ngModelChange)="onCollectionChange($event)"
-                             [nzServerSearch]="true"
-                             (nzOnSearch)="onCollectionSearch($event)"
-                  >
-                      <ng-container *ngFor="let o of collectionOptionList">
-                          <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o.name"></nz-option>
-                      </ng-container>
-                      <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
-                          <i nz-icon nzType="loading" class="loading-icon"></i> Loading...
-                      </nz-option>
-                  </nz-select>
-              </li>
-          </ng-container>
-          <li class="user-profile" nz-menu-item nzMatchRouter>
-              <button nz-button nzType="link" (click)="openTisAbout()">关于</button>
-              <button nz-button nz-dropdown [nzDropdownMenu]="user">
-                  <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
-                  <i nz-icon nzType="down"></i>
-              </button>
-              <nz-dropdown-menu #user="nzDropdownMenu">
-                  <ul nz-menu>
-                      <li nz-menu-item (click)="viewProfile()"><i nz-icon nzType="info" nzTheme="outline"></i>信息</li>
-                      <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
-                  </ul>
-              </nz-dropdown-menu>
-              <ng-template #tisAbout>
-                  <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
-                      <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
-                      <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
-                  </nz-descriptions>
-                  <svg version="1.1"
-                       preserveAspectRatio="xMinYMin meet"
-                       xmlns="http://www.w3.org/2000/svg"
-                       width="70" height="43"
-                       xmlns:xlink="http://www.w3.org/1999/xlink">
-                      <image xlink:href="/images/icon/tis-log.svg" width="70"/>
-                  </svg>
-              </ng-template>
-          </li>
-          <!--
-                    <li nz-menu-item>
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarUsers" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">权限</a>
-                        <div class="dropdown-menu" aria-labelledby="navbarUsers">
-                            <a class="dropdown-item" href="/runtime/role_list.htm">角色</a>
-                            <a class="dropdown-item" href="/runtime/func_list.htm">功能</a>
-                            <a class="dropdown-item" routerLink="/t/usr">用户</a>
-                        </div>
-                    </li>
-             -->
-      </ul>
+        <li nz-menu-item>
+          <a nz-dropdown [nzDropdownMenu]="offlineManage">
+            离线数据
+            <i nz-icon nzType="down"></i>
+          </a>
+          <nz-dropdown-menu #offlineManage="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item><a routerLink="/offline/ds">数据源管理</a></li>
+              <li nz-menu-item><a routerLink="/offline/wf">DF管理</a></li>
+            </ul>
+          </nz-dropdown-menu>
+        </li>
+      </ng-container>
+      <ng-container *ngSwitchCase="false">
+        <li class="index-select-block" nz-menu-item nzMatchRouter>
+          <nz-select name="selectedCollection"
+                     style="width: 100%;"
+                     [compareWith]="selectedCollectionCompareFn"
+                     [nzSize]="'large'"
+                     [ngModel]="app"
+                     nzPlaceHolder="请选择"
+                     [nzDropdownMatchSelectWidth]="false"
+                     nzShowSearch
+                     (ngModelChange)="onCollectionChange($event)"
+                     [nzServerSearch]="true"
+                     (nzOnSearch)="onCollectionSearch($event)"
+          >
+            <ng-container *ngFor="let o of collectionOptionList">
+              <nz-option *ngIf="!isLoading" [nzValue]="o" [nzLabel]="o.name"></nz-option>
+            </ng-container>
+            <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+              <i nz-icon nzType="loading" class="loading-icon"></i> Loading...
+            </nz-option>
+          </nz-select>
+        </li>
+      </ng-container>
+      <li class="user-profile" nz-menu-item nzMatchRouter>
+        <button nz-button nzType="link" (click)="openTisAbout()">关于</button>
+        <button nz-button nz-dropdown [nzDropdownMenu]="user">
+          <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
+          <i nz-icon nzType="down"></i>
+        </button>
+        <nz-dropdown-menu #user="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="viewProfile()"><i nz-icon nzType="info" nzTheme="outline"></i>信息</li>
+            <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
+          </ul>
+        </nz-dropdown-menu>
+        <ng-template #tisAbout>
+          <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
+            <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
+          </nz-descriptions>
+          <svg version="1.1"
+               preserveAspectRatio="xMinYMin meet"
+               xmlns="http://www.w3.org/2000/svg"
+               width="70" height="43"
+               xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image xlink:href="/images/icon/tis-log.svg" width="70"/>
+          </svg>
+        </ng-template>
+      </li>
+      <!--
+                <li nz-menu-item>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarUsers" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">权限</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarUsers">
+                        <a class="dropdown-item" href="/runtime/role_list.htm">角色</a>
+                        <a class="dropdown-item" href="/runtime/func_list.htm">功能</a>
+                        <a class="dropdown-item" routerLink="/t/usr">用户</a>
+                    </div>
+                </li>
+         -->
+    </ul>
   `,
   styles: [`
-      .ng-star-inserted {
-          margin: 0
-      }
+    .ng-star-inserted {
+      margin: 0
+    }
 
-      .index-select-block {
-          width: 300px;
-      }
+    .index-select-block {
+      width: 300px;
+    }
 
-      .nav-items {
-      }
+    .nav-items {
+    }
 
-      .navbar-brand {
-          font-size: 15px;
-      }
+    .navbar-brand {
+      font-size: 15px;
+    }
 
-      .user-profile {
-          float: right;
-      }
+    .user-profile {
+      float: right;
+    }
 
-      .logo {
-          margin: 10px 24px 0px 24px;
-          float: left;
-      }
+    .logo {
+      margin: 10px 24px 0px 24px;
+      float: left;
+    }
   `]
 })
 export class NavigateBarComponent extends BasicFormComponent implements OnInit {
@@ -293,7 +293,8 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       this.collectionOptionList = data;
       this.isLoading = false;
     });
-    let popularSelected = LatestSelectedIndex.popularSelectedIndex(this._localStorageService);
+
+    let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
 
     if (this.app) {
       popularSelected.addIfNotContain(this.app);
@@ -315,7 +316,10 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   openInitSystemDialog() {
-    let ref: NzModalRef<InitSystemComponent> = this.openDialog(InitSystemComponent, {nzTitle: "初始化TIS", nzClosable: false});
+    let ref: NzModalRef<InitSystemComponent> = this.openDialog(InitSystemComponent, {
+      nzTitle: "初始化TIS",
+      nzClosable: false
+    });
     ref.afterClose.subscribe((result: TisResponseResult) => {
       if (result.success) {
         this.successNotify("TIS配置初始化完成");
@@ -351,7 +355,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     let app = new Application();
     app.appType = value.appType;
     app.projectName = value.name;
-    LatestSelectedIndex.routeToApp(this._localStorageService, this.r, app);
+    LatestSelectedIndex.routeToApp(this.tisService,this._localStorageService, this.r, app);
   }
 
 
