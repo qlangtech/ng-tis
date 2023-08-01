@@ -881,8 +881,8 @@ export class NotebookwrapperComponent implements OnInit {
               </div>
             </ng-template>
 
-            <form nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
-                  *ngIf=" _pp.descVal.propVals.length >0" class="sub-prop">
+            <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}"  nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
+                  *ngIf=" _pp.descVal.propVals.length >0" >
               <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
                 <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
                            [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
