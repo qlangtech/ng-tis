@@ -162,15 +162,15 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     /**=====================================================
      * <<<<<<<<<for test
      =======================================================*/
-    // DataxAddStep2Component.getDataXReaderWriterEnum(this).then((rwEnum: DataXReaderWriterEnum) => {
+    // DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
     //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "hudi2";
-    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+    //   dto.dataxPipeName = "hdfs_mysql";
+    //   dto.processMeta = {readerRDBMS: false, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MySQL" === r.displayName);
-    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Hudi" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
+    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "TDFS" === r.displayName);
+    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
+    //   this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

@@ -247,6 +247,7 @@ export interface TisResponseResult {
 export class Item {
   impl = '';
   implUrl: string;
+  public dspt: Descriptor;
   //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
   // vals: Map<string /**key*/, ItemPropVal> = new Map();
   // 后一种类型支持subform的类型
@@ -337,7 +338,7 @@ export class Item {
       return;
     }
     let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
-   // console.log([at.key, at]);
+    // console.log([at.key, at]);
     if (at.describable) {
       let d = at.descriptors.get(v.impl);
       if (!d) {
@@ -398,9 +399,19 @@ export class Item {
   }
 
 
-  constructor(public dspt: Descriptor, public updateModel = false) {
-    if (dspt) {
-      this.impl = dspt.impl;
+  constructor(_dspt: Descriptor, public updateModel = false) {
+    // if (dspt) {
+    //   this.impl = dspt.impl;
+    // }
+    this.newDesc = _dspt;
+  }
+
+  public set newDesc(desc: Descriptor) {
+    this.dspt = desc;
+    if (desc) {
+      this.impl = desc.impl;
+    } else {
+      this.impl = null;
     }
   }
 
@@ -418,7 +429,7 @@ export class Item {
     // console.log(this.dspt.attrs);
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
-     // console.log([at.key, v, at]);
+      // console.log([at.key, v, at]);
       newVal = Item.wrapItemPropVal(v, at);
       if (newVal) {
         newVals[at.key] = (newVal);
@@ -429,6 +440,7 @@ export class Item {
 
   public clearPropVals(dspClear = true): void {
     delete this._propVals;
+    this.vals = {};
     if (dspClear) {
       this.dspt = null;
     }

@@ -217,6 +217,7 @@ export class TISService {
   }
 
   private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
+   // console.log(result);
     if (result.success) {
       // console.log([result.msg, e, (result.msg && result.msg.length > 0) , ( e === undefined || !e.notShowBizMsg) , ( (e === undefined) || !e.createOrGetNotebook)]);
       if ((result.msg && result.msg.length > 0)

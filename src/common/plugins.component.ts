@@ -791,7 +791,7 @@ export class NotebookwrapperComponent implements OnInit {
                              [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="fieldTypeEnums">
-                      <!--ENUM-->
+                    <!--ENUM-->
                       <nz-select nzShowSearch [nzMode]="  _pp.enumMode " [disabled]="disabled"
                                  [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"
                                  nzAllowClear>
@@ -863,14 +863,18 @@ export class NotebookwrapperComponent implements OnInit {
           </ng-container>
           <ng-container *ngSwitchCase="false">
 
-            <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled" [name]="_pp.key" nzAllowClear [(ngModel)]="_pp.descVal.impl"
+            <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled" [name]="_pp.key"
+                       nzAllowClear [ngModel]="_pp.descVal.impl"
                        (ngModelChange)="changePlugin(_pp,$event)"
                        [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
-              <nz-option *ngFor="let e of _pp.descVal.descriptors.values()" [nzLabel]="e.displayName"
+              <nz-option *ngFor="let e of _pp.descVal.descriptors.values()"
+                         [nzLabel]="e.displayName"
                          [nzValue]="e.impl"></nz-option>
             </nz-select>
 
-            <button *ngIf="_pp.descVal.extensible" nz-button nzType="link" (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload" nzTheme="outline"></i></button>
+            <button *ngIf="_pp.descVal.extensible" nz-button nzType="link"
+                    (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload"
+                                                                           nzTheme="outline"></i></button>
 
             <ng-template #renderExtraPluginTemplate>
               <nz-divider></nz-divider>
@@ -881,8 +885,9 @@ export class NotebookwrapperComponent implements OnInit {
               </div>
             </ng-template>
 
-            <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}"  nz-form [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
-                  *ngIf=" _pp.descVal.propVals.length >0" >
+            <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
+                  [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
+                  *ngIf=" _pp.descVal.propVals.length >0">
               <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
                 <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
                            [(ngModel)]="_pp.descVal.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
@@ -988,7 +993,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     super(tisService, modalService, notification);
   }
 
-  freshDescPropDescriptors(pluginImpl: string, ip: ItemPropVal){
+  freshDescPropDescriptors(pluginImpl: string, ip: ItemPropVal) {
     let descVal = ip.descVal;
     this.getAllDesc(pluginImpl, ip.key)
       .then((descMap) => {
@@ -997,9 +1002,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           // h.updateDescriptor(descMap);
           this.cdr.detectChanges();
           // this.notification
-          this.notification.create('success', '成功', "已经成功更新\""+ ip.label+"\"的可选项");
-        }else{
-          this.notification.create('warning', '通知',  "\""+ ip.label + "\"的可选项并没有变化");
+          this.notification.create('success', '成功', "已经成功更新\"" + ip.label + "\"的可选项");
+        } else {
+          this.notification.create('warning', '通知', "\"" + ip.label + "\"的可选项并没有变化");
         }
       });
   }
@@ -1010,19 +1015,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, descVal.extendPoint, null, []);
 
     drawerRef.afterClose.subscribe((result) => {
-      this.freshDescPropDescriptors(pluginImpl,ip);
-      // this.getAllDesc(pluginImpl, ip.key)
-      //   .then((descMap) => {
-      //     if (descVal.descriptors.size !== descMap.size) {
-      //       descVal.descriptors = descMap;
-      //       // h.updateDescriptor(descMap);
-      //       this.cdr.detectChanges();
-      //     }
-      //   });
-      // console.log(result);
-      // descVal.descriptors
-      // descVal.dspt
-      // this.afterPluginAddClose.emit();
+      this.freshDescPropDescriptors(pluginImpl, ip);
     })
   }
 
@@ -1117,12 +1110,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                // enum
-                // db detail
-                // let item: Item = Object.assign(new Item(d), );
-                // let nn = new ValOption();
-                // n.name = biz.detailed.identityName;
-                // n.impl = d.impl;
+                              // enum
+                              // db detail
+                              // let item: Item = Object.assign(new Item(d), );
+                              // let nn = new ValOption();
+                              // n.name = biz.detailed.identityName;
+                              // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -1187,7 +1180,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
       return;
     }
     let dspt = _pp.descVal.descriptors.get(impl);
-    _pp.descVal.dspt = dspt;
+    _pp.descVal.newDesc = dspt;
+    // console.log([_pp.descVal.impl,_pp.descVal.dspt]);
   }
 
   inputValChange(_pp: ItemPropVal, $event: Event) {
@@ -1239,6 +1233,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
 
   openSelectableInputManager(createRouter: CreatorRouter) {
+   // console.log(createRouter);
     const drawerRef = this.drawerService.create<SelectionInputAssistComponent, {}, {}>({
       nzWidth: "60%",
       nzPlacement: "right",
@@ -1318,26 +1313,75 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
     super(tisService, modalService, notification);
   }
 
-  ngOnInit(): void {
+  private reducePluginType(): Map<PluginName, Array<TargetPlugin>> {
     let tp: TargetPlugin;
-    this.pluginTyps = [];
+    let reducePluginType: Map<PluginName, Array<TargetPlugin>> = new Map<PluginName, Array<TargetPlugin>>();
+    let tplugins: Array<TargetPlugin>;
     for (let i = 0; i < this.createCfg.plugin.length; i++) {
       tp = this.createCfg.plugin[i];
-      let extraParam = "targetItemDesc_" + tp.descName;
-      if (tp.extraParam) {
-        extraParam += (',' + tp.extraParam);
+      tplugins = reducePluginType.get(tp.hetero);
+      if (!tplugins) {
+        tplugins = new Array<TargetPlugin>();
+        reducePluginType.set(tp.hetero, tplugins);
       }
+      tplugins.push(tp);
+    }
+    return reducePluginType;
+  }
+
+  ngOnInit(): void {
+    // let tp: TargetPlugin;
+    this.pluginTyps = [];
+
+    let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
+
+    for (const [key, val] of reducePluginType.entries()) {
+      // console.log(key);
+      // console.log(val);
+      let extraParam = null;
+      let descFilter = {
+        localDescFilter: (desc) => true
+      };
+      let tp: TargetPlugin = {hetero: key};
+      if (val.length === 1) {
+        tp = val[0];
+        extraParam = "targetItemDesc_" + tp.descName;
+        if (tp.extraParam) {
+          extraParam += (',' + tp.extraParam);
+        }
+        descFilter = {
+          localDescFilter: (desc) => {
+            return desc.displayName === tp.descName;
+          }
+        };
+      }
+
       this.pluginTyps.push({
         name: tp.hetero
         , require: true
         , extraParam: extraParam
-        , descFilter: {
-          localDescFilter: (desc) => {
-            return desc.displayName === tp.descName;
-          }
-        }
+        , descFilter: descFilter
       });
     }
+
+
+    // for (let i = 0; i < this.createCfg.plugin.length; i++) {
+    //   tp = this.createCfg.plugin[i];
+    //   let extraParam = "targetItemDesc_" + tp.descName;
+    //   if (tp.extraParam) {
+    //     extraParam += (',' + tp.extraParam);
+    //   }
+    //   this.pluginTyps.push({
+    //     name: tp.hetero
+    //     , require: true
+    //     , extraParam: extraParam
+    //     , descFilter: {
+    //       localDescFilter: (desc) => {
+    //         return desc.displayName === tp.descName;
+    //       }
+    //     }
+    //   });
+    // }
   }
 
   whenAjaxOccur(e: PluginSaveResponse) {
@@ -1360,8 +1404,8 @@ interface CreatorRouter {
 
 interface TargetPlugin {
   hetero: PluginName;
-  extraParam: string;
-  descName: string;
+  extraParam?: string;
+  descName?: string;
 }
 
 
