@@ -28,7 +28,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-      <tis-steps [type]="stepType" [step]="offsetStep(3)"></tis-steps>
+      <tis-steps  [type]="stepType" [step]="offsetStep(3)"></tis-steps>
       <!--      <tis-form [fieldsErr]="errorItem">-->
       <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
       <!--              <tis-header-tool>-->
@@ -37,7 +37,8 @@ import {ActivatedRoute, Router} from "@angular/router";
       <!--          </tis-page-header>-->
       <!--      </tis-form>-->
       <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()" [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
+          <tis-steps-tools-bar [result]="result"  [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()"
+                               [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
           <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
               <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">
                   <input nz-input [(ngModel)]="writerTargetTabName"/>
@@ -49,7 +50,9 @@ import {ActivatedRoute, Router} from "@angular/router";
                       <tis-col title="Name" width="40">
                           <ng-template let-u='r'>
                               <nz-form-item>
-                                  <nz-form-control [nzValidateStatus]="u.ip.validateStatus" [nzHasFeedback]="u.ip.hasFeedback" [nzErrorTip]="u.ip.error">
+                                  <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
+                                                   [nzHasFeedback]="u.ip.hasFeedback"
+                                                   [nzErrorTip]="u.ip.error">
                                       <input nz-input [(ngModel)]="u.name"/>
                                   </nz-form-control>
                               </nz-form-item>
@@ -57,31 +60,66 @@ import {ActivatedRoute, Router} from "@angular/router";
                       </tis-col>
                       <tis-col title="Type">
                           <ng-template let-u='r'>
-                              {{u.type.typeDesc}}
+                              <nz-space>
+                                  <nz-select *nzSpaceItem class="type-select" [(ngModel)]="u.type.type"
+                                             nzPlaceHolder="请选择">
+                                      <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
+                                                 *ngFor="let tp of this.typeMetas"></nz-option>
+                                  </nz-select>
+                                  <ng-container
+                                          *ngTemplateOutlet="assistType;context:{typemeta:this.typeMap.get(u.type.type)}">
+                                  </ng-container>
+                                  <ng-template #assistType let-typemeta="typemeta">
+                                      <ng-container *ngIf="typemeta.containColSize">
+                                          <nz-input-number nz-tooltip nzTooltipTitle="Column Size" *nzSpaceItem
+                                                           [(ngModel)]="u.type.columnSize"
+                                                           [nzMin]="typemeta.colsSizeRange.min"
+                                                           [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
+                                      </ng-container>
+                                      <ng-container *ngIf="typemeta.containDecimalRange">
+                                          <nz-input-number nz-tooltip nzTooltipTitle="Decimal Digits Size" *nzSpaceItem
+                                                           [(ngModel)]="u.type.decimalDigits"
+                                                           [nzMin]="typemeta.decimalRange.min"
+                                                           [nzMax]="typemeta.decimalRange.max"></nz-input-number>
+                                      </ng-container>
+
+                                  </ng-template>
+                              </nz-space>
                           </ng-template>
                       </tis-col>
+                    <tis-col title="主键">
+                      <ng-template let-u='r'>
+                        <nz-switch
+                          [(ngModel)]="u.pk"
+                          [nzCheckedChildren]="checkedTemplate"
+                          [nzUnCheckedChildren]="unCheckedTemplate"
+                        ></nz-switch>
+                        <ng-template #checkedTemplate><span nz-icon nzType="check"></span></ng-template>
+                        <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
+                      </ng-template>
+                    </tis-col>
                   </tis-page>
               </tis-ipt>
           </tis-form>
       </nz-spin>
   `
   , styles: [
-      `
-            .editable-cell {
-                position: relative;
-                padding: 5px 12px;
-                cursor: pointer;
-            }
+    `
+      .editable-cell {
+        position: relative;
+        padding: 5px 12px;
+        cursor: pointer;
+      }
 
-            .editable-row:hover .editable-cell {
-                border: 1px solid #d9d9d9;
-                border-radius: 4px;
-                padding: 4px 11px;
-            }
+      .editable-row:hover .editable-cell {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        padding: 4px 11px;
+      }
 
-            nz-form-item {
-                margin: 0px;
-            }
+      nz-form-item {
+        margin: 0px;
+      }
     `
   ]
 })
@@ -95,6 +133,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   writerTargetTabName: string;
   writerFromTabName: string;
   colsMeta: Array<ReaderColMeta> = [];
+  typeMetas: Array<DataTypeMeta> = [];
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
@@ -106,20 +145,41 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   //   }
   //   return meta.index;
   // }
+  private _typeMap: Map<number, DataTypeMeta>
+  get typeMap(): Map<number, DataTypeMeta> {
+    if (!this._typeMap) {
+      if (this.typeMetas.length > 0) {
+        this._typeMap = new Map();
+        for (let type of this.typeMetas) {
+          this._typeMap.set(type.type.type, type);
+        }
+      }
+    }
+    return this._typeMap;
+  }
 
   protected initialize(app: CurrentCollection): void {
 
     let url = '/coredefine/corenodemanage.ajax';
-    this.httpPost(url, 'action=datax_action&emethod=get_writer_cols_meta&dataxName=' + this.dto.dataxPipeName).then((r) => {
-      this.colsMeta = r.bizresult.sourceCols;
-      this.writerTargetTabName = r.bizresult.to;
-      this.writerFromTabName = r.bizresult.from;
-      let index = 0;
-      this.colsMeta.forEach((c) => {
-        c.index = ++index;
-        c.ip = new ItemPropVal();
+    this.httpPost(url, 'action=datax_action&emethod=get_writer_cols_meta&dataxName=' + this.dto.dataxPipeName)
+      .then((r) => {
+        let typeMetas = r.bizresult.colMetas;
+        this.typeMetas = typeMetas;
+        let typeMap: Map<number, DataTypeMeta> = new Map();
+        for (let type of this.typeMetas) {
+          typeMap.set(type.type.type, type);
+        }
+       // console.log(typeMetas);
+        let tabMapper = r.bizresult.tabMapper;
+        this.colsMeta = tabMapper.sourceCols;
+        this.writerTargetTabName = tabMapper.to;
+        this.writerFromTabName = tabMapper.from;
+        let index = 0;
+        this.colsMeta.forEach((c) => {
+          c.index = ++index;
+          c.ip = new ItemPropVal();
+        });
       });
-    });
 
   }
 
@@ -167,5 +227,38 @@ interface ReaderColMeta {
   name: string;
   type: string;
   ip: ItemPropVal;
+}
+
+// {
+//   "colsSizeRange": {},
+//   "containColSize": true,
+//   "containDecimalRange": false,
+//   "type": {
+//   "columnSize": 32,
+//     "decimalDigits": 0,
+//     "s": "12,32,",
+//     "type": 12,
+//     "typeDesc": "varchar(32)",
+//     "typeName": "VARCHAR",
+//     "unsigned": false,
+//     "unsignedToken": ""
+// }
+// }
+
+interface DataTypeMeta {
+  colsSizeRange: { min: number, max: number };
+  decimalRange: { min: number, max: number };
+  containColSize: boolean;
+  "containDecimalRange": boolean,
+  "type": {
+    "columnSize": number,
+    "decimalDigits": number,
+    //"s": "12,32,",
+    "type": number,
+    //"typeDesc": "varchar(32)",
+    "typeName": string,
+    // "unsigned": false,
+    // "unsignedToken": ""
+  }
 }
 

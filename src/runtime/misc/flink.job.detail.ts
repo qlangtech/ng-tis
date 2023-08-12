@@ -31,6 +31,9 @@ declare module flink.job.detail {
   }
 
   export interface IncrJobStatus {
+    // example:
+    jobId: string;
+    savePointRootPath: string;
     savepointPaths: Array<FlinkSavepoint>;
   }
 

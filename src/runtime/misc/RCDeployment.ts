@@ -159,6 +159,7 @@ export interface IncrDesc extends PluginExtraProps {
 export class IndexIncrStatus extends K8SControllerStatus {
   public incrScriptCreated: boolean;
   public incrScriptMainFileContent: string;
+  public restorableByCheckpoint:boolean;
   public k8sPluginInitialized: boolean;
   public flinkJobDetail: FlinkJobDetail;
   public incrProcess: IncrProcess;
