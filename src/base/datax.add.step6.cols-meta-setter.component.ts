@@ -28,80 +28,80 @@ import {ActivatedRoute, Router} from "@angular/router";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-      <tis-steps  [type]="stepType" [step]="offsetStep(3)"></tis-steps>
-      <!--      <tis-form [fieldsErr]="errorItem">-->
-      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-      <!--              <tis-header-tool>-->
-      <!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-      <!--              </tis-header-tool>-->
-      <!--          </tis-page-header>-->
-      <!--      </tis-form>-->
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [result]="result"  [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()"
-                               [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
-          <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
-              <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">
-                  <input nz-input [(ngModel)]="writerTargetTabName"/>
-              </tis-ipt>
-              <tis-ipt #targetColsEnum title="Writer列描述" name="targetColsEnum">
-                  <tis-page [rows]="colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
-                      <tis-col title="Index" field="index" width="7">
-                      </tis-col>
-                      <tis-col title="Name" width="40">
-                          <ng-template let-u='r'>
-                              <nz-form-item>
-                                  <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
-                                                   [nzHasFeedback]="u.ip.hasFeedback"
-                                                   [nzErrorTip]="u.ip.error">
-                                      <input nz-input [(ngModel)]="u.name"/>
-                                  </nz-form-control>
-                              </nz-form-item>
-                          </ng-template>
-                      </tis-col>
-                      <tis-col title="Type">
-                          <ng-template let-u='r'>
-                              <nz-space>
-                                  <nz-select *nzSpaceItem class="type-select" [(ngModel)]="u.type.type"
-                                             nzPlaceHolder="请选择">
-                                      <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
-                                                 *ngFor="let tp of this.typeMetas"></nz-option>
-                                  </nz-select>
-                                  <ng-container
-                                          *ngTemplateOutlet="assistType;context:{typemeta:this.typeMap.get(u.type.type)}">
-                                  </ng-container>
-                                  <ng-template #assistType let-typemeta="typemeta">
-                                      <ng-container *ngIf="typemeta.containColSize">
-                                          <nz-input-number nz-tooltip nzTooltipTitle="Column Size" *nzSpaceItem
-                                                           [(ngModel)]="u.type.columnSize"
-                                                           [nzMin]="typemeta.colsSizeRange.min"
-                                                           [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
-                                      </ng-container>
-                                      <ng-container *ngIf="typemeta.containDecimalRange">
-                                          <nz-input-number nz-tooltip nzTooltipTitle="Decimal Digits Size" *nzSpaceItem
-                                                           [(ngModel)]="u.type.decimalDigits"
-                                                           [nzMin]="typemeta.decimalRange.min"
-                                                           [nzMax]="typemeta.decimalRange.max"></nz-input-number>
-                                      </ng-container>
+    <tis-steps [type]="stepType" [step]="offsetStep(3)"></tis-steps>
+    <!--      <tis-form [fieldsErr]="errorItem">-->
+    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+    <!--              <tis-header-tool>-->
+    <!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+    <!--              </tis-header-tool>-->
+    <!--          </tis-page-header>-->
+    <!--      </tis-form>-->
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <tis-steps-tools-bar [result]="result" [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()"
+                           [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
+      <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
+        <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">
+          <input nz-input [(ngModel)]="writerTargetTabName"/>
+        </tis-ipt>
+        <tis-ipt #targetColsEnum title="Writer列描述" name="targetColsEnum">
+          <tis-page [rows]="colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
+            <tis-col title="Index" field="index" width="7">
+            </tis-col>
+            <tis-col title="Name" width="40">
+              <ng-template let-u='r'>
+                <nz-form-item>
+                  <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
+                                   [nzHasFeedback]="u.ip.hasFeedback"
+                                   [nzErrorTip]="u.ip.error">
+                    <input nz-input [(ngModel)]="u.name"/>
+                  </nz-form-control>
+                </nz-form-item>
+              </ng-template>
+            </tis-col>
+            <tis-col title="Type">
+              <ng-template let-u='r'>
+                <nz-space>
+                  <nz-select *nzSpaceItem class="type-select" [(ngModel)]="u.type.type" (ngModelChange)="typeChange(u.type)"
+                             nzPlaceHolder="请选择">
+                    <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
+                               *ngFor="let tp of this.typeMetas"></nz-option>
+                  </nz-select>
+                  <ng-container
+                    *ngTemplateOutlet="assistType;context:{typemeta:this.typeMap.get(u.type.type)}">
+                  </ng-container>
+                  <ng-template #assistType let-typemeta="typemeta">
+                    <ng-container *ngIf="typemeta.containColSize">
+                      <nz-input-number nz-tooltip nzTooltipTitle="Column Size" *nzSpaceItem
+                                       [(ngModel)]="u.type.columnSize"
+                                       [nzMin]="typemeta.colsSizeRange.min"
+                                       [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
+                    </ng-container>
+                    <ng-container *ngIf="typemeta.containDecimalRange">
+                      <nz-input-number nz-tooltip nzTooltipTitle="Decimal Digits Size" *nzSpaceItem
+                                       [(ngModel)]="u.type.decimalDigits"
+                                       [nzMin]="typemeta.decimalRange.min"
+                                       [nzMax]="typemeta.decimalRange.max"></nz-input-number>
+                    </ng-container>
 
-                                  </ng-template>
-                              </nz-space>
-                          </ng-template>
-                      </tis-col>
-                    <tis-col title="主键">
-                      <ng-template let-u='r'>
-                        <nz-switch
-                          [(ngModel)]="u.pk"
-                          [nzCheckedChildren]="checkedTemplate"
-                          [nzUnCheckedChildren]="unCheckedTemplate"
-                        ></nz-switch>
-                        <ng-template #checkedTemplate><span nz-icon nzType="check"></span></ng-template>
-                        <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
-                      </ng-template>
-                    </tis-col>
-                  </tis-page>
-              </tis-ipt>
-          </tis-form>
-      </nz-spin>
+                  </ng-template>
+                </nz-space>
+              </ng-template>
+            </tis-col>
+            <tis-col title="主键">
+              <ng-template let-u='r'>
+                <nz-switch
+                  [(ngModel)]="u.pk"
+                  [nzCheckedChildren]="checkedTemplate"
+                  [nzUnCheckedChildren]="unCheckedTemplate"
+                ></nz-switch>
+                <ng-template #checkedTemplate><span nz-icon nzType="check"></span></ng-template>
+                <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
+              </ng-template>
+            </tis-col>
+          </tis-page>
+        </tis-ipt>
+      </tis-form>
+    </nz-spin>
   `
   , styles: [
     `
@@ -169,7 +169,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
         for (let type of this.typeMetas) {
           typeMap.set(type.type.type, type);
         }
-       // console.log(typeMetas);
+        // console.log(typeMetas);
         let tabMapper = r.bizresult.tabMapper;
         this.colsMeta = tabMapper.sourceCols;
         this.writerTargetTabName = tabMapper.to;
@@ -220,6 +220,18 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
         }
       });
   }
+
+  typeChange(type: DataTypeDesc) {
+   // console.log(type);
+
+    let meta: DataTypeMeta = this.typeMap.get(type.type)
+    if(meta.containColSize){
+      type.columnSize = meta.type.columnSize;
+    }
+    if(meta.containDecimalRange){
+      type.decimalDigits =  meta.type.decimalDigits;
+    }
+  }
 }
 
 interface ReaderColMeta {
@@ -250,15 +262,17 @@ interface DataTypeMeta {
   decimalRange: { min: number, max: number };
   containColSize: boolean;
   "containDecimalRange": boolean,
-  "type": {
-    "columnSize": number,
-    "decimalDigits": number,
-    //"s": "12,32,",
-    "type": number,
-    //"typeDesc": "varchar(32)",
-    "typeName": string,
-    // "unsigned": false,
-    // "unsignedToken": ""
-  }
+  "type": DataTypeDesc
+}
+
+interface DataTypeDesc {
+  "columnSize": number,
+  "decimalDigits": number,
+  //"s": "12,32,",
+  "type": number,
+  //"typeDesc": "varchar(32)",
+  "typeName": string,
+  // "unsigned": false,
+  // "unsignedToken": ""
 }
 
