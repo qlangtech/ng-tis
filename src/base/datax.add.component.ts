@@ -283,6 +283,7 @@ export class AddStep2ComponentCfg {
 
 export interface DataXCreateProcessMeta {
   readerRDBMS: boolean;
+  readerRDBMSChangeableInLifetime: boolean;
   // DataX Reader 是否有明确的表名
   explicitTable: boolean;
 
