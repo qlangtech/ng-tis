@@ -141,10 +141,12 @@ export class SelectedTabsComponent extends BasicFormComponent {
     if (!this.descriptor) {
       throw new Error("descriptor can not be null");
     }
-    // console.log(meta);
+    // console.log([meta, this.dataXReaderTargetName]);
+    let detailId = meta.id;
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
-      this.descriptor.displayName, this.descriptor.impl, meta.fieldName, this.dataXReaderTargetName, this.skipSubformDescNullError)];
+      this.descriptor.displayName, this.descriptor.impl, meta.fieldName
+      , this.dataXReaderTargetName+ ",subformDetailIdValue_" + detailId, this.skipSubformDescNullError)];
     // console.log(pluginMeta);
     let ip = this.subFormHetero.items[0].vals[meta.id];
     if (ip instanceof ItemPropVal) {
@@ -274,7 +276,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
     pluginMeta = pluginMeta.map((pm) => {
       let m: PluginMeta = <any>pm;
       // 主要目的是将subFormPlugin的desc信息去除掉
-      return {name: m.name, require: m.require, extraParam: m.extraParam + ",subformDetailIdValue_" + detailId};
+      return {name: m.name, require: m.require, extraParam: m.extraParam };
     });
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
       nzWidth: "60%",

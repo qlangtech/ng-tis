@@ -197,12 +197,21 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
       //   tabs.set(tab, {tableName: tab, selectableCols: []});
       // });
     }
-    if (this.dto.processMeta.readerRDBMS) {
-      this.nextStep.emit(this.dto);
-    } else {
-      let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep5Component};
-      this.nextStep.emit(next);
-    }
+
+    DataxAddStep5Component.rewriteProcessMeta(this, this.dto)
+      .then((pmeta) => {
+        if (pmeta.readerRDBMS) {
+          // console.log(this.dto.processMeta);
+          this.nextStep.emit(this.dto);
+        } else {
+          let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep5Component};
+          this.nextStep.emit(next);
+        }
+      });
+
+
+
+
   }
 
 }

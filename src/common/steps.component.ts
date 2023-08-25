@@ -114,8 +114,9 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
           </button> &nbsp;
         </ng-container>
         <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
-          <button nz-button nzType="primary" (click)="goOn.emit($event)"><i nz-icon nzType="step-forward"
-                                                                            nzTheme="outline"></i>下一步
+          <button nz-button nzType="primary" (click)="goOn.emit($event)">
+            <i nz-icon nzType="step-forward"
+              nzTheme="outline"></i>下一步
           </button>
         </ng-container>
         <ng-content select="final-exec-controller"></ng-content>
