@@ -241,6 +241,30 @@ export interface TisResponseResult {
   errorfields?: Array<Array<Array<IFieldError>>>;
 }
 
+export interface ReaderColMeta {
+  index: number;
+  name: string;
+  type: string;
+  ip: ItemPropVal;
+}
+
+export interface DataTypeMeta {
+  colsSizeRange: { min: number, max: number };
+  decimalRange: { min: number, max: number };
+  containColSize: boolean;
+  "containDecimalRange": boolean,
+  "type": {
+    "columnSize": number,
+    "decimalDigits": number,
+    //"s": "12,32,",
+    "type": number,
+    //"typeDesc": "varchar(32)",
+    "typeName": string,
+    // "unsigned": false,
+    // "unsignedToken": ""
+  }
+}
+
 /**
  * 对应一个plugin的输入项
  */

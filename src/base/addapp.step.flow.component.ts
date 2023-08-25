@@ -15,12 +15,6 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
-// import { AdDirective } from './ad.directive';
-// import { AdItem }      from './ad-item';
-// import { AdComponent } from './ad.component';
-// import {AddAppFormComponent} from './addapp-form.component';
-import {AddAppFlowDirective} from './addapp.directive';
 import {AddAppFormComponent} from './addapp-form.component';
 import {AddAppDefSchemaComponent} from './addapp-define-schema.component';
 import {

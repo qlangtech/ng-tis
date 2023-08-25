@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/schema.edit.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp.step.flow.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +56,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -68,6 +68,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/common" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -156,6 +157,8 @@
       <workItem from="1689734160494" duration="31313000" />
       <workItem from="1690027575512" duration="7752000" />
       <workItem from="1690355112999" duration="63361000" />
+      <workItem from="1692623710033" duration="11885000" />
+      <workItem from="1692881425500" duration="7703000" />
     </task>
     <servers />
   </component>
