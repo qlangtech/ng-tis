@@ -35,7 +35,7 @@ import {DataTypeMeta, ReaderColMeta} from "./tis.plugin";
         <ng-template let-u='r'>
           <nz-space>
             <nz-select *nzSpaceItem class="type-select" [(ngModel)]="u.type.type"
-                       nzPlaceHolder="请选择">
+                       nzPlaceHolder="请选择" (ngModelChange)="typeChange(u.type)">
               <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
                          *ngFor="let tp of this.typeMetas"></nz-option>
             </nz-select>
@@ -112,4 +112,27 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
 
   }
 
+  typeChange(type: DataTypeDesc) {
+    // console.log(type);
+
+    let meta: DataTypeMeta = this.typeMap.get(type.type)
+    if(meta.containColSize){
+      type.columnSize = meta.type.columnSize;
+    }
+    if(meta.containDecimalRange){
+      type.decimalDigits =  meta.type.decimalDigits;
+    }
+  }
+
+}
+
+interface DataTypeDesc {
+  "columnSize": number,
+  "decimalDigits": number,
+  //"s": "12,32,",
+  "type": number,
+  //"typeDesc": "varchar(32)",
+  "typeName": string,
+  // "unsigned": false,
+  // "unsignedToken": ""
 }

@@ -467,7 +467,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     if (!h.pluginCategory) {
       throw new Error("pluginCategory can not be null");
     }
-
+console.log( [this.plugins,h.pluginCategory]);
     let nh = Object.assign(new HeteroList(), h);
     nh.items = [item];
     this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
@@ -558,7 +558,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems() {
-    // console.log("ddd");
+     console.log(this.plugins);
     PluginsComponent.initializePluginItems(this, this.plugins, true, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
       if (success) {
         this.showExtensionPoint.open = showExtensionPoint;

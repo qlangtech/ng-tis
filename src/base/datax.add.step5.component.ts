@@ -18,7 +18,7 @@
 
 import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {CurrentCollection} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
@@ -109,6 +109,24 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     this.savePlugin.emit(savePluginEvent);
   }
 
+  public static rewriteProcessMeta(module: BasicFormComponent, dto: DataxDTO): Promise<DataXCreateProcessMeta> {
+    let p: Promise<DataXCreateProcessMeta> = new Promise<DataXCreateProcessMeta>((resolve) => {
+      resolve(dto.processMeta);
+    });
+    // console.log(processMeta);
+    if (dto.processMeta.readerRDBMSChangeableInLifetime) {
+      p = module.httpPost("/coredefine/corenodemanage.ajax"
+        , "action=datax_action&emethod=get_reader_writer_meta&dataxName=" + dto.dataxPipeName)
+        .then((result) => {
+          if (result.success) {
+            dto.processMeta = result.bizresult;
+            return dto.processMeta;
+          }
+        });
+    }
+    return p;
+  }
+
   afterSaveReader(response: PluginSaveResponse) {
     if (!response.saveSuccess) {
       return;
@@ -136,24 +154,45 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
       return;
     }
 
-    // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
-    if (processMeta.readerRDBMS) {
-      if (processMeta.writerRDBMS) {
-        n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
-      } else {
-        // 直接确认
-        n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
-      }
-    } else {
-      n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
-      // if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
-      //   // ES的Schema编辑是特别定制的
-      //   n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
-      // } else {
-      //
-      // }
-    }
-    this.nextStep.emit(n);
+
+    // let p: Promise<DataXCreateProcessMeta> = new Promise<DataXCreateProcessMeta>((resolve) => {
+    //   resolve(processMeta);
+    // });
+    // // console.log(processMeta);
+    // if (processMeta.readerRDBMSChangeableInLifetime) {
+    //   p = this.httpPost("/coredefine/corenodemanage.ajax"
+    //     , "action=datax_action&emethod=get_reader_writer_meta&dataxName=" + this.dto.dataxPipeName)
+    //     .then((result) => {
+    //       if (result.success) {
+    //         this.dto.processMeta = result.bizresult;
+    //         return processMeta = this.dto.processMeta;
+    //       }
+    //     });
+    // }
+
+    DataxAddStep5Component.rewriteProcessMeta(this, this.dto)
+      .then((pmeta) => {
+        // console.log(pmeta);
+        // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
+        if (pmeta.readerRDBMS) {
+          if (pmeta.writerRDBMS) {
+            n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+          } else {
+            // 直接确认
+            n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
+          }
+        } else {
+          n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
+          // if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
+          //   // ES的Schema编辑是特别定制的
+          //   n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
+          // } else {
+          //
+          // }
+        }
+        this.nextStep.emit(n);
+      })
+
   }
 
 
