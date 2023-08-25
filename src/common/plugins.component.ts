@@ -832,6 +832,9 @@ export class NotebookwrapperComponent implements OnInit {
                                   [nzLimit]="1"
                        ><button [disabled]="fileupload.nzFileList.length > 0" nz-button><i nz-icon nzType="upload"></i>上传</button></nz-upload>
                  </ng-container>
+                 <ng-container *ngSwitchCase="10">
+                   <db-schema-editor></db-schema-editor>
+                 </ng-container>
               </span>
             <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon nzType="question-circle"
                                                                              nzTheme="outline"></i></a>
