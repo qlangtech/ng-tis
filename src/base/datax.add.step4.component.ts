@@ -279,7 +279,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       return {name: m.name, require: m.require, extraParam: m.extraParam };
     });
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
-      nzWidth: "60%",
+      nzWidth: "80%",
       nzTitle: `设置 ${detailId}`,
       nzContent: PluginSubFormComponent,
       nzContentParams: {
