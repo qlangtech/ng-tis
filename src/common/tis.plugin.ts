@@ -21,6 +21,7 @@ import {BasicFormComponent} from "./basic.form.component";
 import {NzSelectModeType} from "ng-zorro-antd/select";
 import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
+import {id} from "date-fns/locale";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
@@ -28,28 +29,28 @@ export const PARAM_END_TYPE = "&endType=";
 
 export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName =
-  'mq'
-  | 'incr-config'
-  | 'sinkFactory'
-  | 'k8s-config'
-  | 'fs'
-  | 'datasource'
-  | 'dataxReader'
-  | 'params-cfg'
-  | 'appSource'
-  | 'dataxWriter'
-  | 'datax-worker';
+    'mq'
+    | 'incr-config'
+    | 'sinkFactory'
+    | 'k8s-config'
+    | 'fs'
+    | 'datasource'
+    | 'dataxReader'
+    | 'params-cfg'
+    | 'appSource'
+    | 'dataxWriter'
+    | 'datax-worker';
 export declare type PluginMeta = {
-  skipSubformDescNullError?: boolean;
-  name: PluginName, require: boolean
-  // key1_val1,key2_val2
-  , extraParam?: string
-  // 服务端对目标Item的desc进行过滤
-  , descFilter?:
-    { // 插件安装panel需要过滤的端类型
-      endType?: () => string,
-      localDescFilter: (desc: Descriptor) => boolean
-    }
+    skipSubformDescNullError?: boolean;
+    name: PluginName, require: boolean
+    // key1_val1,key2_val2
+    , extraParam?: string
+    // 服务端对目标Item的desc进行过滤
+    , descFilter?:
+        { // 插件安装panel需要过滤的端类型
+            endType?: () => string,
+            localDescFilter: (desc: Descriptor) => boolean
+        }
 };
 export declare type PluginType = PluginName | PluginMeta;
 
@@ -60,658 +61,774 @@ export const KEY_DEFAULT_VALUE = 'dftVal';
 
 // 某一插件某一属性行
 export class ItemPropVal {
-  key: string;
-  type: number;
-  options: Array<ValOption>;
-  required: boolean;
-  // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
-  descVal: DescribleVal;
-  advance: boolean;
-  error: string;
-  public _eprops: { string: any };
-  private dftVal: any;
-  placeholder: string;
-  _primaryVal: any = undefined;
-  // 是否是主键
-  pk: boolean;
-  has_set_primaryVal = false;
-  disabled = false;
+    key: string;
+    type: number;
+    options: Array<ValOption>;
+    required: boolean;
+    // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
+    descVal: DescribleVal;
+    advance: boolean;
+    error: string;
+    public _eprops: { string: any };
+    private dftVal: any;
+    placeholder: string;
+    _primaryVal: any = undefined;
+    // 是否是主键
+    pk: boolean;
+    has_set_primaryVal = false;
+    disabled = false;
 
 
-  constructor(public updateModel = false) {
-  }
-
-  set eprops(vals: { String: any }) {
-    // @ts-ignore
-    this._eprops = vals || {};
-    this.dftVal = this._eprops[KEY_DEFAULT_VALUE];
-    this.placeholder = this._eprops['placeholder'] || '';
-  }
-
-
-  public setPropValEnums(cols: Array<{ name: string, value: string }>, colItemChecked?: (optVal) => boolean) {
-    // console.log([cols, colItemChecked]);
-    if (!colItemChecked) {
-      colItemChecked = (_) => true;
+    constructor(public updateModel = false) {
     }
-    let enums: Array<OptionEnum> = [];
-    cols.forEach((s) => {
-      enums.push({label: s.name, val: s.value, checked: colItemChecked(s.value)})
-    });
-    this.setEProp(KEY_OPTIONS_ENUM, enums);
-  }
 
-
-  get label(): string {
-    let label = this._eprops['label'];
-    return label ? label : this.key;
-  }
-
-  /**
-   * 当
-   */
-  get enumMode(): NzSelectModeType {
-    return this.getEProp('enumMode') || 'default';
-  }
-
-  public getEProp(key: string): any {
-    return this._eprops[key];
-  }
-
-  public setEProp(key: string, val: any): void {
-    this._eprops[key] = val;
-  }
-
-  get hasFeedback(): boolean {
-    return !(!this.error);
-  }
-
-  get validateStatus(): string {
-    return this.hasFeedback ? 'error' : '';
-  }
-
-  set primary(val: any) {
-    this._primaryVal = val;
-  }
-
-  get primary(): any {
-    // console.log(this);
-    if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
-      // 新增模式下
-      this._primaryVal = this.dftVal;
-      this.has_set_primaryVal = true;
+    set eprops(vals: { String: any }) {
+        // @ts-ignore
+        this._eprops = vals || {};
+        this.dftVal = this._eprops[KEY_DEFAULT_VALUE];
+        this.placeholder = this._eprops['placeholder'] || '';
     }
-    if (this._primaryVal === undefined) {
-      this._primaryVal = (this.type === TYPE_ENUM && this.enumMode === 'multiple') ? [] : '';
-    }
-    return this._primaryVal;
-    // return this.updateModel ? this._primaryVal : this.dftVal;
-  }
 
-  get primaryVal(): boolean {
-    return !(this.descVal);
-  }
+    public setMcolsEnums(dbLatestMcols: Array<ReaderColMeta>, mcols: Array<ReaderColMeta>, typeMetas: Array<DataTypeMeta>) {
+        this.setEProp(KEY_OPTIONS_ENUM, new TabletView(dbLatestMcols, mcols, typeMetas));
+    }
+
+    public get isMcolsEnums(): boolean {
+        let enumVal = this.getEProp(KEY_OPTIONS_ENUM)
+        return enumVal instanceof TabletView;
+    }
+
+    public get mcolsEnums(): TabletView {
+        let enumVal = this.getEProp(KEY_OPTIONS_ENUM)
+        return enumVal;
+    }
+
+    public setPropValEnums(cols: Array<{ name: string, value: string }>, colItemChecked?: (optVal) => boolean) {
+        // console.log([cols, colItemChecked]);
+        if (!colItemChecked) {
+            colItemChecked = (_) => true;
+        }
+        let enums: Array<OptionEnum> = [];
+        cols.forEach((s) => {
+            enums.push({label: s.name, val: s.value, checked: colItemChecked(s.value)})
+        });
+        this.setEProp(KEY_OPTIONS_ENUM, enums);
+    }
+
+
+    get label(): string {
+        let label = this._eprops['label'];
+        return label ? label : this.key;
+    }
+
+    /**
+     * 当
+     */
+    get enumMode(): NzSelectModeType {
+        return this.getEProp('enumMode') || 'default';
+    }
+
+    public getEProp(key: string): any {
+        return this._eprops[key];
+    }
+
+    public setEProp(key: string, val: any): void {
+        this._eprops[key] = val;
+    }
+
+    get hasFeedback(): boolean {
+        return !(!this.error);
+    }
+
+    get validateStatus(): string {
+        return this.hasFeedback ? 'error' : '';
+    }
+
+    set primary(val: any) {
+        this._primaryVal = val;
+    }
+
+    get primary(): any {
+        // console.log(this);
+        if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
+            // 新增模式下
+            this._primaryVal = this.dftVal;
+            this.has_set_primaryVal = true;
+        }
+        if (this._primaryVal === undefined) {
+            this._primaryVal = (this.type === TYPE_ENUM && this.enumMode === 'multiple') ? [] : '';
+        }
+        return this._primaryVal;
+        // return this.updateModel ? this._primaryVal : this.dftVal;
+    }
+
+    get primaryVal(): boolean {
+        return !(this.descVal);
+    }
 }
 
 export class Descriptor {
-  // 表单内嵌深度，深度到达一定深度，表单的布局需要调整一下
-  formLevel: number;
-  impl: string;
-  implUrl: string;
-  containAdvance: boolean;
-  displayName: string;
-  extendPoint: string;
-  attrs: AttrDesc[];
-  extractProps: { string: any };
-  veriflable: boolean;
-  pkField: string;
-  // subform relevant
+    // 表单内嵌深度，深度到达一定深度，表单的布局需要调整一下
+    formLevel: number;
+    impl: string;
+    implUrl: string;
+    containAdvance: boolean;
+    displayName: string;
+    extendPoint: string;
+    attrs: AttrDesc[];
+    extractProps: { string: any };
+    veriflable: boolean;
+    pkField: string;
+    // subform relevant
 
-  subFormMeta: {
-    behaviorMeta: any,
-    fieldName: string,
-    idList: Array<string>
-    id?: string,
-  }
-  subForm: boolean;
-
-  /**
-   *
-   * @param h
-   * @param des
-   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
-   */
-  public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
-    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-    let nItem = new Item(des);
-    nItem.displayName = des.displayName;
-    nItem.implUrl = des.implUrl;
-    // nItem.containAdvance = des.containAdvance;
-    des.attrs.forEach((attr) => {
-      nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
-    });
-    let nitems: Item[] = [];
-    h.items.forEach((r) => {
-      nitems.push(r);
-    });
-    // console.log(nItem);
-    nitems.push(nItem);
-    h.items = nitems;
-  }
-
-
-  public static addNewItemByDescs(h: HeteroList, decs: Array<Descriptor>, updateModel: boolean
-    , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-    let des: Descriptor;
-    // let nitems: Item[] = [];
-    for (let index = 0; index < decs.length; index++) {
-      des = decs[index];
-      Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
+    subFormMeta: {
+        behaviorMeta: any,
+        fieldName: string,
+        idList: Array<string>
+        id?: string,
     }
-  }
+    subForm: boolean;
 
-  public get eprops(): PluginExtraProps {
-    let extraProps: PluginExtraProps = <any>this.extractProps;
-    return extraProps;
-  }
+    /**
+     *
+     * @param h
+     * @param des
+     * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+     */
+    public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
+        , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
+        let nItem = new Item(des);
+        nItem.displayName = des.displayName;
+        nItem.implUrl = des.implUrl;
+        // nItem.containAdvance = des.containAdvance;
+        des.attrs.forEach((attr) => {
+            nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
+        });
+        let nitems: Item[] = [];
+        h.items.forEach((r) => {
+            nitems.push(r);
+        });
+        // console.log(nItem);
+        nitems.push(nItem);
+        h.items = nitems;
+    }
 
-  public get notebook(): NotebookMeta {
-    let note: NotebookMeta = this.extractProps["notebook"];
-    return note;
-  }
 
-  public get supportBatch(): boolean {
-    return !!this.extractProps["supportBatch"];
-  }
+    public static addNewItemByDescs(h: HeteroList, decs: Array<Descriptor>, updateModel: boolean
+        , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
+        let des: Descriptor;
+        // let nitems: Item[] = [];
+        for (let index = 0; index < decs.length; index++) {
+            des = decs[index];
+            Descriptor.addNewItem(h, des, updateModel, itemPropSetter);
+        }
+    }
+
+    public get eprops(): PluginExtraProps {
+        let extraProps: PluginExtraProps = <any>this.extractProps;
+        return extraProps;
+    }
+
+    public get notebook(): NotebookMeta {
+        let note: NotebookMeta = this.extractProps["notebook"];
+        return note;
+    }
+
+    public get supportBatch(): boolean {
+        return !!this.extractProps["supportBatch"];
+    }
 }
 
 export interface NotebookMeta {
-  // 是否可用
-  ability: boolean;
-  // 服务端是否激活
-  activate: boolean;
+    // 是否可用
+    ability: boolean;
+    // 服务端是否激活
+    activate: boolean;
 }
 
 export interface TisResponseResult {
-  bizresult?: any;
-  success: boolean;
-  errormsg?: string[];
-  action_error_page_show?: boolean;
-  msg?: Array<any>;
-  errorfields?: Array<Array<Array<IFieldError>>>;
+    bizresult?: any;
+    success: boolean;
+    errormsg?: string[];
+    action_error_page_show?: boolean;
+    msg?: Array<any>;
+    errorfields?: Array<Array<Array<IFieldError>>>;
+}
+
+
+export class TabletView {
+
+    constructor(private _dbLatestMcols: Array<ReaderColMeta>, private _mcols: Array<ReaderColMeta>, private _typeMetas: Array<DataTypeMeta>) {
+        let index = 0;
+        this._mcols.forEach((c) => {
+            c.index = ++index;
+            c.ip = new ItemPropVal();
+        });
+
+        // let tmp = [];
+        // this._dbLatestMcols.forEach((cm) => {
+        //     if (cm.name !== "member_price") {
+        //         tmp.push(cm);
+        //     }
+        // });
+        //this._dbLatestMcols = tmp;
+        this._dbLatestMcols.forEach((c) => {
+            c.index = ++index;
+            c.ip = new ItemPropVal();
+        });
+    }
+
+    public get isContainDBLatestMcols(): boolean {
+        return !!this._dbLatestMcols;
+    }
+
+    public get mcols(): Array<ReaderColMeta> {
+        return this._mcols;
+    }
+
+    /**
+     * 数据库中可能添加了新的字段，或者已经删除了某列
+     */
+    public synchronizeMcols(): Array<ReaderColMeta> {
+        // return this._mcols;
+        if (this._dbLatestMcols) {
+            let result = [];
+            let lastestCol: ReaderColMeta;
+            let col: ReaderColMeta;
+            let idxCol = 0;
+            outter: for (let i = 0; i < this._dbLatestMcols.length; i++) {
+                lastestCol = this._dbLatestMcols[i];
+                while (idxCol < this._mcols.length) {
+                    col = this._mcols[idxCol];
+                    if (lastestCol.name === col.name) {
+                        col.index = i + 1;
+                        result.push(col);
+                        idxCol++;
+                    } else {
+                        let find = -1;
+                        if ((find = this.findRemain(lastestCol, idxCol + 1)) < 0) {
+                            // 说明 lastestCol 是数据库中新增的
+                        } else {
+                            // 说明 col 已经在数据库中被删除了，那应该跳过了
+                            idxCol = find;
+                            lastestCol = this._mcols[idxCol++];
+                        }
+                        lastestCol.index = i + 1;
+                        result.push(lastestCol);
+                        // 需要遍历需要的所有
+
+                    }
+                    continue outter;
+                }
+            }
+            delete this._dbLatestMcols
+            // 需要将最新引用设置上，不然表单提交时无法将最新的表单内容提交到服务端
+            this._mcols = result;
+            return result;
+        } else {
+            return this._mcols;
+        }
+    }
+
+    private findRemain(target: ReaderColMeta, startIdxCol: number): number {
+        let find = -1;
+        for (let idx = startIdxCol; idx < this._mcols.length; idx++) {
+            if (target.name === this._mcols[idx].name) {
+                return (find = idx);
+            }
+        }
+
+        return find;
+    }
+
+    public get typeMetas(): Array<DataTypeMeta> {
+        return this._typeMetas;
+    }
 }
 
 export interface ReaderColMeta {
-  index: number;
-  name: string;
-  type: string;
-  ip: ItemPropVal;
+    index: number;
+    name: string;
+    type: string;
+    disable: boolean;
+    ip: ItemPropVal;
 }
 
 export interface DataTypeMeta {
-  colsSizeRange: { min: number, max: number };
-  decimalRange: { min: number, max: number };
-  containColSize: boolean;
-  "containDecimalRange": boolean,
-  "type": {
-    "columnSize": number,
-    "decimalDigits": number,
-    //"s": "12,32,",
-    "type": number,
-    //"typeDesc": "varchar(32)",
-    "typeName": string,
-    // "unsigned": false,
-    // "unsignedToken": ""
-  }
+    colsSizeRange: { min: number, max: number };
+    decimalRange: { min: number, max: number };
+    containColSize: boolean;
+    "containDecimalRange": boolean,
+    "type": {
+        "columnSize": number,
+        "decimalDigits": number,
+        //"s": "12,32,",
+        "type": number,
+        //"typeDesc": "varchar(32)",
+        "typeName": string,
+        // "unsigned": false,
+        // "unsignedToken": ""
+    }
 }
 
 /**
  * 对应一个plugin的输入项
  */
 export class Item {
-  impl = '';
-  implUrl: string;
-  public dspt: Descriptor;
-  //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
-  // vals: Map<string /**key*/, ItemPropVal> = new Map();
-  // 后一种类型支持subform的类型
-  /**
-   * subform format:
-   * <pre>
-   *   vals:{
-   *     tableName:[
-   *      {
-   *       impl:""
-   *       vals:{ k1:v1,k2:v2,k3:v3}
-   *      },{},{}
-   *     ]
-   *   }
-   *
-   * </pre>
-   */
-  public vals: { [key: string]: ItemPropVal }
-    | { [key: string]: { [key: string]: ItemPropVal } }
-    | { [key: string]: Array<Item> } = {};
-  displayName = '';
-  private _propVals: ItemPropVal[];
+    impl = '';
+    implUrl: string;
+    public dspt: Descriptor;
+    //  vals: Map<string /**key*/, string | DescribleVal> = new Map();
+    // vals: Map<string /**key*/, ItemPropVal> = new Map();
+    // 后一种类型支持subform的类型
+    /**
+     * subform format:
+     * <pre>
+     *   vals:{
+     *     tableName:[
+     *      {
+     *       impl:""
+     *       vals:{ k1:v1,k2:v2,k3:v3}
+     *      },{},{}
+     *     ]
+     *   }
+     *
+     * </pre>
+     */
+    public vals: { [key: string]: ItemPropVal }
+        | { [key: string]: { [key: string]: ItemPropVal } }
+        | { [key: string]: Array<Item> } = {};
+    displayName = '';
+    private _propVals: ItemPropVal[];
 
-  /**
-   * 表单中有高级字段，是否显示全部？
-   */
-  public showAllField = false;
+    /**
+     * 表单中有高级字段，是否显示全部？
+     */
+    public showAllField = false;
 
-  /**
-   * 创建一个新的Item
-   *
-   * @param fieldNames
-   */
-  public static create(fieldNames: string[]): Item {
-    let item = new Item(null);
-    fieldNames.forEach((fname) => {
-      item.vals[fname] = new ItemPropVal();
-    });
-    return item;
-  }
-
-  public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
-    let item: Item = null;
-    let fieldsErrs: Array<IFieldError> = null;
-
-    if (errorFields) {
-      for (let index = 0; index < errorFields.length; index++) {
-        fieldsErrs = errorFields[index];
-        item = items[index];
-        let itemProp: ItemPropVal;
-        fieldsErrs.forEach((fieldErr) => {
-          let ip = item.vals[fieldErr.name];
-          if (ip instanceof ItemPropVal) {
-            itemProp = ip;
-            itemProp.error = fieldErr.content;
-
-            if (!itemProp.primaryVal) {
-              if (fieldErr.errorfields.length !== 1) {
-                throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
-              }
-              Item.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
-            }
-          } else {
-            throw new Error("illegal type");
-          }
+    /**
+     * 创建一个新的Item
+     *
+     * @param fieldNames
+     */
+    public static create(fieldNames: string[]): Item {
+        let item = new Item(null);
+        fieldNames.forEach((fname) => {
+            item.vals[fname] = new ItemPropVal();
         });
-      }
-    }
-  }
-
-  public static processFieldsErr(result: TisResponseResult): Item {
-    let errFields = result.errorfields;
-    if (errFields && errFields.length > 0) {
-      let pluginsErr = errFields[0];
-      if (pluginsErr.length > 0) {
-        let pluginErr: Array<IFieldError> = pluginsErr[0];
-        let errKeys = pluginErr.map((r) => r.name);
-        let item: Item = Item.create(errKeys);
-        Item.processErrorField(pluginsErr, [item]);
         return item;
-      }
     }
-    return Item.create([]);
-  }
 
-  public static wrapItemPropVal(v: any, at: AttrDesc): ItemPropVal {
-    if (v === undefined || v === null) {
-      return;
+    public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
+        let item: Item = null;
+        let fieldsErrs: Array<IFieldError> = null;
+
+        if (errorFields) {
+            for (let index = 0; index < errorFields.length; index++) {
+                fieldsErrs = errorFields[index];
+                item = items[index];
+                let itemProp: ItemPropVal;
+                fieldsErrs.forEach((fieldErr) => {
+                    let ip = item.vals[fieldErr.name];
+                    if (ip instanceof ItemPropVal) {
+                        itemProp = ip;
+                        itemProp.error = fieldErr.content;
+
+                        if (!itemProp.primaryVal) {
+                            if (fieldErr.errorfields.length !== 1) {
+                                throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
+                            }
+                            Item.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
+                        }
+                    } else {
+                        throw new Error("illegal type");
+                    }
+                });
+            }
+        }
     }
-    let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
-    // console.log([at.key, at]);
-    if (at.describable) {
-      let d = at.descriptors.get(v.impl);
-      if (!d) {
-        //
-        throw new Error(`impl:${v.impl} can not find relevant descriptor`);
-      }
-      let ii: Item = Object.assign(new Item(d), v);
-      ii.wrapItemVals();
-      // console.log([ii,at]);
-      newVal.descVal = at.createDescribleVal(ii);
-    } else {
-      if (at.isMultiSelectableType) {
-        if (!Array.isArray(v)) {
-          // console.log(v);
-          throw new Error("expect val type is array but is not");
+
+    public static processFieldsErr(result: TisResponseResult): Item {
+        let errFields = result.errorfields;
+        if (errFields && errFields.length > 0) {
+            let pluginsErr = errFields[0];
+            if (pluginsErr.length > 0) {
+                let pluginErr: Array<IFieldError> = pluginsErr[0];
+                let errKeys = pluginErr.map((r) => r.name);
+                let item: Item = Item.create(errKeys);
+                Item.processErrorField(pluginsErr, [item]);
+                return item;
+            }
         }
-        // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
-        if (!at.eprops) {
-          // console.log(at);
-          throw new Error("at.eprops can not be null");
+        return Item.create([]);
+    }
+
+    public static wrapItemPropVal(v: any, at: AttrDesc): ItemPropVal {
+        if (v === undefined || v === null) {
+            return;
         }
-        let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
-        if (!selectableCol) {
-          throw new Error("selectableCol can not be null");
-        }
-        let cols: Array<{ name: string, value: string }> = null;
-        if (selectableCol.length < 1) {
-          cols = v.map((r) => {
-            return {name: r, value: r}
-          });
-          newVal.setPropValEnums(cols, (_) => true);
+        let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
+        // console.log([at.key, at]);
+        if (at.describable) {
+            let d = at.descriptors.get(v.impl);
+            if (!d) {
+                //
+                throw new Error(`impl:${v.impl} can not find relevant descriptor`);
+            }
+            let ii: Item = Object.assign(new Item(d), v);
+            ii.wrapItemVals();
+            // console.log([ii,at]);
+            newVal.descVal = at.createDescribleVal(ii);
         } else {
-          cols = selectableCol.map((c) => {
-            return {"name": c.label, "value": c.val}
-          });
-          newVal.setPropValEnums(cols, (sval) => {
-            return !!v.find((optVal) => optVal === sval);
-          });
+            if (at.isMultiSelectableType) {
+                if (!Array.isArray(v)) {
+                    // console.log(v);
+                    throw new Error("expect val type is array but is not");
+                }
+                // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
+                if (!at.eprops) {
+                    // console.log(at);
+                    throw new Error("at.eprops can not be null");
+                }
+                let enumVal = at.eprops[KEY_OPTIONS_ENUM];
+                let mcols: Array<ReaderColMeta>;
+                let typeMetas: Array<DataTypeMeta>;
+                if (mcols = enumVal["tabMapper"]) {
+
+
+                    typeMetas = enumVal["colMetas"];
+                    newVal.setMcolsEnums(mcols, (v.length > 0) ? v : mcols, typeMetas);
+                } else {
+                    let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
+                    if (!selectableCol) {
+                        throw new Error("selectableCol can not be null");
+                    }
+                    let cols: Array<{ name: string, value: string }> = null;
+                    if (selectableCol.length < 1) {
+                        cols = v.map((r) => {
+                            return {name: r, value: r}
+                        });
+                        newVal.setPropValEnums(cols, (_) => true);
+                    } else {
+                        cols = selectableCol.map((c) => {
+                            return {"name": c.label, "value": c.val}
+                        });
+                        newVal.setPropValEnums(cols, (sval) => {
+                            return !!v.find((optVal) => optVal === sval);
+                        });
+                    }
+                }
+
+                // console.log([selectableCol, cols]);
+
+            } else {
+                newVal._primaryVal = v;
+            }
+            // newVal.pk = (at.key === this.dspt.pkField);
         }
-        // console.log([selectableCol, cols]);
-
-      } else {
-        newVal._primaryVal = v;
-      }
-      // newVal.pk = (at.key === this.dspt.pkField);
+        return newVal;
     }
-    return newVal;
-  }
 
 
-  // containAdvance = false;
+    // containAdvance = false;
 
-  /**
-   * 字段中是否包含高级字段（可以隐藏）
-   */
-  public get containAdvanceField(): boolean {
-    return this.dspt.containAdvance;
-  }
-
-
-  constructor(_dspt: Descriptor, public updateModel = false) {
-    // if (dspt) {
-    //   this.impl = dspt.impl;
-    // }
-    this.newDesc = _dspt;
-  }
-
-  public set newDesc(desc: Descriptor) {
-    this.dspt = desc;
-    if (desc) {
-      this.impl = desc.impl;
-    } else {
-      this.impl = null;
+    /**
+     * 字段中是否包含高级字段（可以隐藏）
+     */
+    public get containAdvanceField(): boolean {
+        return this.dspt.containAdvance;
     }
-  }
 
-  public get implVal() {
-    if (!this.updateModel) {
 
+    constructor(_dspt: Descriptor, public updateModel = false) {
+        // if (dspt) {
+        //   this.impl = dspt.impl;
+        // }
+        this.newDesc = _dspt;
     }
-    return '';
-  }
 
-  public wrapItemVals(): void {
-    let newVals = {};
-    let ovals: any /**map*/ = this.vals;
-    let newVal: ItemPropVal;
-    // console.log(this.dspt.attrs);
-    this.dspt.attrs.forEach((at) => {
-      let v = ovals[at.key];
-      // console.log([at.key, v, at]);
-      newVal = Item.wrapItemPropVal(v, at);
-      if (newVal) {
-        newVals[at.key] = (newVal);
-      }
-    });
-    this.vals = newVals;
-  }
+    public set newDesc(desc: Descriptor) {
+        this.dspt = desc;
+        if (desc) {
+            this.impl = desc.impl;
+        } else {
+            this.impl = null;
+        }
+    }
 
-  public clearPropVals(dspClear = true): void {
-    delete this._propVals;
-    this.vals = {};
-    if (dspClear) {
-      this.dspt = null;
-    }
-  }
+    public get implVal() {
+        if (!this.updateModel) {
 
-  public get propVals(): ItemPropVal[] {
-    if (this._propVals) {
-      return this._propVals;
+        }
+        return '';
     }
-    if (!this.dspt) {
-      this._propVals = [];
-      return this._propVals;
+
+    public wrapItemVals(): void {
+        let newVals = {};
+        let ovals: any /**map*/ = this.vals;
+        let newVal: ItemPropVal;
+        // console.log(this.dspt.attrs);
+        this.dspt.attrs.forEach((at) => {
+            let v = ovals[at.key];
+            // console.log([at.key, v, at]);
+            newVal = Item.wrapItemPropVal(v, at);
+            if (newVal) {
+                newVals[at.key] = (newVal);
+            }
+        });
+        this.vals = newVals;
     }
-    this._propVals = [];
-    this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
-      let ip: ItemPropVal | { [key: string]: ItemPropVal } | Array<Item> = this.vals[attr.key];
-      if (!ip) {
-        // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
-        ip = attr.addNewEmptyItemProp(this.updateModel);
-        this.vals[attr.key] = ip;
-      }
-      // console.log(ip);
-      if (ip instanceof ItemPropVal) {
-        this._propVals.push(ip);
-      } else {
-        throw new Error("illegal ip type");
-      }
-    });
-    return this._propVals;
-  }
+
+    public clearPropVals(dspClear = true): void {
+        delete this._propVals;
+        this.vals = {};
+        if (dspClear) {
+            this.dspt = null;
+        }
+    }
+
+    public get propVals(): ItemPropVal[] {
+        if (this._propVals) {
+            return this._propVals;
+        }
+        if (!this.dspt) {
+            this._propVals = [];
+            return this._propVals;
+        }
+        this._propVals = [];
+        this.dspt.attrs.forEach((attr /**AttrDesc*/) => {
+            let ip: ItemPropVal | { [key: string]: ItemPropVal } | Array<Item> = this.vals[attr.key];
+            if (!ip) {
+                // throw new Error(`attrKey:${attr.key} can not find relevant itemProp`);
+                ip = attr.addNewEmptyItemProp(this.updateModel);
+                this.vals[attr.key] = ip;
+            }
+            // console.log(ip);
+            if (ip instanceof ItemPropVal) {
+                this._propVals.push(ip);
+            } else {
+                throw new Error("illegal ip type");
+            }
+        });
+        return this._propVals;
+    }
 }
 
 export class DescribleVal
-  extends Item {
-  // impl: string;
-  // displayName: string;
-  // vals: string[] | DescribleVal[];
-  descriptors: Map<string /* impl */, Descriptor> = new Map();
-  extendPoint: string;
-  extensible: boolean;
+    extends Item {
+    // impl: string;
+    // displayName: string;
+    // vals: string[] | DescribleVal[];
+    descriptors: Map<string /* impl */, Descriptor> = new Map();
+    extendPoint: string;
+    extensible: boolean;
 }
 
 export class AttrDesc {
-  key: string;
-  ord: number;
-  // 是否是主键
-  pk: boolean;
-  advance: boolean;
-  /**
-   * 当describable为true时descriptors 应该有内容
-   * */
-  descriptors: Map<string /*impl*/, Descriptor>;
-  describable: boolean;
-  extendPoint: string;
-  // 实现类型是否可以在运行期添加
-  extensible: boolean;
-  type: number;
-  options: Array<ValOption>;
-  required: boolean;
-  eprops: { String: any };
+    key: string;
+    ord: number;
+    // 是否是主键
+    pk: boolean;
+    advance: boolean;
+    /**
+     * 当describable为true时descriptors 应该有内容
+     * */
+    descriptors: Map<string /*impl*/, Descriptor>;
+    describable: boolean;
+    extendPoint: string;
+    // 实现类型是否可以在运行期添加
+    extensible: boolean;
+    type: number;
+    options: Array<ValOption>;
+    required: boolean;
+    eprops: { String: any };
 
-  // MULTI_SELECTABLE
-  public get isMultiSelectableType(): boolean {
-    return this.type === TYPE_PLUGIN_MULTI_SELECTION;
-  }
-
-  /**
-   *
-   * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
-   */
-  public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
-    let desVal = new ItemPropVal(updateModel);
-    desVal.key = this.key;
-    desVal.pk = this.pk;
-    desVal.advance = this.advance;
-    desVal.eprops = Object.assign({}, this.eprops);
-    desVal.required = this.required;
-    desVal.type = this.type;
-    // 当type为6时，options应该有内容
-    desVal.options = this.options;
-    if (this.describable) {
-      desVal.descVal = this.createDescribleVal(new Item(null, updateModel));
-      if (this.eprops) {
-        let displayName = this.eprops[KEY_DEFAULT_VALUE];
-        // displayName
-        if (!updateModel && displayName) {
-          // 在新建时候
-          for (let e of desVal.descVal.descriptors.values()) {
-            if (displayName === e.displayName) {
-              desVal.descVal.impl = e.impl;
-              desVal.descVal.dspt = e;
-              break;
-            }
-          }
-        }
-      }
+    // MULTI_SELECTABLE
+    public get isMultiSelectableType(): boolean {
+        return this.type === TYPE_PLUGIN_MULTI_SELECTION;
     }
-    return desVal;
-  }
 
-  public createDescribleVal(v: Item): DescribleVal {
-    // console.log(v);
-    let descVal = new DescribleVal(v.dspt, v.updateModel);
-    descVal.extensible = this.extensible;
-    descVal.extendPoint = this.extendPoint;
-    descVal.displayName = v.displayName;
-    // descVal.containAdvance = v.containAdvance;
-    // descVal.impl = v.impl;
-    descVal.vals = v.vals;
-    this.descriptors.forEach((entry) => {
-      descVal.descriptors.set(entry.impl, entry);
-    });
-    return descVal;
-  }
+    /**
+     *
+     * @param updateModel 是否是更新模式，在更新模式下，插件的默认值不能设置到控件上去
+     */
+    public addNewEmptyItemProp(updateModel: boolean): ItemPropVal {
+        let desVal = new ItemPropVal(updateModel);
+        desVal.key = this.key;
+        desVal.pk = this.pk;
+        desVal.advance = this.advance;
+        desVal.eprops = Object.assign({}, this.eprops);
+        desVal.required = this.required;
+        desVal.type = this.type;
+        // 当type为6时，options应该有内容
+        desVal.options = this.options;
+        if (this.describable) {
+            desVal.descVal = this.createDescribleVal(new Item(null, updateModel));
+            if (this.eprops) {
+                let displayName = this.eprops[KEY_DEFAULT_VALUE];
+                // displayName
+                if (!updateModel && displayName) {
+                    // 在新建时候
+                    for (let e of desVal.descVal.descriptors.values()) {
+                        if (displayName === e.displayName) {
+                            desVal.descVal.impl = e.impl;
+                            desVal.descVal.dspt = e;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return desVal;
+    }
+
+    public createDescribleVal(v: Item): DescribleVal {
+        // console.log(v);
+        let descVal = new DescribleVal(v.dspt, v.updateModel);
+        descVal.extensible = this.extensible;
+        descVal.extendPoint = this.extendPoint;
+        descVal.displayName = v.displayName;
+        // descVal.containAdvance = v.containAdvance;
+        // descVal.impl = v.impl;
+        descVal.vals = v.vals;
+        this.descriptors.forEach((entry) => {
+            descVal.descriptors.set(entry.impl, entry);
+        });
+        return descVal;
+    }
 }
 
 
 /*HeteroList*/
 export class HeteroList {
-  descriptors: Map<string /* impl */, Descriptor> = new Map();
-  private _descriptorList: Array<Descriptor>;
+    descriptors: Map<string /* impl */, Descriptor> = new Map();
+    private _descriptorList: Array<Descriptor>;
 
-  identityId: string;
-  // item 可选数量
-  cardinality: string;
-  caption: string;
-  extensionPoint: string;
-  extensionPointUrl: string;
-  items: Item[] = [];
+    identityId: string;
+    // item 可选数量
+    cardinality: string;
+    caption: string;
+    extensionPoint: string;
+    extensionPointUrl: string;
+    items: Item[] = [];
 
-  pluginCategory: PluginType;
+    pluginCategory: PluginType;
 
-  public static isDescFilterDefined(type: PluginType): type is PluginMeta {
-    let filter = (<PluginMeta>type).descFilter;
-    return !!filter && !!filter.endType;
-  }
-
-  public get descriptorList(): Array<Descriptor> {
-    if (!this._descriptorList) {
-      this._descriptorList = Array.from(this.descriptors.values());
+    public static isDescFilterDefined(type: PluginType): type is PluginMeta {
+        let filter = (<PluginMeta>type).descFilter;
+        return !!filter && !!filter.endType;
     }
-    return this._descriptorList;
-  }
 
-  public get endType(): string {
-    // console.log(this.pluginCategory);
-    if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
-      return this.pluginCategory.descFilter.endType();
+    public get descriptorList(): Array<Descriptor> {
+        if (!this._descriptorList) {
+            this._descriptorList = Array.from(this.descriptors.values());
+        }
+        return this._descriptorList;
     }
-    return null;
-  }
+
+    public get endType(): string {
+        // console.log(this.pluginCategory);
+        if (HeteroList.isDescFilterDefined(this.pluginCategory)) {
+            return this.pluginCategory.descFilter.endType();
+        }
+        return null;
+    }
 
 
-  public get identity(): string {
-    return this.extensionPoint.replace(/\./g, '-');
-  }
+    public get identity(): string {
+        return this.extensionPoint.replace(/\./g, '-');
+    }
 
-  public updateDescriptor(newDescriptors: Map<string /* impl */, Descriptor>): void {
-    this.descriptors = newDescriptors;
-    this._descriptorList = undefined;
-  }
+    public updateDescriptor(newDescriptors: Map<string /* impl */, Descriptor>): void {
+        this.descriptors = newDescriptors;
+        this._descriptorList = undefined;
+    }
 
-  public get addItemDisabled(): boolean {
-    return (this.cardinality === '1' && this.items.length > 0);
-  }
+    public get addItemDisabled(): boolean {
+        return (this.cardinality === '1' && this.items.length > 0);
+    }
 }
 
 export class PluginSaveResponse {
-  constructor(public saveSuccess: boolean, public formDisabled: boolean, private bizResult?: any) {
+    constructor(public saveSuccess: boolean, public formDisabled: boolean, private bizResult?: any) {
 
-  }
+    }
 
-  public hasBiz(): boolean {
-    return !!this.bizResult;
-  }
+    public hasBiz(): boolean {
+        return !!this.bizResult;
+    }
 
-  public biz(): any {
-    return this.bizResult;
-  }
+    public biz(): any {
+        return this.bizResult;
+    }
 }
 
 export interface IFieldError {
-  name: string;
-  content?: string;
-  errorfields?: Array<Array<IFieldError>>
+    name: string;
+    content?: string;
+    errorfields?: Array<Array<IFieldError>>
 }
 
 export class ValOption {
-  public impl: string;
-  public name: string;
+    public impl: string;
+    public name: string;
 }
 
 export interface OptionEnum {
-  // {label: s.name, val: s.value, checked: colItemChecked(s.value)}
-  label: string;
-  val: string;
-  checked: boolean;
+    // {label: s.name, val: s.value, checked: colItemChecked(s.value)}
+    label: string;
+    val: string;
+    checked: boolean;
 }
 
 export class SavePluginEvent {
-  // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
-  // 创建notebook
-  public createOrGetNotebook = false;
-  public verifyConfig = false;
-  public notShowBizMsg = false;
-  // 顺带要在服务端执行一段脚本
-  // namespace:corename:method
-  public serverForward;
-  public basicModule: BasicFormComponent;
+    // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
+    // 创建notebook
+    public createOrGetNotebook = false;
+    public verifyConfig = false;
+    public notShowBizMsg = false;
+    // 顺带要在服务端执行一段脚本
+    // namespace:corename:method
+    public serverForward;
+    public basicModule: BasicFormComponent;
 }
 
 export interface DataType {
-  typeDesc: string;
+    typeDesc: string;
 }
 
 export interface IColumnMeta {
-  key: string;
-  pk: boolean;
-  index: number;
+    key: string;
+    pk: boolean;
+    index: number;
 
-  nullable: boolean;
+    nullable: boolean;
 
-  comment: string;
+    comment: string;
 
-  type: DataType;
+    type: DataType;
 }
 
 //{ tableid?: number, dbId?: string, dbName?: string, isNew: boolean }
 export class DataBase {
-  constructor(public dbId: string, public dbName: string) {
-  }
+    constructor(public dbId: string, public dbName: string) {
+    }
 }
 
 export class SuccessAddedDBTabs {
-  public db: DataBase;
+    public db: DataBase;
 
-  constructor(tab: TablePojo, private tabs: { [key: string]: Array<Item> }) {
-    this.db = new DataBase(tab.dbId, tab.dbName);
-  }
-
-  public get tabKeys(): Array<string> {
-    let tabs: Array<string> = [];
-    for (let tabName in this.tabs) {
-      tabs.push(tabName);
+    constructor(tab: TablePojo, private tabs: { [key: string]: Array<Item> }) {
+        this.db = new DataBase(tab.dbId, tab.dbName);
     }
-    return tabs;
-  }
+
+    public get tabKeys(): Array<string> {
+        let tabs: Array<string> = [];
+        for (let tabName in this.tabs) {
+            tabs.push(tabName);
+        }
+        return tabs;
+    }
 }
 
 
