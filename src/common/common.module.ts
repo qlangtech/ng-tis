@@ -25,7 +25,7 @@ import {
   TdContentDirective,
   ThDirective,
   TisColumn,
-  TisPageHeader
+  TisPageHeader, TisPageRowAssist
 } from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
 import {NavigateBarComponent} from "./navigate.bar.component";
@@ -162,7 +162,7 @@ import {SchemaEditComponent} from "./schema.edit.component";
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
-    TisPageHeader,TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
+    TisPageHeader,TisPageRowAssist ,TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
     , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
@@ -172,7 +172,7 @@ import {SchemaEditComponent} from "./schema.edit.component";
     , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule, ViewGenerateCfgComponent,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule, TisStepsToolbarComponent,
-    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe,TisPageHeader, TisColumn, PaginationComponent
+    NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe,TisPageHeader,TisPageRowAssist, TisColumn, PaginationComponent
     , TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
     , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp
     , PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule

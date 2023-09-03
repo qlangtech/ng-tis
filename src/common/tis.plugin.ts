@@ -23,6 +23,7 @@ import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {id} from "date-fns/locale";
 
+
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
 export const PARAM_END_TYPE = "&endType=";
@@ -80,6 +81,7 @@ export class ItemPropVal {
 
 
     constructor(public updateModel = false) {
+      //  console.log("create");
     }
 
     set eprops(vals: { String: any }) {
@@ -149,7 +151,7 @@ export class ItemPropVal {
     }
 
     get primary(): any {
-        // console.log(this);
+
         if (!this.updateModel && !this.has_set_primaryVal && this.dftVal !== undefined) {
             // 新增模式下
             this._primaryVal = this.dftVal;
@@ -260,21 +262,28 @@ export class TabletView {
 
     constructor(private _dbLatestMcols: Array<ReaderColMeta>, private _mcols: Array<ReaderColMeta>, private _typeMetas: Array<DataTypeMeta>) {
         let index = 0;
+        // console.log(this._mcols);
+        // console.log(this._dbLatestMcols);
         this._mcols.forEach((c) => {
             c.index = ++index;
             c.ip = new ItemPropVal();
+            // @ts-ignore
+            c.extraProps = c.extraProps|{}
         });
 
+        // 删除字段测试
         // let tmp = [];
         // this._dbLatestMcols.forEach((cm) => {
         //     if (cm.name !== "member_price") {
         //         tmp.push(cm);
         //     }
         // });
-        //this._dbLatestMcols = tmp;
+        // this._dbLatestMcols = tmp;
         this._dbLatestMcols.forEach((c) => {
             c.index = ++index;
             c.ip = new ItemPropVal();
+            // @ts-ignore
+            c.extraProps = c.extraProps|{}
         });
     }
 
@@ -289,10 +298,12 @@ export class TabletView {
     /**
      * 数据库中可能添加了新的字段，或者已经删除了某列
      */
-    public synchronizeMcols(): Array<ReaderColMeta> {
+    public synchronizeMcols(): SynchronizeMcolsResult {
         // return this._mcols;
+        let syncResult: SynchronizeMcolsResult;
         if (this._dbLatestMcols) {
             let result = [];
+            syncResult = new SynchronizeMcolsResult(result);
             let lastestCol: ReaderColMeta;
             let col: ReaderColMeta;
             let idxCol = 0;
@@ -308,8 +319,10 @@ export class TabletView {
                         let find = -1;
                         if ((find = this.findRemain(lastestCol, idxCol + 1)) < 0) {
                             // 说明 lastestCol 是数据库中新增的
+                            syncResult.newAddCols.push(lastestCol.name);
                         } else {
                             // 说明 col 已经在数据库中被删除了，那应该跳过了
+                            syncResult.deletedCols.push(col.name);
                             idxCol = find;
                             lastestCol = this._mcols[idxCol++];
                         }
@@ -324,11 +337,12 @@ export class TabletView {
             delete this._dbLatestMcols
             // 需要将最新引用设置上，不然表单提交时无法将最新的表单内容提交到服务端
             this._mcols = result;
-            return result;
+            return syncResult;
         } else {
-            return this._mcols;
+            return new SynchronizeMcolsResult(this._mcols);
         }
     }
+
 
     private findRemain(target: ReaderColMeta, startIdxCol: number): number {
         let find = -1;
@@ -346,12 +360,39 @@ export class TabletView {
     }
 }
 
+export class SynchronizeMcolsResult {
+    syncCols: Array<ReaderColMeta> = [];
+    newAddCols: Array<string> = [];
+    deletedCols: Array<string> = [];
+
+    constructor(syncCols: Array<ReaderColMeta>) {
+        this.syncCols = syncCols;
+    }
+
+    get hasAnyDiff(): boolean {
+        return this.newAddCols.length > 0 || this.deletedCols.length > 0;
+    }
+
+    get differSummary(): string {
+        let differ = '';
+        if (this.newAddCols.length > 0) {
+            differ += " 新增：" + this.newAddCols.map((c) => "'" + c + "'").join(",");
+        }
+        if (this.deletedCols.length > 0) {
+            differ += " 删除：" + this.deletedCols.map((c) => "'" + c + "'").join(",");
+        }
+        return differ;
+    }
+}
+
 export interface ReaderColMeta {
     index: number;
     name: string;
     type: string;
     disable: boolean;
     ip: ItemPropVal;
+
+   // extraProps?: { string?: any };
 }
 
 export interface DataTypeMeta {
@@ -359,16 +400,28 @@ export interface DataTypeMeta {
     decimalRange: { min: number, max: number };
     containColSize: boolean;
     "containDecimalRange": boolean,
-    "type": {
-        "columnSize": number,
-        "decimalDigits": number,
-        //"s": "12,32,",
-        "type": number,
-        //"typeDesc": "varchar(32)",
-        "typeName": string,
-        // "unsigned": false,
-        // "unsignedToken": ""
-    }
+    "type": DataTypeDesc
+    //   {
+    //   "columnSize": number,
+    //   "decimalDigits": number,
+    //   //"s": "12,32,",
+    //   "type": number,
+    //   //"typeDesc": "varchar(32)",
+    //   "typeName": string,
+    //   // "unsigned": false,
+    //   // "unsignedToken": ""
+    // }
+}
+
+export interface DataTypeDesc {
+    "columnSize": number,
+    "decimalDigits": number,
+    //"s": "12,32,",
+    "type": number,
+    //"typeDesc": "varchar(32)",
+    "typeName": string,
+    // "unsigned": false,
+    // "unsignedToken": ""
 }
 
 /**

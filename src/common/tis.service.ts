@@ -161,6 +161,7 @@ export class TISService {
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts)
       .toPromise()
       .then((response) => {
+        console.log(response);
         let result = this.processResult(response, e);
         if (result) {
           return result;

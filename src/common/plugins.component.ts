@@ -385,10 +385,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let d: Descriptor = null;
     let attrs: AttrDesc[];
     let attr: AttrDesc;
+   // console.log(descriptors);
     for (let impl in descriptors) {
       d = Object.assign(new Descriptor(), descriptors[impl]);
       attrs = [];
       d.attrs.forEach((a) => {
+
         attr = Object.assign(new AttrDesc(), a);
         if (attr.describable) {
           attr.descriptors = this.wrapDescriptors(attr.descriptors);
@@ -793,9 +795,8 @@ export class NotebookwrapperComponent implements OnInit {
                   </ng-container>
                   <ng-container *ngSwitchCase="fieldTypeEnums">
                     <!--ENUM-->
-                      <nz-select nzShowSearch [nzMode]="  _pp.enumMode " [disabled]="disabled"
-                                 [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"
-                                 nzAllowClear>
+                      <nz-select nzShowSearch [nzMode]="_pp.enumMode" [disabled]="disabled"
+                                 [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option *ngFor="let e of _pp.getEProp('enum')" [nzLabel]="e.label"
                                       [nzValue]="e.val"></nz-option>
                        </nz-select>
