@@ -278,6 +278,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       // 主要目的是将subFormPlugin的desc信息去除掉
       return {name: m.name, require: m.require, extraParam: m.extraParam };
     });
+    //console.log(hlist);
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
       nzWidth: "80%",
       nzTitle: `设置 ${detailId}`,
@@ -292,13 +293,14 @@ export class SelectedTabsComponent extends BasicFormComponent {
         return;
       }
       meta.setted = true;
-      //  console.log(hetero.hetero.items.length);
+       // console.log([this.subFormHetero.items[0].vals,hetero.hetero.items]);
       // for (let itemIndex = 0; itemIndex < hetero.hetero.items.length; itemIndex++) {
       //
       // }
       // console.log(hetero.hetero.items[0].vals);
       // @ts-ignore
       // this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
+
       this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items;
       this.subFormItemSetterFlag.set(detailId, true);
     });
@@ -419,7 +421,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        // console.log(r.bizresult);
+         console.log(r);
         let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
         let hlist: HeteroList[] = [h];
         return hlist;

@@ -162,16 +162,16 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     /**=====================================================
      * <<<<<<<<<for test
      =======================================================*/
-    // DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
-    //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "hdfs_mysql";
-    //   dto.processMeta = {readerRDBMS: false, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
-    //   // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
-    //   // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "TDFS" === r.displayName);
-    //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, dto);
-    // });
+    DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
+      let dto = new DataxDTO();
+      dto.dataxPipeName = "mongo_mysql";
+      dto.processMeta = {readerRDBMS: false, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+      // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
+      // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
+      dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MongoDB" === r.displayName);
+      dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
+      this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
+    });
     /**=====================================================
      * for test end>>>>>>>>
      =======================================================*/
@@ -283,7 +283,7 @@ export class AddStep2ComponentCfg {
 
 export interface DataXCreateProcessMeta {
   readerRDBMS: boolean;
-  readerRDBMSChangeableInLifetime: boolean;
+  readerRDBMSChangeableInLifetime?: boolean;
   // DataX Reader 是否有明确的表名
   explicitTable: boolean;
 

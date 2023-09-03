@@ -7,18 +7,72 @@ import {
     ViewContainerRef
 } from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
-import {ActivatedRoute} from "@angular/router";
 import {TISService} from "./tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {DataTypeMeta, ReaderColMeta, TabletView} from "./tis.plugin";
+import {DataTypeDesc, DataTypeMeta, ReaderColMeta, TabletView} from "./tis.plugin";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 @Component({
     selector: "db-schema-editor",
     template: `
         <tis-page [rows]="colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
+            <page-row-assist>
+                <ng-template let-u='r'>
+                    <p class="row-assist">
+                        <tis-page [rows]="u?.docFieldSplitMetas" [tabSize]="'small'" [bordered]="true"
+                                  [showPagination]="false">
+                            <page-header>
+                                <button nz-button nzSize="small" (click)="addMongoDocumentSplitter(u)"><span nz-icon
+                                                                                                             nzType="plus"
+                                                                                                             nzTheme="outline"></span>添加
+                                </button>
+                            </page-header>
+                            <tis-col title="新字段">
+                                <ng-template let-uu='r'>
+                                    <nz-form-item>
+<!--                                        [nzValidateStatus]="uu.ip.validateStatus"-->
+<!--                                        [nzHasFeedback]="uu.ip.hasFeedback"-->
+<!--                                        [nzErrorTip]="uu.ip.error"-->
+                                        <nz-form-control >
+                                            <input nz-input [(ngModel)]="uu.name" [disabled]="uu.disable"/>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </ng-template>
+                            </tis-col>
+                            <tis-col title="Json路径">
+
+<!--                                [nzValidateStatus]="uu.ip.validateStatus"-->
+<!--                                [nzHasFeedback]="uu.ip.hasFeedback"-->
+<!--                                [nzErrorTip]="uu.ip.error"-->
+
+                                <ng-template let-uu='r'>
+                                    <nz-form-item>
+                                        <nz-form-control>
+                                            <input nz-input [(ngModel)]="uu.jsonPath" [disabled]="uu.disable"/>
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                </ng-template>
+                            </tis-col>
+                            <tis-col title="Jdbc类型">
+                                <ng-template let-uu='r'>
+                                    <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:uu}"></ng-container>
+                                </ng-template>
+                            </tis-col>
+
+                            <tis-col title="操作">
+                                <ng-template let-uu='r'>
+                                    <button nz-button nzSize="small" nzType="link" (click)="deleteDocFieldSplitRow(uu,u)">删除
+                                    </button>
+                                </ng-template>
+                            </tis-col>
+                        </tis-page>
+
+                    </p>
+                </ng-template>
+            </page-row-assist>
             <page-header>
-                <button  [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                <button [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
                         nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
                         (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
                                                                          nzTheme="outline"></span>sync
@@ -59,35 +113,16 @@ import {DataTypeMeta, ReaderColMeta, TabletView} from "./tis.plugin";
                     </nz-form-item>
                 </ng-template>
             </tis-col>
+            <tis-col title="Mongo Type">
+                <ng-template let-u='r'>
+                    {{ u.mongoFieldType}}
+                    <nz-switch *ngIf="u.mongoDocType" nzSize="small" [(ngModel)]="u.openAssist"
+                    ></nz-switch>
+                </ng-template>
+            </tis-col>
             <tis-col title="Type">
                 <ng-template let-u='r'>
-                    <nz-space>
-                        <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="u.disable" [(ngModel)]="u.type.type"
-                                   nzPlaceHolder="请选择" (ngModelChange)="typeChange(u.type)">
-                            <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
-                                       *ngFor="let tp of this.typeMetas"></nz-option>
-                        </nz-select>
-                        <ng-container
-                                *ngTemplateOutlet="assistType;context:{typemeta:this.typeMap.get(u.type.type)}">
-                        </ng-container>
-                        <ng-template #assistType let-typemeta="typemeta">
-                            <ng-container *ngIf="typemeta.containColSize">
-                                <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Column Size"
-                                                 *nzSpaceItem
-                                                 [(ngModel)]="u.type.columnSize"
-                                                 [nzMin]="typemeta.colsSizeRange.min"
-                                                 [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
-                            </ng-container>
-                            <ng-container *ngIf="typemeta.containDecimalRange">
-                                <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Decimal Digits Size"
-                                                 *nzSpaceItem
-                                                 [(ngModel)]="u.type.decimalDigits"
-                                                 [nzMin]="typemeta.decimalRange.min"
-                                                 [nzMax]="typemeta.decimalRange.max"></nz-input-number>
-                            </ng-container>
-
-                        </ng-template>
-                    </nz-space>
+                    <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:u}"></ng-container>
                 </ng-template>
             </tis-col>
             <tis-col title="主键" *ngIf="!pkSetDisable">
@@ -101,10 +136,54 @@ import {DataTypeMeta, ReaderColMeta, TabletView} from "./tis.plugin";
                     <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
                 </ng-template>
             </tis-col>
+
         </tis-page>
+
+
+        <ng-template #jdbcTypeTemplate let-u='u'>
+            <nz-space>
+                <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="u.disable"
+                           nzDropdownMatchSelectWidth="true" [(ngModel)]="u.type.type"
+                           nzPlaceHolder="请选择" (ngModelChange)="typeChange(u.type)">
+                    <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
+                               *ngFor="let tp of this.typeMetas"></nz-option>
+                </nz-select>
+
+                <ng-container
+                        *ngTemplateOutlet="assistType;context:{typemeta:this.typeMap.get(u.type.type),u:u};">
+                </ng-container>
+
+                <ng-template #assistType let-typemeta="typemeta" let-u="u">
+                    <ng-container *ngIf="typemeta.containColSize">
+                        <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Column Size"
+                                         *nzSpaceItem
+                                         [(ngModel)]="u.type.columnSize"
+                                         [nzMin]="typemeta.colsSizeRange.min"
+                                         [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
+                    </ng-container>
+                    <ng-container *ngIf="typemeta.containDecimalRange">
+                        <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Decimal Digits Size"
+                                         *nzSpaceItem
+                                         [(ngModel)]="u.type.decimalDigits"
+                                         [nzMin]="typemeta.decimalRange.min"
+                                         [nzMax]="typemeta.decimalRange.max"></nz-input-number>
+                    </ng-container>
+
+                </ng-template>
+            </nz-space>
+        </ng-template>
+
     `
     , styles: [
         `
+            .row-assist {
+                margin: 8px 0px 8px 0px;
+            }
+
+            .type-select {
+                min-width: 14em;
+            }
+
             .text-delete {
                 text-decoration: line-through;
             }
@@ -133,8 +212,10 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
 
     view: TabletView;
 
+
     @Input()
     public set tabletView(view: TabletView) {
+
         this.colsMeta = view.mcols;
         this.typeMetas = view.typeMetas;
         this.view = view;
@@ -153,20 +234,23 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
         return this._typeMap;
     }
 
-    constructor(private route: ActivatedRoute, tisService: TISService, modalService: NzModalService) {
-        super(tisService, modalService);
+    constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService) {
+        super(tisService, modalService, notification);
     }
 
     syncTabSchema() {
-        this.colsMeta = this.view.synchronizeMcols();
-        // console.log(this.view);
-        //
-        // for(this.view.mcols){
-        //
-        // }
+        let syncResult = this.view.synchronizeMcols();
+        this.colsMeta = syncResult.syncCols;
+
+        if (syncResult.hasAnyDiff) {
+            this.successNotify(syncResult.differSummary);
+        } else {
+            this.warnNotify("与数据库最新表结构没有区别");
+        }
     }
 
     ngAfterContentInit() {
+
     }
 
     ngOnDestroy() {
@@ -186,15 +270,42 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
     }
 
 
+    addMongoDocumentSplitter(u: ReaderColMeta | any) {
+
+        let rowAssist: Array<RowAssist> = u.docFieldSplitMetas;
+        if (!rowAssist) {
+            rowAssist = [];
+        }
+        rowAssist.push(new RowAssist("", '', this.typeMap.get(-1).type))
+        u.docFieldSplitMetas = [...rowAssist];
+    }
+
+    deleteDocFieldSplitRow(mongoDocSplit: RowAssist, colMeta: ReaderColMeta) {
+        let rowAssist: Array<RowAssist> = (<any>colMeta).docFieldSplitMetas
+        if (!rowAssist) {
+            throw new Error("rowAssist can not be null");
+        }
+        const index = rowAssist.indexOf(mongoDocSplit);
+
+        if (index > -1) {
+            rowAssist.splice(index, 1);
+            (<any>colMeta).docFieldSplitMetas = [...rowAssist];
+        }
+    }
 }
 
-interface DataTypeDesc {
-    "columnSize": number,
-    "decimalDigits": number,
-    //"s": "12,32,",
-    "type": number,
-    //"typeDesc": "varchar(32)",
-    "typeName": string,
-    // "unsigned": false,
-    // "unsignedToken": ""
+class RowAssist {
+    constructor(public name: string, public jsonPath: string, public type: DataTypeDesc) {
+    }
 }
+
+// interface DataTypeDesc {
+//   "columnSize": number,
+//   "decimalDigits": number,
+//   //"s": "12,32,",
+//   "type": number,
+//   //"typeDesc": "varchar(32)",
+//   "typeName": string,
+//   // "unsigned": false,
+//   // "unsignedToken": ""
+// }

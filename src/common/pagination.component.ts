@@ -120,8 +120,25 @@ export class Pager {
 
 @Component({
     selector: 'page-header',
-    template: `<ng-content></ng-content>`})
+    template: `
+        <ng-content></ng-content>`
+})
 export class TisPageHeader implements AfterContentInit, AfterViewInit {
+    ngAfterContentInit(): void {
+    }
+
+    ngAfterViewInit(): void {
+    }
+}
+
+@Directive({
+    selector: 'page-row-assist'
+})
+export class TisPageRowAssist implements AfterContentInit, AfterViewInit {
+    @ContentChild(TemplateRef, {static: false}) rowAssistTempate: TemplateRef<any>;
+
+
+
     ngAfterContentInit(): void {
     }
 
@@ -208,7 +225,8 @@ export class TdContentDirective implements OnInit {
     selector: 'tis-page',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <nz-table #tabrows [nzBordered]="bordered" [nzTitle]="_pageHeader?tisPagerHeader:null" [nzData]="rows" [nzSize]="this.tabSize"
+        <nz-table #tabrows [nzBordered]="bordered" [nzTitle]="_pageHeader?tisPagerHeader:null" [nzData]="rows"
+                  [nzSize]="this.tabSize"
                   [nzShowPagination]="showPagination" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                   (nzPageIndexChange)="searchData()"
                   [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
@@ -243,16 +261,23 @@ export class TdContentDirective implements OnInit {
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let r of tabrows.data">
-                <ng-template ngFor let-k [ngForOf]="cls">
-                    <td *ngIf="k.fieldDefined">
-                        {{r[k.field]}}
-                    </td>
-                    <td *ngIf="!k.fieldDefined">
-                        <ng-template tis-td-content [row]='r' [key-meta]='k'></ng-template>
-                    </td>
-                </ng-template>
-            </tr>
+            <ng-container *ngFor="let r of tabrows.data">
+                <tr>
+                    <ng-template ngFor let-k [ngForOf]="cls">
+                        <td *ngIf="k.fieldDefined">
+                            {{r[k.field]}}
+                        </td>
+                        <td *ngIf="!k.fieldDefined">
+                            <ng-template tis-td-content [row]='r' [key-meta]='k'></ng-template>
+                        </td>
+                    </ng-template>
+                </tr>
+                <tr *ngIf="this.containTpl" [nzExpand]="  r.openAssist">
+
+                    <ng-container *ngTemplateOutlet="this._rowAssist.rowAssistTempate;context:{r:r}"></ng-container>
+
+                </tr>
+            </ng-container>
             </tbody>
         </nz-table>
         <ng-template #tisPagerHeader>
@@ -313,7 +338,10 @@ export class TdContentDirective implements OnInit {
 })
 export class PaginationComponent implements AfterContentInit, OnInit {
     @ContentChildren(TisColumn) cols: QueryList<TisColumn>;
+    @ContentChildren(TisPageRowAssist) rowAssists: QueryList<TisPageRowAssist>;
     @ContentChildren(TisPageHeader) pageHeader: QueryList<TisPageHeader>;
+
+
     @Input('rows') rows: any[] = [];
     @Input() showPagination = true;
     @Input('spinning') isSpinning = false;
@@ -321,11 +349,16 @@ export class PaginationComponent implements AfterContentInit, OnInit {
     @Input() tabSize: NzTableSize;
     private _cls: TisColumn[] = [];
     _pageHeader: TisPageHeader;
+    _rowAssist: TisPageRowAssist;
     @Output('go-page') pageEmitter = new EventEmitter<number>();
     p: Pager = new Pager();
 
     @Input('pager') set pager(p: Pager) {
         this.p = p;
+    }
+
+    get containTpl(): boolean {
+        return this._rowAssist && !!this._rowAssist.rowAssistTempate;
     }
 
     ngOnInit(): void {
@@ -348,6 +381,7 @@ export class PaginationComponent implements AfterContentInit, OnInit {
     ngAfterContentInit() {
         this._cls = this.cols.toArray();
         this._pageHeader = this.pageHeader.first;
+        this._rowAssist = this.rowAssists.first;
     }
 
     searchData() {

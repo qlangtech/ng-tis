@@ -91,13 +91,16 @@ export class BasicFormComponent {
     this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
+  protected warnNotify(msg: string, duration?: number) {
+    this.notification.warning('注意', msg, {nzDuration: duration > 0 ? duration : 6000});
+  }
+
   protected infoNotify(msg: string, duration?: number) {
     this.notification.info('信息', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
     this.formDisabled = false;
-    // console.log("webExecuteCallback")
     NProgress.done();
     return r;
   }
