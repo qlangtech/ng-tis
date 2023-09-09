@@ -21,7 +21,8 @@ import {BasicFormComponent} from "./basic.form.component";
 import {NzSelectModeType} from "ng-zorro-antd/select";
 import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
-import {id} from "date-fns/locale";
+import {NextObserver, Subject} from "rxjs";
+import {JSONFile} from "@angular/cli/utilities/json-file";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
@@ -69,7 +70,7 @@ export class ItemPropVal {
     // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
     descVal: DescribleVal;
     advance: boolean;
-    error: string;
+    _error: string | any;
     public _eprops: { string: any };
     private dftVal: any;
     placeholder: string;
@@ -81,7 +82,15 @@ export class ItemPropVal {
 
 
     constructor(public updateModel = false) {
-      //  console.log("create");
+        //  console.log("create");
+    }
+
+    public get error(): string | any {
+        return this._error;
+    }
+
+    public set error(content: string | any) {
+        this._error = content;
     }
 
     set eprops(vals: { String: any }) {
@@ -92,7 +101,8 @@ export class ItemPropVal {
     }
 
     public setMcolsEnums(dbLatestMcols: Array<ReaderColMeta>, mcols: Array<ReaderColMeta>, typeMetas: Array<DataTypeMeta>) {
-        this.setEProp(KEY_OPTIONS_ENUM, new TabletView(dbLatestMcols, mcols, typeMetas));
+        let tabView = new TabletView(dbLatestMcols, mcols, typeMetas);
+        this.setEProp(KEY_OPTIONS_ENUM, tabView);
     }
 
     public get isMcolsEnums(): boolean {
@@ -139,7 +149,8 @@ export class ItemPropVal {
     }
 
     get hasFeedback(): boolean {
-        return !(!this.error);
+        let err = this.error;
+        return !(!err) && typeof err === "string";
     }
 
     get validateStatus(): string {
@@ -207,11 +218,13 @@ export class Descriptor {
             nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
         });
         let nitems: Item[] = [];
+        console.log( h.items);
         h.items.forEach((r) => {
             nitems.push(r);
         });
-        // console.log(nItem);
+        //
         nitems.push(nItem);
+
         h.items = nitems;
     }
 
@@ -258,17 +271,20 @@ export interface TisResponseResult {
 }
 
 
-export class TabletView {
+export class TabletView implements NextObserver<any> {
 
     constructor(private _dbLatestMcols: Array<ReaderColMeta>, private _mcols: Array<ReaderColMeta>, private _typeMetas: Array<DataTypeMeta>) {
         let index = 0;
         // console.log(this._mcols);
         // console.log(this._dbLatestMcols);
-        this._mcols.forEach((c) => {
+        this._mcols.forEach((c: ReaderColMeta) => {
             c.index = ++index;
             c.ip = new ItemPropVal();
             // @ts-ignore
-            c.extraProps = c.extraProps|{}
+            c.extraProps = c.extraProps | {}
+
+            RowAssist.setDocFieldSplitMetas(c
+                , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
         });
 
         // 删除字段测试
@@ -279,13 +295,21 @@ export class TabletView {
         //     }
         // });
         // this._dbLatestMcols = tmp;
+        index = 0;
         this._dbLatestMcols.forEach((c) => {
             c.index = ++index;
             c.ip = new ItemPropVal();
             // @ts-ignore
-            c.extraProps = c.extraProps|{}
+            c.extraProps = c.extraProps | {}
+            RowAssist.setDocFieldSplitMetas(c
+                , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
         });
     }
+
+    next(errorContent: any): void {
+        console.log(errorContent);
+    }
+
 
     public get isContainDBLatestMcols(): boolean {
         return !!this._dbLatestMcols;
@@ -391,8 +415,7 @@ export interface ReaderColMeta {
     type: string;
     disable: boolean;
     ip: ItemPropVal;
-
-   // extraProps?: { string?: any };
+    // extraProps?: { string?: any };
 }
 
 export interface DataTypeMeta {
@@ -482,7 +505,9 @@ export class Item {
                 item = items[index];
                 let itemProp: ItemPropVal;
                 fieldsErrs.forEach((fieldErr) => {
+
                     let ip = item.vals[fieldErr.name];
+                    // console.log([item.vals, fieldErr, item.vals[fieldErr.name], ip]);
                     if (ip instanceof ItemPropVal) {
                         itemProp = ip;
                         itemProp.error = fieldErr.content;
@@ -884,4 +909,36 @@ export class SuccessAddedDBTabs {
     }
 }
 
+export const KEY_DOC_FIELD_SPLIT_METAS = "docFieldSplitMetas";
 
+/**
+ * 该类目前只为mongo 的document 类型的field拆解而用
+ */
+export class RowAssist {
+    public _ip: Map<string, ItemPropVal>;
+
+    public static getDocFieldSplitMetas(u: ReaderColMeta): Array<RowAssist> {
+        let rowAssist: Array<RowAssist> = u[KEY_DOC_FIELD_SPLIT_METAS];
+        if (!rowAssist) {
+            rowAssist = [];
+        }
+        return rowAssist;
+    }
+
+    static setDocFieldSplitMetas(u: ReaderColMeta, rowAssist: Array<RowAssist>) {
+        u[KEY_DOC_FIELD_SPLIT_METAS] = [...rowAssist];
+    }
+
+    constructor(public name: string, public jsonPath: string, public type: DataTypeDesc) {
+        this._ip = new Map<string, ItemPropVal>();
+    }
+
+    public getIp(propName: string): ItemPropVal {
+        let ip = this._ip.get(propName);
+        if (!ip) {
+            ip = new ItemPropVal();
+            this._ip.set(propName, ip);
+        }
+        return ip;
+    }
+}

@@ -367,7 +367,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
-        // console.log([pm, bizArray]);
+         console.log([pm, bizArray]);
         for (let i = 0; i < pm.length; i++) {
           // console.log([bizArray[i], pm[i]]);
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
@@ -426,6 +426,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       items.push(h.items);
     });
     let postData: any = {"items": items};
+   // console.log(postData);
     if (savePluginEvent.serverForward) {
       postData.serverForward = savePluginEvent.serverForward;
     }
@@ -597,7 +598,7 @@ console.log( [this.plugins,h.pluginCategory]);
     // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
     // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
     let formContext = !!savePluginEvent.basicModule ? savePluginEvent.basicModule : this;
-    // console.log(formContext)
+     console.log(_heteroList);
     PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
@@ -645,6 +646,7 @@ console.log( [this.plugins,h.pluginCategory]);
       _heteroList.forEach((h) => {
         let items: Item[] = h.items;
         let errorFields = pluginErrorFields[index++];
+        // console.log(errorFields);
         Item.processErrorField(errorFields, items);
       });
       this.cdr.detectChanges();
@@ -822,7 +824,7 @@ export class NotebookwrapperComponent implements OnInit {
                  <ng-container *ngSwitchCase="8">
                    <ng-container [ngSwitch]="_pp.isMcolsEnums">
                        <ng-container *ngSwitchCase="true">
-                          <db-schema-editor [nameEditDisable]="true" [pkSetDisable]="true" [tabletView]="_pp.mcolsEnums" ></db-schema-editor>
+                          <db-schema-editor [nameEditDisable]="true" [pkSetDisable]="true" [error]="_pp.error"  [tabletView]="_pp.mcolsEnums" ></db-schema-editor>
                        </ng-container>
                       <ng-container *ngSwitchCase="false">
                          <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']"

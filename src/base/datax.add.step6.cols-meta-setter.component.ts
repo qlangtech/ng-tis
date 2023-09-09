@@ -80,7 +80,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   writerFromTabName: string;
   // colsMeta: Array<ReaderColMeta> = [];
   // typeMetas: Array<DataTypeMeta> = [];
-  tabView: TabletView = new TabletView(null,null, null);
+  tabView: TabletView = new TabletView([],[], []);
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
