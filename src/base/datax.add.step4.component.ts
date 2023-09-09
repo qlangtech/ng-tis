@@ -141,13 +141,14 @@ export class SelectedTabsComponent extends BasicFormComponent {
     if (!this.descriptor) {
       throw new Error("descriptor can not be null");
     }
-    // console.log([meta, this.dataXReaderTargetName]);
+    // ,targetItemDesc_batch_source_process_extend
+     console.log([meta, this.dataXReaderTargetName,this.descriptor]);
     let detailId = meta.id;
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
       this.descriptor.displayName, this.descriptor.impl, meta.fieldName
       , this.dataXReaderTargetName+ ",subformDetailIdValue_" + detailId, this.skipSubformDescNullError)];
-    // console.log(pluginMeta);
+     console.log(pluginMeta);
     let ip = this.subFormHetero.items[0].vals[meta.id];
     if (ip instanceof ItemPropVal) {
       throw new Error("illegal type");
@@ -173,14 +174,17 @@ export class SelectedTabsComponent extends BasicFormComponent {
 
         let oitems = h.items;
         let items: Array<Item> = [];
-        h.items = items;
+      //  h.items = items;
+       // console.log([oitems]);
         h.descriptorList.forEach((desc) => {
+
           for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
             if (oitems[itemIdx].impl === desc.impl) {
               items.push(oitems[itemIdx]);
               return;
             }
           }
+
           Descriptor.addNewItemByDescs(h, [desc], false, (_, propVal) => {
             if (propVal.pk) {
               propVal.primary = meta.id;
@@ -188,6 +192,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
             }
             return propVal;
           });
+        //  console.log(h.items);
         });
 
         // if (h.items.length < 1) {
@@ -278,7 +283,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       // 主要目的是将subFormPlugin的desc信息去除掉
       return {name: m.name, require: m.require, extraParam: m.extraParam };
     });
-    //console.log(hlist);
+   // console.log([hlist,pluginMeta]);
     const drawerRef = this.drawerService.create<PluginSubFormComponent, { hetero: HeteroList[] }, { hetero: HeteroList }>({
       nzWidth: "80%",
       nzTitle: `设置 ${detailId}`,
@@ -404,7 +409,8 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   // savePlugin = new EventEmitter<any>();
 
 
-  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string, subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
+  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string //
+                                             , subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
     return {
       skipSubformDescNullError: skipSubformDescNullError,
       name: "dataxReader", require: true
@@ -534,7 +540,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   private initializeSubFieldForms(useCache: boolean): Promise<TisResponseResult> {
     return DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
       , useCache, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-        // console.log(subFieldForms);
+         console.log([subFieldForms,subFormHetero]);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         this.transferList.splice(0);

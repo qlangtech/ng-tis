@@ -165,7 +165,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
       let dto = new DataxDTO();
       dto.dataxPipeName = "mongo_mysql";
-      dto.processMeta = {readerRDBMS: false, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+      dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
       // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
       // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
       dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MongoDB" === r.displayName);

@@ -1,40 +1,42 @@
-import {
-    AfterContentInit,
-    Component,
-    ComponentFactoryResolver, ComponentRef, Input,
-    OnDestroy, Type,
-    ViewChild,
-    ViewContainerRef
-} from "@angular/core";
+import {AfterContentInit, Component, Input, OnDestroy} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {DataTypeDesc, DataTypeMeta, ReaderColMeta, TabletView} from "./tis.plugin";
+import {
+    DataTypeDesc,
+    DataTypeMeta,
+    KEY_DOC_FIELD_SPLIT_METAS,
+    ReaderColMeta,
+    RowAssist,
+    TabletView
+} from "./tis.plugin";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 @Component({
     selector: "db-schema-editor",
     template: `
+
         <tis-page [rows]="colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
             <page-row-assist>
                 <ng-template let-u='r'>
                     <p class="row-assist">
+                        <!--class: RowAssist-->
                         <tis-page [rows]="u?.docFieldSplitMetas" [tabSize]="'small'" [bordered]="true"
                                   [showPagination]="false">
                             <page-header>
-                                <button nz-button nzSize="small" (click)="addMongoDocumentSplitter(u)"><span nz-icon
-                                                                                                             nzType="plus"
-                                                                                                             nzTheme="outline"></span>添加
+                                <button nz-button nzSize="small" (click)="addMongoDocumentSplitter(u)">
+                                    <span nz-icon
+                                          nzType="plus"
+                                          nzTheme="outline"></span>添加
                                 </button>
                             </page-header>
                             <tis-col title="新字段">
                                 <ng-template let-uu='r'>
                                     <nz-form-item>
-<!--                                        [nzValidateStatus]="uu.ip.validateStatus"-->
-<!--                                        [nzHasFeedback]="uu.ip.hasFeedback"-->
-<!--                                        [nzErrorTip]="uu.ip.error"-->
-                                        <nz-form-control >
+                                        <nz-form-control [nzValidateStatus]="uu.getIp('name').validateStatus"
+                                                         [nzHasFeedback]="uu.getIp('name').hasFeedback"
+                                                         [nzErrorTip]="uu.getIp('name').error">
                                             <input nz-input [(ngModel)]="uu.name" [disabled]="uu.disable"/>
                                         </nz-form-control>
                                     </nz-form-item>
@@ -42,13 +44,15 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
                             </tis-col>
                             <tis-col title="Json路径">
 
-<!--                                [nzValidateStatus]="uu.ip.validateStatus"-->
-<!--                                [nzHasFeedback]="uu.ip.hasFeedback"-->
-<!--                                [nzErrorTip]="uu.ip.error"-->
+                                <!--                                [nzValidateStatus]="uu.ip.validateStatus"-->
+                                <!--                                [nzHasFeedback]="uu.ip.hasFeedback"-->
+                                <!--                                [nzErrorTip]="uu.ip.error"-->
 
                                 <ng-template let-uu='r'>
                                     <nz-form-item>
-                                        <nz-form-control>
+                                        <nz-form-control [nzValidateStatus]="uu.getIp('jsonPath').validateStatus"
+                                                         [nzHasFeedback]="uu.getIp('jsonPath').hasFeedback"
+                                                         [nzErrorTip]="uu.getIp('jsonPath').error">
                                             <input nz-input [(ngModel)]="uu.jsonPath" [disabled]="uu.disable"/>
                                         </nz-form-control>
                                     </nz-form-item>
@@ -62,7 +66,8 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 
                             <tis-col title="操作">
                                 <ng-template let-uu='r'>
-                                    <button nz-button nzSize="small" nzType="link" (click)="deleteDocFieldSplitRow(uu,u)">删除
+                                    <button nz-button nzSize="small" nzType="link"
+                                            (click)="deleteDocFieldSplitRow(uu,u)">删除
                                     </button>
                                 </ng-template>
                             </tis-col>
@@ -97,13 +102,14 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
             <tis-col title="Name" width="40">
                 <ng-template let-u='r'>
                     <nz-form-item>
+
                         <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
                                          [nzHasFeedback]="u.ip.hasFeedback"
                                          [nzErrorTip]="u.ip.error">
-
                             <ng-container [ngSwitch]="nameEditDisable">
                                 <ng-container *ngSwitchCase="true">
-                                    <span [ngClass]="{'text-delete':u.disable}"> {{u.name}}</span>
+                                    <span nz-input
+                                          [ngClass]="{'text-delete':u.disable,'ant-input':true}"> {{u.name}}</span>
                                 </ng-container>
                                 <ng-container *ngSwitchCase="false">
                                     <input nz-input [(ngModel)]="u.name" [disabled]="u.disable"/>
@@ -208,6 +214,42 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
     pkSetDisable = false;
 
     @Input()
+    set error(errors: Array<any>) {
+        if (!Array.isArray(errors)) {
+            return;
+        }
+        // KEY_DOC_FIELD_SPLIT_METAS
+        let err: { name: string, };
+        for (let idx = 0; idx < errors.length; idx++) {
+            err = errors[idx];
+            for (let key in err) {
+                switch (key) {
+                    case "name":
+                        this.colsMeta[idx].ip.error = err[key];
+                        break;
+                    case KEY_DOC_FIELD_SPLIT_METAS:
+                        let splitMetasErrors: Array<any> = err[key];
+                        let metaErr = null;
+                        let splitMetas: Array<RowAssist> = RowAssist.getDocFieldSplitMetas(this.colsMeta[idx]);
+                        let ra: RowAssist = null;
+                        for (let idxMeta = 0; idxMeta < splitMetasErrors.length; idxMeta++) {
+                            ra = splitMetas[idxMeta];
+                            metaErr = splitMetasErrors[idxMeta];
+                            for (let errKey in metaErr) {
+                                ra.getIp(errKey).error = metaErr[errKey];
+                            }
+                        }
+
+                        break;
+                    default:
+                        throw new Error("error key:" + key);
+                }
+            }
+
+        }
+    }
+
+    @Input()
     nameEditDisable = false;
 
     view: TabletView;
@@ -270,15 +312,16 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
     }
 
 
-    addMongoDocumentSplitter(u: ReaderColMeta | any) {
+    addMongoDocumentSplitter(u: ReaderColMeta) {
 
-        let rowAssist: Array<RowAssist> = u.docFieldSplitMetas;
-        if (!rowAssist) {
-            rowAssist = [];
-        }
+        let rowAssist: Array<RowAssist> = RowAssist.getDocFieldSplitMetas(u);//.docFieldSplitMetas;
+
         rowAssist.push(new RowAssist("", '', this.typeMap.get(-1).type))
-        u.docFieldSplitMetas = [...rowAssist];
+//        u.docFieldSplitMetas = [...rowAssist];
+
+        RowAssist.setDocFieldSplitMetas(u, rowAssist);
     }
+
 
     deleteDocFieldSplitRow(mongoDocSplit: RowAssist, colMeta: ReaderColMeta) {
         let rowAssist: Array<RowAssist> = (<any>colMeta).docFieldSplitMetas
@@ -289,13 +332,9 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
 
         if (index > -1) {
             rowAssist.splice(index, 1);
-            (<any>colMeta).docFieldSplitMetas = [...rowAssist];
+            //   (<any>colMeta).docFieldSplitMetas = [...rowAssist];
+            RowAssist.setDocFieldSplitMetas(colMeta, rowAssist)
         }
-    }
-}
-
-class RowAssist {
-    constructor(public name: string, public jsonPath: string, public type: DataTypeDesc) {
     }
 }
 
