@@ -229,7 +229,7 @@ export class TdContentDirective implements OnInit {
                   [nzSize]="this.tabSize"
                   [nzShowPagination]="showPagination" [nzLoading]="isSpinning" [(nzPageIndex)]="pager.page"
                   (nzPageIndexChange)="searchData()"
-                  [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize">
+                  [nzFrontPagination]="false" [nzTotal]="pager.totalCount" [nzPageSize]="pager.pageSize" >
             <thead>
             <tr>
                 <th *ngFor="let k of cls" tis-th [key-meta]='k' [nzCustomFilter]="k.searchable">{{k.title}}

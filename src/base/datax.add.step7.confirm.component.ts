@@ -104,28 +104,52 @@ export enum ExecModel {
       </ng-container>
 
       <ng-container *ngIf=" dto.supportBatch">
-        <h3>DataX脚本文件</h3>
-        <ul class="item-block child-block script-block">
-          <li *ngFor="let f of genCfgFileList">
-            <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
-              <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
-            </button>
-          </li>
-          <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-        </ul>
+
+        <nz-page-header  [nzGhost]="true">
+          <nz-page-header-title>DataX脚本</nz-page-header-title>
+
+          <nz-page-header-extra>
+            <nz-space>
+              <button *nzSpaceItem nz-button nzSize="small" (click)="reGenerate()">重新生成</button>
+            </nz-space>
+          </nz-page-header-extra>
+          <nz-page-header-content class="item-block child-block script-block">
+            <ul >
+              <li *ngFor="let f of genCfgFileList">
+                <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
+                  <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
+                </button>
+              </li>
+              <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+            </ul>
+          </nz-page-header-content>
+        </nz-page-header>
+
+
       </ng-container>
       <ng-container *ngIf="createDDLFileList.length > 0">
-        <h3>Create Table DDL</h3>
 
-        <ul class="child-block item-block script-block">
-          <li *ngFor="let f of createDDLFileList">
-            <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
-                                                                                             nzType="console-sql"
-                                                                                             nzTheme="outline"></i>{{f}}
-            </button>
-          </li>
-          <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-        </ul>
+        <nz-page-header  [nzGhost]="true">
+          <nz-page-header-title>Table DDL Script</nz-page-header-title>
+
+          <nz-page-header-extra>
+            <nz-space>
+              <button *nzSpaceItem nz-button nzSize="small" (click)="reGenerateSqlDDL()">重新生成</button>
+            </nz-space>
+          </nz-page-header-extra>
+
+          <nz-page-header-content class="item-block child-block script-block">
+            <ul>
+              <li *ngFor="let f of createDDLFileList">
+                <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
+                                                                                                 nzType="console-sql"
+                                                                                                 nzTheme="outline"></i>{{f}}
+                </button>
+              </li>
+              <i style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+            </ul>
+          </nz-page-header-content>
+        </nz-page-header>
       </ng-container>
       <h3>基本信息</h3>
       <div class="item-block">

@@ -8,8 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/schema.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/schema.edit.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
@@ -165,7 +165,9 @@
       <workItem from="1692881425500" duration="7703000" />
       <workItem from="1693357372671" duration="14055000" />
       <workItem from="1693621330132" duration="54806000" />
-      <workItem from="1694004421951" duration="28155000" />
+      <workItem from="1694004421951" duration="28794000" />
+      <workItem from="1694418382716" duration="663000" />
+      <workItem from="1694477787341" duration="15501000" />
     </task>
     <servers />
   </component>
@@ -173,130 +175,128 @@
     <option name="version" value="3" />
     <option name="exactExcludedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/common/common.module.js" />
-        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/common/tis.service.js" />
-        <option value="$PROJECT_DIR$/src/common/tis.service.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
-        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
-        <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
-        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/test.js" />
-        <option value="$PROJECT_DIR$/src/test.js.map" />
-        <option value="$PROJECT_DIR$/src/polyfills.js" />
-        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js" />
-        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
-        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
-        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
-        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js" />
-        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/snapshot.link.js" />
-        <option value="$PROJECT_DIR$/src/common/snapshot.link.js.map" />
-        <option value="$PROJECT_DIR$/src/common/steps.component.js" />
-        <option value="$PROJECT_DIR$/src/common/steps.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
-        <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js" />
-        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js" />
-        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js" />
-        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js" />
-        <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js.map" />
-        <option value="$PROJECT_DIR$/src/common/application.js" />
-        <option value="$PROJECT_DIR$/src/common/application.js.map" />
-        <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
-        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js" />
-        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
-        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js" />
-        <option value="$PROJECT_DIR$/src/common/pagination.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js" />
-        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js.map" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
-        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
-        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
-        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
         <option value="$PROJECT_DIR$/src/offline/table.add.step.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/membership.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
-        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
-        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
-        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
+        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/line.chart.component.js" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js" />
+        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js" />
+        <option value="$PROJECT_DIR$/src/common/steps.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js" />
+        <option value="$PROJECT_DIR$/src/service/basic.service.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js" />
+        <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/consume.time.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js" />
+        <option value="$PROJECT_DIR$/src/offline/workflow.add.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/offline-routing.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js.map" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js" />
+        <option value="$PROJECT_DIR$/src/runtime/membership.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/script.service.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
+        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js" />
+        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js.map" />
+        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/copy.other.core.component.js" />
+        <option value="$PROJECT_DIR$/src/common/basic.form.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step4.running.tab-base.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
+        <option value="$PROJECT_DIR$/src/common/tis.service.js" />
+        <option value="$PROJECT_DIR$/src/polyfills.js" />
+        <option value="$PROJECT_DIR$/src/common/application.js" />
+        <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
         <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/service/script.store.js" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
+        <option value="$PROJECT_DIR$/src/common/form.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
+        <option value="$PROJECT_DIR$/src/polyfills.js.map" />
+        <option value="$PROJECT_DIR$/src/common/snapshot.link.js" />
+        <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.store.js.map" />
+        <option value="$PROJECT_DIR$/src/test.js.map" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js" />
+        <option value="$PROJECT_DIR$/src/service/script.store.js" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/full.build.history.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/pager.header.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
+        <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
+        <option value="$PROJECT_DIR$/src/common/application.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.plugin.config.component.js" />
+        <option value="$PROJECT_DIR$/src/common/safe.pipe.js" />
+        <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js" />
+        <option value="$PROJECT_DIR$/src/common/navigate.bar.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/membership.component.js" />
+        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js" />
+        <option value="$PROJECT_DIR$/src/offline/table.add.step.js" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/codemirror.component.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/core.node.manage.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js" />
+        <option value="$PROJECT_DIR$/src/common/common.module.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/codemirror.component.js" />
+        <option value="$PROJECT_DIR$/src/common/snapshotset.component.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/breadcrumb.component.js" />
+        <option value="$PROJECT_DIR$/src/index/application.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/snapshot.link.js.map" />
+        <option value="$PROJECT_DIR$/src/common/tis.service.js.map" />
+        <option value="$PROJECT_DIR$/src/runtime/pojo.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.index.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/init.system.component.js" />
+        <option value="$PROJECT_DIR$/src/user/user.module.js.map" />
+        <option value="$PROJECT_DIR$/src/common/table.select.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/date.format.pipe.js.map" />
+        <option value="$PROJECT_DIR$/src/test.js" />
+        <option value="$PROJECT_DIR$/src/user/user.list.component.js" />
+        <option value="$PROJECT_DIR$/src/common/steps.component.js.map" />
+        <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
+        <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
+        <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
       </list>
     </option>
     <option name="additionalRoots">
