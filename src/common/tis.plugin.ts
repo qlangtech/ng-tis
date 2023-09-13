@@ -604,6 +604,7 @@ export class Item {
             }
             // newVal.pk = (at.key === this.dspt.pkField);
         }
+       // console.log([newVal.key,newVal]);
         return newVal;
     }
 
@@ -644,12 +645,14 @@ export class Item {
     public wrapItemVals(): void {
         let newVals = {};
         let ovals: any /**map*/ = this.vals;
+      console.log([this.dspt.impl,this.vals]);
         let newVal: ItemPropVal;
         // console.log(this.dspt.attrs);
         this.dspt.attrs.forEach((at) => {
             let v = ovals[at.key];
             // console.log([at.key, v, at]);
             newVal = Item.wrapItemPropVal(v, at);
+          console.log([at.key,newVal]);
             if (newVal) {
                 newVals[at.key] = (newVal);
             }
