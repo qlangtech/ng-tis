@@ -41,8 +41,9 @@ export class LatestSelectedIndex {
   }
 
   public static popularSelectedIndex(tisService: TISService, _localStorageService: LocalStorageService): LatestSelectedIndex {
-    let tisVer = tisService.containMeta ? tisService.tisMeta.buildVersion : '';
+    let tisVer = tisService.containMeta ? tisService.tisMeta.tisMeta.buildVersion : '';
     let localLatestIndexKey = KEY_LOCAL_STORAGE_LATEST_INDEX + "_" + tisVer;
+  //  console.log(localLatestIndexKey);
     let popularSelected: LatestSelectedIndex = _localStorageService.get(localLatestIndexKey);
 
     if (popularSelected) {

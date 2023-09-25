@@ -34,9 +34,6 @@ import {StepType} from "../common/steps.component";
       <tis-page-header *ngIf="this.dto?.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
                        [title]="this.dto.dataxPipeName">
       </tis-page-header>
-      <!--      <tis-plugins [errorsPageShow]="false"-->
-      <!--                   [formControlSpan]="20" [shallInitializePluginItems]="false" [showSaveButton]="false" [disabled]="true"-->
-      <!--                   [plugins]="[{name: 'dataxReader', require: true, extraParam: 'justGetItemRelevant_true,dataxName_' + this.dto.dataxPipeName}]"></tis-plugins>-->
       <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
   `,
   styles: [`
@@ -58,7 +55,7 @@ export class DataxConfigComponent extends AppFormComponent implements OnInit {
 
   protected initialize(app: CurrentCollection): void {
     DataxAddComponent.getDataXMeta(this, this.stepType, app).then((dto) => {
-       console.log(dto);
+       //console.log(dto);
       this.dto = dto;
     });
   }

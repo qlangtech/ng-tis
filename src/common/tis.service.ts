@@ -29,7 +29,7 @@ import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
-import {TISMeta} from "./navigate.bar.component";
+import {TISBaseProfile, TISMeta} from "./navigate.bar.component";
 
 declare var TIS: any;
 
@@ -45,7 +45,7 @@ export class TISService {
   // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
   public execId: string;
-  _tisMeta: TISMeta;
+  _tisMeta: TISBaseProfile;
 
   public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
     const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
@@ -63,7 +63,8 @@ export class TISService {
     , public notification: NzNotificationService, private drawerService: NzDrawerService) {
   }
 
-  public set tisMeta(meta: TISMeta) {
+  public set tisMeta(meta: TISBaseProfile) {
+    //console.log(["tisMeta",meta]);
     this._tisMeta = meta;
   }
 
@@ -71,7 +72,8 @@ export class TISService {
     return !!this._tisMeta;
   }
 
-  public get tisMeta(): TISMeta {
+  public get tisMeta(): TISBaseProfile {
+    // console.log(["getTisMeta",this._tisMeta]);
     if (!this._tisMeta) {
       throw new Error("_tisMeta can not be null");
     }
@@ -161,7 +163,7 @@ export class TISService {
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts)
       .toPromise()
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         let result = this.processResult(response, e);
         if (result) {
           return result;
@@ -218,7 +220,7 @@ export class TISService {
   }
 
   private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
-   // console.log(result);
+    // console.log(result);
     if (result.success) {
       // console.log([result.msg, e, (result.msg && result.msg.length > 0) , ( e === undefined || !e.notShowBizMsg) , ( (e === undefined) || !e.createOrGetNotebook)]);
       if ((result.msg && result.msg.length > 0)

@@ -35,6 +35,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
+import {expressionType} from "@angular/compiler/src/output/output_ast";
 
 
 @Component({
@@ -294,25 +295,29 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       this.isLoading = false;
     });
 
-    let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
 
-    if (this.app) {
-      popularSelected.addIfNotContain(this.app);
-    }
+    // let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
+    // this.httpPost(getUserUrl, '').then((r) => {
+      if (this.tisService.containMeta) {
+        let meta: TISBaseProfile = this.tisService.tisMeta;
+        this.userProfile = meta.usr;
+        this.tisMeta = meta.tisMeta
+       // this.tisService.tisMeta = r.bizresult;// this.tisMeta;
 
-    this.collectionOptionList = popularSelected.popularLatestSelected;
+        let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
 
-    let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
-    this.httpPost(getUserUrl, '').then((r) => {
-      if (r.success) {
-        this.userProfile = r.bizresult.usr;
-        this.tisMeta = r.bizresult.tisMeta;
-        this.tisService.tisMeta = this.tisMeta;
-        if (!r.bizresult.sysInitialized) {
+        if (this.app) {
+          popularSelected.addIfNotContain(this.app);
+        }
+
+        this.collectionOptionList = popularSelected.popularLatestSelected;
+
+
+        if (!meta.sysInitialized) {
           this.openInitSystemDialog();
         }
       }
-    })
+    // });
   }
 
   openInitSystemDialog() {
@@ -355,7 +360,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     let app = new Application();
     app.appType = value.appType;
     app.projectName = value.name;
-    LatestSelectedIndex.routeToApp(this.tisService,this._localStorageService, this.r, app);
+    LatestSelectedIndex.routeToApp(this.tisService, this._localStorageService, this.r, app);
   }
 
 
@@ -398,4 +403,10 @@ interface UserProfile {
 export interface TISMeta {
   buildVersion?: string;
   createTime?: string;
+}
+
+export interface TISBaseProfile {
+  sysInitialized: boolean;
+  usr: UserProfile;
+  tisMeta: TISMeta;
 }

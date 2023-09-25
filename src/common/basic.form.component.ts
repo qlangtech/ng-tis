@@ -110,7 +110,7 @@ export class BasicFormComponent {
   }
 
   get appMeta(): TISMeta {
-    return this.tisService.tisMeta;
+    return this.tisService.tisMeta.tisMeta;
   }
 
   protected clearProcessResult(): void {

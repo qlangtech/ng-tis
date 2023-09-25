@@ -80,7 +80,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   writerFromTabName: string;
   // colsMeta: Array<ReaderColMeta> = [];
   // typeMetas: Array<DataTypeMeta> = [];
-  tabView: TabletView = new TabletView([],[], []);
+  tabView: TabletView = new TabletView([], [], [], []);
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
@@ -121,7 +121,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
         // console.log(typeMetas);
         let tabMapper = r.bizresult.tabMapper;
 
-        this.tabView = new TabletView(null,tabMapper.sourceCols, typeMetas);
+        this.tabView = new TabletView([], null, tabMapper.sourceCols, typeMetas);
 
         //  this.colsMeta = tabMapper.sourceCols;
         this.writerTargetTabName = tabMapper.to;

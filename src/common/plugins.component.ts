@@ -371,7 +371,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
-        console.log([pm, bizArray]);
+       // console.log([pm, bizArray]);
         for (let i = 0; i < pm.length; i++) {
           // console.log([bizArray[i], pm[i]]);
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
@@ -418,12 +418,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
     , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
-    // console.log(pluginMetas);
+
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
-
     let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}&getNotebook=${savePluginEvent.createOrGetNotebook}`;
-
 
     let items: Array<Item[]> = [];
     heteroList.forEach((h) => {
@@ -474,7 +472,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     if (!h.pluginCategory) {
       throw new Error("pluginCategory can not be null");
     }
-    console.log([this.plugins, h.pluginCategory]);
+  //  console.log([this.plugins, h.pluginCategory]);
     let nh = Object.assign(new HeteroList(), h);
     nh.items = [item];
     this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
@@ -565,7 +563,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems() {
-    console.log(this.plugins);
+   // console.log(this.plugins);
     PluginsComponent.initializePluginItems(this, this.plugins, true, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
       if (success) {
         this.showExtensionPoint.open = showExtensionPoint;
@@ -692,23 +690,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           this.cdr.detectChanges();
         }
       });
-    // let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + h.extensionPoint;
-    // let entype = h.endType;
-    // if (entype) {
-    //   params += `${PARAM_END_TYPE}${entype}`
-    // }
-    //
-    // let url = "/coredefine/corenodemanage.ajax";
-    // this.httpPost(url, params)
-    //   .then((r) => {
-    //     if (r.success) {
-    //       let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
-    //       if (h.descriptors.size !== descMap.size) {
-    //         h.updateDescriptor(descMap);
-    //         this.cdr.detectChanges();
-    //       }
-    //     }
-    //   });
   }
 
 
@@ -747,12 +728,9 @@ export class NotebookwrapperComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // console.log(this.router.config);
-    // console.log(this.route.pathFromRoot);
   }
 
   active(event: any) {
-    // console.log(event);
   }
 }
 
@@ -1033,7 +1011,6 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   addNewPlugin(pluginImpl: string, ip: ItemPropVal) {
-    // console.log(descVal);
     let descVal = ip.descVal;
     const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, descVal.extendPoint, null, []);
 

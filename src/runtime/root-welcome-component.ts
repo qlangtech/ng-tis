@@ -25,6 +25,7 @@ import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex, SelectedIndex} from "../common/LatestSelectedIndex";
 import {Application} from "../common/application";
 import {TISService} from "../common/tis.service";
+import {BasicFormComponent} from "../common/basic.form.component";
 
 @Component({
   template: `
@@ -236,17 +237,43 @@ import {TISService} from "../common/tis.service";
     `
   ]
 })
-export class RootWelcomeComponent implements OnInit {
+export class RootWelcomeComponent extends BasicFormComponent implements OnInit {
   _latestSelected: Array<SelectedIndex> = [];
   companyIntrShow = false;
 
-  constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService, private tisService: TISService) {
+  constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService,  tisService: TISService) {
+    super(tisService);
   }
 
   ngOnInit(): void {
 
-    let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-    this._latestSelected = popularSelected.popularLatestSelected;
+    let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
+    this.httpPost(getUserUrl, '').then((r) => {
+      if (r.success) {
+        // this.userProfile = r.bizresult.usr;
+        // this.tisMeta = r.bizresult.tisMeta;
+       // console.log(['get_user_info',r.bizresult]);
+        this.tisService.tisMeta = r.bizresult;// this.tisMeta;
+        let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+        this._latestSelected = popularSelected.popularLatestSelected;
+       // console.log(this._latestSelected);
+
+        // let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+        //
+        // if (this.app) {
+        //   popularSelected.addIfNotContain(this.app);
+        // }
+        //
+        // this.collectionOptionList = popularSelected.popularLatestSelected;
+        //
+        //
+        // if (!r.bizresult.sysInitialized) {
+        //   this.openInitSystemDialog();
+        // }
+      }
+    });
+
+
   }
 
   backgroupDbClick(event: MouseEvent) {
