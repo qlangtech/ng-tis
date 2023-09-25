@@ -374,6 +374,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
   selector: "datax-reader-table-select",
   template: `
     <tis-steps *ngIf="createModel && this.dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+
     <nz-spin [nzSpinning]="this.formDisabled">
       <ng-container [ngSwitch]="createModel">
         <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="true" [title]="'Reader 选择导入表'"

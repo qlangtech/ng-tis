@@ -16,17 +16,17 @@
  *   limitations under the License.
  */
 
-import {Component, OnInit, Input, ViewChild, ViewContainerRef, ContentChild, TemplateRef} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {TISService} from '../common/tis.service';
 
 // import {ScriptService} from '../service/script.service';
-import {AbstractSchemaEditComponent, BasicEditComponent} from './basic.edit.component';
+import {AbstractSchemaEditComponent} from './basic.edit.component';
 import {EditorConfiguration} from "codemirror";
 import {FieldErrorInfo, StupidModal} from "../base/addapp-pojo";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder} from "@angular/forms";
 import {SchemaVisualizingEditComponent} from "../common/schema.expert.create.edit.component";
 
 export declare type TisResType = 'schema.xml' | 'solrconfig.xml';

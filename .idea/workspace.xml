@@ -6,13 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/LatestSelectedIndex.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/schema.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/schema.edit.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +174,10 @@
       <workItem from="1693621330132" duration="54806000" />
       <workItem from="1694004421951" duration="28794000" />
       <workItem from="1694418382716" duration="663000" />
-      <workItem from="1694477787341" duration="15501000" />
+      <workItem from="1694477787341" duration="24523000" />
+      <workItem from="1694861820270" duration="2964000" />
+      <workItem from="1695174516890" duration="9209000" />
+      <workItem from="1695601023792" duration="4701000" />
     </task>
     <servers />
   </component>

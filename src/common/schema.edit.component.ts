@@ -119,7 +119,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           </nz-form-item>
         </ng-template>
       </tis-col>
-      <tis-col title="Mongo Type">
+      <tis-col *ngIf="view.elementContainKey('mongoFieldType')"  title="Mongo Type">
         <ng-template let-u='r'>
           {{ u.mongoFieldType}}
           <nz-switch *ngIf="u.mongoDocType" nzSize="small" [(ngModel)]="u.openAssist"
@@ -147,6 +147,8 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
     <ng-template #jdbcTypeTemplate let-u='u'>
+<!--      {{u | json}}-->
+<!--      {{u.type.type}}-->
       <nz-space>
         <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="u.disable"
                    nzDropdownMatchSelectWidth="true" [(ngModel)]="u.type.type"
