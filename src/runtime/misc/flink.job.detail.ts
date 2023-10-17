@@ -21,7 +21,7 @@ declare module flink.job.detail {
   export interface JobManagerAddress {
     host: string;
     port: number;
-    uRL: string;
+    URL: string;
   }
 
   export interface ClusterCfg {

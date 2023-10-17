@@ -17,10 +17,9 @@
  */
 
 import {BasicFormComponent} from "../../common/basic.form.component";
-import {K8SRCSpec, K8SReplicsSpecComponent} from "../../common/k8s.replics.spec.component";
-import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
+import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
 import {StepType} from "../../common/steps.component";
-import {Descriptor} from "../../common/tis.plugin";
+import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>

@@ -16,7 +16,13 @@
  *   limitations under the License.
  */
 
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
+import {BasicFormComponent} from "../common/basic.form.component";
+import {LocalStorageService} from "angular-2-local-storage";
+import {TISService} from "../common/tis.service";
+import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
+import {TisResponseResult} from "../common/tis.plugin";
+import * as NProgress from "nprogress/nprogress";
 
 // 这个类专门负责router
 @Component({
@@ -25,6 +31,47 @@ import {Component} from "@angular/core";
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent {
+export class AppComponent  implements OnInit {
+
+  constructor( private _localStorageService: LocalStorageService, private  tisService: TISService) {
+  }
+
+  ngOnInit(): void {
+
+    let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
+
+   // this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+    NProgress.start();
+    this.tisService.httpPost(getUserUrl, '').then(this.webExecuteCallback).then((r) => {
+      if (r.success) {
+        // this.userProfile = r.bizresult.usr;
+        // this.tisMeta = r.bizresult.tisMeta;
+        // console.log(['get_user_info',r.bizresult]);
+        this.tisService.tisMeta = r.bizresult;// this.tisMeta;
+        // let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+        // this._latestSelected = popularSelected.popularLatestSelected;
+        // console.log(this._latestSelected);
+
+        // let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+        //
+        // if (this.app) {
+        //   popularSelected.addIfNotContain(this.app);
+        // }
+        //
+        // this.collectionOptionList = popularSelected.popularLatestSelected;
+        //
+        //
+        // if (!r.bizresult.sysInitialized) {
+        //   this.openInitSystemDialog();
+        // }
+      }
+    });
+
+  }
+
+  private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
+    NProgress.done();
+    return r;
+  }
 
 }

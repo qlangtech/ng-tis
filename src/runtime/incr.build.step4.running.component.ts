@@ -36,7 +36,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
         <nz-alert *ngIf="true" nzType="info" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
         <ng-template #unableToUseK8SController>
           可直接打开Flink控制台<a target="_blank"
-                                  [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'"><i
+                                  [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.URL+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'"><i
           nz-icon nzType="link" nzTheme="outline"></i>控制台</a>
         </ng-template>
       </div>
@@ -116,7 +116,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                   <ng-template let-rr="r">
                     <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName"
                        nzOverlayClassName="tooltip-pree"
-                       [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.uRL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                       [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.URL +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
                   </ng-template>
                 </tis-col>
                 <tis-col title="Status" width="10">
@@ -334,6 +334,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   reload() {
     IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
     //  if(this.dto.state !== incrStatus.state){
+      console.log(this.dto);
         this.dto = incrStatus;
         this.successNotify("状态已更新");
      // }
