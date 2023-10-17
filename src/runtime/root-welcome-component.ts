@@ -155,8 +155,8 @@ import {BasicFormComponent} from "../common/basic.form.component";
             </nz-card>
           </div>
           <div nz-col nzSpan="8">
-            <nz-card nzTitle="钉钉讨论群">
-              <img width="260" src="/images/dingding_talk_group.jpeg"/>
+            <nz-card nzTitle="微信讨论群">
+              <img width="260" src="/images/weixin_talk.png"/>
             </nz-card>
           </div>
           <div nz-col nzSpan="8">
@@ -241,39 +241,15 @@ export class RootWelcomeComponent extends BasicFormComponent implements OnInit {
   _latestSelected: Array<SelectedIndex> = [];
   companyIntrShow = false;
 
-  constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService,  tisService: TISService) {
+  constructor(private r: Router, private route: ActivatedRoute, private _localStorageService: LocalStorageService, tisService: TISService) {
     super(tisService);
   }
 
   ngOnInit(): void {
 
-    let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
-    this.httpPost(getUserUrl, '').then((r) => {
-      if (r.success) {
-        // this.userProfile = r.bizresult.usr;
-        // this.tisMeta = r.bizresult.tisMeta;
-       // console.log(['get_user_info',r.bizresult]);
-        this.tisService.tisMeta = r.bizresult;// this.tisMeta;
-        let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-        this._latestSelected = popularSelected.popularLatestSelected;
-       // console.log(this._latestSelected);
 
-        // let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-        //
-        // if (this.app) {
-        //   popularSelected.addIfNotContain(this.app);
-        // }
-        //
-        // this.collectionOptionList = popularSelected.popularLatestSelected;
-        //
-        //
-        // if (!r.bizresult.sysInitialized) {
-        //   this.openInitSystemDialog();
-        // }
-      }
-    });
-
-
+    let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+    this._latestSelected = popularSelected.popularLatestSelected;
   }
 
   backgroupDbClick(event: MouseEvent) {
@@ -296,6 +272,6 @@ export class RootWelcomeComponent extends BasicFormComponent implements OnInit {
     let app = new Application();
     app.projectName = item.name;
     app.appType = item.appType;
-    LatestSelectedIndex.routeToApp(null,null, this.r, app);
+    LatestSelectedIndex.routeToApp(null, null, this.r, app);
   }
 }

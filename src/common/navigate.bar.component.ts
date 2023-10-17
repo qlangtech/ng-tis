@@ -105,6 +105,7 @@ import {expressionType} from "@angular/compiler/src/output/output_ast";
         </li>
       </ng-container>
       <ng-container *ngSwitchCase="false">
+
         <li class="index-select-block" nz-menu-item nzMatchRouter>
           <nz-select name="selectedCollection"
                      style="width: 100%;"
@@ -270,6 +271,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     const getIndeNameList = (fuzzName: string) => {
       return this._http
         .get(`/tjs/runtime/applist.ajax?emethod=query_app&action=app_view_action&query=${fuzzName}`)
@@ -298,7 +300,9 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
     // let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
     // this.httpPost(getUserUrl, '').then((r) => {
+   // console.log(this.tisService.containMeta);
       if (this.tisService.containMeta) {
+
         let meta: TISBaseProfile = this.tisService.tisMeta;
         this.userProfile = meta.usr;
         this.tisMeta = meta.tisMeta

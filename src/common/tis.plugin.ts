@@ -61,8 +61,34 @@ export const TYPE_PLUGIN_SELECTION = 6;
 export const TYPE_PLUGIN_MULTI_SELECTION = 8;
 export const KEY_DEFAULT_VALUE = 'dftVal';
 
+export class ErrorFeedback {
+  _error: string | any;
+
+  constructor(error?: string) {
+    this._error = error;
+  }
+
+
+  public get error(): string | any {
+    return this._error;
+  }
+
+  public set error(content: string | any) {
+    this._error = content;
+  }
+
+  get hasFeedback(): boolean {
+    let err = this.error;
+    return !(!err) && typeof err === "string";
+  }
+
+  get validateStatus(): string {
+    return this.hasFeedback ? 'error' : '';
+  }
+}
+
 // 某一插件某一属性行
-export class ItemPropVal {
+export class ItemPropVal extends ErrorFeedback {
   key: string;
   type: number;
   options: Array<ValOption>;
@@ -70,7 +96,7 @@ export class ItemPropVal {
   // 如果考到通用性的化这里应该是数组类型，现在考虑到简单实现，线默认用一个单独的
   descVal: DescribleVal;
   advance: boolean;
-  _error: string | any;
+  // _error: string | any;
   public _eprops: { string: any };
   private dftVal: any;
   placeholder: string;
@@ -83,15 +109,9 @@ export class ItemPropVal {
 
   constructor(public updateModel = false) {
     //  console.log("create");
+    super();
   }
 
-  public get error(): string | any {
-    return this._error;
-  }
-
-  public set error(content: string | any) {
-    this._error = content;
-  }
 
   set eprops(vals: { String: any }) {
     // @ts-ignore
@@ -148,14 +168,6 @@ export class ItemPropVal {
     this._eprops[key] = val;
   }
 
-  get hasFeedback(): boolean {
-    let err = this.error;
-    return !(!err) && typeof err === "string";
-  }
-
-  get validateStatus(): string {
-    return this.hasFeedback ? 'error' : '';
-  }
 
   set primary(val: any) {
     this._primaryVal = val;
@@ -423,7 +435,7 @@ export class SynchronizeMcolsResult {
 export interface ReaderColMeta {
   index: number;
   name: string;
-  type: string;
+  type: string | any;
   disable: boolean;
   ip: ItemPropVal;
   // extraProps?: { string?: any };
@@ -656,14 +668,14 @@ export class Item {
   public wrapItemVals(): void {
     let newVals = {};
     let ovals: any /**map*/ = this.vals;
-  //  console.log([this.dspt.impl, this.vals]);
+    //  console.log([this.dspt.impl, this.vals]);
     let newVal: ItemPropVal;
     // console.log(this.dspt.attrs);
     this.dspt.attrs.forEach((at) => {
       let v = ovals[at.key];
       // console.log([at.key, v, at]);
       newVal = Item.wrapItemPropVal(v, at);
-     // console.log([at.key, newVal]);
+      // console.log([at.key, newVal]);
       if (newVal) {
         newVals[at.key] = (newVal);
       }
@@ -929,7 +941,7 @@ export const KEY_DOC_FIELD_SPLIT_METAS = "docFieldSplitMetas";
  * 该类目前只为mongo 的document 类型的field拆解而用
  */
 export class RowAssist {
-  public _ip: Map<string, ItemPropVal>;
+  public _ip: Map<string, ErrorFeedback>;
 
   public static getDocFieldSplitMetas(u: ReaderColMeta): Array<RowAssist> {
     let rowAssist: Array<RowAssist> = u[KEY_DOC_FIELD_SPLIT_METAS];
@@ -944,10 +956,10 @@ export class RowAssist {
   }
 
   constructor(public name: string, public jsonPath: string, public type: DataTypeDesc) {
-    this._ip = new Map<string, ItemPropVal>();
+    this._ip = new Map<string, ErrorFeedback>();
   }
 
-  public getIp(propName: string): ItemPropVal {
+  public getIp(propName: string): ErrorFeedback {
     let ip = this._ip.get(propName);
     if (!ip) {
       ip = new ItemPropVal();

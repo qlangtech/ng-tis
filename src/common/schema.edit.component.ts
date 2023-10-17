@@ -4,7 +4,7 @@ import {TISService} from "./tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {
   DataTypeDesc,
-  DataTypeMeta,
+  DataTypeMeta, ErrorFeedback,
   KEY_DOC_FIELD_SPLIT_METAS,
   ReaderColMeta,
   RowAssist,
@@ -12,6 +12,9 @@ import {
 } from "./tis.plugin";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 
+const KEY_COLUMN_SIZE = "columnSize";
+const KEY_DECIMAL_DIGITS = "decimalDigits";
+const KEY_FEEDBAKC = "Feedback";
 
 @Component({
   selector: "db-schema-editor",
@@ -119,7 +122,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           </nz-form-item>
         </ng-template>
       </tis-col>
-      <tis-col *ngIf="view.elementContainKey('mongoFieldType')"  title="Mongo Type">
+      <tis-col *ngIf="view.elementContainKey('mongoFieldType')" title="Mongo Type">
         <ng-template let-u='r'>
           {{ u.mongoFieldType}}
           <nz-switch *ngIf="u.mongoDocType" nzSize="small" [(ngModel)]="u.openAssist"
@@ -147,38 +150,52 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
     <ng-template #jdbcTypeTemplate let-u='u'>
-<!--      {{u | json}}-->
-<!--      {{u.type.type}}-->
-      <nz-space>
-        <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="u.disable"
-                   nzDropdownMatchSelectWidth="true" [(ngModel)]="u.type.type"
-                   nzPlaceHolder="请选择" (ngModelChange)="typeChange(u.type)">
-          <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
-                     *ngFor="let tp of this.typeMetas"></nz-option>
-        </nz-select>
+      <!--          {{u | json}}-->
+      <!--      {{u.type.type}}-->
+      <nz-form-item>
+        <nz-space>
+          <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="u.disable"
+                     nzDropdownMatchSelectWidth="true" [(ngModel)]="u.type.type"
+                     nzPlaceHolder="请选择" (ngModelChange)="typeChange(u.type)">
+            <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
+                       *ngFor="let tp of this.typeMetas"></nz-option>
+          </nz-select>
 
-        <ng-container
-          *ngTemplateOutlet="assistType;context:{typemeta:getColTypeMeta(u.type.type),u:u};">
-        </ng-container>
-
-        <ng-template #assistType let-typemeta="typemeta" let-u="u">
-          <ng-container *ngIf="typemeta.containColSize">
-            <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Column Size"
-                             *nzSpaceItem
-                             [(ngModel)]="u.type.columnSize"
-                             [nzMin]="typemeta.colsSizeRange.min"
-                             [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
-          </ng-container>
-          <ng-container *ngIf="typemeta.containDecimalRange">
-            <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Decimal Digits Size"
-                             *nzSpaceItem
-                             [(ngModel)]="u.type.decimalDigits"
-                             [nzMin]="typemeta.decimalRange.min"
-                             [nzMax]="typemeta.decimalRange.max"></nz-input-number>
+          <ng-container
+            *ngTemplateOutlet="assistType;context:{typemeta:getColTypeMeta(u.type.type),u:u};">
           </ng-container>
 
-        </ng-template>
-      </nz-space>
+          <ng-template #assistType let-typemeta="typemeta" let-u="u" let-colSizeFeedback="u.type.columnSizeFeedback" let-decimalDigitsFeedback="u.type.decimalDigitsFeedback">
+            <ng-container *ngIf="typemeta.containColSize">
+
+              <nz-form-control *nzSpaceItem [nzValidateStatus]="colSizeFeedback?.validateStatus"
+                               [nzHasFeedback]="colSizeFeedback?.hasFeedback"
+                               [nzErrorTip]="colSizeFeedback?.error">
+
+                <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Column Size"
+
+                                 [(ngModel)]="u.type.columnSize"
+                                 [nzMin]="typemeta.colsSizeRange.min"
+                                 [nzMax]="typemeta.colsSizeRange.max"></nz-input-number>
+              </nz-form-control>
+
+            </ng-container>
+            <ng-container *ngIf="typemeta.containDecimalRange">
+              <nz-form-control *nzSpaceItem [nzValidateStatus]="decimalDigitsFeedback?.validateStatus"
+                               [nzHasFeedback]="decimalDigitsFeedback?.hasFeedback"
+                               [nzErrorTip]="decimalDigitsFeedback?.error">
+                <nz-input-number [disabled]="u.disable" nz-tooltip nzTooltipTitle="Decimal Digits Size"
+
+                                 [(ngModel)]="u.type.decimalDigits"
+                                 [nzMin]="typemeta.decimalRange.min"
+                                 [nzMax]="typemeta.decimalRange.max"></nz-input-number>
+              </nz-form-control>
+
+            </ng-container>
+
+          </ng-template>
+        </nz-space>
+      </nz-form-item>
     </ng-template>
 
   `
@@ -222,23 +239,41 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
     }
     // KEY_DOC_FIELD_SPLIT_METAS
     let err: { name: string, };
+
     for (let idx = 0; idx < errors.length; idx++) {
+      let colMeta: ReaderColMeta = this.colsMeta[idx];
+      if (!colMeta) {
+        continue;
+      }
       err = errors[idx];
       for (let key in err) {
         switch (key) {
           case "name":
-            this.colsMeta[idx].ip.error = err[key];
+            colMeta.ip.error = err[key];
+            break;
+          case KEY_COLUMN_SIZE:
+          case KEY_DECIMAL_DIGITS:
+            colMeta.type[key + KEY_FEEDBAKC] = new ErrorFeedback(err[key]);
             break;
           case KEY_DOC_FIELD_SPLIT_METAS:
             let splitMetasErrors: Array<any> = err[key];
+    //        console.log(splitMetasErrors);
             let metaErr = null;
-            let splitMetas: Array<RowAssist> = RowAssist.getDocFieldSplitMetas(this.colsMeta[idx]);
+            let splitMetas: Array<RowAssist> = RowAssist.getDocFieldSplitMetas(colMeta);
             let ra: RowAssist = null;
             for (let idxMeta = 0; idxMeta < splitMetasErrors.length; idxMeta++) {
               ra = splitMetas[idxMeta];
               metaErr = splitMetasErrors[idxMeta];
               for (let errKey in metaErr) {
-                ra.getIp(errKey).error = metaErr[errKey];
+                switch(errKey){
+                  case KEY_COLUMN_SIZE:
+                  case KEY_DECIMAL_DIGITS:
+                    ra.type[errKey + KEY_FEEDBAKC] = new ErrorFeedback(metaErr[errKey]);
+                    break;
+                  default:
+                    ra.getIp(errKey).error = metaErr[errKey];
+                }
+  // console.log([ra,idxMeta]);
               }
             }
 
@@ -263,7 +298,7 @@ export class SchemaEditComponent extends BasicFormComponent implements AfterCont
     this.colsMeta = view.mcols;
     this.typeMetas = view.typeMetas;
     this.view = view;
-  //  console.log([this.colsMeta ,this.typeMetas]);
+    //  console.log([this.colsMeta ,this.typeMetas]);
   }
 
   private _typeMap: Map<number, DataTypeMeta>
