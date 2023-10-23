@@ -373,8 +373,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let bizArray: HeteroList[] = r.bizresult.plugins;
        // console.log([pm, bizArray]);
         for (let i = 0; i < pm.length; i++) {
-          // console.log([bizArray[i], pm[i]]);
+          //
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
+       //   console.log([bizArray[i], pm[i], h]);
           _heteroList.push(h);
         }
       }

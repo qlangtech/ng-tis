@@ -86,25 +86,6 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
     super(tisService, modalService, r, route);
   }
 
-  // getIndex(meta: ReaderColMeta): number {
-  //   if (!meta.index) {
-  //     meta.index = ++this._index;
-  //   }
-  //   return meta.index;
-  // }
-//  private _typeMap: Map<number, DataTypeMeta>
-//   get typeMap(): Map<number, DataTypeMeta> {
-//     if (!this._typeMap) {
-//       if (this.typeMetas.length > 0) {
-//         this._typeMap = new Map();
-//         for (let type of this.typeMetas) {
-//           this._typeMap.set(type.type.type, type);
-//         }
-//       }
-//     }
-//     return this._typeMap;
-//   }
-
   protected initialize(app: CurrentCollection): void {
 
     let url = '/coredefine/corenodemanage.ajax';
@@ -123,14 +104,8 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
 
         this.tabView = new TabletView([], null, tabMapper.sourceCols, typeMetas);
 
-        //  this.colsMeta = tabMapper.sourceCols;
         this.writerTargetTabName = tabMapper.to;
         this.writerFromTabName = tabMapper.from;
-        // let index = 0;
-        // this.colsMeta.forEach((c) => {
-        //   c.index = ++index;
-        //   c.ip = new ItemPropVal();
-        // });
       });
 
   }

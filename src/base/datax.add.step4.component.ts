@@ -85,7 +85,6 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
             <nz-tag *ngSwitchCase="false" [nzColor]="'#999999'"><i nz-icon nzType="warning" nzTheme="outline"></i>未设置
             </nz-tag>
           </ng-container>
-          <!--                              <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">{{data.meta.behaviorMeta.clickBtnLabel}}</button>-->
           <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">设置</button>
         </td>
       </tr>
@@ -173,8 +172,8 @@ export class SelectedTabsComponent extends BasicFormComponent {
     }
     // console.log(ip);
     let cachedVals: Array<Item> = <Array<Item>>ip;
-    // console.log(cachedVals);
-    if (cachedVals) {
+    // console.log([this.subFormHetero.items[0],cachedVals,this.subFormItemSetterFlag.get(meta.id),Array.isArray(null)]);
+    if (Array.isArray(cachedVals)) {
       if (this.subFormItemSetterFlag.get(meta.id)) {
         let heteroList = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], pluginMeta[0]);
         // heteroList[0].items[0].vals = cachedVals;
@@ -193,7 +192,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
         let oitems = h.items;
         let items: Array<Item> = [];
         //  h.items = items;
-        // console.log([oitems]);
+         console.log([oitems]);
         h.descriptorList.forEach((desc) => {
 
           for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
