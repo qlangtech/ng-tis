@@ -230,7 +230,7 @@ export class Descriptor {
       nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
     });
     let nitems: Item[] = [];
-    console.log(h.items);
+   // console.log(h.items);
     h.items.forEach((r) => {
       nitems.push(r);
     });

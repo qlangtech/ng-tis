@@ -302,6 +302,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   initComponents(updateTreeInit: boolean) {
+    console.log("initComponents");
     this.treeLoad = true;
     let action = 'emethod=get_datasource_info&action=offline_datasource_action';
     this.httpPost('/offline/datasource.ajax', action)
@@ -353,10 +354,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       , {name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}
       , `添加${pluginDesc.displayName}数据库`
       , (db) => {
-        let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
+        let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};
+        origin[KEY_DB_ID] = `${db.dbId}`;
+        // KEY_DB_ID
+        let newNode: NzTreeNodeOptions[] = [origin];
         this.nodes = newNode.concat(this.nodes);
 
         let e = {'type': NodeType.DB, 'dbId': `${db.dbId}`};
+       // console.log([db, e, newNode]);
         this.treeNodeClicked = true;
         this.onEvent(e);
         //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
@@ -528,7 +533,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
           if (result.success) {
 
             let biz = result.bizresult;
-
+           // console.log([biz, type])
             if (type === NodeType.DB) {
               let detail = biz.detailed;
               let db = DatasourceComponent.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
@@ -783,7 +788,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   }
 
   afterPluginInit(evne: HeteroList[]) {
-    // console.log([this.datasourceDesc, evne]);
+   // console.log([this.datasourceDesc, evne]);
     this.supportFacade = false;
     for (let index = 0; index < evne.length; index++) {
       let catItems: HeteroList = evne[index];
