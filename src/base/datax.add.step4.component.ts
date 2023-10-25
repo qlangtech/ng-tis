@@ -192,7 +192,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
         let oitems = h.items;
         let items: Array<Item> = [];
         //  h.items = items;
-         console.log([oitems]);
+        // console.log([oitems]);
         h.descriptorList.forEach((desc) => {
 
           for (let itemIdx = 0; itemIdx < oitems.length; itemIdx++) {
