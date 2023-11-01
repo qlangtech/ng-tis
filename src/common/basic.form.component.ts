@@ -175,6 +175,7 @@ export class BasicFormComponent {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();
+    console.log(this.tisService.currentApp);
     return this.tisService.jsonPost(url, body, e).then(this.webExecuteCallback).catch(this.handleError);
   }
 

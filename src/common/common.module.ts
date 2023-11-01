@@ -129,7 +129,6 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
 import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
 import {ControlPanelComponent} from "./control.panel.component";
-import {BasiManageModule} from "../base/base.manage.module";
 import {SchemaEditComponent} from "./schema.edit.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 

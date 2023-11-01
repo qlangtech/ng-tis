@@ -18,7 +18,7 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 
@@ -29,51 +29,86 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataXJobWorkerStatus, DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {SavePluginEvent} from "../common/tis.plugin";
+import {PowerjobCptType} from "./datax.worker.component";
 
 @Component({
   template: `
-      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="2"></tis-steps>
+      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="3"></tis-steps>
       <tis-page-header [showBreadcrumb]="false">
           <tis-header-tool>
               <button nz-button nzType="default" [disabled]="formDisabled" (click)="prestep()">上一步</button>&nbsp;
-              <button [disabled]="formDisabled" nz-button nzType="primary" (click)="launchK8SController()"><i nz-icon nzType="rocket" nzTheme="outline"></i>启动</button>
+              <button [disabled]="formDisabled" nz-button nzType="primary" (click)="launchK8SController()"><i nz-icon
+                                                                                                              nzType="rocket"
+                                                                                                              nzTheme="outline"></i>启动
+              </button>
           </tis-header-tool>
       </tis-page-header>
-      <h4>K8S基本信息</h4>
+      <h4>PowerJob-Server</h4>
       <div class="item-block">
-          <tis-plugins [formControlSpan]="20" [shallInitializePluginItems]="false" [plugins]="['datax-worker']" [disabled]="true"
+          <tis-plugins [formControlSpan]="20" [shallInitializePluginItems]="false"
+                       [plugins]="[{name: 'datax-worker', require: true,extraParam:'dataxName_'+ PowerjobCptType.Server}]"
+                       [disabled]="true"
                        [showSaveButton]="false"
-                       #pluginComponent></tis-plugins>
+          ></tis-plugins>
       </div>
+      <div class="item-block">
+          <k8s-replics-spec [rcSpec]="this.dto.powderJobServerRCSpec" [disabled]="true"
+                            [labelSpan]="5"></k8s-replics-spec>
+
+      </div>
+
+      <h4>PowerJob-Worker</h4>
+      <div class="item-block">
+          <tis-plugins [formControlSpan]="20" [shallInitializePluginItems]="false"
+                       [plugins]="[{name: 'datax-worker', require: true,extraParam:'dataxName_'+ PowerjobCptType.Worker}]"
+                       [disabled]="true"
+                       [showSaveButton]="false"
+          ></tis-plugins>
+      </div>
+      <div class="item-block">
+          <k8s-replics-spec [rcSpec]="this.dto.powderJobWorkerRCSpec" [disabled]="true"
+                            [labelSpan]="5"></k8s-replics-spec>
+      </div>
+
+      <h4>PowerJob-Job</h4>
+      <div class="item-block">
+          <tis-plugins [formControlSpan]="20" [shallInitializePluginItems]="false"
+                       [plugins]="[{name: 'datax-worker', require: true,extraParam:'dataxName_'+ PowerjobCptType.JobTpl}]"
+                       [disabled]="true"
+                       [showSaveButton]="false"
+          ></tis-plugins>
+      </div>
+
+
       <ng-container *ngIf="dto.processMeta.supportK8SReplicsSpecSetter">
-          <h4>K8S资源规格</h4>
-          <div class="item-block">
-              <k8s-replics-spec [rcSpec]="this.dto.rcSpec" [disabled]="true" #k8sReplicsSpec [labelSpan]="3"></k8s-replics-spec>
-          </div>
       </ng-container>
   `
   , styles: [
       `
     `]
 })
-export class DataxWorkerAddStep3Component extends AppFormComponent implements AfterViewInit, OnInit {
+export class DataxWorkerAddStep3Component extends BasicFormComponent implements AfterViewInit, OnInit {
   savePlugin = new EventEmitter<any>();
   @ViewChild('k8sReplicsSpec', {read: K8SReplicsSpecComponent, static: true}) k8sReplicsSpec: K8SReplicsSpecComponent;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, notification: NzNotificationService) {
-    super(tisService, route, modalService, notification);
+  constructor(tisService: TISService, modalService: NzModalService) {
+    super(tisService, modalService);
   }
 
   ngOnInit(): void {
-    if (this.dto.processMeta.supportK8SReplicsSpecSetter && !this.dto.rcSpec) {
+    if (this.dto.processMeta.supportK8SReplicsSpecSetter && !this.dto.powderJobServerRCSpec) {
       throw new Error("rcSpec can not be null");
     }
+    console.log(this.dto.processMeta);
+    let appTisService: TISService = this.tisService;
+    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
   }
 
   get currentApp(): CurrentCollection {
+   // console.log(this.dto.processMeta);
     return new CurrentCollection(0, this.dto.processMeta.targetName);
   }
   launchK8SController() {
@@ -92,6 +127,7 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   }
 
   protected initialize(app: CurrentCollection): void {
+    console.log(app);
   }
 
   ngAfterViewInit() {
@@ -101,5 +137,7 @@ export class DataxWorkerAddStep3Component extends AppFormComponent implements Af
   prestep() {
     this.preStep.next(this.dto);
   }
+
+  public readonly PowerjobCptType = PowerjobCptType;
 }
 

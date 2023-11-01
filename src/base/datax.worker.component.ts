@@ -30,6 +30,15 @@ import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
+import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
+import {isBooleanLiteralLike} from "codelyzer/util/utils";
+import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
+
+export enum PowerjobCptType{
+  Server =("powerjob-server"),
+  Worker = ("powerjob-worker"),
+  JobTpl = ("powerjob-job-tpl")
+}
 
 @Component({
   template: `
@@ -66,7 +75,8 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
     if (this.processMeta.supportK8SReplicsSpecSetter) {
       configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep2Component, pre: DataxWorkerAddStep0Component});
-      configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep1Component});
+      configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep22Component, pre: DataxWorkerAddStep1Component});
+      configFST.set(DataxWorkerAddStep22Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep2Component});
       configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
     } else {
       configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep0Component});
@@ -84,7 +94,10 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
           if (dataXWorkerStatus.k8sReplicationControllerCreated) {
             this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
           } else {
-            this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
+         //   this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
+
+            this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
+
           }
         }
       });
