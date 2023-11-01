@@ -32,39 +32,30 @@ import {PowerjobCptType} from "./datax.worker.component";
 
 @Component({
   template: `
-    <tis-steps [type]="this.dto.processMeta.stepsType" [step]="1"></tis-steps>
-    <tis-page-header [showBreadcrumb]="false">
-      <tis-header-tool>
-        <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
-        <button nz-button nzType="primary"
-                                                                                            (click)="createStep1Next(k8sReplicsSpec)">
-        下一步
-      </button>
-      </tis-header-tool>
-    </tis-page-header>
-    <nz-spin [nzSpinning]="this.formDisabled">
-      <div class="item-block">
+      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="2"></tis-steps>
+      <tis-page-header [showBreadcrumb]="false">
+          <tis-header-tool>
+              <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
+          </tis-header-tool>
+      </tis-page-header>
+      <nz-spin [nzSpinning]="this.formDisabled" >
+        <div class="item-block">
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      [savePlugin]="savePlugin" [showSaveButton]="false"
                      (afterSave)="afterSaveReader($event)"
-                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobWorkerHetero"
-                     #pluginComponent></tis-plugins>
-      </div>
-      <div class="item-block">
-        <k8s-replics-spec [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem" #k8sReplicsSpec [labelSpan]="5">
-        </k8s-replics-spec>
-      </div>
-    </nz-spin>
+                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderjobJobTplHetero" #pluginComponent></tis-plugins>
+        </div>
+      </nz-spin>
 
   `
 })
-export class DataxWorkerAddStep2Component extends AppFormComponent implements AfterViewInit, OnInit {
+export class DataxWorkerAddStep22Component extends AppFormComponent implements AfterViewInit, OnInit {
   savePlugin = new EventEmitter<SavePluginEvent>();
   // @ViewChild('k8sReplicsSpec', {read: K8SReplicsSpecComponent, static: true}) k8sReplicsSpec: K8SReplicsSpecComponent;
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.Worker};
+  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.JobTpl};
   errorItem: Item;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
@@ -75,38 +66,27 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
     return new CurrentCollection(0, this.dto.processMeta.targetName);
   }
 
-  afterSaveReader(e: PluginSaveResponse) {
-    if (e.saveSuccess) {
-      this.nextStep.emit(this.dto);
-    }
-  }
+  createStep1Next() {
 
-  createStep1Next(spec: K8SReplicsSpecComponent) {
-    // console.log(k8sReplicsSpec.k8sControllerSpec);
-   // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
-    if (!spec.validate()) {
-      return;
-    }
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
-    e.serverForward ="coredefine:datax_action:save_datax_worker";
-    e.postPayload = {"k8sSpec": this.dto.powderJobWorkerRCSpec};
+
     let appTisService: TISService = this.tisService;
     appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
     e.basicModule = this;
     this.savePlugin.emit(e);
 
-    // =================================
-    // let rcSpec = k8sReplicsSpec.k8sControllerSpec;
+    // console.log(k8sReplicsSpec.k8sControllerSpec);
+    //let rcSpec = k8sReplicsSpec.k8sControllerSpec;
     // let e = new SavePluginEvent();
     // e.notShowBizMsg = true;
     // this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker&targetName=${this.dto.processMeta.targetName}`
     //   , {
-    //     k8sSpec: rcSpec,
+    //     k8sSpec: null,
     //   }, e)
     //   .then((r) => {
     //     if (r.success) {
-    //       this.dto.powderJobServerRCSpec = rcSpec;
+    //       this.dto.powderJobServerRCSpec = null;
     //       this.nextStep.emit(this.dto);
     //     } else {
     //       this.errorItem = Item.processFieldsErr(r);
@@ -127,6 +107,12 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
 
   prestep() {
     this.preStep.emit(this.dto);
+  }
+
+  afterSaveReader(e: PluginSaveResponse) {
+    if (e.saveSuccess) {
+      this.nextStep.emit(this.dto);
+    }
   }
 }
 

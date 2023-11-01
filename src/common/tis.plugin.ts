@@ -326,7 +326,7 @@ export class TabletView implements NextObserver<any> {
   }
 
   next(errorContent: any): void {
-    console.log(errorContent);
+   // console.log(errorContent);
   }
 
 
@@ -894,6 +894,7 @@ export class SavePluginEvent {
   // 顺带要在服务端执行一段脚本
   // namespace:corename:method
   public serverForward;
+  public postPayload: {[key:string]:any};
   public basicModule: BasicFormComponent;
 }
 

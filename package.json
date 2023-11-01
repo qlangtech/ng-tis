@@ -7,7 +7,7 @@
     "build:watch": "tsc -p ./src/ -w",
     "build:e2e": "tsc -p e2e/",
     "ng:serve-aot": "npm run build-project:sdk && npm run build-project:vis && ng build --aot ---configuration production ",
-    "ng:serve-jit": "ng serve  --proxy-config proxy.conf.json",
+    "ng:serve-jit": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve  --proxy-config proxy.conf.json",
     "build:aot": "ngc -p tsconfig-aot.json && rollup -c rollup-config.js_bak",
     "rollup": "rollup -c rollup-config.js_bak",
     "serve": "lite-server -c=bs-config.json",

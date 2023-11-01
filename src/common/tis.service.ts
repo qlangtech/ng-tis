@@ -134,8 +134,9 @@ export class TISService {
 
   public set currentApp(currApp: CurrentCollection) {
     // console.log("currentApp");
-    //  let err = new Error();
-    //  console.log(err.stack);
+    //   let err = new Error();
+    //   console.log(err.stack);
+    // console.log(currApp);
     this.currApp = currApp;
   }
 
