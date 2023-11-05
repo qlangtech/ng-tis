@@ -16,7 +16,15 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {
+    AfterViewInit,
+    Component,
+    ComponentFactoryResolver,
+    Input,
+    OnInit,
+    ViewChild,
+    ViewContainerRef
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -33,75 +41,102 @@ import {DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
 import {isBooleanLiteralLike} from "codelyzer/util/utils";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
+import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 
-export enum PowerjobCptType{
-  Server =("powerjob-server"),
-  Worker = ("powerjob-worker"),
-  JobTpl = ("powerjob-job-tpl")
+export enum PowerjobCptType {
+    Server = ("powerjob-server"),
+    Worker = ("powerjob-worker"),
+    JobTpl = ("powerjob-job-tpl"),
+    UsingExistCluster = ("powerjob-use-exist-cluster")
 }
 
 @Component({
-  template: `
-      <tis-page-header [title]="this.processMeta.pageHeader">
-      </tis-page-header>
-      <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
-          <ng-template #container></ng-template>
-      </nz-spin>
-      {{ multiViewDAG.lastCpt?.name}}
-  `
+    template: `
+        <tis-page-header [title]="this.processMeta.pageHeader">
+        </tis-page-header>
+        <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
+            <ng-template #container></ng-template>
+        </nz-spin>
+        {{ multiViewDAG.lastCpt?.name}}
+    `
 })
 export class DataxWorkerComponent extends AppFormComponent implements AfterViewInit, OnInit {
-  @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
+    @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
 
-  multiViewDAG: MultiViewDAG;
-  processMeta: ProcessMeta;
+    multiViewDAG: MultiViewDAG;
+    processMeta: ProcessMeta;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
-    , private _componentFactoryResolver: ComponentFactoryResolver) {
-    super(tisService, route, modalService);
-  }
-
-  protected initialize(app: CurrentCollection): void {
-  }
-
-  ngAfterViewInit() {
-  }
-
-
-  ngOnInit(): void {
-    this.processMeta = this.route.snapshot.data["processMeta"];
-    // 配置步骤前后跳转状态机
-    let configFST: Map<any, { next: any, pre: any }> = new Map();
-    configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
-    if (this.processMeta.supportK8SReplicsSpecSetter) {
-      configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep2Component, pre: DataxWorkerAddStep0Component});
-      configFST.set(DataxWorkerAddStep2Component, {next: DataxWorkerAddStep22Component, pre: DataxWorkerAddStep1Component});
-      configFST.set(DataxWorkerAddStep22Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep2Component});
-      configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep2Component});
-    } else {
-      configFST.set(DataxWorkerAddStep1Component, {next: DataxWorkerAddStep3Component, pre: DataxWorkerAddStep0Component});
-      configFST.set(DataxWorkerAddStep3Component, {next: DataxWorkerRunningComponent, pre: DataxWorkerAddStep1Component});
+    constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService
+        , private _componentFactoryResolver: ComponentFactoryResolver) {
+        super(tisService, route, modalService);
     }
 
-    configFST.set(DataxWorkerRunningComponent, {next: DataxWorkerAddStep0Component, pre: DataxWorkerAddStep3Component});
+    protected initialize(app: CurrentCollection): void {
+    }
 
-    this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-    this.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=datax_action&emethod=get_job_worker_meta&targetName=${this.processMeta.targetName}`)
-      .then((r) => {
-        if (r.success) {
-          let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: this.processMeta});
-          if (dataXWorkerStatus.k8sReplicationControllerCreated) {
-            this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
-          } else {
-         //   this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
+    ngAfterViewInit() {
+    }
 
-            this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
 
-          }
+    ngOnInit(): void {
+        this.processMeta = this.route.snapshot.data["processMeta"];
+        // 配置步骤前后跳转状态机
+        let configFST: Map<any, { next: any, pre: any }> = new Map();
+        configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
+        configFST.set(DataxWorkerAddExistPowerjobClusterComponent, {
+            next: DataxWorkerAddStep22Component,
+            pre: DataxWorkerAddStep0Component
+        });
+        if (this.processMeta.supportK8SReplicsSpecSetter) {
+            configFST.set(DataxWorkerAddStep1Component, {
+                next: DataxWorkerAddStep2Component,
+                pre: DataxWorkerAddStep0Component
+            });
+            configFST.set(DataxWorkerAddStep2Component, {
+                next: DataxWorkerAddStep22Component,
+                pre: DataxWorkerAddStep1Component
+            });
+            configFST.set(DataxWorkerAddStep22Component, {
+                next: DataxWorkerAddStep3Component,
+                pre: DataxWorkerAddStep2Component
+            });
+            configFST.set(DataxWorkerAddStep3Component, {
+                next: DataxWorkerRunningComponent,
+                pre: DataxWorkerAddStep2Component
+            });
+        } else {
+            configFST.set(DataxWorkerAddStep1Component, {
+                next: DataxWorkerAddStep3Component,
+                pre: DataxWorkerAddStep0Component
+            });
+            configFST.set(DataxWorkerAddStep3Component, {
+                next: DataxWorkerRunningComponent,
+                pre: DataxWorkerAddStep1Component
+            });
         }
-      });
-  }
+
+        configFST.set(DataxWorkerRunningComponent, {
+            next: DataxWorkerAddStep0Component,
+            pre: DataxWorkerAddStep3Component
+        });
+
+        this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
+        this.httpPost('/coredefine/corenodemanage.ajax'
+            , `action=datax_action&emethod=get_job_worker_meta&targetName=${this.processMeta.targetName}`)
+            .then((r) => {
+                if (r.success) {
+                    let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: this.processMeta});
+                    if (dataXWorkerStatus.k8sReplicationControllerCreated) {
+                        this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
+                    } else {
+                        this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
+
+                        //   this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
+
+                    }
+                }
+            });
+    }
 }
 
 

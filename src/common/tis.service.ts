@@ -27,9 +27,8 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from "@angular/common/http";
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
-import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
-import {TISBaseProfile, TISMeta} from "./navigate.bar.component";
+import {TISBaseProfile} from "./navigate.bar.component";
 
 declare var TIS: any;
 

@@ -228,6 +228,7 @@ export class DataxWorkerDTO {
 
 
     powderJobServerHetero: HeteroList[] = [];
+    powderJobUseExistClusterHetero: HeteroList[] = [];
     powderJobWorkerHetero: HeteroList[] = [];
     powderjobJobTplHetero: HeteroList[] = [];
 

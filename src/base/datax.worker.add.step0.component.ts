@@ -22,51 +22,69 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {NzModalService} from "ng-zorro-antd/modal";
 
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+import {IntendDirect} from "../common/MultiViewDAG";
 
 @Component({
-  template: `
+    template: `
 
-    <nz-alert  nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
-    <ng-template #unableToUseK8SController>
-      因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面
-    </ng-template>
+        <nz-alert nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
+        <ng-template #unableToUseK8SController>
+            因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面
+        </ng-template>
 
-      <nz-empty style="height: 500px"
-                nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                [nzNotFoundFooter]="footerTpl"
-                [nzNotFoundContent]="contentTpl"
-      >
-          <ng-template #contentTpl>
-              <span>{{this.dto.processMeta.notCreateTips}}</span>
-          </ng-template>
-          <ng-template #footerTpl>
-              <button nz-button nzType="primary" (click)="onClick()">{{this.dto.processMeta.createButtonLabel}}</button>
-          </ng-template>
-      </nz-empty>
-  `
+        <nz-empty style="height: 500px"
+                  nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                  [nzNotFoundFooter]="footerTpl"
+                  [nzNotFoundContent]="contentTpl"
+        >
+            <ng-template #contentTpl>
+                <span>{{this.dto.processMeta.notCreateTips}}</span>
+            </ng-template>
+            <ng-template #footerTpl>
+
+                <nz-space class="btn-block">
+
+                    <button *nzSpaceItem nz-button nzType="primary"
+                            (click)="onClick()">{{this.dto.processMeta.createButtonLabel}}</button>
+
+                    <button *nzSpaceItem nz-button nzType="default" (click)="onClickAddExistPowerjobCluster()">
+                        接入已有PowerJob集群
+                    </button>
+                </nz-space>
+
+
+            </ng-template>
+        </nz-empty>
+    `
 })
 export class DataxWorkerAddStep0Component extends BasicFormComponent implements AfterViewInit, OnInit {
 
-  @Input() dto: DataxWorkerDTO;
-  @Output() nextStep = new EventEmitter<any>();
+    @Input() dto: DataxWorkerDTO;
+    @Output() nextStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NzModalService) {
-    super(tisService, modalService);
-  }
+    constructor(tisService: TISService, modalService: NzModalService) {
+        super(tisService, modalService);
+    }
 
-  protected initialize(app: CurrentCollection): void {
-  }
+    protected initialize(app: CurrentCollection): void {
+    }
 
-  ngAfterViewInit() {
-  }
+    ngAfterViewInit() {
+    }
 
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
-  }
+    }
 
-  onClick() {
-    this.nextStep.emit(this.dto);
-  }
+    onClick() {
+        this.nextStep.emit(this.dto);
+    }
+
+    onClickAddExistPowerjobCluster() {
+        let direct: IntendDirect = {dto: this.dto, cpt: DataxWorkerAddExistPowerjobClusterComponent};
+        this.nextStep.emit(direct)
+    }
 }
 

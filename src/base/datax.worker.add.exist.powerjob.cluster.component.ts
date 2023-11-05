@@ -53,7 +53,7 @@ import {PowerjobCptType} from "./datax.worker.component";
 
     `
 })
-export class DataxWorkerAddStep1Component extends AppFormComponent implements AfterViewInit, OnInit {
+export class DataxWorkerAddExistPowerjobClusterComponent extends BasicFormComponent implements AfterViewInit, OnInit {
     // hlist: HeteroList[] = [];
     savePlugin = new EventEmitter<SavePluginEvent>();
     @Input() dto: DataxWorkerDTO;
@@ -61,15 +61,15 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
     @Output() preStep = new EventEmitter<any>();
     pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.Server};
 
-    constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
-        super(tisService, route, modalService);
+    constructor(tisService: TISService, modalService: NzModalService) {
+        super(tisService, modalService);
     }
 
     // get currentApp(): CurrentCollection {
     //   return new CurrentCollection(0, this.dto.processMeta.targetName);
     // }
     createStep1Next(spec: K8SReplicsSpecComponent) {
-       // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
+        // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
         if (!spec.validate()) {
             return;
         }
@@ -104,14 +104,10 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
 
                     let desc = Array.from(rList.values());
                     let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
-                    let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
                     let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
                     let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
                     if (!powerjobServer) {
                         throw new Error("powerjobServer can not be null");
-                    }
-                    if (!powerjobUseExistCluster) {
-                        throw new Error("powerjobUseExistCluster can not be null");
                     }
                     if (!powerjobWorker) {
                         throw new Error("powerjobWorker can not be null");
@@ -121,7 +117,6 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
                     }
 
                     this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, this.pluginCategory);
-                    this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.pluginCategory);
                     this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, this.pluginCategory);
                     this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, this.pluginCategory);
 
