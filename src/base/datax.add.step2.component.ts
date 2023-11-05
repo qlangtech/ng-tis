@@ -49,26 +49,24 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
       <tis-form [fieldsErr]="errorItem">
         <tis-ipt *ngIf="cfg.readerCptNeed" #readerType title="Reader类型" name="readerType"
                  require="true">
-          <!--                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="reader" class="form-control" [ngModel]="dto.readerImpl" (ngModelChange)="changeReaderDesc($event)">-->
-          <!--                      <nz-option *ngFor="let pp of readerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>-->
-          <!--                  </nz-select>-->
 
           <nz-radio-group [ngModel]="dto.readerImpl" nzSize="large" (ngModelChange)="changeReaderDesc($event)"
                           nzButtonStyle="solid">
             <label class="source-lab" *ngFor="let pp of readerDesc" nz-radio-button
-                   [nzValue]="pp.impl">{{pp.displayName}}</label>
+                   [nzValue]="pp.impl">
+              <i nz-icon class="icon"  *ngIf="pp.supportIcon" [nzType]="pp.endtype"  nzTheme="outline"></i>
+              <i class="txt">{{pp.displayName}}</i>
+            </label>
           </nz-radio-group>
         </tis-ipt>
         <tis-ipt #writerType [title]="cfg.writerTypeLable" name="writerType" require="true">
-          <!--                  <nz-select nzSize="large" nzPlaceHolder="请选择" name="writer" class="form-control" [ngModel]="dto.writerImpl" (ngModelChange)="changeWriterDesc($event)">-->
-          <!--                      <nz-option *ngFor="let pp of writerDesc" [nzValue]="pp.impl" [nzLabel]="pp.displayName"></nz-option>-->
-          <!--                  </nz-select>-->
-
 
           <nz-radio-group [ngModel]="dto.writerImpl" nzSize="large" (ngModelChange)="changeWriterDesc($event)"
                           nzButtonStyle="solid">
             <label class="source-lab" *ngFor="let pp of writerDesc" nz-radio-button
-                   [nzValue]="pp.impl">{{pp.displayName}}</label>
+                   [nzValue]="pp.impl">
+              <i nz-icon class="icon" *ngIf="pp.supportIcon" [nzType]="pp.endtype"  nzTheme="outline"></i>
+              <i class="txt">{{pp.displayName}}</i></label>
           </nz-radio-group>
         </tis-ipt>
         <tis-ipt title="插件安装" require="false">
@@ -84,10 +82,22 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
   `
   , styles: [
     `
-      .source-lab {
-        margin-top: 5px;
-        margin-left: 5px;
-      }
+        .source-lab {
+            margin-top: 5px;
+            margin-left: 5px;
+          display: inline-block;
+        }
+
+        .source-lab .icon {
+            font-size: 40px;
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .source-lab .txt {
+            font-size: 12px;
+            padding-bottom: 5px;
+        }
     `
   ]
 })
@@ -126,9 +136,9 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
     }
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute, private iconService: NzIconService) {
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute ) {
     super(tisService, modalService, r, route);
-    this.iconService.addIconLiteral('ng-zorro:sqlserver', ngZorroIconSqlserver);
+   // this.iconService.addIconLiteral('ng-zorro:sqlserver', ngZorroIconSqlserver);
   }
 
   get cfg(): AddStep2ComponentCfg {

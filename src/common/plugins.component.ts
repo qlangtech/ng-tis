@@ -103,9 +103,10 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
                 </div>
                 <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
                     <div style="float:right">
-                        <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link"
+
+                        <nz-tag *ngIf="true || showExtensionPoint.open"> <a [href]="item.implUrl" class="plugin-link"
                                                                            target="_blank"><i nz-icon nzType="link"
-                                                                                              nzTheme="outline"></i>{{item.impl}}
+                                                                                              nzTheme="outline"></i> <span *ngIf="item.dspt.supportIcon" nz-icon [nzType]="item.dspt.endtype" nzTheme="outline"></span>{{item.impl}}
                         </a></nz-tag>
                         <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)"
                                 nz-button

@@ -38,7 +38,7 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-              <a href="javascript:void(0)">{{d.displayName}}</a>
+              <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype" nzTheme="outline"></span> {{d.displayName}}</a>
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item (click)="addNewPlugin()">

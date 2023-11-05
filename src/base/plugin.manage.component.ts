@@ -142,6 +142,12 @@ enum PluginTab {
         <nz-tab nzTitle="已安装" (nzClick)="openInstalledPlugins()">
           <ng-template nz-tab>
             <tis-page [rows]="installedPlugs">
+              <tis-col   width="5">
+                <ng-template let-item="r">
+                <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon [nzType]="icon" nzTheme="fill"></span>
+                </ng-template>
+              </tis-col>
+
               <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="15">
                 <ng-template let-item="r">
                   <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc"

@@ -49,20 +49,15 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
-import {NZ_ICON_DEFAULT_TWOTONE_COLOR, NZ_ICONS} from 'ng-zorro-antd/icon';
 
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
-import {IconDefinition} from "@ant-design/icons-angular";
-import {DeleteOutline} from "@ant-design/icons-angular/icons";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {WFControllerComponent} from "./workflow.controller.component";
 import {WorkflowOfflineEngineSelectComponent} from "./workflow.offline.engine.select.component";
 import {TableColsMetaComponent} from "./table.cols.meta.component";
 
-
-const icons: IconDefinition[] = [DeleteOutline];
 
 @NgModule({
   id: 'offline',
@@ -77,8 +72,6 @@ const icons: IconDefinition[] = [DeleteOutline];
     , NzDividerModule, NzGridModule
   ],
   providers: [
-    {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
-    {provide: NZ_ICONS, useValue: icons}
   ],
   declarations: [
     WorkflowComponent, WorkflowOfflineEngineSelectComponent, WFControllerComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
