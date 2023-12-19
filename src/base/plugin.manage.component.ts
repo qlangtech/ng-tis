@@ -358,7 +358,6 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       , `action=plugin_action&emethod=reload_update_site_meta${this.buildExtendPointParam()}`)
       .then((r) => {
         if (r.success) {
-          // this.installedPlugs = r.bizresult;
           this.updateSiteLoadErr = null;
           this.pager = Pager.create(r);
           this.avaliablePlugs = r.bizresult.rows;

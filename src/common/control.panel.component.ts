@@ -23,23 +23,23 @@ typeMeta.set('normal-stop-incr', new PanelMeta("一般操作", "", false, 'stop'
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: "control-prompt",
   template: `
-      <div class="typography-panel">
-          <nz-page-header class="danger-control-title" [nzTitle]="typeMeta.title" [nzSubtitle]="typeMeta.subTitle">
-          </nz-page-header>
+    <div class="typography-panel">
+      <nz-page-header class="danger-control-title" [nzTitle]="typeMeta.title" [nzSubtitle]="typeMeta.subTitle">
+      </nz-page-header>
 
-          <nz-list class="ant-advanced-search-form"
-                   [ngClass]="{'ant-advanced-search-form-danger': typeMeta.danger ,'ant-advanced-search-form-normal':!typeMeta.danger}"
-                   nzBordered>
-              <nz-list-item>
-                  <span nz-typography>{{this.procDesc}}</span>
-                  <button nz-button nzType="primary" [nzLoading]="this.formDisabled" [disabled]="disabled"
-                          [nzDanger]="typeMeta.danger"
-                          (click)="btnClick()">
-                      <i nz-icon [nzType]="typeMeta.btnType" nzTheme="outline"></i>{{typeMeta.btnLabel}}
-                  </button>
-              </nz-list-item>
-          </nz-list>
-      </div>
+      <nz-list class="ant-advanced-search-form"
+               [ngClass]="{'ant-advanced-search-form-danger': typeMeta.danger ,'ant-advanced-search-form-normal':!typeMeta.danger}"
+               nzBordered>
+        <nz-list-item>
+          <span nz-typography>{{this.procDesc}}</span>
+          <button nz-button nzType="primary" [nzLoading]="this.formDisabled" [disabled]="disabled"
+                  [nzDanger]="typeMeta.danger"
+                  (click)="btnClick()">
+            <i nz-icon [nzType]="typeMeta.btnType" nzTheme="outline"></i>{{typeMeta.btnLabel}}
+          </button>
+        </nz-list-item>
+      </nz-list>
+    </div>
   `,
   styles: [
     `
@@ -91,7 +91,7 @@ typeMeta.set('normal-stop-incr', new PanelMeta("一般操作", "", false, 'stop'
 })
 export class ControlPanelComponent extends BasicFormComponent  //implements AfterContentInit, OnDestroy
 {
-  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService,private cd: ChangeDetectorRef) {
+  constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, modalService, notification);
   }
 
@@ -112,16 +112,17 @@ export class ControlPanelComponent extends BasicFormComponent  //implements Afte
   @Output()
   controlClick = new EventEmitter<ControlPanelComponent>();
 
-  public restoreInitialState(){
+  public restoreInitialState() {
     this.formDisabled = false;
     this.cd.detectChanges();
   }
 
   btnClick() {
-
+    //'${this.currentApp.appName}'
+    // console.log(this.currentApp);
     this.modalService.confirm({
       nzTitle: this.typeMeta.title,
-      nzContent: `是否确定要${this.procDesc}'${this.currentApp.appName}'`,
+      nzContent: `是否确定要${this.procDesc}`,
       nzOkText: '执行',
       nzCancelText: '取消',
       nzOnOk: () => {
@@ -130,6 +131,10 @@ export class ControlPanelComponent extends BasicFormComponent  //implements Afte
         this.cd.detectChanges();
       }
     });
+  }
 
+  public enableComponent() {
+    this.formDisabled = false;
+    this.cd.detectChanges();
   }
 }

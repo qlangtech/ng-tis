@@ -475,7 +475,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        console.log(r);
+       // console.log(r);
         let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
         let hlist: HeteroList[] = [h];
         return hlist;

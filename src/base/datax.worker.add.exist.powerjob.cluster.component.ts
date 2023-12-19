@@ -35,19 +35,16 @@ import {PowerjobCptType} from "./datax.worker.component";
         <tis-steps [type]="this.dto.processMeta.stepsType" [step]="0"></tis-steps>
         <tis-page-header [showBreadcrumb]="false">
             <tis-header-tool>
-                <button nz-button nzType="primary" (click)="createStep1Next(k8sReplicsSpec)">下一步</button>
+                <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
+                <button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
             </tis-header-tool>
         </tis-page-header>
         <nz-spin [nzSpinning]="this.formDisabled">
             <div class="item-block">
                 <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                              (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                             [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobServerHetero"
+                             [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobUseExistClusterHetero"
                              #pluginComponent></tis-plugins>
-            </div>
-            <div class="item-block">
-                <k8s-replics-spec [(rcSpec)]="dto.powderJobServerRCSpec" #k8sReplicsSpec [labelSpan]="5">
-                </k8s-replics-spec>
             </div>
         </nz-spin>
 
@@ -68,15 +65,12 @@ export class DataxWorkerAddExistPowerjobClusterComponent extends BasicFormCompon
     // get currentApp(): CurrentCollection {
     //   return new CurrentCollection(0, this.dto.processMeta.targetName);
     // }
-    createStep1Next(spec: K8SReplicsSpecComponent) {
-        // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
-        if (!spec.validate()) {
-            return;
-        }
+    createStep1Next() {
+
         let e = new SavePluginEvent();
         e.notShowBizMsg = true;
-        e.serverForward = "coredefine:datax_action:save_datax_worker";
-        e.postPayload = {"k8sSpec": this.dto.powderJobServerRCSpec};
+       // e.serverForward = "coredefine:datax_action:save_datax_worker";
+       // e.postPayload = {"k8sSpec": this.dto.powderJobServerRCSpec};
         let appTisService: TISService = this.tisService;
         appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
         e.basicModule = this;
@@ -132,5 +126,8 @@ export class DataxWorkerAddExistPowerjobClusterComponent extends BasicFormCompon
     }
 
 
+    prestep() {
+  this.preStep.emit(this.dto);
+    }
 }
 

@@ -122,6 +122,7 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
 
 
   ngOnInit(): void {
+    console.log(this.dto);
   }
 
 

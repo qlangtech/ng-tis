@@ -16,17 +16,17 @@
  *   limitations under the License.
  */
 import {NzUploadModule} from 'ng-zorro-antd/upload';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule, OnInit} from "@angular/core";
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ItemPropValPipe, TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {
-    Pager,
     PaginationComponent,
     TdContentDirective,
     ThDirective,
     TisColumn,
-    TisPageHeader, TisPageRowAssist
+    TisPageHeader,
+    TisPageRowAssist
 } from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
 import {NavigateBarComponent} from "./navigate.bar.component";
@@ -63,7 +63,6 @@ import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {NzBreadCrumbModule} from 'ng-zorro-antd/breadcrumb';
 import {TisBreadcrumbComponent} from "./breadcrumb.component";
-import {FullBuildHistoryComponent} from "./full.build.history.component";
 import {TisStepsComponent, TisStepsToolbarComponent} from "./steps.component";
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzPopoverModule} from 'ng-zorro-antd/popover';
@@ -131,9 +130,9 @@ import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
 import {ControlPanelComponent} from "./control.panel.component";
 import {SchemaEditComponent} from "./schema.edit.component";
-import {TISEndtypeIcons} from "./icons/mysql";
 import {TISService} from "./tis.service";
 import {IconDefinition} from "@ant-design/icons-angular";
+import {FullBuildHistoryComponent} from './full.build.history.component';
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries

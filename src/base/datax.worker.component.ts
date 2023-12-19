@@ -47,7 +47,9 @@ export enum PowerjobCptType {
     Server = ("powerjob-server"),
     Worker = ("powerjob-worker"),
     JobTpl = ("powerjob-job-tpl"),
-    UsingExistCluster = ("powerjob-use-exist-cluster")
+    UsingExistCluster = ("powerjob-use-exist-cluster"),
+    // applicationAware
+    JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite")
 }
 
 @Component({
