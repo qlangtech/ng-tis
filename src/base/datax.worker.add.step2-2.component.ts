@@ -29,6 +29,9 @@ import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {PowerjobCptType} from "./datax.worker.component";
+import {IntendDirect} from "../common/MultiViewDAG";
+import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 
 @Component({
   template: `

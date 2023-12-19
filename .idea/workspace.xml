@@ -5,24 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/icons/mysql.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2-2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2-2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/MultiViewDAG.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/control.panel.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/control.panel.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/k8s.replics.spec.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,22 +66,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/mozhenghua/j2ee_solution/project/tis-console/src/base",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/Users/mozhenghua/j2ee_solution/project/tis-console/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/src/base&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/base" />
@@ -189,7 +193,11 @@
       <workItem from="1696845032454" duration="16196000" />
       <workItem from="1697681099340" duration="12240000" />
       <workItem from="1698121156636" duration="1480000" />
-      <workItem from="1698474858158" duration="68951000" />
+      <workItem from="1698474858158" duration="79270000" />
+      <workItem from="1699322270462" duration="6030000" />
+      <workItem from="1699677367052" duration="609000" />
+      <workItem from="1699832608227" duration="1287000" />
+      <workItem from="1699925707152" duration="44134000" />
     </task>
     <servers />
   </component>

@@ -43,415 +43,415 @@ const KEY_show_Bread_crumb = "showBreadcrumb";
 
 // declare var NProgress: any;
 export class BasicFormComponent {
-  result: TisResponseResult;
-  // 表单是否禁用
+    result: TisResponseResult;
+    // 表单是否禁用
 
-  public formDisabled = false;
+    public formDisabled = false;
 
-  // 取得随机ID
-  public static getUUID(): string {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
-  }
-
-  // // 当前上下文中使用的索引
-  // currIndex: CurrentCollection;
-  public showBreadCrumb(route: ActivatedRoute): boolean {
-    return !!route.snapshot.data[KEY_show_Bread_crumb];
-  }
-
-  constructor(protected tisService: TISService
-    , protected modalService?: NzModalService, protected notification?: NzNotificationService) {
-  }
-
-  protected confirm(content: string, onOK: () => void): void {
-    if (!this.modalService) {
-      throw new Error(" have not inject prop 'modalService' ");
-    }
-    this.modalService.confirm({
-      nzTitle: '确认',
-      nzContent: content,
-      nzOkText: '执行',
-      nzCancelText: '取消',
-      nzOnOk: onOK
-    });
-  }
-
-  protected successNotify(msg: string, duration?: number): NzNotificationRef {
-    return this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
-  }
-
-  protected errNotify(msg: string, duration?: number) {
-    this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
-  }
-
-  protected warnNotify(msg: string, duration?: number) {
-    this.notification.warning('注意', msg, {nzDuration: duration > 0 ? duration : 6000});
-  }
-
-  protected infoNotify(msg: string, duration?: number) {
-    this.notification.info('信息', msg, {nzDuration: duration > 0 ? duration : 6000});
-  }
-
-  private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
-    this.formDisabled = false;
-    NProgress.done();
-    return r;
-  }
-
-  get appNotAware(): boolean {
-    return !this.tisService.currentApp;
-  }
-
-  get appMeta(): TISMeta {
-    return this.tisService.tisMeta.tisMeta;
-  }
-
-  protected clearProcessResult(): void {
-    this.result = {success: true, msg: [], errormsg: []};
-  }
-
-  public processResult(result: TisResponseResult, callback?: () => void): void {
-    return this.processResultWithTimeout(result, 10000, callback);
-  }
-
-  // 显示执行结果
-  protected processResultWithTimeout(result: TisResponseResult, timeout: number, callback?: () => void): void {
-    this.result = result;
-    // console.log(result);
-    if (timeout > 0) {
-      setTimeout(() => {
-        this.clearProcessResult();
-        if (callback) {
-          callback();
+    // 取得随机ID
+    public static getUUID(): string {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
         }
-      }, timeout);
+
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
     }
-  }
 
-  protected submitForm(url: string, form: any): void {
-    this.formDisabled = true;
-    NProgress.start();
-    this.clearProcessResult();
-    this.tisService.httpPost(url
-      , jQuery(form).serialize()).then(result => {
-      this.processResult(result);
-      this.formDisabled = false;
-    });
-  }
+    // // 当前上下文中使用的索引
+    // currIndex: CurrentCollection;
+    public showBreadCrumb(route: ActivatedRoute): boolean {
+        return !!route.snapshot.data[KEY_show_Bread_crumb];
+    }
 
-  public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
+    constructor(protected tisService: TISService
+        , protected modalService?: NzModalService, protected notification?: NzNotificationService) {
+    }
 
-    let option: ModalOptions = {
-      // nzTitle: title,
-      nzWidth: "800px",
-      nzContent: component,
-      nzFooter: null,
-      nzMaskClosable: false
-    };
-    return this.modalService.create(Object.assign(option, options));
-  }
+    protected confirm(content: string, onOK: () => void): void {
+        if (!this.modalService) {
+            throw new Error(" have not inject prop 'modalService' ");
+        }
+        this.modalService.confirm({
+            nzTitle: '确认',
+            nzContent: content,
+            nzOkText: '执行',
+            nzCancelText: '取消',
+            nzOnOk: onOK
+        });
+    }
 
-  get currentApp(): CurrentCollection {
-    return this.tisService.currentApp;
-  }
+    public successNotify(msg: string, duration?: number): NzNotificationRef {
+        return this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
+    }
 
-  // 发送http post请求
-  public httpPost(url: string, body: string): Promise<TisResponseResult> {
-    this.formDisabled = true;
-    NProgress.start();
-    this.clearProcessResult();
-    return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
-  }
+    protected errNotify(msg: string, duration?: number) {
+        this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
+    }
 
-  // 发送json表单
-  public jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult> {
-    this.formDisabled = true;
-    NProgress.start();
-    this.clearProcessResult();
-   // console.log(this.tisService.currentApp);
-    return this.tisService.jsonPost(url, body, e).then(this.webExecuteCallback).catch(this.handleError);
-  }
+    protected warnNotify(msg: string, duration?: number) {
+        this.notification.warning('注意', msg, {nzDuration: duration > 0 ? duration : 6000});
+    }
+
+    protected infoNotify(msg: string, duration?: number) {
+        this.notification.info('信息', msg, {nzDuration: duration > 0 ? duration : 6000});
+    }
+
+    private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
+        this.formDisabled = false;
+        NProgress.done();
+        return r;
+    }
+
+    get appNotAware(): boolean {
+        return !this.tisService.currentApp;
+    }
+
+    get appMeta(): TISMeta {
+        return this.tisService.tisMeta.tisMeta;
+    }
+
+    protected clearProcessResult(): void {
+        this.result = {success: true, msg: [], errormsg: []};
+    }
+
+    public processResult(result: TisResponseResult, callback?: () => void): void {
+        return this.processResultWithTimeout(result, 10000, callback);
+    }
+
+    // 显示执行结果
+    protected processResultWithTimeout(result: TisResponseResult, timeout: number, callback?: () => void): void {
+        this.result = result;
+        // console.log(result);
+        if (timeout > 0) {
+            setTimeout(() => {
+                this.clearProcessResult();
+                if (callback) {
+                    callback();
+                }
+            }, timeout);
+        }
+    }
+
+    protected submitForm(url: string, form: any): void {
+        this.formDisabled = true;
+        NProgress.start();
+        this.clearProcessResult();
+        this.tisService.httpPost(url
+            , jQuery(form).serialize()).then(result => {
+            this.processResult(result);
+            this.formDisabled = false;
+        });
+    }
+
+    public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
+
+        let option: ModalOptions = {
+            // nzTitle: title,
+            nzWidth: "800px",
+            nzContent: component,
+            nzFooter: null,
+            nzMaskClosable: false
+        };
+        return this.modalService.create(Object.assign(option, options));
+    }
+
+    get currentApp(): CurrentCollection {
+        return this.tisService.currentApp;
+    }
+
+    // 发送http post请求
+    public httpPost(url: string, body: string): Promise<TisResponseResult> {
+        this.formDisabled = true;
+        NProgress.start();
+        this.clearProcessResult();
+        return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+    }
+
+    // 发送json表单
+    public jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult> {
+        this.formDisabled = true;
+        NProgress.start();
+        this.clearProcessResult();
+        // console.log(this.tisService.currentApp);
+        return this.tisService.jsonPost(url, body, e).then(this.webExecuteCallback).catch(this.handleError);
+    }
 
 // = (r: TisResponseResult): TisResponseResult => {
-  protected handleError = (error: any): Promise<any> => {
-    // console.log(error);
-    // console.log(this);
-    this.formDisabled = false;
-    NProgress.done();
-    return Promise.reject(error.message || error);
-  }
+    protected handleError = (error: any): Promise<any> => {
+        // console.log(error);
+        // console.log(this);
+        this.formDisabled = false;
+        NProgress.done();
+        return Promise.reject(error.message || error);
+    }
 
-  protected jsonp(url: string): Promise<TisResponseResult> {
-    this.formDisabled = true;
-    NProgress.start();
-    return this.tisService.jsonp(url).then(this.webExecuteCallback).catch(this.handleError);
-  }
+    protected jsonp(url: string): Promise<TisResponseResult> {
+        this.formDisabled = true;
+        NProgress.start();
+        return this.tisService.jsonp(url).then(this.webExecuteCallback).catch(this.handleError);
+    }
 
-  public jPost(url: string, o: any): Promise<TisResponseResult> {
-    this.formDisabled = true;
-    NProgress.start();
-    this.clearProcessResult();
-    return this.tisService.jPost(url, o).then(this.webExecuteCallback).catch(this.handleError);
-  }
+    public jPost(url: string, o: any): Promise<TisResponseResult> {
+        this.formDisabled = true;
+        NProgress.start();
+        this.clearProcessResult();
+        return this.tisService.jPost(url, o).then(this.webExecuteCallback).catch(this.handleError);
+    }
 
 }
 
 
 // 可选项
 export class Option {
-  constructor(public value: string, public label: string) {
-  }
+    constructor(public value: string, public label: string) {
+    }
 }
 
 export class NodeMeta {
 
 
-  constructor(public type: string, private img: string
-    , private size: number[], public label: string, public compRef: Type<any>) {
-  }
+    constructor(public type: string, private img: string
+        , private size: number[], public label: string, public compRef: Type<any>) {
+    }
 
-  get width(): number {
-    return this.size[0];
-  }
+    get width(): number {
+        return this.size[0];
+    }
 
-  get height(): number {
-    return this.size[1];
-  }
+    get height(): number {
+        return this.size[1];
+    }
 
-  get imgPath(): string {
-    return '/images/icon/' + this.img;
-  }
+    get imgPath(): string {
+        return '/images/icon/' + this.img;
+    }
 }
 
 
 export abstract class BasicSidebarDTO {
-  protected constructor(public nodeMeta: NodeMeta) {
-  }
+    protected constructor(public nodeMeta: NodeMeta) {
+    }
 }
 
 
 @Component({
-  selector: 'sidebar-toolbar',
-  styles: [
-    ` .sidebar {
-      border-bottom: thin solid #999999;
-      padding: 0 0 5px 0;
-      margin: 0 0 18px 0;
-      height: 40px;
-    }
+    selector: 'sidebar-toolbar',
+    styles: [
+        ` .sidebar {
+            border-bottom: thin solid #999999;
+            padding: 0 0 5px 0;
+            margin: 0 0 18px 0;
+            height: 40px;
+        }
 
-    .float-right {
-      float: right;
-    }
+        .float-right {
+            float: right;
+        }
+        `
+    ],
+    template: `
+        <div class="sidebar">
+            <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
+            <div [ngClass]="{'float-right': true}">
+                <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
+                <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
+            </div>
+        </div>
+        <div style="clear: both"></div>
     `
-  ],
-  template: `
-    <div class="sidebar">
-      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
-      <div [ngClass]="{'float-right': true}">
-        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
-        <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
-      </div>
-    </div>
-    <div style="clear: both"></div>
-  `
 })
 export class SideBarToolBar extends BasicFormComponent {
-  @Output() save = new EventEmitter<any>();
-  @Input() deleteDisabled = false;
-  @Input() saveDisabled = false;
-  @Output() delete = new EventEmitter<any>();
-  @Output() close = new EventEmitter<any>();
+    @Output() save = new EventEmitter<any>();
+    @Input() deleteDisabled = false;
+    @Input() saveDisabled = false;
+    @Output() delete = new EventEmitter<any>();
+    @Output() close = new EventEmitter<any>();
 
-  constructor(tisService: TISService, ngModalService: NzModalService) {
-    super(tisService, ngModalService);
-  }
+    constructor(tisService: TISService, ngModalService: NzModalService) {
+        super(tisService, ngModalService);
+    }
 
-  _deleteNode() {
-    this.modalService.confirm({
-      nzTitle: '<i>请确认是否要删除该节点?</i>',
-      nzContent: '<b>删除之后不可恢复</b>',
-      nzOnOk: () => {
-        this.delete.emit();
-      }
-    });
-  }
+    _deleteNode() {
+        this.modalService.confirm({
+            nzTitle: '<i>请确认是否要删除该节点?</i>',
+            nzContent: '<b>删除之后不可恢复</b>',
+            nzOnOk: () => {
+                this.delete.emit();
+            }
+        });
+    }
 
 
-  _saveClick() {
-    this.save.emit();
-  }
+    _saveClick() {
+        this.save.emit();
+    }
 
-  _closeSidebar(event: MouseEvent) {
-    this.close.emit(event);
-  }
+    _closeSidebar(event: MouseEvent) {
+        this.close.emit(event);
+    }
 
 }
 
 @Injectable()
 export abstract class BasicSideBar extends BasicFormComponent {
-  @Output() saveClick = new EventEmitter<any>();
-  // @Output() onClose = new EventEmitter<any>();
-  // @Input() nodeMeta: NodeMeta;
-  //
-  nodeMeta: NodeMeta;
-  _sidebarDTO: BasicSidebarDTO;
+    @Output() saveClick = new EventEmitter<any>();
+    // @Output() onClose = new EventEmitter<any>();
+    // @Input() nodeMeta: NodeMeta;
+    //
+    nodeMeta: NodeMeta;
+    _sidebarDTO: BasicSidebarDTO;
 
-  @Input() set sidebarDto(dto: BasicSidebarDTO) {
-    this.nodeMeta = dto.nodeMeta;
-    this._sidebarDTO = dto;
-  }
-
-  @Input() g6Graph: any;
-  @Input() parentComponent: IDataFlowMainComponent;
-
-  protected constructor(tisService: TISService, modalService: NzModalService, private drawerRef: NzDrawerRef<BasicSideBar>, notification?: NzNotificationService) {
-    super(tisService, modalService, notification);
-  }
-
-  _saveClick(): void {
-    this.saveClick.emit();
-  }
-
-  _closeSidebar(event: MouseEvent): void {
-    // this.onClose.emit();
-    this.drawerRef.close();
-    if (event) {
-      event.stopPropagation();
+    @Input() set sidebarDto(dto: BasicSidebarDTO) {
+        this.nodeMeta = dto.nodeMeta;
+        this._sidebarDTO = dto;
     }
-  }
 
-  public abstract initComponent(addComponent: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void;
+    @Input() g6Graph: any;
+    @Input() parentComponent: IDataFlowMainComponent;
 
-  /**
-   *
-   * @param graph
-   * @param $
-   * @param nodeid
-   * @param addComponent
-   * @param evt
-   * @return 保存是否成功
-   */
-  public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: IDataFlowMainComponent, evt: any): boolean;
+    protected constructor(tisService: TISService, modalService: NzModalService, private drawerRef: NzDrawerRef<BasicSideBar>, notification?: NzNotificationService) {
+        super(tisService, modalService, notification);
+    }
+
+    _saveClick(): void {
+        this.saveClick.emit();
+    }
+
+    _closeSidebar(event: MouseEvent): void {
+        // this.onClose.emit();
+        this.drawerRef.close();
+        if (event) {
+            event.stopPropagation();
+        }
+    }
+
+    public abstract initComponent(addComponent: IDataFlowMainComponent, selectNode: BasicSidebarDTO): void;
+
+    /**
+     *
+     * @param graph
+     * @param $
+     * @param nodeid
+     * @param addComponent
+     * @param evt
+     * @return 保存是否成功
+     */
+    public abstract subscribeSaveClick(graph: any, $: any, nodeid: string, addComponent: IDataFlowMainComponent, evt: any): boolean;
 }
 
 export interface IDataFlowMainComponent {
-  readonly dumpTabs: Map<string, DumpTable>;
-  readonly joinNodeMap: Map<string /*id*/, JoinNode>;
+    readonly dumpTabs: Map<string, DumpTable>;
+    readonly joinNodeMap: Map<string /*id*/, JoinNode>;
 
-  removeDumpNode(nodeId: string): void;
+    removeDumpNode(nodeId: string): void;
 
-  removeJoinNode(nodeId: string): void;
+    removeJoinNode(nodeId: string): void;
 
-  /**
-   * 可选的依赖节点
-   */
-  dependencyOption(selfJoinNodeId: string): Array<Option>;
+    /**
+     * 可选的依赖节点
+     */
+    dependencyOption(selfJoinNodeId: string): Array<Option>;
 
 
-  closePanel(): void;
+    closePanel(): void;
 
-  getUid(): string;
+    getUid(): string;
 }
 
 export class WSMessage {
-  constructor(public logtype: string, public data?: any) {
+    constructor(public logtype: string, public data?: any) {
 
-  }
+    }
 }
 
 @Injectable()
 export abstract class AppFormComponent extends BasicFormComponent implements OnInit {
-  private _getCurrentAppCache = false;
+    private _getCurrentAppCache = false;
 
-  protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService, notification?: NzNotificationService) {
-    super(tisService, modalService, notification);
-  }
+    protected constructor(tisService: TISService, protected route: ActivatedRoute, modalService: NzModalService, notification?: NzNotificationService) {
+        super(tisService, modalService, notification);
+    }
 
-  // @Input()
-  public set getCurrentAppCache(val: boolean) {
-    this._getCurrentAppCache = val;
-  }
+    // @Input()
+    public set getCurrentAppCache(val: boolean) {
+        this._getCurrentAppCache = val;
+    }
 
-  ngOnInit(): void {
-    let queryParams = this.route.snapshot.queryParams;
-    let execId = queryParams['execId'];
-    this.tisService.execId = execId;
-    this.route.params
-      .subscribe((params: Params) => {
-        // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
-        // if (this.tisService instanceof AppTISService) {
-        let appTisService: TISService = this.tisService;
-        if (!this._getCurrentAppCache) {
-          let collectionName = params['name'];
-          // console.log(collectionName);
-          if (!collectionName) {
-            appTisService.currentApp = null;
-          }
-          if (!appTisService.currentApp && collectionName) {
-            appTisService.currentApp = new CurrentCollection(0, collectionName);
-            // console.log(this.currentApp);
-          } else {
-            // appTisService.currentApp = null;
-          }
-        }
-        // console.log(appTisService.currentApp);
-        this.initialize(appTisService.currentApp);
-      });
-  }
+    ngOnInit(): void {
+        let queryParams = this.route.snapshot.queryParams;
+        let execId = queryParams['execId'];
+        this.tisService.execId = execId;
+        this.route.params
+            .subscribe((params: Params) => {
+                // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
+                // if (this.tisService instanceof AppTISService) {
+                let appTisService: TISService = this.tisService;
+                if (!this._getCurrentAppCache) {
+                    let collectionName = params['name'];
+                    // console.log(collectionName);
+                    if (!collectionName) {
+                        appTisService.currentApp = null;
+                    }
+                    if (!appTisService.currentApp && collectionName) {
+                        appTisService.currentApp = new CurrentCollection(0, collectionName);
+                        // console.log(this.currentApp);
+                    } else {
+                        // appTisService.currentApp = null;
+                    }
+                }
+                // console.log(appTisService.currentApp);
+                this.initialize(appTisService.currentApp);
+            });
+    }
 
-  protected abstract initialize(app: CurrentCollection): void ;
+    protected abstract initialize(app: CurrentCollection): void ;
 
-  protected getWSMsgSubject(logtype: string): Subject<WSMessage> {
-    let app = this.currentApp;
-    return <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${app ? app.name : ''}`)
-      .pipe(map((response: MessageEvent) => {
-        let json = JSON.parse(response.data);
-        // console.log(json);
-        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
-          return new WSMessage('mq_tags_status', json);
-        } else if (json.logType && json.logType === "INCR") {
-          return new WSMessage('incr', json);
-        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
-          return new WSMessage(LogType.INCR_DEPLOY_STATUS_CHANGE, json);
-        } else if (json.logType && json.logType === "DATAX_WORKER_POD_LOG") {
-          return new WSMessage(LogType.DATAX_WORKER_POD_LOG, json);
-        }
-        return null;
-      }));
-  }
+    protected getWSMsgSubject(logtype: string): Subject<WSMessage> {
+        let app = this.currentApp;
+        return <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${app ? app.name : ''}`)
+            .pipe(map((response: MessageEvent) => {
+                let json = JSON.parse(response.data);
+                // console.log(json);
+                if (json.logType && json.logType === "MQ_TAGS_STATUS") {
+                    return new WSMessage('mq_tags_status', json);
+                } else if (json.logType && json.logType === "INCR") {
+                    return new WSMessage('incr', json);
+                } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
+                    return new WSMessage(LogType.INCR_DEPLOY_STATUS_CHANGE, json);
+                } else if (json.logType && json.logType === "DATAX_WORKER_POD_LOG") {
+                    return new WSMessage(LogType.DATAX_WORKER_POD_LOG, json);
+                }
+                return null;
+            }));
+    }
 }
 
 export class CurrentCollection {
-  constructor(private id: number, public name: string, public appTyp?: AppType) {
-  }
+    constructor(private id: number, public name: string, public appTyp?: AppType) {
+    }
 
-  public get appid() {
-    return this.id;
-  }
+    public get appid() {
+        return this.id;
+    }
 
-  public get appName() {
-    return this.name;
-  }
+    public get appName() {
+        return this.name;
+    }
 }
 
 
 // sidebar 在与主页面传递的dto对象
 export class DumpTable extends BasicSidebarDTO {
-  constructor(nodeMeta: NodeMeta, public nodeid: string, public dbid?: string, public tabname?: string) {
-    super(nodeMeta);
-  }
+    constructor(nodeMeta: NodeMeta, public nodeid: string, public dbid?: string, public tabname?: string) {
+        super(nodeMeta);
+    }
 
-  public get tableName(): string {
-    return this.tabname;
-  }
+    public get tableName(): string {
+        return this.tabname;
+    }
 }
 
 /**
@@ -459,102 +459,105 @@ export class DumpTable extends BasicSidebarDTO {
  */
 export class ERMetaNode extends BasicSidebarDTO {
 
-  public columnTransferList: ColumnTransfer[] = [];
-  // 主索引表
-  public primaryIndexTab = false;
-  // 当primaryIndexTab为true时，primaryIndexColumnName不能为空
-  public primaryIndexColumnNames: PrimaryIndexColumnName[] = [new PrimaryIndexColumnName(null, false)];
+    public columnTransferList: ColumnTransfer[] = [];
+    // 主索引表
+    public primaryIndexTab = false;
+    // 当primaryIndexTab为true时，primaryIndexColumnName不能为空
+    public primaryIndexColumnNames: PrimaryIndexColumnName[] = [new PrimaryIndexColumnName(null, false)];
 
-  // 监听增量变更
-  public monitorTrigger = true;
-  public sharedKey: string;
-  public timeVerColName: string;
+    // 监听增量变更
+    public monitorTrigger = true;
+    public sharedKey: string;
+    public timeVerColName: string;
 
-  constructor(public dumpnode: DumpTable, public topologyName: string) {
-    super(null);
-  }
+    constructor(public dumpnode: DumpTable, public topologyName: string) {
+        super(null);
+    }
 }
 
 export class PrimaryIndexColumnName {
-  public delete = false;
+    public delete = false;
 
-  constructor(public name: string, public pk: boolean) {
-  }
+    constructor(public name: string, public pk: boolean) {
+    }
 }
 
 export class ColumnTransfer {
-  public checked = false;
+    public checked = false;
 
-  constructor(public colKey: string, public transfer: string, public param: string) {
-  }
+    constructor(public colKey: string, public transfer: string, public param: string) {
+    }
 }
 
 export class ERRuleNode extends BasicSidebarDTO {
-  public cardinality: string;
-  linkKeyList: LinkKey[] = [];
+    public cardinality: string;
+    linkKeyList: LinkKey[] = [];
 
-  constructor(public rel: {
-    id: string, 'sourceNode': DumpTable, 'targetNode': DumpTable, 'linkrule': { linkKeyList: LinkKey[], cardinality: string }
-  }, public topologyName: string) {
-    super(null);
-    this.cardinality = rel.linkrule.cardinality;
-    this.linkKeyList = rel.linkrule.linkKeyList;
-  }
+    constructor(public rel: {
+        id: string,
+        'sourceNode': DumpTable,
+        'targetNode': DumpTable,
+        'linkrule': { linkKeyList: LinkKey[], cardinality: string }
+    }, public topologyName: string) {
+        super(null);
+        this.cardinality = rel.linkrule.cardinality;
+        this.linkKeyList = rel.linkrule.linkKeyList;
+    }
 
-  public get sourceNode(): DumpTable {
-    return this.rel.sourceNode;
-  }
+    public get sourceNode(): DumpTable {
+        return this.rel.sourceNode;
+    }
 
-  public get targetNode(): DumpTable {
-    return this.rel.targetNode;
-  }
+    public get targetNode(): DumpTable {
+        return this.rel.targetNode;
+    }
 }
 
 
 export class JoinNode extends BasicSidebarDTO {
-  public dependencies: Option[] = [];
-  public edgeIds: string[] = [];
+    public dependencies: Option[] = [];
+    public edgeIds: string[] = [];
 
-  constructor(nodeMeta: NodeMeta, public id?: string, public exportName?: string, public position?: Pos, public sql?: string) {
-    super(nodeMeta);
-  }
+    constructor(nodeMeta: NodeMeta, public id?: string, public exportName?: string, public position?: Pos, public sql?: string) {
+        super(nodeMeta);
+    }
 
-  public addDependency(o: Option): void {
-    this.dependencies.push(o);
-  }
+    public addDependency(o: Option): void {
+        this.dependencies.push(o);
+    }
 
-  public addEdgeId(id: string): void {
-    this.edgeIds.push(id);
-  }
+    public addEdgeId(id: string): void {
+        this.edgeIds.push(id);
+    }
 }
 
 
 export class NodeMetaConfig {
-  constructor(public exportName: string, public id: string, public type: string, public position: Pos
-    , public sql: string, public dependencies: NodeMetaDependency[]) {
-  }
+    constructor(public exportName: string, public id: string, public type: string, public position: Pos
+        , public sql: string, public dependencies: NodeMetaDependency[]) {
+    }
 }
 
 
 export class Pos {
-  constructor(public x: number, public y: number) {
+    constructor(public x: number, public y: number) {
 
-  }
+    }
 }
 
 export class NodeMetaDependency {
-  constructor(public id: string, public dbid: string
-    , public dbName: string, public name: string
-    , public position?: Pos, public type?: string) {
+    constructor(public id: string, public dbid: string
+        , public dbName: string, public name: string
+        , public position?: Pos, public type?: string) {
 
-  }
+    }
 }
 
 export class LinkKey {
-  public checked = false;
+    public checked = false;
 
-  constructor(public parentKey: string, public childKey: string) {
-  }
+    constructor(public parentKey: string, public childKey: string) {
+    }
 }
 
 

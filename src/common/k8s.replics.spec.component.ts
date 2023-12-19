@@ -105,10 +105,11 @@ import {Item, ItemPropVal} from "./tis.plugin";
             </tis-ipt>
             <tis-ipt title="弹性扩缩容" name="hpa" require>
                 <div>
-                    <nz-switch [nzDisabled]="disabled" nzCheckedChildren="开" nzUnCheckedChildren="关"
+
+                    <nz-switch  [nzDisabled]="disabled || hpaDisabled" nzCheckedChildren="开" nzUnCheckedChildren="关"
                                formControlName="supportHpa"></nz-switch>
                 </div>
-                <div *ngIf="specForm?.get('supportHpa').value" class="resource-spec">
+                <div *ngIf="specForm?.get('supportHpa').value && !hpaDisabled" class="resource-spec">
                     <div [ngClass]="{'ant-form-item-has-error':hasErr('cpuAverageUtilization')}">
                         <nz-input-group nzAddOnBefore="CPU平均利用率" [nzAddOnAfter]="'%'" nzCompact>
                             <nz-input-number [nzDisabled]="disabled" name="cpuAverageUtilization" class="input-number"
@@ -175,6 +176,9 @@ export class K8SReplicsSpecComponent extends BasicFormComponent implements After
 
     @Input()
     disabled = false;
+    @Input()
+    hpaDisabled = false;
+
 
     @Input()
     errorItem: Item;

@@ -53,7 +53,7 @@ import {
     ValOption,
     OptionEnum, DescribleVal
 } from "./tis.plugin";
-import {NzModalService} from "ng-zorro-antd/modal";
+import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
@@ -61,6 +61,7 @@ import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
+import {FunctionCall} from "@angular/compiler";
 
 
 @Component({
@@ -78,7 +79,9 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
                     <ng-container *ngSwitchCase="true">
                         <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
                             <div style="float: right;">
-                                <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+                                <button nz-button nzType="primary" [disabled]="this.formDisabled"
+                                        (click)="_savePlugin($event)">保存
+                                </button>
                             </div>
                             <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
                                 <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity"
@@ -88,7 +91,9 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
                     </ng-container>
                     <ng-container *ngSwitchCase="false">
                         <div style="float: right;">
-                            <button nz-button nzType="primary" (click)="_savePlugin($event)">保存</button>
+                            <button nz-button nzType="primary" [disabled]="this.formDisabled"
+                                    (click)="_savePlugin($event)">保存
+                            </button>
                         </div>
                     </ng-container>
                 </ng-container>
@@ -104,9 +109,11 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
                 <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
                     <div style="float:right">
 
-                        <nz-tag *ngIf="true || showExtensionPoint.open"> <a [href]="item.implUrl" class="plugin-link"
+                        <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link"
                                                                            target="_blank"><i nz-icon nzType="link"
-                                                                                              nzTheme="outline"></i> <span *ngIf="item.dspt.supportIcon" nz-icon [nzType]="item.dspt.endtype" nzTheme="outline"></span>{{item.impl}}
+                                                                                              nzTheme="outline"></i>
+                            <span *ngIf="item.dspt.supportIcon" nz-icon [nzType]="item.dspt.endtype"
+                                  nzTheme="outline"></span>{{item.impl}}
                         </a></nz-tag>
                         <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)"
                                 nz-button
@@ -268,17 +275,32 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     public static openPluginInstanceAddDialog(b: BasicFormComponent, pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void) {
+        PluginsComponent.openPluginDialog({shallLoadSavedItems: false}, b, pluginDesc, pluginTp, title, onSuccess);
+    }
+
+    public static openPluginDialog(opts: OpenPluginDialogOptions, b: BasicFormComponent
+        , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void): NzModalRef<any> {
         let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
         let addDb: PluginsComponent = modalRef.getContentComponent();
+
         addDb.errorsPageShow = true;
         addDb.getCurrentAppCache = true;
         addDb.formControlSpan = 19;
         addDb.shallInitializePluginItems = false;
         addDb.disableNotebook = true;
         addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
-        addDb.setPluginMeta([pluginTp])
+        if (opts.shallLoadSavedItems) {
+            addDb.plugins = [pluginTp];
+        } else {
+            addDb.setPluginMeta([pluginTp])
+        }
+        if (opts.savePluginEventCreator) {
+            addDb.savePluginEventCreator = opts.savePluginEventCreator;
+        }
+
         addDb.showSaveButton = true;
         addDb.afterSave.subscribe((r: PluginSaveResponse) => {
+            // console.log(r);
             if (r && r.saveSuccess && r.hasBiz()) {
                 modalRef.close();
                 let db = r.biz();
@@ -286,7 +308,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                 onSuccess(db);
             }
         });
+        return modalRef;
     }
+
 
     public static getPluginMetaParams(pluginMeta: PluginType[]): string {
         return pluginMeta.map((p) => {
@@ -294,7 +318,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
             // console.log(param);
             if (param.name) {
                 let t: PluginMeta = param;
-                return `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? ',' + t.extraParam : ''}`
+                let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
+                if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
+                    metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
+                }
+                return metaParam;
             } else {
                 return p;
             }
@@ -550,7 +578,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     ngOnInit() {
-       // super.ngOnInit();
+        // super.ngOnInit();
     }
 
     ngOnDestroy(): void {
@@ -567,7 +595,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
             });
         }
         this.ajaxOccur.emit(new PluginSaveResponse(false, true));
-        // let component = 'mq';
+        // console.log("shallInitializePluginItems:"+ this.shallInitializePluginItems);
         if (this.shallInitializePluginItems) {
             if (!this.plugins || this.plugins.length < 1) {
                 throw new Error("plugin argument can not be null");
@@ -581,7 +609,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
     public initializePluginItems() {
-       //  console.log(this.plugins);
+        //  console.log(this.plugins);
         PluginsComponent.initializePluginItems(this, this.plugins, true, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
             if (success) {
                 this.showExtensionPoint.open = showExtensionPoint;
@@ -602,10 +630,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     _savePlugin(event: MouseEvent) {
-        let e = new SavePluginEvent();
+        let e = this.savePluginEventCreator();// new SavePluginEvent();
         e.verifyConfig = false;
         this.savePluginSetting(event, e);
     }
+
+    @Input()
+    private savePluginEventCreator = () => new SavePluginEvent();
 
     savePluginSetting(event: MouseEvent, savePluginEvent: SavePluginEvent) {
         this._savePluginInfo(event, savePluginEvent, this.plugins, this._heteroList);
@@ -618,7 +649,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
         // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
         let formContext = !!savePluginEvent.basicModule ? savePluginEvent.basicModule : this;
-       // console.log(_heteroList);
+        // console.log(_heteroList);
         PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
             // 成功了
             this.ajaxOccur.emit(new PluginSaveResponse(r.success, false));
@@ -1131,12 +1162,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                         //  console.log(_pp);
                         switch (_pp.type) {
                             case TYPE_ENUM: // enum
-                                            // enum
-                                            // db detail
-                                            // let item: Item = Object.assign(new Item(d), );
-                                            // let nn = new ValOption();
-                                            // n.name = biz.detailed.identityName;
-                                            // n.impl = d.impl;
+                                // enum
+                                // db detail
+                                // let item: Item = Object.assign(new Item(d), );
+                                // let nn = new ValOption();
+                                // n.name = biz.detailed.identityName;
+                                // n.impl = d.impl;
 
                                 if (biz.detailed) {
                                     let db = biz.detailed;
@@ -1427,6 +1458,14 @@ interface TargetPlugin {
     hetero: PluginName;
     extraParam?: string;
     descName?: string;
+}
+
+export interface OpenPluginDialogOptions {
+    shallLoadSavedItems: boolean;
+    /**
+     * 是否要覆写创建SavePluginEvent的行为
+     */
+    savePluginEventCreator?: () => SavePluginEvent;
 }
 
 

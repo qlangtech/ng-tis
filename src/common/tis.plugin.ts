@@ -23,6 +23,7 @@ import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {NextObserver, Subject} from "rxjs";
 import {JSONFile} from "@angular/cli/utilities/json-file";
+import {PowerjobCptType} from "../base/datax.worker.component";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
@@ -30,6 +31,7 @@ export const CONST_FORM_LAYOUT_VERTICAL = 3;
 export const PARAM_END_TYPE = "&endType=";
 
 export const KEY_OPTIONS_ENUM = "enum";
+
 export declare type PluginName =
     'mq'
     | 'incr-config'
@@ -41,12 +43,16 @@ export declare type PluginName =
     | 'params-cfg'
     | 'appSource'
     | 'dataxWriter'
-    | 'datax-worker';
+    | 'datax-worker'
+    // @ts-ignore
+    | PowerjobCptType.JobTplAppOverwrite // 'powerjob-job-tpl-app-overwrite'
 export declare type PluginMeta = {
     skipSubformDescNullError?: boolean;
     name: PluginName, require: boolean
     // key1_val1,key2_val2
     , extraParam?: string
+    // &key=val&key=val
+    , appendParams?: Array<{key:string,val:string}>
     // 服务端对目标Item的desc进行过滤
     , descFilter?:
         { // 插件安装panel需要过滤的端类型

@@ -232,7 +232,22 @@ export class DataxWorkerDTO {
     powderJobWorkerHetero: HeteroList[] = [];
     powderjobJobTplHetero: HeteroList[] = [];
 
+    usingPowderJobUseExistCluster = false;
+
     public get containPowerJob(): boolean {
         return this.powderJobServerHetero.length > 0 && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;
     }
+}
+
+export interface PowerJobWorkflow {
+    wfName: string;
+    id: number;
+    cronInfo: string;
+    enable: true,
+    gmtCreate: number;//1699937621000,
+    gmtModified: number,
+    // "id":16,
+    // "maxWfInstanceNum":1,
+    // "timeExpression":"0 0 12 * * ?",
+    // "timeExpressionType":"CRON",
 }

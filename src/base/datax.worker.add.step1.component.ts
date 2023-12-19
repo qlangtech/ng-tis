@@ -35,6 +35,7 @@ import {PowerjobCptType} from "./datax.worker.component";
         <tis-steps [type]="this.dto.processMeta.stepsType" [step]="0"></tis-steps>
         <tis-page-header [showBreadcrumb]="false">
             <tis-header-tool>
+                <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
                 <button nz-button nzType="primary" (click)="createStep1Next(k8sReplicsSpec)">下一步</button>
             </tis-header-tool>
         </tis-page-header>
@@ -46,7 +47,7 @@ import {PowerjobCptType} from "./datax.worker.component";
                              #pluginComponent></tis-plugins>
             </div>
             <div class="item-block">
-                <k8s-replics-spec [(rcSpec)]="dto.powderJobServerRCSpec" #k8sReplicsSpec [labelSpan]="5">
+                <k8s-replics-spec [(rcSpec)]="dto.powderJobServerRCSpec" [hpaDisabled]="true"  #k8sReplicsSpec [labelSpan]="5">
                 </k8s-replics-spec>
             </div>
         </nz-spin>
@@ -73,6 +74,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
         if (!spec.validate()) {
             return;
         }
+       // EventSource
         let e = new SavePluginEvent();
         e.notShowBizMsg = true;
         e.serverForward = "coredefine:datax_action:save_datax_worker";
@@ -92,41 +94,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
 
     ngOnInit(): void {
 
-        if (this.dto.containPowerJob) {
-            return;
-        }
 
-        this.httpPost('/coredefine/corenodemanage.ajax'
-            , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
-            .then((r) => {
-                if (r.success) {
-                    let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-
-                    let desc = Array.from(rList.values());
-                    let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
-                    let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
-                    let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
-                    let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
-                    if (!powerjobServer) {
-                        throw new Error("powerjobServer can not be null");
-                    }
-                    if (!powerjobUseExistCluster) {
-                        throw new Error("powerjobUseExistCluster can not be null");
-                    }
-                    if (!powerjobWorker) {
-                        throw new Error("powerjobWorker can not be null");
-                    }
-                    if (!jobTpl) {
-                        throw new Error("jobTpl can not be null");
-                    }
-
-                    this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, this.pluginCategory);
-                    this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.pluginCategory);
-                    this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, this.pluginCategory);
-                    this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, this.pluginCategory);
-
-                }
-            });
 
     }
 
@@ -137,5 +105,8 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
     }
 
 
+    prestep() {
+         this.preStep.emit(this.dto);
+    }
 }
 

@@ -37,13 +37,13 @@ import {ErrorListComponent} from "./error.list.component";
 import {NotebookwrapperComponent} from "../common/plugins.component";
 
 
-const dataXWorkerCfg: { processMeta: ProcessMeta }
+export const dataXWorkerCfg: { processMeta: ProcessMeta }
   = {
   processMeta: {
     targetName: "datax-worker"
-    , pageHeader: "DataX分布式执行器"
-    , notCreateTips: "还未创建DataX执行器，创建之后可以将DataX构建任务提交到K8S集群，高效并行执行DataX数据同步任务"
-    , createButtonLabel: "创建DataX执行器"
+    , pageHeader: "PowerJob分布式执行器"
+    , notCreateTips: "还未创建PowerJob执行器，创建之后可以将DataX构建任务提交到K8S PowerJob集群，高效并行执行分布式数据同步任务"
+    , createButtonLabel: "创建PowerJob执行器"
     , stepsType: StepType.CreateWorkderOfDataX
     , supportK8SReplicsSpecSetter: true
   }
