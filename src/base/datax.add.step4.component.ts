@@ -335,6 +335,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       }
     });
     drawerRef.afterClose.subscribe(hetero => {
+     // console.log("close");
       if (!hetero) {
         return;
       }
@@ -766,7 +767,7 @@ export class PluginSubFormComponent {
   }
 
   verifyPluginConfig(e: PluginSaveResponse) {
-    if (e.saveSuccess) {
+    if (e.saveSuccess && e.verify) {
       this.drawer.close({hetero: this.hetero[0]});
     }
   }

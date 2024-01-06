@@ -20,7 +20,11 @@ import {BasicFormComponent} from "../../common/basic.form.component";
 import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
 import {StepType} from "../../common/steps.component";
 import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
-import {HeteroList} from "../../common/tis.plugin";
+import {Descriptor, HeteroList, SavePluginEvent} from "../../common/tis.plugin";
+import {ExecuteStep, MessageData} from "../../common/tis.service";
+import {DataxWorkerAddStep0Component} from "../../base/datax.worker.add.step0.component";
+import {PowerjobCptType} from "../../base/datax.worker.component";
+import {DataxWorkerAddStep1Component} from "../../base/datax.worker.add.step1.component";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -38,216 +42,270 @@ import {HeteroList} from "../../common/tis.plugin";
  */
 
 export interface CpuLimit {
-    unit: string;
-    unitEmpty: boolean;
-    val: number;
+  unit: string;
+  unitEmpty: boolean;
+  val: number;
 }
 
 export interface CpuRequest {
-    unit: string;
-    unitEmpty: boolean;
-    val: number;
+  unit: string;
+  unitEmpty: boolean;
+  val: number;
 }
 
 
 export interface MemoryLimit {
-    unit: string;
-    unitEmpty: boolean;
-    val: number;
+  unit: string;
+  unitEmpty: boolean;
+  val: number;
 }
 
 export interface MemoryRequest {
-    unit: string;
-    unitEmpty: boolean;
-    val: number;
+  unit: string;
+  unitEmpty: boolean;
+  val: number;
 }
 
 export interface Status {
-    availableReplicas: number;
-    fullyLabeledReplicas: number;
-    observedGeneration: number;
-    readyReplicas: number;
-    replicas: number;
+  availableReplicas: number;
+  fullyLabeledReplicas: number;
+  observedGeneration: number;
+  readyReplicas: number;
+  replicas: number;
+}
+
+export class ScalaLog {
+  faild: boolean;
+  launchingTokenExist: boolean;
+  logs: Array<MessageData>
+  milestones: Array<ExecuteStep>
 }
 
 export interface RCDeployment {
-    cpuLimit: CpuLimit;
-    cpuRequest: CpuRequest;
-    creationTimestamp: number;
-    dockerImage: string;
-    envs: Map<string, string>;
-    pods: Array<K8sPodState>;
-    memoryLimit: MemoryLimit;
-    memoryRequest: MemoryRequest;
-    replicaCount: number;
-    status: Status;
+  name: string;
+  cpuLimit: CpuLimit;
+  cpuRequest: CpuRequest;
+  creationTimestamp: number;
+  dockerImage: string;
+  envs: Map<string, string>;
+  pods: Array<K8sPodState>;
+  memoryLimit: MemoryLimit;
+  memoryRequest: MemoryRequest;
+  replicaCount: number;
+  replicaScalable: boolean;
+  rcScalaLog: ScalaLog
+  status: Status;
 }
 
 export interface K8sPodState {
-    name: string;
-    phase?: string;
-    startTime?: string;
-    restartCount?: number;
+  name: string;
+  phase?: string;
+  startTime?: string;
+  restartCount?: number;
 }
 
 export enum LogType {
-    INCR_DEPLOY_STATUS_CHANGE = "incrdeploy-change",
-    DATAX_WORKER_POD_LOG = "datax-worker-pod-log"
+  INCR_DEPLOY_STATUS_CHANGE = "incrdeploy-change",
+  DATAX_WORKER_POD_LOG = "datax-worker-pod-log"
 }
 
 export interface RcHpaStatus {
-    conditions: Array<HpaConditionEvent>;
-    currentMetrics: Array<HpaMetrics>;
-    autoscalerStatus: HpaAutoscalerStatus;
-    autoscalerSpec: HpaAutoscalerSpec;
+  conditions: Array<HpaConditionEvent>;
+  currentMetrics: Array<HpaMetrics>;
+  autoscalerStatus: HpaAutoscalerStatus;
+  autoscalerSpec: HpaAutoscalerSpec;
 }
 
 export interface HpaConditionEvent {
-    type: string;
-    status: string;
-    lastTransitionTime: string;
-    reason: string;
-    message: string;
+  type: string;
+  status: string;
+  lastTransitionTime: string;
+  reason: string;
+  message: string;
 }
 
 export interface HpaAutoscalerStatus {
-    currentCPUUtilizationPercentage: number;
-    currentReplicas: number;
-    desiredReplicas: number;
-    lastScaleTime: number;
+  currentCPUUtilizationPercentage: number;
+  currentReplicas: number;
+  desiredReplicas: number;
+  lastScaleTime: number;
 }
 
 export interface HpaAutoscalerSpec {
-    maxReplicas: number;
-    minReplicas: number;
-    targetCPUUtilizationPercentage: number;
+  maxReplicas: number;
+  minReplicas: number;
+  targetCPUUtilizationPercentage: number;
 }
 
 export interface HpaMetrics {
-    type: string;
+  type: string;
 
-    resource: UsingResource;
+  resource: UsingResource;
 }
 
 export interface UsingResource {
-    name: string;
-    currentAverageUtilization: any;
-    currentAverageValue: any;
+  name: string;
+  currentAverageUtilization: any;
+  currentAverageValue: any;
 }
 
 export class K8SControllerStatus {
-    public k8sReplicationControllerCreated: boolean;
+  public k8sReplicationControllerCreated: boolean;
+  public payloads: { string?: any } = {};
 
-    public state: "NONE" | "STOPED" | "RUNNING" | "DISAPPEAR";
-    // 由于本地执行器没有安装，导致datax执行器无法执行
-    public installLocal: boolean;
-    public rcDeployment: RCDeployment;
+  public state: "NONE" | "STOPED" | "RUNNING" | "DISAPPEAR";
+  // 由于本地执行器没有安装，导致datax执行器无法执行
+  public installLocal: boolean;
+  public rcDeployments: Array<RCDeployment>;
+
+  public get rcDeployment(): RCDeployment {
+    if (!this.rcDeployments) {
+      return null;
+    }
+    for (let idx = 0; idx < this.rcDeployments.length; idx++) {
+      return this.rcDeployments[idx];
+    }
+    return null;
+  }
+
+  public findPod(podName: string): K8sPodState {
+    if (!this.rcDeployments) {
+      throw new Error("rcDeployments can not be null");
+    }
+    let pod: K8sPodState = null;
+    for (let idx = 0; idx < this.rcDeployments.length; idx++) {
+      pod = this.rcDeployments[idx].pods.find((pp) => (pp.name === podName));
+      if (pod) {
+        return pod;
+      }
+    }
+    throw new Error(" has not found pod with name:" + podName);
+  }
 }
 
 export interface PluginExtraProps {
-    endType: string;
-    extendPoint: string;
-    supportIncr: boolean;
-    impl: string;
-    displayName: string;
+  endType: string;
+  extendPoint: string;
+  supportIncr: boolean;
+  impl: string;
+  displayName: string;
 }
 
 export interface IncrDesc extends PluginExtraProps {
-    extendSelectedTabProp: boolean;
+  extendSelectedTabProp: boolean;
 }
 
 export class IndexIncrStatus extends K8SControllerStatus {
-    public incrScriptCreated: boolean;
-    public incrScriptMainFileContent: string;
-    public restorableByCheckpoint: boolean;
-    public k8sPluginInitialized: boolean;
-    public flinkJobDetail: FlinkJobDetail;
-    public incrProcess: IncrProcess;
+  public incrScriptCreated: boolean;
+  public incrScriptMainFileContent: string;
+  public restorableByCheckpoint: boolean;
+  public k8sPluginInitialized: boolean;
+  public flinkJobDetail: FlinkJobDetail;
+  public incrProcess: IncrProcess;
 
-    public incrSourceDesc: IncrDesc;
-    public incrSinkDesc: IncrDesc;
-    public readerDesc: PluginExtraProps;
-    public writerDesc: PluginExtraProps;
+  public incrSourceDesc: IncrDesc;
+  public incrSinkDesc: IncrDesc;
+  public readerDesc: PluginExtraProps;
+  public writerDesc: PluginExtraProps;
 
 
-    public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
-        basicForm.httpPost('/coredefine/corenodemanage.ajax'
-            , `action=core_action&emethod=get_incr_status&cache=${cache}`)
-            .then((r) => {
-                if (r.success) {
-                    let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
-                    hander(incrStatus);
-                }
-            });
-    }
-
-    /**
-     * 增量处理节点启动有异常
-     */
-    public get incrProcessLaunchHasError(): boolean {
-        return this.k8sReplicationControllerCreated
-            && this.incrProcess
-            && !this.incrProcess.incrGoingOn
-            && !!this.rcDeployment
-            && !!this.rcDeployment.status
-            && this.rcDeployment.status.readyReplicas > 0;
-    }
-
-    public getFirstPod(): K8sPodState {
-        for (let i = 0; i < this.rcDeployment.pods.length; i++) {
-            return this.rcDeployment.pods[i];
-            break;
+  public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
+    basicForm.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=core_action&emethod=get_incr_status&cache=${cache}`)
+      .then((r) => {
+        if (r.success) {
+          let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
+          hander(incrStatus);
         }
-        return null;
+      });
+  }
+
+  /**
+   * 增量处理节点启动有异常
+   */
+  public get incrProcessLaunchHasError(): boolean {
+    return this.k8sReplicationControllerCreated
+      && this.incrProcess
+      && !this.incrProcess.incrGoingOn
+      && !!this.rcDeployment
+      && !!this.rcDeployment.status
+      && this.rcDeployment.status.readyReplicas > 0;
+  }
+
+  public getFirstPod(): K8sPodState {
+    for (let i = 0; i < this.rcDeployment.pods.length; i++) {
+      return this.rcDeployment.pods[i];
+      break;
     }
+    return null;
+  }
 }
 
 export interface IncrProcess {
-    incrGoingOn: boolean;
-    incrProcessPaused: boolean;
+  incrGoingOn: boolean;
+  incrProcessPaused: boolean;
 }
 
 export interface ProcessMeta {
-    targetName: string;
-    pageHeader: string;
-    stepsType: StepType
-    supportK8SReplicsSpecSetter: boolean;
-    // step0
-    notCreateTips: string;
-    createButtonLabel: string;
+  targetName: string;
+  pageHeader: string;
+  stepsType: StepType
+  supportK8SReplicsSpecSetter: boolean;
+  // step0
+  notCreateTips: string;
+  //createButtonLabel: string;
+
+  step1Buttons?: Array<{ label: string, click: (cpt: DataxWorkerAddStep0Component) => void }>;
+  confirmStepCpts?: Array<{ cptType: PowerjobCptType, cptShow: (dto: DataxWorkerDTO) => boolean, cpuMemorySpecGetter: (dto: DataxWorkerDTO) => K8SRCSpec }>;
+
+  step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => void
+
+  step1CreateSaveEvent: (step1: DataxWorkerAddStep1Component) => SavePluginEvent
+
+  step1HeteroGetter: (dto: DataxWorkerDTO) => HeteroList[]
+
+  launchClusterMethod: string;
+  relaunchClusterMethod: string;
 }
 
 export class DataXJobWorkerStatus extends K8SControllerStatus {
-    processMeta: ProcessMeta;
+  processMeta: ProcessMeta;
 }
 
 export class DataxWorkerDTO {
-    powderJobServerRCSpec: K8SRCSpec;
-    powderJobWorkerRCSpec: K8SRCSpec;
-    processMeta: ProcessMeta;
+  primaryRCSpec: K8SRCSpec;
+  powderJobWorkerRCSpec: K8SRCSpec;
+  processMeta: ProcessMeta;
 
 
-    powderJobServerHetero: HeteroList[] = [];
-    powderJobUseExistClusterHetero: HeteroList[] = [];
-    powderJobWorkerHetero: HeteroList[] = [];
-    powderjobJobTplHetero: HeteroList[] = [];
+  powderJobServerHetero: HeteroList[] = [];
+  powderJobUseExistClusterHetero: HeteroList[] = [];
+  powderJobWorkerHetero: HeteroList[] = [];
+  powderjobJobTplHetero: HeteroList[] = [];
 
-    usingPowderJobUseExistCluster = false;
+  usingPowderJobUseExistCluster = false;
 
-    public get containPowerJob(): boolean {
-        return this.powderJobServerHetero.length > 0 && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;
-    }
+
+  flinkClusterHetero: HeteroList[] = [];
+
+  public get step1Hetero(): HeteroList[] {
+    return this.processMeta.step1HeteroGetter(this);
+  }
+
+  public get containPowerJob(): boolean {
+    return this.powderJobServerHetero.length > 0 && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;
+  }
 }
 
 export interface PowerJobWorkflow {
-    wfName: string;
-    id: number;
-    cronInfo: string;
-    enable: true,
-    gmtCreate: number;//1699937621000,
-    gmtModified: number,
-    // "id":16,
-    // "maxWfInstanceNum":1,
-    // "timeExpression":"0 0 12 * * ?",
-    // "timeExpressionType":"CRON",
+  wfName: string;
+  id: number;
+  cronInfo: string;
+  enable: true,
+  gmtCreate: number;//1699937621000,
+  gmtModified: number,
+  // "id":16,
+  // "maxWfInstanceNum":1,
+  // "timeExpression":"0 0 12 * * ?",
+  // "timeExpressionType":"CRON",
 }

@@ -43,6 +43,7 @@ import {PowerjobCptType} from "./datax.worker.component";
       </tis-header-tool>
     </tis-page-header>
     <nz-spin [nzSpinning]="this.formDisabled">
+      <h4>基本配置</h4>
       <div class="item-block">
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      [savePlugin]="savePlugin" [showSaveButton]="false"
@@ -50,6 +51,7 @@ import {PowerjobCptType} from "./datax.worker.component";
                      [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobWorkerHetero"
                      #pluginComponent></tis-plugins>
       </div>
+      <h4>资源规格</h4>
       <div class="item-block">
         <k8s-replics-spec [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem" #k8sReplicsSpec [labelSpan]="5">
         </k8s-replics-spec>

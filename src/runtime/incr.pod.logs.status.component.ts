@@ -25,38 +25,59 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 
-import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
+import {IndexIncrStatus, K8sPodState, LogType, ProcessMeta, RCDeployment} from "./misc/RCDeployment";
+import {PodsListComponent} from "../base/datax.worker.running.component";
 
 @Component({
   selector: 'incr-pod-logs-status',
   template: `
-      <nz-spin [nzSize]="'large'" [nzSpinning]="this._transactionProcessing || this.formDisabled">
-          <div style="height: 800px;">
-              <nz-alert *ngIf="this.logMonitorTimeout" nzType="warning" [nzDescription]="warnTpl" nzShowIcon></nz-alert>
-              <ng-template #warnTpl>
-                  日志监听已经超时，请重连
-                  <button nz-button nzType="primary" nzSize="small" (click)="reconnLogMonitor()">重连</button>
-              </ng-template>
-              <nz-page-header>
-                  <nz-page-header-title>{{this.selectedPod?.name}}
-                      <nz-tag>{{this.selectedPod?.phase}}</nz-tag>
-                  </nz-page-header-title>
-                  <nz-page-header-extra>
-                      <button nz-button nzType="primary" (click)="relauchIncrProcess()">重启</button>
-                  </nz-page-header-extra>
-              </nz-page-header>
-              <ng-terminal #term></ng-terminal>
-          </div>
-      </nz-spin>
+    <nz-spin [nzSize]="'large'" [nzSpinning]="this._transactionProcessing || this.formDisabled">
+      <div style="height: 800px;">
+        <nz-alert *ngIf="this.logMonitorTimeout" nzType="warning" [nzDescription]="warnTpl" nzShowIcon></nz-alert>
+        <ng-template #warnTpl>
+          日志监听已经超时，请重连
+          <button nz-button nzType="primary" nzSize="small" (click)="reconnLogMonitor()">重连</button>
+        </ng-template>
+        <nz-page-header>
+          <nz-page-header-title>
+
+            <nz-space>
+
+              <span *nzSpaceItem><nz-tag >
+                <ng-container [ngSwitch]="this.logMonitorTimeout">
+                  <span *ngSwitchCase="false" nz-icon [nzType]="'sync'" [nzSpin]="true"></span>
+                  <span *ngSwitchCase="true" nz-icon nzType="stop" nzTheme="outline"></span>
+                </ng-container>
+                {{this._selectedPod?.phase}}</nz-tag>
+<!--                {{this._selectedPod?.name}}--></span>
+              <nz-select  *nzSpaceItem nzPlaceHolder="Choose" nzShowSearch [ngModel]="this._selectedPod?.name" (ngModelChange)="targetPodChange($event)">
+                <nz-option-group *ngFor="let rc of this.rcDeployments" [nzLabel]="rc.name">
+                  <nz-option *ngFor="let pod of rc.pods" [nzValue]="pod.name" [nzLabel]="pod.name"></nz-option>
+                </nz-option-group>
+              </nz-select>
+
+            </nz-space>
+          </nz-page-header-title>
+          <nz-page-header-extra>
+            <nz-space>
+              <button *nzSpaceItem nz-button nzType="primary" (click)="relauchIncrProcess()">重启</button>
+            </nz-space>
+
+
+          </nz-page-header-extra>
+        </nz-page-header>
+        <ng-terminal #term></ng-terminal>
+      </div>
+    </nz-spin>
   `,
   styles: [
-      `  nz-page-header {
-          padding: 4px;
-      }
+    `  nz-page-header {
+      padding: 4px;
+    }
 
-      nz-alert {
-          margin: 10px 0 10px 0;
-      }
+    nz-alert {
+      margin: 10px 0 10px 0;
+    }
     `
   ]
 })
@@ -64,13 +85,34 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
   private currCollection: CurrentCollection;
   @ViewChild('term', {static: true}) terminal: NgTerminal;
   private componentDestroy = false;
+  @Input() processMeta: ProcessMeta
   @Input()
   msgSubject: Subject<WSMessage>;
   @Input()
   incrStatus: IndexIncrStatus;
   logMonitorTimeout = false;
+  _selectedPod: K8sPodState;
+
   @Input()
-  selectedPod: K8sPodState;
+  rcDeployments: Array<RCDeployment> =[];
+
+  // podStatChange: Subject<K8sPodState> = new Subject<K8sPodState>();
+  targetPodChange(targetPod: any) {
+ // console.log(event);
+
+    PodsListComponent.viewPodLog(this.processMeta, this.route, this.router, {name:targetPod});
+  }
+  @Input()
+  set selectedPod(podStat: K8sPodState) {
+    // console.log("set selectedPod");
+    // this.podStatChange.next(podStat);
+    this._selectedPod = podStat;
+  }
+
+  get selectedPod(): K8sPodState {
+    return this._selectedPod;
+  }
+
   @Input()
   logType: LogType = LogType.INCR_DEPLOY_STATUS_CHANGE;
 
@@ -84,17 +126,21 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
 
   ngOnInit(): void {
     super.ngOnInit();
+    // console.log("podStatChange.subscribe");
     this.sendIncrdeployChange();
+    //  this.podStatChange.subscribe((podStat) => {
+    //    console.log("set selectedPod:"+ podStat.name);
+    //    let lt = this.logType + ":" + podStat.name;
+    //    if (!this.msgSubject) {
+    //      this.msgSubject = this.getWSMsgSubject(lt);
+    //
+    //    } else {
+    //      this.msgSubject.next(new WSMessage(lt));
+    //    }
+    //  });
   }
 
   ngAfterViewInit(): void {
-  }
-
-  ngOnDestroy(): void {
-    this.componentDestroy = true;
-  }
-
-  ngAfterContentInit(): void {
     this.msgSubject.subscribe((response: WSMessage): void => {
       if (!response || this.componentDestroy) {
         return;
@@ -113,6 +159,14 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
           break;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroy = true;
+  }
+
+  ngAfterContentInit(): void {
+
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -147,11 +201,12 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
     this._transactionProcessing = true;
     switch (this.logType) {
       case LogType.DATAX_WORKER_POD_LOG:
-        this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name)
+        this.httpPost('/coredefine/corenodemanage.ajax'
+          , "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name + "&targetName=" + this.processMeta.targetName)
           .then((r) => {
 
             if (r.success) {
-              this.successNotify(`已经成功触发重启DataX Worker实例${this.selectedPod.name}`);
+              this.successNotify(`已经成功触发重启Powerjob实例${this.selectedPod.name}`);
               setTimeout(() => {
                 // console.log("navigate");
                 this.router.navigate(["/base/datax-worker", "profile"], {relativeTo: this.route});
@@ -160,6 +215,8 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
             } else {
               this._transactionProcessing = false;
             }
+          }, (reason) => {
+            this._transactionProcessing = false;
           });
         return;
       case LogType.INCR_DEPLOY_STATUS_CHANGE:
@@ -178,7 +235,11 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
             } else {
               this._transactionProcessing = false;
             }
+          }, (reason) => {
+            this._transactionProcessing = false;
           });
     }
   }
+
+
 }

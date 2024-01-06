@@ -164,10 +164,13 @@ export class BasicFormComponent {
 
     // 发送http post请求
     public httpPost(url: string, body: string): Promise<TisResponseResult> {
-        this.formDisabled = true;
-        NProgress.start();
-        this.clearProcessResult();
-        return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+      this.formDisabled = true;
+      NProgress.start();
+      this.clearProcessResult();
+      return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+      // return this.tisService._zone.runOutsideAngular(()=>{
+      //
+      // })
     }
 
     // 发送json表单
