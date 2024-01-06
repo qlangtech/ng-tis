@@ -26,289 +26,298 @@ import {Item, ItemPropVal} from "./tis.plugin";
 
 
 @Component({
-    selector: `k8s-replics-spec`,
-    template: `
-        <tis-form [fieldsErr]="this.errorItem" [labelSpan]="this.labelSpan" [controlerSpan]="this.controlSpan"
-                  [formGroup]="specForm">
-            <tis-ipt #pods title="Pods" name="pods" require>
-                <div [ngClass]="{'ant-form-item-has-error':hasErr('pods')}">
-                    <nz-input-group nzCompact [nzAddOnAfter]="podUnit" style="width:200px">
-                        <nz-input-number [nzDisabled]="disabled" name="pods" formControlName="pods" class="input-number"
-                                         [nzStep]="1"></nz-input-number>
-                    </nz-input-group>
-                    <div *ngIf="hasErr('pods')"
-                         class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('pods')}}</div>
-                </div>
-            </tis-ipt>
-            <tis-ipt title="CPU" name="cpu" require>
-                <div class="resource-spec">
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('cuprequest')}">
-                        <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="cpuRequestTpl">
-                            <nz-input-number [nzDisabled]="disabled" name="cuprequest" class="input-number"
-                                             formControlName="cuprequest" [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <ng-template #cpuRequestTpl>
-                            <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="cuprequestunit">
-                                <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
-                                <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
-                            </nz-select>
-                        </ng-template>
-                        <div *ngIf="hasErr('cuprequest')"
-                             class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cuprequest')}}</div>
-                    </div>
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('cuplimit')}">
-                        <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="cpuLimitTpl">
-                            <nz-input-number [nzDisabled]="disabled" formControlName="cuplimit" class="input-number"
-                                             [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <ng-template #cpuLimitTpl>
-                            <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="cuplimitunit">
-                                <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
-                                <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
-                            </nz-select>
-                        </ng-template>
-                        <div *ngIf="hasErr('cuplimit')" class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cuplimit')}}</div>
-                    </div>
-                </div>
-            </tis-ipt>
-            <tis-ipt title="Memory" name="memory" require>
-                <div class="resource-spec">
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('memoryrequest')}">
-                        <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="memoryrequestTpl">
-                            <nz-input-number [nzDisabled]="disabled" formControlName="memoryrequest"
-                                             class="input-number" [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <ng-template #memoryrequestTpl>
-                            <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="memoryrequestunit">
-                                <nz-option [nzLabel]="'MB'" [nzValue]="'M'"></nz-option>
-                                <nz-option [nzLabel]="'GB'" [nzValue]="'G'"></nz-option>
-                            </nz-select>
-                        </ng-template>
-                        <div *ngIf="hasErr('memoryrequest')"
-                             class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('memoryrequest')}}</div>
-                    </div>
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('memorylimit')}">
-                        <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="memorylimitTpl">
-                            <nz-input-number [nzDisabled]="disabled" formControlName="memorylimit" class="input-number"
-                                             [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <ng-template #memorylimitTpl>
-                            <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="memorylimitunit">
-                                <nz-option [nzLabel]="'MB'" [nzValue]="'M'"></nz-option>
-                                <nz-option [nzLabel]="'GB'" [nzValue]="'G'"></nz-option>
-                            </nz-select>
-                        </ng-template>
-                        <div *ngIf="hasErr('memorylimit')"
-                             class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('memorylimit')}}</div>
-                    </div>
-                </div>
-            </tis-ipt>
-            <tis-ipt title="弹性扩缩容" name="hpa" require>
-                <div>
+  selector: `k8s-replics-spec`,
+  template: `
+    <tis-form [fieldsErr]="this.errorItem" [labelSpan]="this.labelSpan" [controlerSpan]="this.controlSpan"
+              [formGroup]="specForm">
+      <tis-ipt #pods title="Pods" name="pods" require>
+        <div [ngClass]="{'ant-form-item-has-error':hasErr('pods')}">
+          <nz-input-group nzCompact [nzAddOnAfter]="podUnit" style="width:200px">
+            <nz-input-number [nzDisabled]="disabled" name="pods" formControlName="pods" class="input-number"
+                             [nzStep]="1"></nz-input-number>
+          </nz-input-group>
+          <div *ngIf="hasErr('pods')"
+               class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('pods')}}</div>
+        </div>
+      </tis-ipt>
+      <tis-ipt title="CPU" name="cpu" require>
+        <div class="resource-spec">
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('cuprequest')}">
+            <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="cpuRequestTpl">
+              <nz-input-number [nzDisabled]="disabled" name="cuprequest" class="input-number"
+                               formControlName="cuprequest" [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <ng-template #cpuRequestTpl>
+              <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="cuprequestunit">
+                <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
+                <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
+              </nz-select>
+            </ng-template>
+            <div *ngIf="hasErr('cuprequest')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cuprequest')}}</div>
+          </div>
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('cuplimit')}">
+            <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="cpuLimitTpl">
+              <nz-input-number [nzDisabled]="disabled" formControlName="cuplimit" class="input-number"
+                               [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <ng-template #cpuLimitTpl>
+              <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="cuplimitunit">
+                <nz-option [nzLabel]="'millicores'" [nzValue]="'m'"></nz-option>
+                <nz-option [nzLabel]="'cores'" [nzValue]="'cores'"></nz-option>
+              </nz-select>
+            </ng-template>
+            <div *ngIf="hasErr('cuplimit')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cuplimit')}}</div>
+          </div>
+        </div>
+      </tis-ipt>
+      <tis-ipt title="Memory" name="memory" require>
+        <div class="resource-spec">
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('memoryrequest')}">
+            <nz-input-group nzAddOnBefore="Request" nzCompact [nzAddOnAfter]="memoryrequestTpl">
+              <nz-input-number [nzDisabled]="disabled" formControlName="memoryrequest"
+                               class="input-number" [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <ng-template #memoryrequestTpl>
+              <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="memoryrequestunit">
+                <nz-option [nzLabel]="'MB'" [nzValue]="'M'"></nz-option>
+                <nz-option [nzLabel]="'GB'" [nzValue]="'G'"></nz-option>
+              </nz-select>
+            </ng-template>
+            <div *ngIf="hasErr('memoryrequest')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('memoryrequest')}}</div>
+          </div>
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('memorylimit')}">
+            <nz-input-group nzAddOnBefore="Limit" nzCompact [nzAddOnAfter]="memorylimitTpl">
+              <nz-input-number [nzDisabled]="disabled" formControlName="memorylimit" class="input-number"
+                               [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <ng-template #memorylimitTpl>
+              <nz-select [nzDisabled]="disabled" class="spec-unit" formControlName="memorylimitunit">
+                <nz-option [nzLabel]="'MB'" [nzValue]="'M'"></nz-option>
+                <nz-option [nzLabel]="'GB'" [nzValue]="'G'"></nz-option>
+              </nz-select>
+            </ng-template>
+            <div *ngIf="hasErr('memorylimit')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('memorylimit')}}</div>
+          </div>
+        </div>
+      </tis-ipt>
+      <tis-ipt title="弹性扩缩容" name="hpa" require>
+        <div>
 
-                    <nz-switch  [nzDisabled]="disabled || hpaDisabled" nzCheckedChildren="开" nzUnCheckedChildren="关"
-                               formControlName="supportHpa"></nz-switch>
-                </div>
-                <div *ngIf="specForm?.get('supportHpa').value && !hpaDisabled" class="resource-spec">
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('cpuAverageUtilization')}">
-                        <nz-input-group nzAddOnBefore="CPU平均利用率" [nzAddOnAfter]="'%'" nzCompact>
-                            <nz-input-number [nzDisabled]="disabled" name="cpuAverageUtilization" class="input-number"
-                                             formControlName="cpuAverageUtilization" [nzMin]="1"
-                                             [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <div *ngIf="hasErr('cpuAverageUtilization')"
-                             class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cpuAverageUtilization')}}</div>
-                    </div>
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('minHpaPod')}">
-                        <nz-input-group nzAddOnBefore="最小Pods" [nzAddOnAfter]="podUnit" nzCompact>
-                            <nz-input-number [nzDisabled]="disabled" name="minHpaPod" class="input-number"
-                                             formControlName="minHpaPod" [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <div *ngIf="hasErr('minHpaPod')" class="ant-form-item-explain">{{controlErr('minHpaPod')}}</div>
-                    </div>
-                    <div [ngClass]="{'ant-form-item-has-error':hasErr('maxHpaPod')}">
-                        <nz-input-group nzAddOnBefore="最大Pods" [nzAddOnAfter]="podUnit" nzCompact>
-                            <nz-input-number [nzDisabled]="disabled" name="maxHpaPod" class="input-number"
-                                             formControlName="maxHpaPod" [nzMin]="1" [nzStep]="1"></nz-input-number>
-                        </nz-input-group>
-                        <div *ngIf="hasErr('maxHpaPod')" class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('maxHpaPod')}}</div>
-                    </div>
-                </div>
-                <div *ngIf="specForm?.get('supportHpa').value" style="padding-top: 5px">
-                    <nz-alert nzType="info" [nzMessage]="suggestMsg"></nz-alert>
-                    <ng-template #suggestMsg>
-                        在启用<strong>弹性扩缩容</strong>之前，请先在K8S集群中部署<strong>metrics-server</strong>,不然<strong>弹性扩缩容</strong>无法正常工作，具体请参照<a
-                            target="_blank" href="https://github.com/kubernetes-sigs/metrics-server">https://github.com/kubernetes-sigs/metrics-server</a>
-                    </ng-template>
-                </div>
-            </tis-ipt>
-        </tis-form>
-        <ng-template #podUnit>个</ng-template>
-    `
-    , styles: [`
-        .resource-spec {
-            display: flex;
-        }
+          <nz-switch [nzDisabled]="disabled || hpaDisabled" nzCheckedChildren="开" nzUnCheckedChildren="关"
+                     formControlName="supportHpa"></nz-switch>
+        </div>
+        <div *ngIf="specForm?.get('supportHpa').value && !hpaDisabled" class="resource-spec">
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('cpuAverageUtilization')}">
+            <nz-input-group nzAddOnBefore="CPU平均利用率" [nzAddOnAfter]="'%'" nzCompact>
+              <nz-input-number [nzDisabled]="disabled" name="cpuAverageUtilization" class="input-number"
+                               formControlName="cpuAverageUtilization" [nzMin]="1"
+                               [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <div *ngIf="hasErr('cpuAverageUtilization')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('cpuAverageUtilization')}}</div>
+          </div>
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('minHpaPod')}">
+            <nz-input-group nzAddOnBefore="最小Pods" [nzAddOnAfter]="podUnit" nzCompact>
+              <nz-input-number [nzDisabled]="disabled" name="minHpaPod" class="input-number"
+                               formControlName="minHpaPod" [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <div *ngIf="hasErr('minHpaPod')" class="ant-form-item-explain">{{controlErr('minHpaPod')}}</div>
+          </div>
+          <div [ngClass]="{'ant-form-item-has-error':hasErr('maxHpaPod')}">
+            <nz-input-group nzAddOnBefore="最大Pods" [nzAddOnAfter]="podUnit" nzCompact>
+              <nz-input-number [nzDisabled]="disabled" name="maxHpaPod" class="input-number"
+                               formControlName="maxHpaPod" [nzMin]="1" [nzStep]="1"></nz-input-number>
+            </nz-input-group>
+            <div *ngIf="hasErr('maxHpaPod')"
+                 class="ant-form-item-explain ant-form-item-explain-error">{{controlErr('maxHpaPod')}}</div>
+          </div>
+        </div>
+        <div *ngIf="specForm?.get('supportHpa').value" style="padding-top: 5px">
+          <nz-alert nzType="info" [nzMessage]="suggestMsg"></nz-alert>
+          <ng-template #suggestMsg>
+            在启用<strong>弹性扩缩容</strong>之前，请先在K8S集群中部署<strong>metrics-server</strong>,不然<strong>弹性扩缩容</strong>无法正常工作，具体请参照<a
+            target="_blank" href="https://github.com/kubernetes-sigs/metrics-server">https://github.com/kubernetes-sigs/metrics-server</a>
+          </ng-template>
+        </div>
+      </tis-ipt>
+    </tis-form>
+    <ng-template #podUnit>个</ng-template>
+  `
+  , styles: [`
+    .resource-spec {
+      display: flex;
+    }
 
-        .resource-spec .spec-unit {
-            width: 150px;
-        }
+    .resource-spec .spec-unit {
+      width: 150px;
+    }
 
-        .resource-spec div {
-            flex: 1;
-            margin-right: 20px;
-        }
+    .resource-spec div {
+      flex: 1;
+      margin-right: 20px;
+    }
 
-        .input-number {
-            width: 100%;
-        }
+    .input-number {
+      width: 100%;
+    }
 
-        .spec-form {
-        }
-    `]
+    .spec-form {
+    }
+  `]
 })
 export class K8SReplicsSpecComponent extends BasicFormComponent implements AfterContentInit, AfterViewInit, OnInit {
-    specForm: FormGroup;
-    @Input()
-    labelSpan = 2;
-    @Input()
-    controlSpan = 20;
+  specForm: FormGroup;
+  @Input()
+  labelSpan = 2;
+  @Input()
+  controlSpan = 20;
 
-    @Input()
-    disabled = false;
-    @Input()
-    hpaDisabled = false;
+  @Input()
+  disabled = false;
+  @Input()
+  hpaDisabled = false;
 
 
-    @Input()
-    errorItem: Item;
-    @Input()
-    rcSpec: K8SRCSpec;
+  @Input()
+  errorItem: Item;
+  @Input()
+  rcSpec: K8SRCSpec;
 
-    @Output()
-    rcSpecChange = new EventEmitter<K8SRCSpec>();
+  @Output()
+  rcSpecChange = new EventEmitter<K8SRCSpec>();
 
-    constructor(tisService: TISService, modalService: NzModalService, private fb: FormBuilder) {
-        super(tisService, modalService);
-        this.specForm = this.fb.group({
-            supportHpa: [false, [Validators.required]],
-            minHpaPod: [1],
-            maxHpaPod: [3],
-            cpuAverageUtilization: [10, [Validators.pattern(new RegExp("\\d+")),Validators.max(100), Validators.min(1)]],
-            pods: [1, [Validators.required]],
-            cuprequest: [500, [Validators.required]],
-            cuprequestunit: ['m', [Validators.required]],
-            cuplimitunit: ['cores', [Validators.required]],
-            cuplimit: [1, [Validators.required]],
-            memoryrequest: [500, [Validators.required]],
-            memoryrequestunit: ['M', [Validators.required]],
-            memorylimit: [2, [Validators.required]],
-            memorylimitunit: ['G', [Validators.required]]
-        });
+  constructor(tisService: TISService, modalService: NzModalService, private fb: FormBuilder) {
+    super(tisService, modalService);
+    this.specForm = this.fb.group({
+      supportHpa: [false, [Validators.required]],
+      minHpaPod: [1],
+      maxHpaPod: [3],
+      cpuAverageUtilization: [10, [Validators.pattern(new RegExp("\\d+")), Validators.max(100), Validators.min(1)]],
+      pods: [1, [Validators.required]],
+      cuprequest: [500, [Validators.required]],
+      cuprequestunit: ['m', [Validators.required]],
+      cuplimitunit: ['cores', [Validators.required]],
+      cuplimit: [1, [Validators.required]],
+      memoryrequest: [500, [Validators.required]],
+      memoryrequestunit: ['M', [Validators.required]],
+      memorylimit: [2, [Validators.required]],
+      memorylimitunit: ['G', [Validators.required]]
+    });
+  }
+
+  hasErr(control: string): boolean {
+    let field: AbstractControl = this.specForm.controls[control];
+
+    for (let err in field.errors) {
+      return true;
+    }
+    if (!this.errorItem) {
+      return false;
+    }
+    // @ts-ignore
+    let itemPP: ItemPropVal = this.errorItem.vals[control];
+    return itemPP && itemPP.hasFeedback;
+  }
+
+  public validate(): boolean {
+    this.rcSpecChange.emit(this.specForm.value);
+    return this.specForm.valid;
+  }
+
+  controlErr(control: string): string {
+
+    let field: AbstractControl = this.specForm.controls[control];
+
+    for (let errKey in field.errors) {
+      switch (errKey) {
+        case Validators.required.name:
+          return "必须输入";
+        case Validators.max.name:
+          // console.log(field.errors[errKey])
+          return "必须小于" + field.errors[errKey].max;
+        case Validators.min.name:
+          return "必须大于" + field.errors[errKey].min;
+      }
     }
 
-    hasErr(control: string): boolean {
-        let field: AbstractControl = this.specForm.controls[control];
-
-        for(let err in field.errors){
-            return true;
-        }
-        if (!this.errorItem) {
-            return false;
-        }
-        // @ts-ignore
-        let itemPP: ItemPropVal = this.errorItem.vals[control];
-        return itemPP && itemPP.hasFeedback;
+    if (!this.errorItem) {
+      return '';
     }
-
-    public validate(): boolean {
-        this.rcSpecChange.emit(this.specForm.value);
-        return this.specForm.valid;
+    // @ts-ignore
+    let itemPP: ItemPropVal = this.errorItem.vals[control];
+    if (!itemPP) {
+      return '';
     }
+    return itemPP.error;
+  }
 
-    controlErr(control: string): string {
+  ngAfterContentInit(): void {
+    // this.specForm.get
+  }
 
-        let field: AbstractControl = this.specForm.controls[control];
+  public get k8sControllerSpec(): K8SRCSpec {
+    return this.specForm.value;
+  }
 
-        for(let errKey in field.errors){
-            switch (errKey) {
-                case Validators.required.name:
-                    return "必须输入";
-                case Validators.max.name:
-                   // console.log(field.errors[errKey])
-                    return "必须小于"+ field.errors[errKey].max;
-                case Validators.min.name:
-                    return "必须大于"+ field.errors[errKey].min;
-            }
-        }
+  ngAfterViewInit(): void {
+  }
 
-        if (!this.errorItem) {
-            return '';
-        }
-        // @ts-ignore
-        let itemPP: ItemPropVal = this.errorItem.vals[control];
-        if (!itemPP) {
-            return '';
-        }
-        return itemPP.error;
+  ngOnInit(): void {
+
+    if (!this.rcSpec) {
+      this.rcSpec = K8SReplicsSpecComponent.createInitRcSpec();
     }
+    // console.log(this.rcSpec);
+    this.specForm.setValue(this.rcSpec);
+    // this.specForm.valueChanges.subscribe((spec) => {
+    //
+    // })
+    // this.specForm.setErrors({"cuprequest": "dddddddd"});
+    // console.log(this.specForm.errors);
+    // console.log(this.specForm.value);
+  }
 
-    ngAfterContentInit(): void {
-        // this.specForm.get
-    }
-
-    public get k8sControllerSpec(): K8SRCSpec {
-        return this.specForm.value;
-    }
-
-    ngAfterViewInit(): void {
-    }
-
-    ngOnInit(): void {
-
-        if (!this.rcSpec) {
-            this.rcSpec = K8SReplicsSpecComponent.createInitRcSpec();
-        }
-        // console.log(this.rcSpec);
-        this.specForm.setValue(this.rcSpec);
-        // this.specForm.valueChanges.subscribe((spec) => {
-        //
-        // })
-        // this.specForm.setErrors({"cuprequest": "dddddddd"});
-        // console.log(this.specForm.errors);
-        // console.log(this.specForm.value);
-    }
-
-    public static createInitRcSpec():K8SRCSpec {
-        return {
-            'pods': 1,
-            supportHpa: false, minHpaPod: 1, maxHpaPod: 3, cpuAverageUtilization: 10, cuprequest: 500,
-            cuprequestunit: 'm',
-            cuplimitunit: 'cores',
-            cuplimit: 1,
-            memoryrequest: 500,
-            memoryrequestunit: 'M',
-            memorylimit: 2,
-            memorylimitunit: 'G'
-        };
-    }
+  public static createInitRcSpec(): K8SRCSpec {
+    return {
+      'pods': 1,
+      supportHpa: false, minHpaPod: 1, maxHpaPod: 3, cpuAverageUtilization: 10, cuprequest: 500,
+      cuprequestunit: 'm',
+      cuplimitunit: 'cores',
+      cuplimit: 1,
+      memoryrequest: 500,
+      memoryrequestunit: 'M',
+      memorylimit: 2,
+      memorylimitunit: 'G'
+    };
+  }
 }
 
 
 export interface K8SRCSpec {
-    supportHpa: boolean,
-    minHpaPod: number,
-    maxHpaPod: number,
-    cpuAverageUtilization: number,
-    pods: number,
-    cuprequest: number,
-    cuprequestunit: string,
-    cuplimitunit: string,
-    cuplimit: number,
-    memoryrequest: number,
-    memoryrequestunit: string,
-    memorylimit: number,
-    memorylimitunit: string
+  /**
+   * HPA ====================================
+   */
+  supportHpa: boolean,
+  minHpaPod: number,
+  maxHpaPod: number,
+  cpuAverageUtilization: number,
+  /**
+   * end HPA ====================================
+   */
+
+  pods: number,
+  cuprequest: number,
+  cuprequestunit: string,
+  cuplimitunit: string,
+  cuplimit: number,
+  memoryrequest: number,
+  memoryrequestunit: string,
+  memorylimit: number,
+  memorylimitunit: string
 }
 
 

@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import {CurrentCollection, WSMessage} from './basic.form.component';
@@ -59,7 +59,7 @@ export class TISService {
 
   constructor(protected http: HttpClient
               // , private modalService: NgbModal
-    , public notification: NzNotificationService, private drawerService: NzDrawerService) {
+    , public notification: NzNotificationService, private drawerService: NzDrawerService, public _zone: NgZone) {
   }
 
   public set tisMeta(meta: TISBaseProfile) {
@@ -289,7 +289,127 @@ export class TISService {
     return Promise.reject(error.message || error);
   }
 
+  /**
+   * https://dev.to/icolomina/subscribing-to-server-sent-events-with-angular-ee8
+   *
+   * 好奇 zone.js 的作用
+   * https://medium.com/@chrisbautistaaa/server-sent-events-in-angular-node-908830cc29aa
+   * @param sseUrl
+   */
+  public createEventSource(targetResName: string, sseUrl: string): EventSourceSubject {
+
+    const eventSource = new EventSource("/tjs" + sseUrl);
+    console.log("onmessage");
+
+
+    // eventSource.onmessage = (event: MessageEvent) => {
+    //   console.log(event);
+    //   const messageData: MessageData = JSON.parse(event.data);
+    //   //observer.next(messageData);
+    // };
+    // eventSource.addEventListener('message', (event) => {
+    //   console.log(event);
+    // }, false);
+    // eventSource.addEventListener('other', (event: MessageEvent) => {
+    //   console.log(['other', event.data]);
+    // }, false);
+
+    return new EventSourceSubject(targetResName, eventSource, new Observable(observer => {
+
+      eventSource.onmessage = (event: MessageEvent) => {
+        this._zone.run(() => {
+          // console.log(event.data);
+          const messageData: MessageData = JSON.parse(event.data);
+          observer.next([EventType.LOG_MESSAGE, messageData]);
+        });
+
+
+      };
+      eventSource.addEventListener(EventType.TASK_MILESTONE, (event: MessageEvent) => {
+        // console.log(['other', event.data]);
+        try {
+          const messageData: ExecuteStep = JSON.parse(event.data);
+          observer.next([EventType.TASK_MILESTONE, messageData]);
+        } catch (e) {
+          console.log(['catch err', e])
+        }
+      }, false);
+      //
+      //
+      eventSource.addEventListener(EventType.TASK_EXECUTE_STEPS, (event: MessageEvent) => {
+        try {
+          const messageData: Array<ExecuteStep> = JSON.parse(event.data);
+          observer.next([EventType.TASK_EXECUTE_STEPS, messageData]);
+        } catch (e) {
+          console.log(['catch err', e])
+        }
+      }, false);
+
+
+      eventSource.onerror = (event) => {
+        this._zone.run(() => {
+          // 服务端colse也会在客户端trigger error 消息
+          //throw new Error();
+          console.log(["receive error", event]);
+          //  observer.error(event);
+          observer.next([EventType.SSE_CLOSE, null]);
+          eventSource.close();
+          observer.complete();
+        });
+      }
+
+
+    }));
+
+
+  }
 }
 
+export class EventSourceSubject {
+  constructor(public targetResName: string, private eventSource: EventSource, private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep]>) {
+
+  }
+
+  public close(): void {
+    this.eventSource.close();
+  }
+
+  public get events(): Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep]> {
+    return this.observable;
+  }
+
+
+}
+
+export enum EventType {
+  TASK_MILESTONE = 'taskMilestone',
+  TASK_EXECUTE_STEPS = "executeSteps",
+  LOG_MESSAGE = 'message',
+  SSE_CLOSE = 'sseClose'
+}
+
+export interface MessageData {
+  level: string;
+  time: number;
+  msg: string;
+}
+
+export class ExecuteStep {
+  name: string;
+  describe: string;
+  complete: boolean;
+  success: boolean;
+
+  _processing: boolean = false;
+
+  get processIcon(): string {
+    return this._processing ? 'loading' : null;
+  }
+}
+
+// interface SubTaskMilestoneData {
+//   jobName: string;
+//   success: boolean;
+// }
 
 

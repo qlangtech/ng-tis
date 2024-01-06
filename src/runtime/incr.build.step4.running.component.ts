@@ -334,7 +334,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   reload() {
     IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
     //  if(this.dto.state !== incrStatus.state){
-      console.log(this.dto);
+    //  console.log(this.dto);
         this.dto = incrStatus;
         this.successNotify("状态已更新");
      // }

@@ -26,7 +26,7 @@ import {
     ViewContainerRef
 } from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
 
@@ -42,6 +42,7 @@ import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.componen
 import {isBooleanLiteralLike} from "codelyzer/util/utils";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+import {TisResponseResult} from "../common/tis.plugin";
 
 export enum PowerjobCptType {
     Server = ("powerjob-server"),
@@ -49,7 +50,8 @@ export enum PowerjobCptType {
     JobTpl = ("powerjob-job-tpl"),
     UsingExistCluster = ("powerjob-use-exist-cluster"),
     // applicationAware
-    JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite")
+    JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite"),
+    FlinkCluster =("flink-cluster")
 }
 
 @Component({
@@ -123,21 +125,45 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
         });
 
         this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
-        this.httpPost('/coredefine/corenodemanage.ajax'
-            , `action=datax_action&emethod=get_job_worker_meta&targetName=${this.processMeta.targetName}`)
-            .then((r) => {
-                if (r.success) {
-                    let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: this.processMeta});
-                    if (dataXWorkerStatus.k8sReplicationControllerCreated) {
-                        this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
-                    } else {
-                        this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
 
-                        //   this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
+      DataxWorkerComponent.getJobWorkerMeta(this,this.processMeta).then((dataXWorkerStatus)=>{
+        if (dataXWorkerStatus.k8sReplicationControllerCreated) {
+          this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
+        } else {
+           this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
 
-                    }
-                }
-            });
+          // this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component
+          //   , Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
+
+        }
+      })
+
+        // this.httpPost('/coredefine/corenodemanage.ajax'
+        //     , `action=datax_action&emethod=get_job_worker_meta&targetName=${this.processMeta.targetName}`)
+        //     .then((r) => {
+        //         if (r.success) {
+        //             let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: this.processMeta});
+        //             if (dataXWorkerStatus.k8sReplicationControllerCreated) {
+        //                 this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
+        //             } else {
+        //                // this.multiViewDAG.loadComponent(DataxWorkerAddStep0Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta}));
+        //
+        //                    this.multiViewDAG.loadComponent(DataxWorkerAddStep3Component, Object.assign(new DataxWorkerDTO(), {processMeta: this.processMeta,powderJobServerRCSpec:K8SReplicsSpecComponent.createInitRcSpec()}));
+        //
+        //             }
+        //         }
+        //     });
+    }
+
+    public static getJobWorkerMeta(cpt:BasicFormComponent,processMeta: ProcessMeta) :Promise<DataXJobWorkerStatus>{
+     return  cpt.httpPost('/coredefine/corenodemanage.ajax'
+        , `action=datax_action&emethod=get_job_worker_meta&targetName=${processMeta.targetName}`)
+        .then((r) => {
+          if (r.success) {
+            let dataXWorkerStatus: DataXJobWorkerStatus = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {processMeta: processMeta});
+            return dataXWorkerStatus
+          }
+        });
     }
 }
 

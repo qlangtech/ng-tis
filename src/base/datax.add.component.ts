@@ -164,13 +164,13 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
      =======================================================*/
     // DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
     //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "mongo_mysql";
+    //   dto.dataxPipeName = "mysql_mysql4";
     //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
-    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MongoDB" === r.displayName);
+    //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MySQL" === r.displayName);
     //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep2Component, dto);
+    //   this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

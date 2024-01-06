@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -31,82 +31,104 @@ import {PowerjobCptType} from "./datax.worker.component";
 
 
 @Component({
-    template: `
-        <tis-steps [type]="this.dto.processMeta.stepsType" [step]="0"></tis-steps>
-        <tis-page-header [showBreadcrumb]="false">
-            <tis-header-tool>
-                <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
-                <button nz-button nzType="primary" (click)="createStep1Next(k8sReplicsSpec)">下一步</button>
-            </tis-header-tool>
-        </tis-page-header>
-        <nz-spin [nzSpinning]="this.formDisabled">
-            <div class="item-block">
-                <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
-                             (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                             [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobServerHetero"
-                             #pluginComponent></tis-plugins>
-            </div>
-            <div class="item-block">
-                <k8s-replics-spec [(rcSpec)]="dto.powderJobServerRCSpec" [hpaDisabled]="true"  #k8sReplicsSpec [labelSpan]="5">
-                </k8s-replics-spec>
-            </div>
-        </nz-spin>
+  template: `
+    <tis-steps [type]="this.dto.processMeta.stepsType" [step]="0"></tis-steps>
+    <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
+      <tis-page-header [showBreadcrumb]="false">
+        <tis-header-tool>
+          <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
+          <button nz-button nzType="primary" [disabled]="this.formDisabled"
+                  (click)="createStep1Next()">下一步
+          </button>
+        </tis-header-tool>
+      </tis-page-header>
+      <h4>基本配置</h4>
+      <div class="item-block">
 
-    `
+        <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+                     (ajaxOccur)="ajaxOccur($event)" (afterSave)="afterSaveReader($event)"
+                     [savePlugin]="savePlugin" [showSaveButton]="false"
+                     [shallInitializePluginItems]="false" [_heteroList]="dto.step1Hetero"
+                     #pluginComponent></tis-plugins>
+      </div>
+      <ng-container *ngIf="rcSpecShow">
+        <h4>资源规格</h4>
+        <div class="item-block">
+          <k8s-replics-spec [(rcSpec)]="dto.primaryRCSpec" [hpaDisabled]="true" #k8sReplicsSpec
+                            [labelSpan]="5">
+          </k8s-replics-spec>
+        </div>
+      </ng-container>
+    </nz-spin>
+
+  `
 })
 export class DataxWorkerAddStep1Component extends AppFormComponent implements AfterViewInit, OnInit {
-    // hlist: HeteroList[] = [];
-    savePlugin = new EventEmitter<SavePluginEvent>();
-    @Input() dto: DataxWorkerDTO;
-    @Output() nextStep = new EventEmitter<any>();
-    @Output() preStep = new EventEmitter<any>();
-    pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.Server};
+  // hlist: HeteroList[] = [];
+  @ViewChild('k8sReplicsSpec', {static: false}) spec: K8SReplicsSpecComponent;
+  savePlugin = new EventEmitter<SavePluginEvent>();
+  rcSpecShow = false;
+  @Input() dto: DataxWorkerDTO;
+  @Output() nextStep = new EventEmitter<any>();
+  @Output() preStep = new EventEmitter<any>();
+  // pluginCategory: PluginType = {name: 'datax-worker', require: true, extraParam: "dataxName_" + PowerjobCptType.Server};
+  pluginCategory: PluginType = {
+    name: 'datax-worker',
+    require: true,
+    extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+  };
 
-    constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
-        super(tisService, route, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
+    super(tisService, route, modalService);
+  }
+
+  // get currentApp(): CurrentCollection {
+  //   return new CurrentCollection(0, this.dto.processMeta.targetName);
+  // }
+  createStep1Next() {
+     ///console.log(this.spec);
+    if (this.spec && !this.spec.validate()) {
+      return;
     }
+    // EventSource
+    let e = this.dto.processMeta.step1CreateSaveEvent(this);// new SavePluginEvent();
+    // e.notShowBizMsg = true;
+    // e.serverForward = "coredefine:datax_action:save_datax_worker";
+    // e.postPayload = {"k8sSpec": this.dto.primaryRCSpec};
+    let appTisService: TISService = this.tisService;
+    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    e.basicModule = this;
+    this.savePlugin.emit(e);
+  }
 
-    // get currentApp(): CurrentCollection {
-    //   return new CurrentCollection(0, this.dto.processMeta.targetName);
-    // }
-    createStep1Next(spec: K8SReplicsSpecComponent) {
-       // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
-        if (!spec.validate()) {
-            return;
-        }
-       // EventSource
-        let e = new SavePluginEvent();
-        e.notShowBizMsg = true;
-        e.serverForward = "coredefine:datax_action:save_datax_worker";
-        e.postPayload = {"k8sSpec": this.dto.powderJobServerRCSpec};
-        let appTisService: TISService = this.tisService;
-        appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-        e.basicModule = this;
-        this.savePlugin.emit(e);
+  protected initialize(app: CurrentCollection): void {
+  }
+
+  ngAfterViewInit() {
+  }
+
+
+  ngOnInit(): void {
+    let evt = this.dto.processMeta.step1CreateSaveEvent(this);
+    this.rcSpecShow = !!evt.postPayload;
+  }
+
+  afterSaveReader(e: PluginSaveResponse) {
+
+    //this.formDisabled = e.formDisabled;
+    if (e.saveSuccess) {
+      this.nextStep.emit(this.dto);
     }
-
-    protected initialize(app: CurrentCollection): void {
-    }
-
-    ngAfterViewInit() {
-    }
+  }
 
 
-    ngOnInit(): void {
+  prestep() {
+    this.preStep.emit(this.dto);
+  }
 
-
-
-    }
-
-    afterSaveReader(e: PluginSaveResponse) {
-        if (e.saveSuccess) {
-            this.nextStep.emit(this.dto);
-        }
-    }
-
-
-    prestep() {
-         this.preStep.emit(this.dto);
-    }
+  ajaxOccur(event: PluginSaveResponse) {
+    console.log(event);
+    //this.formDisabled = event.formDisabled;
+  }
 }
 

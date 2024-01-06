@@ -103,6 +103,7 @@ export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements 
 
   ngOnInit(): void {
     super.ngOnInit();
+    console.log(this.dto);
   }
 
   ngAfterViewInit(): void {

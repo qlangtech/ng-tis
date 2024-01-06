@@ -201,6 +201,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   createIndexStep1Next() {
+    console.log("createIndexStep1Next");
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     e.serverForward = "coredefine:core_action:create_incr_sync_channal";
@@ -232,9 +233,11 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
+   // console.log(event);
     if (event.saveSuccess) {
       if (event.hasBiz()) {
         let biz = event.biz();
+
         this.dto.incrSourceDesc = biz.incrSourceDesc;
         this.dto.incrSinkDesc = biz.incrSinkDesc;
         this.dto.incrScriptMainFileContent = biz.incrScriptMainFileContent;

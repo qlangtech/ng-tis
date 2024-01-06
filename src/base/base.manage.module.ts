@@ -43,26 +43,29 @@ import {DataxWorkerComponent} from "./datax.worker.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
-import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
-import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
+import {
+  DataxWorkerAddStep3Component,
+  LaunchK8SClusterWaittingProcessComponent
+} from "./datax.worker.add.step3.component";
+import {DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent} from "./datax.worker.running.component";
 
 import {MarkdownModule} from "ngx-markdown";
 import {ErrorListComponent} from "./error.list.component";
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
-
+import {NgTerminalModule} from "ng-terminal";
 
 
 @NgModule({
   id: 'basemanage',
-  imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule],
+  imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
   declarations: [
     ApplistComponent, ErrorListComponent, DepartmentAddComponent, BaseMangeIndexComponent, BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component
     , DataxWorkerAddExistPowerjobClusterComponent
-    , DataxWorkerAddStep22Component ,DataxWorkerAddStep3Component
-    , DataxWorkerRunningComponent
+    , DataxWorkerAddStep22Component, DataxWorkerAddStep3Component
+    , DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent, LaunchK8SClusterWaittingProcessComponent
   ],
   entryComponents: [ApplistComponent
     , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
