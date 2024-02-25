@@ -51,7 +51,7 @@ import {
   TYPE_PLUGIN_SELECTION,
   CONST_FORM_LAYOUT_VERTICAL,
   ValOption,
-  OptionEnum, DescribleVal
+  OptionEnum, DescribleVal, IFieldError
 } from "./tis.plugin";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -106,15 +106,20 @@ import {FunctionCall} from "@angular/compiler";
             <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a>
           </nz-tag>
         </div>
-        <div *ngFor=" let item of h.items " [ngClass]="{'item-block':shallInitializePluginItems}">
+        <div *ngFor=" let item of h.items " style="position: relative"
+             [ngClass]="{'item-block':shallInitializePluginItems}">
+          <div *ngIf="item.dspt.supportIcon" style="position: absolute;bottom:0px ;left:0px;opacity:0.9">
+            <i style="font-size: 120px" nz-icon [nzType]="item.dspt.endtype"
+               nzTheme="fill"></i>
+          </div>
           <div style="float:right">
 
-            <nz-tag *ngIf="true || showExtensionPoint.open"><a [href]="item.implUrl" class="plugin-link"
-                                                               target="_blank"><i nz-icon nzType="link"
-                                                                                  nzTheme="outline"></i>
-              <span *ngIf="item.dspt.supportIcon" nz-icon [nzType]="item.dspt.endtype"
-                    nzTheme="outline"></span>{{item.impl}}
-            </a></nz-tag>
+            <nz-tag *ngIf="true || showExtensionPoint.open">
+              <a [href]="item.implUrl" class="plugin-link"
+                 target="_blank"><i nz-icon nzType="link"
+                                    nzTheme="outline"></i>
+                {{item.impl}}
+              </a></nz-tag>
             <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)"
                     nz-button
                     nzType="link">
@@ -126,14 +131,17 @@ import {FunctionCall} from "@angular/compiler";
                     (click)="configCheck(h , item,$event)"><i
               nz-icon nzType="check" nzTheme="outline"></i>校验
             </button> &nbsp;
-            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button nzSize="small"
-                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book" nzTheme="outline"></i>Notebook
+            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
+                    nzSize="small"
+                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
+                                                               nzTheme="outline"></i>Notebook
             </button>
           </div>
           <div style="clear: both"></div>
           <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
             <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
-                       [(ngModel)]="item.showAllField" [ngModelOptions]="{standalone: true}"></nz-switch>
+                       [(ngModel)]="item.showAllField"
+                       [ngModelOptions]="{standalone: true}"></nz-switch>
           </div>
           <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1"
                          [pluginMeta]="plugins[index]"
@@ -288,10 +296,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.formControlSpan = 19;
     addDb.shallInitializePluginItems = false;
     addDb.disableNotebook = true;
-    addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
+
     if (opts.shallLoadSavedItems) {
-      addDb.plugins = [pluginTp];
+      addDb.setPlugins([pluginTp], opts.opt);
     } else {
+      addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
       addDb.setPluginMeta([pluginTp])
     }
     if (opts.savePluginEventCreator) {
@@ -400,11 +409,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   public static initializePluginItems(ctx: BasicFormComponent, pm: PluginType[]
-    , useCache: boolean, callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void): Promise<TisResponseResult> {
+    , useCache: boolean, callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void
+    , e?: SavePluginEvent): Promise<TisResponseResult> {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
 
-    return ctx.jsonPost(url, {}).then((r) => {
+    return ctx.jsonPost(url, {}, e).then((r) => {
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
@@ -474,7 +484,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
     }
     // console.log([postData,savePluginEvent.postPayload]);
-    //  console.log([heteroList.length, heteroList]);
+    // console.log([savePluginEvent]);
 
     basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {
       processCallback(r);
@@ -544,9 +554,18 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   @Input()
   set plugins(metas: PluginType[]) {
     // console.log(metas);
+    // this.setPluginMeta(metas);
+    // if (!this.shallInitializePluginItems) {
+    //   this.initializePluginItems();
+    // }
+    this.setPlugins(metas);
+  }
+
+  setPlugins(metas: PluginType[], opt?: SavePluginEvent) {
+    // console.log(metas);
     this.setPluginMeta(metas);
     if (!this.shallInitializePluginItems) {
-      this.initializePluginItems();
+      this.initializePluginItems(opt);
     }
   }
 
@@ -610,19 +629,20 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  public initializePluginItems() {
+  public initializePluginItems(e?: SavePluginEvent) {
     //  console.log(this.plugins);
-    PluginsComponent.initializePluginItems(this, this.plugins, true, (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
-      if (success) {
-        this.showExtensionPoint.open = showExtensionPoint;
-        this._heteroList = hList;
-        this.afterInit.emit(this._heteroList);
-        this.cdr.reattach();
-        this.cdr.detectChanges();
-      }
+    PluginsComponent.initializePluginItems(this, this.plugins, true //
+      , (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
+        if (success) {
+          this.showExtensionPoint.open = showExtensionPoint;
+          this._heteroList = hList;
+          this.afterInit.emit(this._heteroList);
+          this.cdr.reattach();
+          this.cdr.detectChanges();
+        }
 
-      this.ajaxOccur.emit(new PluginSaveResponse(success, false,null));
-    });
+        this.ajaxOccur.emit(new PluginSaveResponse(success, false, null));
+      }, e);
   }
 
   submitForm(value: any): void {
@@ -650,13 +670,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // console.log(this.plugins);
     // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
     // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
-    let formContext = !!savePluginEvent.basicModule ? savePluginEvent.basicModule : this;
+    let formContext = this;
     // console.log(_heteroList);
     PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
       if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
-        this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent ,r.bizresult));
+        this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
       } else {
         if (savePluginEvent.verifyConfig && r.success) {
           if (!r.msg || r.msg.length < 1) {
@@ -700,7 +720,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         let items: Item[] = h.items;
         let errorFields = pluginErrorFields[index++];
         // console.log(errorFields);
-        Item.processErrorField(errorFields, items);
+        Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
       });
       this.cdr.detectChanges();
     }, (err) => {
@@ -810,7 +830,8 @@ export class NotebookwrapperComponent implements OnInit {
                              [placeholder]="_pp.placeholder"/>
                   </ng-container>
                   <ng-container *ngSwitchCase="4">
-                       <nz-input-number [disabled]="disabled" *ngIf="_pp.primaryVal" [(ngModel)]="_pp.primary"
+                       <nz-input-number style="width: 50%;" [disabled]="disabled" *ngIf="_pp.primaryVal"
+                                        [(ngModel)]="_pp.primary"
                                         [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
@@ -1463,6 +1484,7 @@ interface TargetPlugin {
 }
 
 export interface OpenPluginDialogOptions {
+  opt?: SavePluginEvent;
   shallLoadSavedItems: boolean;
   /**
    * 是否要覆写创建SavePluginEvent的行为

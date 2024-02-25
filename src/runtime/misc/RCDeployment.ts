@@ -20,11 +20,14 @@ import {BasicFormComponent} from "../../common/basic.form.component";
 import {K8SRCSpec} from "../../common/k8s.replics.spec.component";
 import {StepType} from "../../common/steps.component";
 import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
-import {Descriptor, HeteroList, SavePluginEvent} from "../../common/tis.plugin";
+import {Descriptor, HeteroList, PluginName, PluginType, SavePluginEvent} from "../../common/tis.plugin";
 import {ExecuteStep, MessageData} from "../../common/tis.service";
 import {DataxWorkerAddStep0Component} from "../../base/datax.worker.add.step0.component";
 import {PowerjobCptType} from "../../base/datax.worker.component";
 import {DataxWorkerAddStep1Component} from "../../base/datax.worker.add.step1.component";
+import {Params} from "@angular/router";
+import {DataxWorkerAddStep3Component} from "../../base/datax.worker.add.step3.component";
+import {DataxWorkerRunningComponent} from "../../base/datax.worker.running.component";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>
@@ -153,7 +156,7 @@ export class K8SControllerStatus {
   public k8sReplicationControllerCreated: boolean;
   public payloads: { string?: any } = {};
 
-  public state: "NONE" | "STOPED" | "RUNNING" | "DISAPPEAR";
+  public state: "NONE" | "STOPED" | "RUNNING" | "DISAPPEAR" | "FAILED";
   // 由于本地执行器没有安装，导致datax执行器无法执行
   public installLocal: boolean;
   public rcDeployments: Array<RCDeployment>;
@@ -246,9 +249,18 @@ export interface IncrProcess {
   incrProcessPaused: boolean;
 }
 
+export interface Breadcrumb {
+  breadcrumb: Array<string>;
+  name: string;
+}
+
 export interface ProcessMeta {
+  init_get_job_worker_meta: string;
+  targetNameGetter: (params: Params, justGroup?: boolean, dto?: DataxWorkerDTO) => string;
+  runningTabRouterGetter: (params: Params) => Array<string>;
   targetName: string;
   pageHeader: string;
+  breadcrumbGetter?: (params: Params) => Breadcrumb;
   stepsType: StepType
   supportK8SReplicsSpecSetter: boolean;
   // step0
@@ -256,16 +268,24 @@ export interface ProcessMeta {
   //createButtonLabel: string;
 
   step1Buttons?: Array<{ label: string, click: (cpt: DataxWorkerAddStep0Component) => void }>;
-  confirmStepCpts?: Array<{ cptType: PowerjobCptType, cptShow: (dto: DataxWorkerDTO) => boolean, cpuMemorySpecGetter: (dto: DataxWorkerDTO) => K8SRCSpec }>;
+  confirmStepCpts?: Array<{
+    // hetero: PluginName
+    heteroPluginTypeGetter: (dto: DataxWorkerDTO, params: Params) => PluginType //
+    , cptType: PowerjobCptType //
+    , cptShow: (dto: DataxWorkerDTO) => boolean //
+    , cpuMemorySpecGetter: (dto: DataxWorkerDTO) => K8SRCSpec
+  }>;
 
   step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => void
 
   step1CreateSaveEvent: (step1: DataxWorkerAddStep1Component) => SavePluginEvent
-
+  step1PluginType: PluginType;
+  successCreateNext: (step3: DataxWorkerAddStep3Component) => void
   step1HeteroGetter: (dto: DataxWorkerDTO) => HeteroList[]
 
   launchClusterMethod: string;
   relaunchClusterMethod: string;
+  runningStepCfg: { showPowerJobWorkflowInstance: boolean, defaultTabExecute: (cpt: DataxWorkerRunningComponent) => void }
 }
 
 export class DataXJobWorkerStatus extends K8SControllerStatus {
@@ -291,6 +311,7 @@ export class DataxWorkerDTO {
   public get step1Hetero(): HeteroList[] {
     return this.processMeta.step1HeteroGetter(this);
   }
+
 
   public get containPowerJob(): boolean {
     return this.powderJobServerHetero.length > 0 && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;

@@ -42,7 +42,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
       </div>
       <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
         <nz-tab nzTitle="基本">
-          <ng-template nz-tab [ngSwitch]="this.dto.state === 'DISAPPEAR'">
+          <ng-template nz-tab [ngSwitch]="this.dto.state === 'DISAPPEAR' ||this.dto.state === 'FAILED' ">
             <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
             <!--                      <ng-template #errorTpl>-->
             <!--                          增量处理节点启动有误-->

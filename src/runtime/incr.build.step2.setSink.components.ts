@@ -16,66 +16,80 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
+import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder} from "@angular/forms";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
-import {PluginSaveResponse, SavePluginEvent} from "../common/tis.plugin";
+import {SavePluginEvent} from "../common/tis.plugin";
 import {EditorConfiguration} from "codemirror";
+import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {
+  LaunchK8SClusterWaittingProcessComponent,
+  openWaittingProcessComponent
+} from "../common/launch.waitting.process.component";
+import {NzNotificationService} from "ng-zorro-antd/notification";
+import {CreateLaunchingTarget} from "../base/datax.worker.add.step3.component";
 
 
 @Component({
   template: `
-      <tis-steps type="createIncr" [step]="2"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <tis-header-tool>
-              <button nz-button nzType="default" (click)="createIndexStepPre()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>&nbsp;
-              <button nz-button nzType="primary" (click)="createIndexStepNext()" [nzLoading]="formDisabled"><i nz-icon nzType="cloud-upload" nzTheme="outline"></i>部署</button>&nbsp;
-              <button nz-button nzType="default" (click)="cancelStep()">取消</button>
-          </tis-header-tool>
-      </tis-page-header>
+    <tis-steps type="createIncr" [step]="2"></tis-steps>
+    <tis-page-header [showBreadcrumb]="false" [result]="result">
+      <tis-header-tool>
+        <button nz-button nzType="default" (click)="createIndexStepPre()"><i nz-icon nzType="backward"
+                                                                             nzTheme="outline"></i>上一步
+        </button>&nbsp;
+        <button nz-button nzType="primary" (click)="createIndexStepNext()" [nzLoading]="formDisabled"><i nz-icon
+                                                                                                         nzType="cloud-upload"
+                                                                                                         nzTheme="outline"></i>部署
+        </button>&nbsp;
+        <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+      </tis-header-tool>
+    </tis-page-header>
 
-<!--      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (afterSave)="buildStep2ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>-->
-      <p>
-      <nz-alert  nzType="warning" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
+    <!--      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins" (afterSave)="buildStep2ParamsSetComponentAjax($event)" #buildStep1ParamsSetComponent></tis-plugins>-->
+    <p>
+      <nz-alert nzType="warning" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
       <ng-template #unableToUseK8SController>
-          目前,以下生成的Flink Stream Code 由系统自动生成，不支持自定义内容
+        目前,以下生成的Flink Stream Code 由系统自动生成，不支持自定义内容
       </ng-template>
-      </p>
-      <div style="height: 800px">
-          <tis-codemirror name="schemaContent" [(ngModel)]="dto.incrScriptMainFileContent" [config]="codeMirrorCfg"></tis-codemirror>
-      </div>
+    </p>
+    <div style="height: 800px">
+      <tis-codemirror name="schemaContent" [(ngModel)]="dto.incrScriptMainFileContent"
+                      [config]="codeMirrorCfg"></tis-codemirror>
+    </div>
   `,
   styles: [`
 
-      .resource-spec {
-          display: flex;
-      }
+    .resource-spec {
+      display: flex;
+    }
 
-      .resource-spec div {
-          flex: 1;
-          margin-right: 20px;
-      }
+    .resource-spec div {
+      flex: 1;
+      margin-right: 20px;
+    }
 
-      .input-number {
-          width: 100%;
-      }
+    .input-number {
+      width: 100%;
+    }
 
-      .spec-form {
-          max-width: 800px
-      }
+    .spec-form {
+      max-width: 800px
+    }
 
-      .ant-input-group {
-          width: 200px
-      }
+    .ant-input-group {
+      width: 200px
+    }
 
-      label {
-          width: 5em;
-      }
+    label {
+      width: 5em;
+    }
   `]
 })
 export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements AfterContentInit, AfterViewInit, OnInit {
@@ -86,8 +100,9 @@ export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements 
   savePlugin = new EventEmitter<SavePluginEvent>();
   plugins = [{name: 'sinkFactory', require: true}];
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private fb: FormBuilder) {
-    super(tisService, route, modalService);
+  constructor(tisService: TISService, route: ActivatedRoute, notification: NzNotificationService
+    , modalService: NzModalService, private fb: FormBuilder, private drawerService: NzDrawerService) {
+    super(tisService, route, modalService, notification);
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -103,7 +118,7 @@ export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements 
 
   ngOnInit(): void {
     super.ngOnInit();
-    console.log(this.dto);
+    //  console.log(this.dto);
   }
 
   ngAfterViewInit(): void {
@@ -127,19 +142,46 @@ export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements 
 
 
   createIndexStepNext() {
-   // buildStep2ParamsSetComponentAjax();
-    // let e = new SavePluginEvent();
-    // e.notShowBizMsg = true;
-    // this.savePlugin.emit(e);
 
-   // if (event.saveSuccess) {
-      let url = '/coredefine/corenodemanage.ajax?event_submit_do_deploy_incr_sync_channal=y&action=core_action';
-      // 保存MQ消息
-      this.jsonPost(url, {}).then((r) => {
-        if (r.success) {
-          this.nextStep.emit(this.dto);
-        }
-      });
-    // }
+    let sseUrl = '/coredefine/corenodemanage.ajax?resulthandler=exec_null&event_submit_do_deploy_incr_sync_channal=y&action=core_action&appname=' + this.tisService.currentApp.appName;
+    // 保存MQ消息
+    // this.jsonPost(url, {}).then((r) => {
+    //   if (r.success) {
+    //     this.nextStep.emit(this.dto);
+    //   }
+    // });
+    ///////////////////////
+    let subject = this.tisService.createEventSource(null, sseUrl);
+    const drawerRef = openWaittingProcessComponent(this.drawerService, subject
+      , new CreateLaunchingTarget("core_action", "re_deploy_incr_sync_channal",`appname=${this.tisService.currentApp.appName}`));// this.drawerService.create<LaunchK8SClusterWaittingProcessComponent, {}, {}>({
+    //   nzWidth: "60%",
+    //   nzHeight: "100%",
+    //   nzPlacement: "right",
+    //   nzContent: LaunchK8SClusterWaittingProcessComponent,
+    //   nzContentParams: {"obserable": subject},
+    //   nzClosable: false,
+    //   nzMaskClosable: false
+    // });
+    // let cpt: LaunchK8SClusterWaittingProcessComponent = drawerRef.getContentComponent();
+    // console.log(drawerRef);
+    // cpt.launchTarget =;
+    drawerRef.afterClose.subscribe((status: NzStatusType) => {
+      subject.close();
+      if (status === 'finish') {
+        // this.successNotify("已经成功在K8S集群中启动" + this.dto.processMeta.pageHeader);
+
+        this.nextStep.emit(this.dto);
+
+        // let dataXWorkerStatus: DataXJobWorkerStatus
+        //   = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {'processMeta': this.dto.processMeta});
+        //  this.dto.processMeta.successCreateNext(this);
+        // DataxWorkerComponent.getJobWorkerMeta(this, null, this.dto.processMeta)
+        //   .then((dataXWorkerStatus) => {
+        //     this.nextStep.emit(dataXWorkerStatus);
+        //   });
+
+
+      }
+    })
   }
 }

@@ -21,7 +21,6 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute} from "@angular/router";
-import {EditorConfiguration} from "codemirror";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent} from "./incr.build.step1.component";
 import {IncrBuildStep3Component} from "./incr.build.step3.component";
@@ -32,8 +31,6 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
 import {IncrBuildStep2SetSinkComponent} from "./incr.build.step2.setSink.components";
-import {throwError} from "rxjs";
-import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component";
 import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 
@@ -68,6 +65,9 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
     let configFST: Map<any, { next: any, pre: any }> = new Map();
     configFST.set(IncrBuildStep0Component, {next: IncrBuildStep1ExecEngineSelectComponent, pre: null});
     configFST.set(IncrBuildStep1ExecEngineSelectComponent, {next: IncrBuildStep1Component, pre: IncrBuildStep0Component});
+   // configFST.set(IncrBuildStep1KubernetesApplicationConfigComponent, {next: IncrBuildStep1Component, pre: IncrBuildStep1ExecEngineSelectComponent});
+
+
     configFST.set(IncrBuildStep1Component, {next: IncrBuildStep2SetSinkComponent, pre: IncrBuildStep1ExecEngineSelectComponent});
     configFST.set(IncrBuildStep1ExtendSelectedTabPropsComponent, {next: IncrBuildStep2SetSinkComponent, pre: IncrBuildStep1Component});
     configFST.set(IncrBuildStep2SetSinkComponent, {next: IncrBuildStep3Component, pre: IncrBuildStep1Component});
@@ -86,12 +86,15 @@ export class IncrBuildComponent extends AppFormComponent implements AfterViewIni
       // console.log(incrStatus.flinkJobDetail);
       switch (incrStatus.state) {
         case "NONE":
+
           // 脚本还未创建
           this.multiViewDAG.loadComponent(IncrBuildStep0Component, null);
           break;
+        case "FAILED":
         case "DISAPPEAR":
         case "STOPED":
         case "RUNNING":
+
           // 增量已经在集群中运行，显示增量状态
           this.multiViewDAG.loadComponent(IncrBuildStep4RunningComponent, incrStatus);
           break;

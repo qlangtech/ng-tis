@@ -109,9 +109,9 @@ export class BasicFormComponent {
         return !this.tisService.currentApp;
     }
 
-    get appMeta(): TISMeta {
-        return this.tisService.tisMeta.tisMeta;
-    }
+    // get appMeta(): TISMeta {
+    //     return this.tisService.tisMeta.tisMeta;
+    // }
 
     protected clearProcessResult(): void {
         this.result = {success: true, msg: [], errormsg: []};

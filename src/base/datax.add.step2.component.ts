@@ -25,7 +25,6 @@ import {PluginsComponent} from "../common/plugins.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Descriptor, Item} from "../common/tis.plugin";
-import {NzIconService} from "ng-zorro-antd/icon";
 import {AddStep2ComponentCfg} from "./datax.add.component";
 import {StepType} from "../common/steps.component";
 
