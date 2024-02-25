@@ -29,10 +29,16 @@ import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {ErrorDetailComponent} from "../base/error.detail.component";
 import {TISBaseProfile} from "./navigate.bar.component";
+import {LocalStorageService} from "angular-2-local-storage";
+import {LatestSelectedIndex} from "./LatestSelectedIndex";
 
 declare var TIS: any;
 
 export const WS_CLOSE_MSG = 'event_close_ws';
+//result = result.set('appname', this.currApp.appName);
+//       result = result.set('appid', '' + this.currApp.appid);
+export const KEY_APPNAME = 'appname';
+export const KEY_APP_ID = 'appid';
 
 // @ts-ignore
 @Injectable()
@@ -44,7 +50,7 @@ export class TISService {
   // private socket: Subject<MessageEvent>;
   private currApp: CurrentCollection;
   public execId: string;
-  _tisMeta: TISBaseProfile;
+  private _tisMeta: TISBaseProfile;
 
   public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
     const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
@@ -59,24 +65,66 @@ export class TISService {
 
   constructor(protected http: HttpClient
               // , private modalService: NgbModal
-    , public notification: NzNotificationService, private drawerService: NzDrawerService, public _zone: NgZone) {
+    , public notification: NzNotificationService, private drawerService: NzDrawerService, public _zone: NgZone, private _localStorageService: LocalStorageService) {
   }
 
-  public set tisMeta(meta: TISBaseProfile) {
-    //console.log(["tisMeta",meta]);
-    this._tisMeta = meta;
-  }
+  // public set tisMeta(meta: TISBaseProfile) {
+  //   //console.log(["tisMeta",meta]);
+  //   this._tisMeta = meta;
+  // }
 
-  public get containMeta(): boolean {
-    return !!this._tisMeta;
-  }
+  // public get containMeta(): boolean {
+  //   return !!this._tisMeta;
+  // }
 
-  public get tisMeta(): TISBaseProfile {
-    // console.log(["getTisMeta",this._tisMeta]);
+  public get tisMeta(): Promise<TISBaseProfile> {
+    // console.log(["getTisMeta", this._tisMeta]);
     if (!this._tisMeta) {
-      throw new Error("_tisMeta can not be null");
+      // throw new Error("_tisMeta can not be null");
+
+      let webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
+        // NProgress.done();
+        return r;
+      }
+      // this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+      // NProgress.start();
+      // this._zone.run(() => {
+      let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
+      return this.httpPost(getUserUrl, '').then(webExecuteCallback).then((r) => {
+        if (r.success) {
+          // this.userProfile = r.bizresult.usr;
+          // this.tisMeta = r.bizresult.tisMeta;
+          let biz: TISBaseProfile = r.bizresult;
+          this._tisMeta = Object.assign(biz, {
+            latestSelectedAppsIndex: () => {
+              return LatestSelectedIndex.popularSelectedIndex(biz, this._localStorageService);
+            }
+          });// this.tisMeta;
+          // console.log(['get_user_info', r.bizresult, this._tisMeta]);
+          // let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+          // this._latestSelected = popularSelected.popularLatestSelected;
+          // console.log(this._latestSelected);
+
+          // let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+          //
+          // if (this.app) {
+          //   popularSelected.addIfNotContain(this.app);
+          // }
+          //
+          // this.collectionOptionList = popularSelected.popularLatestSelected;
+          //
+          //
+          // if (!r.bizresult.sysInitialized) {
+          //   this.openInitSystemDialog();
+          // }
+          return this._tisMeta;
+        }
+      });
+      // });
     }
-    return this._tisMeta;
+    return new Promise((resolve) => {
+      resolve(this._tisMeta);
+    });
   }
 
   // 一个websocket的例子 https://tutorialedge.net/post/typescript/angular/angular-websockets-tutorial/
@@ -148,7 +196,7 @@ export class TISService {
 
     let headers = new HttpHeaders();
     headers = headers.append('content-type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    headers = this.appendHeaders(headers);
+    headers = this.appendHeaders(headers, e);
     let params: HttpParams = new HttpParams();
     let indexOf = url.indexOf('?');
     if (indexOf > -1) {
@@ -172,16 +220,22 @@ export class TISService {
       }).catch(this.handleError);
   }
 
-  protected appendHeaders(headers: HttpHeaders): HttpHeaders {
+  protected appendHeaders(headers: HttpHeaders, e: SavePluginEvent): HttpHeaders {
     let result = headers;
     // console.log(this.currApp);
     if (this.currApp) {
-      result = result.set('appname', this.currApp.appName);
-      result = result.set('appid', '' + this.currApp.appid);
+      result = result.set(KEY_APPNAME, this.currApp.appName);
+      result = result.set(KEY_APP_ID, '' + this.currApp.appid);
     }
     if (this.execId) {
       result = result.set("execId", this.execId);
     }
+    if (e && e.overwriteHttpHeader) {
+      e.overwriteHttpHeader.forEach((val, key) => {
+        result = result.set(key, val);
+      });
+    }
+    // console.log([e, result]);
     return result;
     // return headers;
   }
@@ -191,7 +245,7 @@ export class TISService {
   public jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult> {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
-    let opts = {'headers': this.appendHeaders(headers)};
+    let opts = {'headers': this.appendHeaders(headers, e)};
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts).pipe()
       .toPromise()
       // @ts-ignore
@@ -299,7 +353,7 @@ export class TISService {
   public createEventSource(targetResName: string, sseUrl: string): EventSourceSubject {
 
     const eventSource = new EventSource("/tjs" + sseUrl);
-    console.log("onmessage");
+    // console.log("onmessage");
 
 
     // eventSource.onmessage = (event: MessageEvent) => {
@@ -348,11 +402,13 @@ export class TISService {
 
       eventSource.onerror = (event) => {
         this._zone.run(() => {
+          console.log(event);
           // 服务端colse也会在客户端trigger error 消息
           //throw new Error();
-          console.log(["receive error", event]);
+          // console.log(["receive error", event]);
           //  observer.error(event);
-          observer.next([EventType.SSE_CLOSE, null]);
+
+          observer.next([EventType.SSE_CLOSE, event]);
           eventSource.close();
           observer.complete();
         });
@@ -366,7 +422,7 @@ export class TISService {
 }
 
 export class EventSourceSubject {
-  constructor(public targetResName: string, private eventSource: EventSource, private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep]>) {
+  constructor(public targetResName: string, private eventSource: EventSource, private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]>) {
 
   }
 
@@ -374,7 +430,7 @@ export class EventSourceSubject {
     this.eventSource.close();
   }
 
-  public get events(): Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep]> {
+  public get events(): Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]> {
     return this.observable;
   }
 

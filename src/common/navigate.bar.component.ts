@@ -82,7 +82,7 @@ import {expressionType} from "@angular/compiler/src/output/output_ast";
             <ul nz-menu nzSelectable>
               <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
               <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
-              <li nz-menu-item><a routerLink="/base/flink-cluster">Flink Cluster</a></li>
+              <li nz-menu-item><a routerLink="/base/flink-cluster-list">Flink Cluster</a></li>
               <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
               <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
               <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
@@ -300,27 +300,29 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
     // let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
     // this.httpPost(getUserUrl, '').then((r) => {
-   // console.log(this.tisService.containMeta);
-      if (this.tisService.containMeta) {
+    // console.log(this.tisService.containMeta);
+    // if (this.tisService.containMeta) {
 
-        let meta: TISBaseProfile = this.tisService.tisMeta;
-        this.userProfile = meta.usr;
-        this.tisMeta = meta.tisMeta
-       // this.tisService.tisMeta = r.bizresult;// this.tisMeta;
+    this.tisService.tisMeta.then((meta: TISBaseProfile) => {
+      this.userProfile = meta.usr;
+      this.tisMeta = meta.tisMeta
+      // this.tisService.tisMeta = r.bizresult;// this.tisMeta;
 
-        let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+      let popularSelected = meta.latestSelectedAppsIndex(); //LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
 
-        if (this.app) {
-          popularSelected.addIfNotContain(this.app);
-        }
-
-        this.collectionOptionList = popularSelected.popularLatestSelected;
-
-
-        if (!meta.sysInitialized) {
-          this.openInitSystemDialog();
-        }
+      if (this.app) {
+        popularSelected.addIfNotContain(this.app);
       }
+
+      this.collectionOptionList = popularSelected.popularLatestSelected;
+
+
+      if (!meta.sysInitialized) {
+        this.openInitSystemDialog();
+      }
+    });
+
+    //}
     // });
   }
 
@@ -413,4 +415,6 @@ export interface TISBaseProfile {
   sysInitialized: boolean;
   usr: UserProfile;
   tisMeta: TISMeta;
+
+  latestSelectedAppsIndex(): LatestSelectedIndex;
 }

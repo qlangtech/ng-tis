@@ -33,6 +33,9 @@ import {NzMessageService} from "ng-zorro-antd/message";
 import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
 import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
 import {loadMonaco} from "@zeppelin/app.module";
+import {NzIconService} from "ng-zorro-antd/icon";
+import {IconDefinition} from "@ant-design/icons-angular";
+import {TisResponseResult} from "../common/tis.plugin";
 
 registerLocaleData(zh);
 
@@ -103,7 +106,7 @@ export function markedOptionsFactory(): MarkedOptions {
   entryComponents: [],
   bootstrap: [AppComponent],
   // bootstrap: [CodemirrorComponent],
-  providers: [TISService, NzMessageService
+  providers: [TISService,  NzIconService,NzMessageService
     , {provide: NZ_I18N, useValue: zh_CN},
     {
       provide: TRASH_FOLDER_ID_TOKEN,
@@ -123,6 +126,44 @@ export function markedOptionsFactory(): MarkedOptions {
 
 })
 export class AppModule {
-  constructor() {
+  constructor(iconService: NzIconService, tisService: TISService) {
+    // console.log('iconService');
+    // console.log( iconService.getCachedIcons() );
+    tisService.httpPost('/coredefine/corenodemanage.ajax'
+      , `action=plugin_action&emethod=get_endtype_icons`)
+      .then((result) => {
+        let iconDefs: Array<TISIconDefinition> = result.bizresult;
+        let id: TISIconDefinition = null;
+        let ref: IconDefinition = null;
+        let iconMap: Map<string, TISIconDefinition> = new Map<string, TISIconDefinition>();
+
+        for (let i = 0; i < iconDefs.length; i++) {
+          id = iconDefs[i];
+          iconMap.set(id.name + "_" + id.theme, id);
+        }
+
+        for (let i = 0; i < iconDefs.length; i++) {
+          id = iconDefs[i];
+          if (id.ref) {
+            ref = iconMap.get(id.ref + "_" + id.theme);
+            if(!ref){
+              throw new Error("resource reference:'"+ id.ref + "_" + id.theme+"' can not be null");
+            }
+            iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+          } else {
+            iconService.addIcon(iconDefs[i]);
+          }
+        }
+      });
+
+    //
+
+
+
   }
+
+}
+interface TISIconDefinition extends IconDefinition {
+  // 引用其他类型的Icon
+  ref: string;
 }

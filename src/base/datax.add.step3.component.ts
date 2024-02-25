@@ -36,7 +36,7 @@ import {PluginExtraProps} from "../runtime/misc/RCDeployment";
   selector: 'addapp-form',
   // templateUrl: '/runtime/addapp.htm'
   template: `
-    <tis-steps *ngIf="dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+    <tis-steps *ngIf="dto.headerStepShow" [type]="stepType" [step]="_offsetStep"></tis-steps>
     <!--      <tis-form [fieldsErr]="errorItem">-->
     <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
     <!--              <tis-header-tool>-->
@@ -136,6 +136,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
         localDescFilter: (_) => true
       }
     }
+    this.offsetStep(1);
     super.ngOnInit();
   }
 

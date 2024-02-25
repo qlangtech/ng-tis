@@ -24,6 +24,7 @@ import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {NextObserver, Subject} from "rxjs";
 import {JSONFile} from "@angular/cli/utilities/json-file";
 import {PowerjobCptType} from "../base/datax.worker.component";
+import {KEY_APPNAME} from "./tis.service";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
@@ -45,7 +46,11 @@ export declare type PluginName =
   | 'dataxWriter'
   | 'datax-worker'
   // @ts-ignore
-  | PowerjobCptType.JobTplAppOverwrite // 'powerjob-job-tpl-app-overwrite'
+  | PowerjobCptType.JobTplAppOverwrite
+  // @ts-ignore
+  | PowerjobCptType.FlinkCluster
+  // @ts-ignore
+  | PowerjobCptType.FlinkKubernetesApplicationCfg// 'powerjob-job-tpl-app-overwrite'
 export declare type PluginMeta = {
   skipSubformDescNullError?: boolean;
   name: PluginName, require: boolean
@@ -293,7 +298,7 @@ export interface TisResponseResult {
   errormsg?: string[];
   action_error_page_show?: boolean;
   msg?: Array<any>;
-  errorfields?: Array<Array<Array<IFieldError>>>;
+  errorfields?: Array<Array<Array<IFieldError> | Map<string, Array<IFieldError>>>>;
 }
 
 
@@ -519,6 +524,16 @@ export class Item {
    */
   public showAllField = false;
 
+  get pk(): ItemPropVal {
+    let vs = <{ [key: string]: ItemPropVal }>this.vals;
+    for (let key in vs) {
+      if (vs[key].pk) {
+        return vs[key];
+      }
+    }
+    return null;
+  }
+
   /**
    * 创建一个新的Item
    *
@@ -568,10 +583,10 @@ export class Item {
     if (errFields && errFields.length > 0) {
       let pluginsErr = errFields[0];
       if (pluginsErr.length > 0) {
-        let pluginErr: Array<IFieldError> = pluginsErr[0];
+        let pluginErr: Array<IFieldError> = <Array<IFieldError>>pluginsErr[0];
         let errKeys = pluginErr.map((r) => r.name);
         let item: Item = Item.create(errKeys);
-        Item.processErrorField(pluginsErr, [item]);
+        Item.processErrorField(<Array<Array<IFieldError>>>pluginsErr, [item]);
         return item;
       }
     }
@@ -909,14 +924,24 @@ export class SavePluginEvent {
   constructor(public notShowBizMsg = false) {
   }
 
+  public overwriteHttpHeaderOfAppName(val: string) {
+    let headerOverwrite = new Map<string, string>();
+    headerOverwrite.set(KEY_APPNAME, val);
+    this.overwriteHttpHeader = headerOverwrite;
+  }
+
   public createOrGetNotebook = false;
   public verifyConfig = false;
   // public notShowBizMsg = false;
   // 顺带要在服务端执行一段脚本
   // namespace:corename:method
+  /**
+   * example: "coredefine:core_action:determine_process_kerbernete_application_cfg";
+   */
   public serverForward;
   public postPayload: { [key: string]: any };
-  public basicModule: BasicFormComponent;
+  // public basicModule: BasicFormComponent;
+  public overwriteHttpHeader: Map<string, string>;
 }
 
 export interface DataType {

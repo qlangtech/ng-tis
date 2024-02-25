@@ -93,9 +93,10 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
     e.notShowBizMsg = true;
     e.serverForward ="coredefine:datax_action:save_datax_worker";
     e.postPayload = {"k8sSpec": this.dto.powderJobWorkerRCSpec};
-    let appTisService: TISService = this.tisService;
-    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    e.basicModule = this;
+    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
+    // let appTisService: TISService = this.tisService;
+    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    // e.basicModule = this;
     this.savePlugin.emit(e);
 
     // =================================

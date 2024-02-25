@@ -25,7 +25,7 @@ import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/tra
 import {
   AttrDesc,
   Descriptor,
-  HeteroList,
+  HeteroList, IFieldError,
   Item,
   ItemPropVal,
   KEY_OPTIONS_ENUM,
@@ -44,6 +44,13 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ExecModel} from "./datax.add.step7.confirm.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 
+
+enum TableSetterStatus {
+  HasSetted = ('HasSetted'),
+  HaveNotSetted = ('HaveNotSetted'),
+  HasError = ('HasError')
+}
+
 @Component({
   selector: "selected-tables",
   template: `
@@ -58,11 +65,13 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           (nzCheckedChange)="_onItemSelectAll($event)"
         ></th>
         <th>表名
-          <button *ngIf="direction === 'right'" [disabled]="batchSettableTabs.length < 1 " nz-button nzType="primary"
+          <button *ngIf="direction === 'right'" [disabled]="batchSettableTabs.length < 1 " nz-button
+                  nzType="primary"
                   (click)="batchSet()" nzSize="small">批量设置
           </button>
 
-          <button *ngIf="direction === 'left'" nzSize="small" nz-button (click)="reload()" style=" margin: 5px;">
+          <button *ngIf="direction === 'left'" nzSize="small" nz-button (click)="reload()"
+                  style=" margin: 5px;">
             <i nz-icon nzType="reload" nzTheme="outline"></i>Reload
           </button>
         </th>
@@ -80,9 +89,14 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
         <td>{{ data.title }}</td>
         <td *ngIf="direction === 'right'">
           <ng-container [ngSwitch]="subFormSetted( data.meta)">
-            <nz-tag *ngSwitchCase="true" [nzColor]="'#87d068'"><i nz-icon nzType="check" nzTheme="outline"></i>已设置
+            <nz-tag *ngSwitchCase="'HasError'" [nzColor]="'pink'"><i nz-icon nzType="check"
+                                                                     nzTheme="outline"></i>设置有误
             </nz-tag>
-            <nz-tag *ngSwitchCase="false" [nzColor]="'#999999'"><i nz-icon nzType="warning" nzTheme="outline"></i>未设置
+            <nz-tag *ngSwitchCase="'HasSetted'" [nzColor]="'#87d068'"><i nz-icon nzType="check"
+                                                                         nzTheme="outline"></i>已设置
+            </nz-tag>
+            <nz-tag *ngSwitchCase="'HaveNotSetted'" [nzColor]="'#999999'"><i nz-icon nzType="warning"
+                                                                             nzTheme="outline"></i>未设置
             </nz-tag>
           </ng-container>
           <button nz-button (click)="tableColsSelect($event,data.meta)" [nzSize]="'small'">设置</button>
@@ -132,6 +146,13 @@ export class SelectedTabsComponent extends BasicFormComponent {
   subFieldForms: Map<string /*tableName*/, Array<Item>> = new Map();
   @Input()
   dataXReaderTargetName: string;
+
+  /**
+   * table 表单的错误信息
+   */
+  @Input()
+  tabFormErrors: Map<string, Array<IFieldError>>;
+
   subFormItemSetterFlag: Map<string, boolean> = new Map();
 
   constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, notification: NzNotificationService) {
@@ -142,11 +163,20 @@ export class SelectedTabsComponent extends BasicFormComponent {
     return items.filter(i => !i.hide);
   }
 
-  subFormSetted(meta: ISubDetailTransferMeta): boolean {
-    if (this.subFieldForms.get(meta.id) !== undefined) {
-      return true;
+  subFormSetted(meta: ISubDetailTransferMeta): TableSetterStatus {
+    let errs: Array<IFieldError> = null;
+    if (this.tabFormErrors && (errs = this.tabFormErrors.get(meta.id)) && Array.isArray(errs) && errs.length > 0) {
+      return TableSetterStatus.HasError;
     }
-    return !!meta.setted;
+
+    if (this.subFieldForms.get(meta.id) !== undefined) {
+      return TableSetterStatus.HasSetted;
+    }
+    if (!!meta.setted) {
+      return TableSetterStatus.HasSetted
+    } else {
+      return TableSetterStatus.HaveNotSetted;
+    }
   }
 
   /**
@@ -255,7 +285,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
           if (!tabDesc[tabName]) {
             throw new Error("table:" + tabName + " relevant descriptor can not be null")
           }
-         // console.log(subTabs[tabName]);
+          // console.log(subTabs[tabName]);
           if (!Array.isArray(subTabs[tabName])) {
             throw new Error("subTabs[tabName] must be array,but now is:" + (typeof subTabs[tabName]));
           }
@@ -276,19 +306,19 @@ export class SelectedTabsComponent extends BasicFormComponent {
             //   throw new Error("subTabs[tabName] must be array,but now is:" + (typeof subTabs[tabName]));
             // }
             rawItem = rawItems.get(ii.impl);
-            if(!rawItem){
-              throw new Error("impl:"+ ii.impl+" relevant rawItem can not be null");
+            if (!rawItem) {
+              throw new Error("impl:" + ii.impl + " relevant rawItem can not be null");
             }
             ii.vals = rawItem.vals;
 
             ii.wrapItemVals();
             // console.log([tabName, ii, ii.vals, subTabs[tabName], val, this.subFormHetero.items[0].vals]);
-           // console.log([tabName, ii]);
+            // console.log([tabName, ii]);
             tabItems.push(ii);
 
             // }
           });
-         // console.log(tabItems);
+          // console.log(tabItems);
           this.subFormHetero.items[0].vals[tabName] = tabItems;
           this.subFormItemSetterFlag.set(tabName, true);
           //
@@ -335,7 +365,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       }
     });
     drawerRef.afterClose.subscribe(hetero => {
-     // console.log("close");
+      // console.log("close");
       if (!hetero) {
         return;
       }
@@ -413,6 +443,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
                            [pluginMetas]="getPluginMetas()" [subFormHetero]="this.subFormHetero" [stat]="stat"
                            [subFieldForms]="subFieldForms"
                            [dataXReaderTargetName]="getDataXReaderTargetName" (onItemSelect)="onItemSelect($event)"
+                           [tabFormErrors]="tabFormErrors"
                            (onItemSelectAll)="onItemSelectAll($event)"></selected-tables>
         </ng-template>
       </nz-transfer>
@@ -451,7 +482,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
-
+  tabFormErrors: Map<string, Array<IFieldError>>;
 
   // savePlugin = new EventEmitter<any>();
 
@@ -476,7 +507,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-       // console.log(r);
+        // console.log(r);
         let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
         let hlist: HeteroList[] = [h];
         return hlist;
@@ -630,6 +661,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createStepNext(): void {
+    this.tabFormErrors = null;
     let savePluginEvent = new SavePluginEvent();
     savePluginEvent.notShowBizMsg = true;
     // console.log(this.subFormHetero.items[0].vals);
@@ -637,7 +669,24 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       if (result.success) {
         this.nextStep.emit(this.dto);
       } else {
+        // console.log(result);
         this.result = result;
+        for (let i = 0; result.errorfields && i < result.errorfields.length; i++) {
+          let tabs = [];
+          for (let j = 0; j < result.errorfields[i].length; j++) {
+            let errors = new Map<string, Array<IFieldError>>();
+            for (let tabKey in result.errorfields[i][j]) {
+              errors.set(tabKey, result.errorfields[i][j][tabKey])
+              tabs.push(tabKey);
+            }
+            this.tabFormErrors = errors;
+          }
+          if (tabs.length > 0) {
+            this.errNotify("表单:" + tabs.join(",") + "设置有误（可能表没有物理主键），请手动设置");
+          }
+//          console.log(this.tabFormErrors);
+          break;
+        }
       }
     });
     // this.savePlugin.emit();
@@ -749,7 +798,8 @@ interface GetDateMethodMeta {
   // selector: 'nz-drawer-custom-component',
   template: `
     <sidebar-toolbar [deleteDisabled]="true" (close)="close()" (save)="_saveClick()"></sidebar-toolbar>
-    <tis-plugins [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="pluginMeta" (ajaxOccur)="verifyPluginConfig($event)"
+    <tis-plugins [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="pluginMeta"
+                 (ajaxOccur)="verifyPluginConfig($event)"
                  [savePlugin]="savePlugin" [formControlSpan]="21"
                  [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
   `

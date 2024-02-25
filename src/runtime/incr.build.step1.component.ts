@@ -28,17 +28,18 @@ import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep4Component} from "../base/datax.add.step4.component";
 import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
+
 @Component({
   template: `
     <tis-steps type="createIncr" [step]="0"></tis-steps>
     <tis-page-header [showBreadcrumb]="false" [result]="result">
       <nz-affix [nzOffsetTop]="10">
-        <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon
+        <button nz-button nzType="primary"  (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon
                                                                                                                nzType="save"
                                                                                                                nzTheme="outline"></i>保存&下一步
         </button>
         &nbsp;
-        <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+        <button nz-button nzType="default" [disabled]="this.formDisabled" (click)="cancelStep()">取消</button>
       </nz-affix>
     </tis-page-header>
     <nz-spin nzSize="large" [nzSpinning]="formDisabled">
@@ -51,7 +52,7 @@ export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent im
   plugins = [{name: 'incr-config', require: true}];
   savePlugin = new EventEmitter<SavePluginEvent>();
 
-  @Output() nextStep = new EventEmitter<any>();
+  @Output() nextStep = new EventEmitter<IntendDirect | any>();
   @Output() preStep = new EventEmitter<any>();
 
   @Input() dto: IndexIncrStatus;
@@ -67,7 +68,13 @@ export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent im
   }
 
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
+    this.formDisabled = false;
     if (event.saveSuccess) {
+      //console.log(event);
+      // if (event.hasBiz() && 'kubernetes-session' === event.biz()) {
+      //   this.nextStep.emit({dto: this.dto, cpt: IncrBuildStep1KubernetesApplicationConfigComponent});
+      //   return;
+      // }
       // 成功
       // let url = '/coredefine/corenodemanage.ajax?event_submit_do_save_script_meta=y&action=core_action';
       //  this.jsonPost(url, {}).then((r) => {
@@ -84,7 +91,9 @@ export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent im
   createIndexStep1Next() {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
+   // e.serverForward = "coredefine:core_action:determine_process_kerbernete_application_cfg";
     this.savePlugin.emit(e);
+    this.formDisabled = true;
   }
 
   cancelStep() {
@@ -201,7 +210,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   createIndexStep1Next() {
-    console.log("createIndexStep1Next");
+    // console.log("createIndexStep1Next");
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     e.serverForward = "coredefine:core_action:create_incr_sync_channal";
@@ -233,7 +242,7 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   }
 
   buildStep1ParamsSetComponentAjax(event: PluginSaveResponse) {
-   // console.log(event);
+    // console.log(event);
     if (event.saveSuccess) {
       if (event.hasBiz()) {
         let biz = event.biz();
@@ -251,9 +260,9 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
       this.nextStep.emit(this.dto);
     }
 
-    setTimeout(() => {
-      this.formDisabled = event.formDisabled;
-    })
+    // setTimeout(() => {
+    this.formDisabled = event.formDisabled;
+    // })
   }
 
   createIndexStepPre() {

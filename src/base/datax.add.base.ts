@@ -51,21 +51,23 @@ export abstract class BasicDataXAddComponent extends AppFormComponent {
   protected initialize(app: CurrentCollection): void {
   }
 
-  public offsetStep(step: number) {
-    if (this._offsetStep > -1) {
+  public offsetStep(step: number): number {
+    return this.tisService._zone.run(() => {
+      if (this._offsetStep > -1) {
+        return this._offsetStep;
+      }
+      switch (this.dto.processModel) {
+        case StepType.UpdateDataxReader:
+          this._offsetStep = step - 1;
+          break;
+        case StepType.UpdateDataxWriter:
+          this._offsetStep = step - 2;
+          break;
+        default:
+          this._offsetStep = step;
+      }
       return this._offsetStep;
-    }
-    switch (this.dto.processModel) {
-      case StepType.UpdateDataxReader:
-        this._offsetStep = step - 1;
-        break;
-      case StepType.UpdateDataxWriter:
-        this._offsetStep = step - 2;
-        break;
-      default:
-        this._offsetStep = step;
-    }
-    return this._offsetStep;
+    });
   }
 
   // public get componentName(): string {

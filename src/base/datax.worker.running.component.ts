@@ -16,10 +16,10 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnInit, Output} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from "@angular/core";
 import {EventSourceSubject, EventType, ExecuteStep, MessageData, TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {interval, Observable, of, Subject, timer} from "rxjs";
@@ -46,34 +46,35 @@ import {
   throttleTime
 } from 'rxjs/operators';
 import {
-  DataxWorkerAddStep3Component,
-  LaunchK8SClusterWaittingProcessComponent
+  CreateLaunchingTarget,
+  DataxWorkerAddStep3Component
 } from "./datax.worker.add.step3.component";
 import {NzProgressStatusType} from "ng-zorro-antd/progress/typings";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {dataXWorkerCfg} from "./base.manage-routing.module";
+import {PluginsComponent} from "../common/plugins.component";
+import {languages} from "monaco-editor";
+import {NzTabSetComponent} from "ng-zorro-antd/tabs/tabset.component";
+import {LaunchK8SClusterWaittingProcessComponent} from "../common/launch.waitting.process.component";
+
+export const KEY_APPNAME = "appname";
 
 @Component({
   template: `
     <nz-spin size="large" [nzSpinning]="this.formDisabled">
 
 
-      <nz-tabset nzSize="large" [(nzSelectedIndex)]="tabSelectIndex" [nzTabBarExtraContent]="extraTemplate">
+      <nz-tabset nzSize="large" [(nzSelectedIndex)]="tabSelectIndex" [nzTabBarExtraContent]="extraTemplate"
+                 #tabsetComponent>
         <ng-container *ngIf="dto.rcDeployment?.status">
           <nz-tab nzTitle="基本" (nzSelect)="profileTabSelect()">
             <ng-template nz-tab>
-              <div style="margin-top: 8px;" *ngIf="true">
-                <nz-alert *ngIf="true" nzType="info" [nzDescription]="unableToUseK8SController"
-                          nzShowIcon></nz-alert>
-                <ng-template #unableToUseK8SController>
-
-                  可直接打开PowerJob控制台 &nbsp;<a target="_blank"
-                                                    [href]="this.dto.payloads['server_port_host']"><i nz-icon
-                                                                                                      nzType="link"
-                                                                                                      nzTheme="outline"></i>控制台</a>
-                </ng-template>
+              <div style="margin-top: 8px;"
+                   *ngTemplateOutlet="promoteServerHost;context:{server_port_host:this.dto.payloads['server_port_host']}">
               </div>
+
               <pod-list *ngFor="let rc of dto.rcDeployments" [rcDeployment]="rc"
-                        [processMeta]="dto.processMeta"></pod-list>
+                        [processMeta]="dto.processMeta" (viewLog)="gotoViewLog($event)"></pod-list>
 
 
               <!--
@@ -140,12 +141,17 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
             </ng-template>
           </nz-tab>
         </ng-container>
-        <nz-tab nzTitle="实例" (nzSelect)="workflowSelect()">
+        <nz-tab nzTitle="实例" *ngIf="dto.processMeta.runningStepCfg.showPowerJobWorkflowInstance"
+                (nzSelect)="workflowSelect()">
           <ng-template nz-tab>
+            <div
+              *ngTemplateOutlet="promoteServerHost;context:{server_port_host:this.dto.payloads['server_port_host']}">
+            </div>
             <tis-page [rows]="workflows" [pager]="pager" (go-page)="gotoPage($event)">
-              <tis-col title="名称" width="14">
+
+              <tis-col title="工作流ID/名称" width="14">
                 <ng-template let-u='r'>
-                  <a [routerLink]="['/x',u.wfName,'app_build_history']">{{u.wfName}}</a>
+                  <strong>{{u.id}}</strong>/<a [routerLink]="['/x',u.wfName,'app_build_history']">{{u.wfName}}</a>
                 </ng-template>
               </tis-col>
               <tis-col title="定时信息" width="14" field="cronInfo"></tis-col>
@@ -165,7 +171,13 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
               </tis-col>
               <tis-col title="操作">
                 <ng-template let-u='r'>
-                  <button nz-button nzType="link" (click)="startPowerJobTplAppOverwrite(u)">编辑
+                  <button nz-button nzType="link"
+                          (click)="startPowerJobTplAppOverwrite(u)"><span nz-icon nzType="edit"
+                                                                          nzTheme="outline"></span>编辑
+                  </button>
+                  <button nz-button nzType="link"
+                          (click)="deletePowerJobAppOverwrite(u)"><span nz-icon nzType="delete"
+                                                                        nzTheme="outline"></span>删除
                   </button>
                 </ng-template>
               </tis-col>
@@ -174,12 +186,12 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
           </ng-template>
         </nz-tab>
 
-        <nz-tab nzTitle="配置" (nzSelect)="k8sResConfigSelect()">
+        <nz-tab [nzTitle]="cfgTitle" (nzSelect)="k8sResConfigSelect()">
           <ng-template nz-tab>
-            <k8s-res-config [dto]="workerCfg" [displayHeader]="false"></k8s-res-config>
+            <k8s-res-config *ngIf="workerCfg" [dto]="workerCfg" [displayHeader]="false"></k8s-res-config>
           </ng-template>
         </nz-tab>
-        <nz-tab nzTitle="操作" (nzSelect)="manageSelect()">
+        <nz-tab [nzTitle]="controller" (nzSelect)="manageSelect()">
 
           <control-prompt panelType="danger-delete" [procDesc]="this.dto.processMeta.pageHeader"
                           (controlClick)="dataXWorkerDelete($event)"></control-prompt>
@@ -193,8 +205,28 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
           <!--                      </nz-list-item>-->
           <!--                  </nz-list>-->
         </nz-tab>
-      </nz-tabset>
 
+
+      </nz-tabset>
+      <ng-template #promoteServerHost let-server_port_host="server_port_host">
+        <nz-alert style="margin: 8px;" *ngIf="server_port_host" nzType="info" [nzDescription]="unableToUseK8SController"
+                  nzShowIcon>
+
+          <ng-template #unableToUseK8SController>
+
+            可直接打开PowerJob控制台 &nbsp;<a target="_blank"
+                                              [href]="server_port_host"><i nz-icon nzType="link"
+                                                                           nzTheme="outline"></i>控制台</a>
+          </ng-template>
+        </nz-alert>
+
+      </ng-template>
+      <ng-template #cfgTitle>
+        <span nz-icon nzType="file" nzTheme="outline"></span>配置
+      </ng-template>
+      <ng-template #controller>
+        <span nz-icon nzType="setting" nzTheme="outline"></span>操作
+      </ng-template>
       <ng-template #extraTemplate>
         <button nz-button nzType="link"><i nz-icon nzType="sync" nzTheme="outline"></i>更新</button>
       </ng-template>
@@ -231,7 +263,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   // @Input() dto: DataxWorkerDTO;
-
+  @ViewChild('tabsetComponent', {static: false}) tabsetComponent: NzTabSetComponent;
   msgSubject: Subject<WSMessage>;
   dto: DataXJobWorkerStatus = new DataXJobWorkerStatus();
   tabSelectIndex = 0;
@@ -269,23 +301,26 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   get currentApp(): CurrentCollection {
-    return new CurrentCollection(0, this.dto.processMeta.targetName);
+    return new CurrentCollection(0, this.dto.processMeta.targetNameGetter(this.route.snapshot.params));
   }
 
   ngOnInit(): void {
     // super.ngOnInit();
     // console.log("==========================");
-    this.route.params.subscribe((p) => {
-      let targetTab = p['targetTab'];
-      console.log(targetTab);
+    let params = this.route.snapshot.params;
+    this.route.fragment.subscribe((fragment) => {
+      let targetTab = fragment;//['targetTab'];
+      //  console.log(targetTab);
       switch (targetTab) {
         case 'log':
           if (!this.podNameSub) {
-            this.podNameSub = this.route.fragment.subscribe((podName) => {
+            this.podNameSub = this.route.queryParams.subscribe((query) => {
               //  console.log(`podName:${podName}`);
-              if (this.route.snapshot.params['targetTab'] !== 'log') {
-                return;
-              }
+              let podName = query['pod']
+              // console.log(`podName:${podName}`);
+              // if (this.route.snapshot.params['targetTab'] !== 'log') {
+              //   return;
+              // }
               if (!this.selectedPod) {
                 // 取得容器第一个pod
                 let pods = this.dto.rcDeployment.pods;
@@ -295,6 +330,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
                 }
                 this.selectedPod = pods[0];
               }
+              // console.log(this.selectedPod);
               if (!!podName && podName !== this.selectedPod.name) {
                 this.selectedPod = this.dto.findPod(podName);//.pods.find((pp) => (pp.name === podName));
                 if (!this.selectedPod) {
@@ -307,36 +343,47 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
               } else {
                 this.msgSubject.next(new WSMessage(logtype));
               }
-              this.tabSelectIndex = 2;
+              // this.tabSelectIndex = 2;
             });
           }
 
           break;
         case 'profile':
           this.profileViewSelect();
-          this.tabSelectIndex = 0;
+          // this.tabSelectIndex = 0;
           break;
         case 'config': {
           this.tisService.currentApp = this.currentApp;
+          //  console.log(this.workerCfg);
           if (this.workerCfg) {
             break;
           }
-          this.httpPost('/coredefine/corenodemanage.ajax?action=datax_action'
-            , "emethod=get_datax_worker_config&targetName=" + this.dto.processMeta.targetName)
-            .then((r) => {
-              //
-              this._zone.run(() => {
-                if (r.success) {
+          this._zone.run(() => {
 
-                  // setTimeout(()=>{
+            if (this.dto.processMeta.targetName === dataXWorkerCfg.processMeta.targetName) {
+              this.httpPost('/coredefine/corenodemanage.ajax?action=datax_action'
+                , "emethod=get_datax_worker_config&targetName=" + this.dto.processMeta.targetNameGetter(params))
+                .then((r) => {
+                  //     console.log(r);
 
-                  this.workerCfg = Object.assign(new DataxWorkerDTO(), r.bizresult, {"processMeta": this.dto.processMeta});
+                  if (r.success) {
 
-                  // },3000);
-                  // DataxWorkerDTO
-                }
-              });
-            });
+                    // setTimeout(()=>{
+
+                    this.workerCfg = Object.assign(new DataxWorkerDTO(), r.bizresult, {"processMeta": this.dto.processMeta});
+
+                    // },3000);
+                    // DataxWorkerDTO
+                  }
+
+                }, (err) => {
+                  console.log(err);
+                });
+
+            } else {
+              this.workerCfg = Object.assign(new DataxWorkerDTO(), {"processMeta": this.dto.processMeta});
+            }
+          });
           break;
         }
         case 'manage':
@@ -345,10 +392,15 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
         case 'env':
           break;
         case 'wf-list':
-        default : {
-          this.tabSelectIndex = 0;
-          // this.workflowSelect();
+          if (!this.dto.processMeta.runningStepCfg.showPowerJobWorkflowInstance) {
+            throw new Error("powerJob workflow instance can not be present")
+          }
           this.gotoPage(this.pager.curPage)
+          break;
+        default : {
+          this.dto.processMeta.runningStepCfg.defaultTabExecute(this);
+          //  this.tabSelectIndex = 0;
+          // this.workflowSelect();
           break;
         }
       }
@@ -360,6 +412,8 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   ngAfterViewInit() {
+
+    //console.log(this.tabsetComponent.allTabs.get(0).content);
   }
 
 
@@ -390,10 +444,25 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   private activeTab(tabName: string) {
-    let currentTab = this.route.snapshot.params['targetTab'];
+    // let params = this.route.snapshot.params;
+    let currentTab = this.route.snapshot.fragment;// params['targetTab'];
     if (currentTab !== tabName) {
-      this.router.navigate([`/base/${this.dto.processMeta.targetName}`, tabName], {relativeTo: this.route});
+      let commands = DataxWorkerRunningComponent.createRouterCommands(this.dto.processMeta, this.route.snapshot);
+      this.router.navigate(commands, {relativeTo: this.route, fragment: tabName});
     }
+  }
+
+  static createRouterCommands(processMeta: ProcessMeta, snapshot: ActivatedRouteSnapshot): string[] {
+    let params = snapshot.params;
+    let commands = ['/base'];
+    processMeta.runningTabRouterGetter(params)
+      .forEach((path) => {
+        commands.push(path);
+      })
+    return commands;
+    // commands.push(tabName);
+    // this.router.navigate(commands, {relativeTo: this.route, fragment: tabName});
+
   }
 
   envTabSelect() {
@@ -406,13 +475,13 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   profileViewSelect(): void {
-    this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_datax_worker_hpa&targetName=${this.dto.processMeta.targetName}`
-      , {})
-      .then((r) => {
-        if (r.success) {
-          // this.rcHpaStatus = r.bizresult;
-        }
-      });
+    // this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=get_datax_worker_hpa&targetName=${this.dto.processMeta.targetName}`
+    //   , {})
+    //   .then((r) => {
+    //     if (r.success) {
+    //       // this.rcHpaStatus = r.bizresult;
+    //     }
+    //   });
   }
 
   logtypeSelect() {
@@ -432,12 +501,35 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     this.activeTab('config');
   }
 
+  deletePowerJobAppOverwrite(u: PowerJobWorkflow) {
+
+    this.confirm("是否要删除id为" + u.id + "的PowerJob 工作流", () => {
+      this.httpPost('/coredefine/corenodemanage.ajax'
+        , 'action=datax_action&emethod=delete_power_job_workflow&id=' + u.id)
+        .then((r) => {
+          if (r.success) {
+            // this.workflows = r.bizresult.rows;
+            // this.pager = new Pager(r.bizresult.curPage, r.bizresult.totalPage);
+            let idxOf = this.workflows.findIndex((wf) => u.id === wf.id);
+            if (idxOf > -1) {
+              this.workflows.splice(idxOf, 1);
+              this.workflows = [...this.workflows];
+            }
+
+            this.successNotify("已经成功删除id为" + u.id + "的PowerJob 工作流");
+          }
+        });
+    })
+
+
+  }
+
   startPowerJobTplAppOverwrite(u: PowerJobWorkflow) {
     if (!u.wfName) {
       throw new Error("property wfName can not be null");
     }
     DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this, [{
-      key: "appname",
+      key: KEY_APPNAME,
       val: u.wfName
     }]).subscribe((plugin: PowerJobWorkflow) => {
       // console.log(plugin);
@@ -452,6 +544,10 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
 
+  gotoViewLog(podState: K8sPodState) {
+    PodsListComponent.viewPodLog(this.dto.processMeta, this.route, this.router, podState);
+    this.tabSelectIndex = 2;
+  }
 }
 
 @Component({
@@ -562,6 +658,8 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
   @Input() public rcDeployment: RCDeployment;
   @Input() processMeta: ProcessMeta;
 
+  @Output() viewLog = new EventEmitter<K8sPodState>();
+
   toPodNum = new PodNumberDebounce(0);
 
   podNumberChange$ = new Subject<PodNumberChange>();
@@ -609,9 +707,13 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
   }
 
   static viewPodLog(processMeta: ProcessMeta, route: ActivatedRoute, router: Router, podname: K8sPodState) {
-    router.navigate([`/base/${processMeta.targetName}/log`], {
+
+    let commands = DataxWorkerRunningComponent.createRouterCommands(processMeta, route.snapshot);
+
+    router.navigate(commands, {
       relativeTo: route,
-      fragment: podname.name
+      fragment: "log",
+      queryParams: {pod: podname.name}
     });
   }
 
@@ -621,13 +723,13 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
   }
 
   plusPod(): void {
-    console.log("plusPod");
+    // console.log("plusPod");
     this.podNumberChange$.next(new PodNumberChange(true, 1));
   }
 
   viewPodLog(podname: K8sPodState) {
+    this.viewLog.emit(podname);//
 
-    PodsListComponent.viewPodLog(this.processMeta, this.route, this.router, podname);
 
     // this.router.navigate([`/base/${this.processMeta.targetName}/log`], {
     //   relativeTo: this.route,
@@ -700,8 +802,10 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
       this._progressStat = 'active';
       this.rcDeployment.rcScalaLog = undefined;
       let evtSubject: EventSourceSubject = DataxWorkerAddStep3Component.createLaunchingEventSubject(
-        "apply_pod_number", this.tisService, this.processMeta.targetName
-        , "cptType=" + this.rcDeployment.name + "&podNumber=" + data.targetPodNum);
+        new CreateLaunchingTarget("datax_action", "apply_pod_number"
+          , "cptType=" + this.rcDeployment.name + "&podNumber=" + data.targetPodNum)
+        , this.tisService, this.processMeta.targetName
+      );
       //
       //?resulthandler=exec_null&action=datax_action&emethod=apply_pod_number&targetName=datax-worker&cptType=powerjob-worker&podNumber=2
       evtSubject.events.subscribe((e: [EventType, Array<ExecuteStep> | MessageData | ExecuteStep]) => {

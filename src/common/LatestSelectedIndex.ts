@@ -21,6 +21,7 @@ import {Application, AppType} from "./application";
 import {LocalStorageService} from "angular-2-local-storage";
 import {Router} from "@angular/router";
 import {TISService} from "./tis.service";
+import {TISBaseProfile} from "./navigate.bar.component";
 
 const maxQueueSize = 8;
 const KEY_LOCAL_STORAGE_LATEST_INDEX = 'LatestSelectedIndex';
@@ -40,10 +41,12 @@ export class LatestSelectedIndex {
   constructor(public localLatestIndexKey: string) {
   }
 
-  public static popularSelectedIndex(tisService: TISService, _localStorageService: LocalStorageService): LatestSelectedIndex {
-    let tisVer = tisService.containMeta ? tisService.tisMeta.tisMeta.buildVersion : '';
+  public static popularSelectedIndex(tisMeta: TISBaseProfile, _localStorageService: LocalStorageService): LatestSelectedIndex {
+
+
+    let tisVer = tisMeta.tisMeta.buildVersion;
     let localLatestIndexKey = KEY_LOCAL_STORAGE_LATEST_INDEX + "_" + tisVer;
-  //  console.log(localLatestIndexKey);
+    //  console.log(localLatestIndexKey);
     let popularSelected: LatestSelectedIndex = _localStorageService.get(localLatestIndexKey);
 
     if (popularSelected) {
@@ -53,9 +56,13 @@ export class LatestSelectedIndex {
       _localStorageService.set(localLatestIndexKey, popularSelected);
     }
     return popularSelected;
+
+
+    // let tisVer =  tisService.tisMeta.tisMeta.buildVersion ;
+
   }
 
-  public static routeToApp(tisService: TISService, _localStorageService: LocalStorageService, r: Router, app: Application): Array<SelectedIndex> {
+  public static routeToApp(tisService: TISService, _localStorageService: LocalStorageService, r: Router, app: Application): Promise<Array<SelectedIndex>> {
     // console.log(app);
     switch (app.appType) {
       case AppType.DataX:
@@ -68,10 +75,19 @@ export class LatestSelectedIndex {
         throw new Error(`Error Type:${app.appType}`);
     }
     if (_localStorageService) {
-      let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(tisService, _localStorageService);
-      popularSelected.add(new SelectedIndex(app.projectName, app.appType));
-      _localStorageService.set(popularSelected.localLatestIndexKey, popularSelected);
-      return popularSelected.popularLatestSelected;
+
+      return tisService.tisMeta.then((meta) => {
+        let popularSelected = meta.latestSelectedAppsIndex();
+        popularSelected.add(new SelectedIndex(app.projectName, app.appType));
+        _localStorageService.set(popularSelected.localLatestIndexKey, popularSelected);
+        return popularSelected.popularLatestSelected;
+      })
+
+      // return LatestSelectedIndex.popularSelectedIndex(tisService.tisMeta, _localStorageService).then((popularSelected: LatestSelectedIndex) => {
+      //
+      // });
+
+
     }
   }
 

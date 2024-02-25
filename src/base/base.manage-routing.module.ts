@@ -35,14 +35,47 @@ import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
 import {NotebookwrapperComponent} from "../common/plugins.component";
-import {Descriptor, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {K8SRCSpec} from "../common/k8s.replics.spec.component";
+import {FlinkClusterListComponent} from "./flink.cluster.list.component";
+import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 
+const get_job_worker_meta = "get_job_worker_meta";
+const flinkClusterCfgTargetName = PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
+const dataXWorkerCfgTargetName = "datax-worker";
+
+const KEY_TARGET_NAME = 'targetName';
 
 export const dataXWorkerCfg: { processMeta: ProcessMeta }
   = {
+
   processMeta: {
+    step1PluginType: {
+      name: 'datax-worker',
+      require: true,
+      extraParam: "dataxName_" + PowerjobCptType.Server
+    },
+    successCreateNext: (step3: DataxWorkerAddStep3Component) => {
+      DataxWorkerComponent.getJobWorkerMeta(step3, null, step3.dto.processMeta)
+        .then((dataXWorkerStatus) => {
+          step3.nextStep.emit(dataXWorkerStatus);
+        });
+    },
+    targetNameGetter: (params) => {
+      // @ts-ignore
+      return dataXWorkerCfgTargetName;
+    },
+    runningTabRouterGetter: (params) => {
+      return [dataXWorkerCfgTargetName];
+    },
+    init_get_job_worker_meta: get_job_worker_meta,
+    runningStepCfg: {
+      showPowerJobWorkflowInstance: true,
+      defaultTabExecute: (cpt) => {
+        cpt.gotoPage(cpt.pager.curPage)
+      }
+    },
     step1CreateSaveEvent: (step1) => {
       let e = new SavePluginEvent(true);
       e.serverForward = "coredefine:datax_action:save_datax_worker";
@@ -51,7 +84,7 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     },
     relaunchClusterMethod: "relaunch_datax_worker",
     launchClusterMethod: "launch_datax_worker",
-    targetName: "datax-worker"
+    targetName: dataXWorkerCfgTargetName
     , pageHeader: "PowerJob分布式执行器"
     , notCreateTips: "还未创建PowerJob执行器，创建之后可以将DataX构建任务提交到K8S PowerJob集群，高效并行执行分布式数据同步任务"
     //, createButtonLabel: "创建PowerJob执行器"
@@ -77,6 +110,10 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     }
     , confirmStepCpts: [
       {
+
+        heteroPluginTypeGetter: (dto) => {
+          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.Server}
+        },
         cptType: PowerjobCptType.Server,
         cptShow: (dto: DataxWorkerDTO) => true,
         cpuMemorySpecGetter: (dto: DataxWorkerDTO) => {
@@ -87,11 +124,17 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
         }
       }
       , {
+        heteroPluginTypeGetter: (dto) => {
+          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.Worker}
+        },
         cptType: PowerjobCptType.Worker,
         cptShow: (dto: DataxWorkerDTO) => !dto.usingPowderJobUseExistCluster,
         cpuMemorySpecGetter: (dto: DataxWorkerDTO) => dto.powderJobWorkerRCSpec
       }
       , {
+        heteroPluginTypeGetter: (dto) => {
+          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.JobTpl}
+        },
         cptType: PowerjobCptType.JobTpl,
         cptShow: (dto: DataxWorkerDTO) => true,
         cpuMemorySpecGetter: (dto: DataxWorkerDTO) => null
@@ -102,23 +145,71 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
 
 const step1FlinkCreateSaveEvent = new SavePluginEvent(true);
 
-const flinkClusterCfg: { processMeta: ProcessMeta }
+const flinkClusterHeteroPkGetter: (dto: DataxWorkerDTO) => ItemPropVal = (dto: DataxWorkerDTO) => {
+  if (dto && dto.flinkClusterHetero) {
+    for (let i = 0; i < dto.flinkClusterHetero.length; i++) {
+      let hlist = dto.flinkClusterHetero[i];
+      for (let j = 0; j < hlist.items.length; j++) {
+        let item = hlist.items[j];
+        let pk = item.pk;
+        if (pk) {
+          return pk;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+// @ts-ignore
+export const flinkClusterCfg: { processMeta: ProcessMeta }
   = {
   processMeta: {
+    step1PluginType: {
+      name: PowerjobCptType.FlinkCluster,
+      require: true,
+      extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+    },
+    successCreateNext: (step3: DataxWorkerAddStep3Component) => {
+      // DataxWorkerComponent.getJobWorkerMeta(this, null, step3.dto.processMeta)
+      //   .then((dataXWorkerStatus) => {
+      //     step3.nextStep.emit(dataXWorkerStatus);
+      //   });
+      let itemPkVal = flinkClusterHeteroPkGetter(step3.dto);
+      step3.router.navigate(["/base", "flink-session-detail", itemPkVal.primary], {relativeTo: step3.route});
+    },
+    targetNameGetter: (params, justGroup: boolean, dto: DataxWorkerDTO) => {
+      // @ts-ignore
+
+      let itemPkVal = flinkClusterHeteroPkGetter(dto);
+      if (itemPkVal) {
+        return flinkClusterCfgTargetName + "/" + itemPkVal.primary;
+      }
+      return flinkClusterCfgTargetName + (justGroup ? '' : '/dummpnameX');
+    },
+    runningTabRouterGetter: (params) => {
+      return [flinkClusterCfgTargetName];
+    },
+    init_get_job_worker_meta: get_job_worker_meta,
+    runningStepCfg: {
+      showPowerJobWorkflowInstance: false,
+      defaultTabExecute: (cpt) => {
+      }
+    },
     step1CreateSaveEvent: (step1) => {
       return step1FlinkCreateSaveEvent;
     },
     launchClusterMethod: "Launch_flink_cluster",
     relaunchClusterMethod: "relaunch_flink_cluster",
-    targetName: "flink-cluster"
-    , pageHeader: "Flink Native Cluster执行器"
+    targetName: flinkClusterCfgTargetName
+    , pageHeader: "Flink Kubernetes Session执行器"
     // , createButtonLabel: "创建Flink Native Cluster执行器"
-    , notCreateTips: "还未创建Flink Native Cluster执行器，创建之后可以将Flink Job提交到K8S集群，高效并行执行数据实时同步任务"
+    , notCreateTips: "还未创建Flink Kubernetes Session执行器，创建之后可以将Flink Job提交到Kubernetes Session集群，高效并行执行数据实时同步任务"
     , stepsType: StepType.CreateFlinkCluster
     , supportK8SReplicsSpecSetter: false
     , step1Buttons: [
       {
-        label: '创建Flink Native Cluster执行器', click: (step1) => {
+        label: '创建执行器', click: (step1) => {
           step1.onClick();
         }
       }
@@ -131,6 +222,93 @@ const flinkClusterCfg: { processMeta: ProcessMeta }
     }
     , confirmStepCpts: [
       {
+        heteroPluginTypeGetter: (dto) => {
+
+          let itemPkVal = flinkClusterHeteroPkGetter(dto);
+          if (itemPkVal == null) {
+            throw new Error("itemPkVal can not be null");
+          }
+          return <PluginMeta>{
+            name: flinkClusterCfgTargetName,
+            require: true,
+            extraParam: 'dataxName_' + itemPkVal.primary
+          };
+
+        },
+        // hetero: flinkClusterCfgTargetName,
+        cptType: PowerjobCptType.FlinkCluster,
+        cptShow: (dto: DataxWorkerDTO) => true,
+        cpuMemorySpecGetter: (dto: DataxWorkerDTO) => {
+          return null;
+        }
+      }
+    ]
+  }
+};
+
+const get_flink_session = 'get_flink_session';
+// @ts-ignore
+export const flinkSessionDetail: { processMeta: ProcessMeta }
+  = {
+  processMeta: {
+    step1PluginType: null,
+    breadcrumbGetter: (params) => {
+      return {
+        breadcrumb: ['Flink Cluster', '/base/flink-cluster-list'],
+        name: params[KEY_TARGET_NAME]
+      }
+    },
+    successCreateNext: (step3: DataxWorkerAddStep3Component) => {
+      throw  new Error("shall not execute");
+    },
+    targetNameGetter: (params) => {
+      // @ts-ignore
+      return flinkClusterCfgTargetName + "/" + params[KEY_TARGET_NAME];
+    },
+    init_get_job_worker_meta: get_flink_session,
+    runningTabRouterGetter: (params) => {
+      return ['flink-session-detail', params[KEY_TARGET_NAME]];
+    },
+    runningStepCfg: {
+      showPowerJobWorkflowInstance: false,
+      defaultTabExecute: (cpt) => {
+      }
+    },
+    step1CreateSaveEvent: (step1) => {
+      throw new Error();
+    },
+    launchClusterMethod: null,
+    relaunchClusterMethod: "relaunch_flink_cluster",
+    targetName: "flink-session-detail"
+    , pageHeader: "Flink Native Cluster执行器"
+    // , createButtonLabel: "创建Flink Native Cluster执行器"
+    , notCreateTips: null
+    , stepsType: StepType.CreateFlinkCluster
+    , supportK8SReplicsSpecSetter: false
+    , step1Buttons: []
+    , step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => {
+      // cpt.initFlinkClusterRelevantProperties(desc);
+    }
+    , step1HeteroGetter: (dto: DataxWorkerDTO) => {
+      // return dto.flinkClusterHetero;
+      throw new Error();
+    }
+    , confirmStepCpts: [
+      {
+
+        //  hetero: flinkClusterCfgTargetName,
+        heteroPluginTypeGetter: (dto, params) => {
+          // console.log(params);
+          // let itemPkVal = flinkClusterHeteroPkGetter(dto);
+          // if (itemPkVal == null) {
+          //   throw new Error("itemPkVal can not be null");
+          // }
+          return <PluginMeta>{
+            name: flinkClusterCfgTargetName,
+            require: true,
+            extraParam: 'dataxName_' + params[KEY_TARGET_NAME]
+          };
+        },
         cptType: PowerjobCptType.FlinkCluster,
         cptShow: (dto: DataxWorkerDTO) => true,
         cpuMemorySpecGetter: (dto: DataxWorkerDTO) => {
@@ -230,6 +408,21 @@ const basemanageRoutes: Routes = [
             path: flinkClusterCfg.processMeta.targetName,
             component: DataxWorkerComponent,
             data: flinkClusterCfg
+          },
+          {
+            path: flinkClusterCfg.processMeta.targetName + "-list",
+            component: FlinkClusterListComponent,
+            data: flinkClusterCfg
+          },
+          {
+            path: "flink-session-detail/:targetName/:targetTab",
+            component: DataxWorkerComponent,
+            data: flinkSessionDetail
+          },
+          {
+            path: "flink-session-detail/:targetName",
+            component: DataxWorkerComponent,
+            data: flinkSessionDetail
           },
           {
             path: flinkClusterCfg.processMeta.targetName + '/:targetTab',

@@ -63,6 +63,7 @@ import {IncrBuildStep4StopedComponent} from "./incr.build.step4.stoped.component
 import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 
+
 @NgModule({
   id: 'coremanage',
   imports: [CommonModule, CoreNodeRoutingModule, FormsModule, TisCommonModule, NzLayoutModule, NzCollapseModule
@@ -76,9 +77,10 @@ import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.
     CopyOtherCoreComponent
     , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
-    , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent, IncrBuildStep1ExtendSelectedTabPropsComponent ,
+    , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent //
+    , IncrBuildStep1ExtendSelectedTabPropsComponent,
     // IncrBuildStep2Component,
-    IncrBuildStep3Component, IncrBuildStep4RunningComponent , IncrBuildStep4StopedComponent
+    IncrBuildStep3Component, IncrBuildStep4RunningComponent, IncrBuildStep4StopedComponent
   ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色

@@ -73,7 +73,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
   @Output() preStep = new EventEmitter<any>();
   // pluginCategory: PluginType = {name: 'datax-worker', require: true, extraParam: "dataxName_" + PowerjobCptType.Server};
   pluginCategory: PluginType = {
-    name: 'datax-worker',
+    name: PowerjobCptType.FlinkCluster,
     require: true,
     extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
   };
@@ -95,9 +95,9 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
     // e.notShowBizMsg = true;
     // e.serverForward = "coredefine:datax_action:save_datax_worker";
     // e.postPayload = {"k8sSpec": this.dto.primaryRCSpec};
-    let appTisService: TISService = this.tisService;
-    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    e.basicModule = this;
+    // let appTisService: TISService = this.tisService;
+    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetNameGetter(this.route.snapshot.params));
     this.savePlugin.emit(e);
   }
 
@@ -111,6 +111,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
   ngOnInit(): void {
     let evt = this.dto.processMeta.step1CreateSaveEvent(this);
     this.rcSpecShow = !!evt.postPayload;
+    this.pluginCategory = this.dto.processMeta.step1PluginType;
   }
 
   afterSaveReader(e: PluginSaveResponse) {

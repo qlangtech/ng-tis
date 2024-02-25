@@ -29,6 +29,8 @@ import {PowerjobCptType} from "./datax.worker.component";
 import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {dataXWorkerCfg} from "./base.manage-routing.module";
 import {Observable, Subject} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {KEY_APPNAME} from "./datax.worker.running.component";
 
 @Component({
   template: `
@@ -55,15 +57,6 @@ import {Observable, Subject} from "rxjs";
                       [nzType]="i<1 ? 'primary':'default'"
                       (click)="btn.click(this)">{{btn.label}}</button>
             </ng-container>
-
-
-            <!--                        <button *nzSpaceItem [disabled]="this.formDisabled" nz-button nzType="primary"-->
-            <!--                                (click)="onClick()">{{this.dto.processMeta.createButtonLabel}}</button>-->
-
-            <!--                        <button *nzSpaceItem [disabled]="this.formDisabled" nz-button nzType="default"-->
-            <!--                                (click)="onClickAddExistPowerjobCluster()">-->
-            <!--                            接入已有PowerJob集群-->
-            <!--                        </button>-->
           </nz-space>
 
 
@@ -77,7 +70,7 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
   @Input() dto: DataxWorkerDTO;
   @Output() nextStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NzModalService) {
+  constructor(tisService: TISService, modalService: NzModalService, private route: ActivatedRoute) {
     super(tisService, modalService);
   }
 
@@ -91,9 +84,9 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     // let promise =    Promise.resolve();
     let success$ = new Subject<any>();
 
-    DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, module)
-      .then((rList) => {
-
+    DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, true, module)
+      .then((dto) => {
+        let rList = dto.workDesc;
         let desc = Array.from(rList.values());
         let pluginDesc = desc.find((dec) => PowerjobCptType.JobTplAppOverwrite.toString() === dec.displayName);
         let pluginCategory: PluginType = {
@@ -101,9 +94,21 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
           require: true,
           appendParams: appendParams
         };
+        // console.log([pluginDesc,pluginCategory]);
+        let opt = null;
 
+        if (appendParams) {
+          let p = appendParams.find((param) => param.key === KEY_APPNAME);
+          if (p) {
+            opt = new SavePluginEvent();
+            opt.overwriteHttpHeaderOfAppName(p.val);
+          }
+        }
+        // console.log(dto);
+        let containTplRewriterPlugin = dto.typedPluginCount[PowerjobCptType.JobTplAppOverwrite];
         let modelRef = PluginsComponent.openPluginDialog({
-            shallLoadSavedItems: true,
+            opt: opt,
+            shallLoadSavedItems: containTplRewriterPlugin > 0,
             savePluginEventCreator: () => {
               let evnet = new SavePluginEvent();
               evnet.serverForward = "coredefine:datax_action:update_power_job"
@@ -122,13 +127,13 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     return success$.asObservable();
   }
 
-  public static getWorkDescs(targetName: string, module: BasicFormComponent): Promise<Map<string /* impl */, Descriptor>> {
+  public static getWorkDescs(targetName: string, addJobTplOverwritePlugin: boolean, module: BasicFormComponent): Promise<WorkerDTO> {
     return module.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=datax_action&emethod=worker_desc&targetName=${targetName}`)
+      , `action=datax_action&emethod=worker_desc&targetName=${targetName}&addJobTplOverwritePlugin=${addJobTplOverwritePlugin}`)
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-          return (rList);
+          return new WorkerDTO(rList, r.bizresult.typedPluginCount);
         }
       });
   }
@@ -137,46 +142,12 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     if (this.dto.containPowerJob) {
       return;
     }
-    DataxWorkerAddStep0Component.getWorkDescs(this.dto.processMeta.targetName, this).then((rList) => {
-      // let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-
-      let desc = Array.from(rList.values());
-
-      this.dto.processMeta.step0InitDescriptorProcess(this,desc);
-
-    //  this.initPowerJobRelevantProperties(desc);
-     // console.log(desc);
-     //  let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
-     //  let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
-     //  let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
-     //  let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
-     //  if (!powerjobServer) {
-     //    throw new Error("powerjobServer can not be null");
-     //  }
-     //  if (!powerjobUseExistCluster) {
-     //    throw new Error("powerjobUseExistCluster can not be null");
-     //  }
-     //  if (!powerjobWorker) {
-     //    throw new Error("powerjobWorker can not be null");
-     //  }
-     //  if (!jobTpl) {
-     //    throw new Error("jobTpl can not be null");
-     //  }
-     //
-     //  let pluginCategory: PluginType = {name: 'datax-worker', require: true};
-     //  this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, pluginCategory);
-     //  this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, pluginCategory);
-     //  this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, pluginCategory);
-     //  this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, pluginCategory);
-    })
-    // this.httpPost('/coredefine/corenodemanage.ajax'
-    //   , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
-    //   .then((r) => {
-    //     if (r.success) {
-    //
-    //
-    //     }
-    //   });
+    DataxWorkerAddStep0Component.getWorkDescs(this.dto.processMeta.targetNameGetter(this.route.snapshot.params, true), false, this)
+      .then((dto) => {
+        let rList = dto.workDesc;
+        let desc = Array.from(rList.values());
+        this.dto.processMeta.step0InitDescriptorProcess(this, desc);
+      });
   }
 
   public initFlinkClusterRelevantProperties(desc: Array<Descriptor>): void {
@@ -221,6 +192,11 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     this.dto.usingPowderJobUseExistCluster = true;
     let direct: IntendDirect = {dto: this.dto, cpt: DataxWorkerAddExistPowerjobClusterComponent};
     this.nextStep.emit(direct)
+  }
+}
+
+export class WorkerDTO {
+  constructor(public workDesc: Map<string /* impl */, Descriptor>, public typedPluginCount: Map<PowerjobCptType, number>) {
   }
 }
 

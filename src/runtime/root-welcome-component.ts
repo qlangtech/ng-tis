@@ -245,11 +245,13 @@ export class RootWelcomeComponent extends BasicFormComponent implements OnInit {
     super(tisService);
   }
 
-  ngOnInit(): void {
-
-
-    let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-    this._latestSelected = popularSelected.popularLatestSelected;
+  ngOnInit() {
+    this.tisService.tisMeta.then((meta) => {
+      let popularSelected = meta.latestSelectedAppsIndex();
+      this._latestSelected = popularSelected.popularLatestSelected;
+    });
+    // let popularSelected: LatestSelectedIndex = await LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+    // this._latestSelected = popularSelected.popularLatestSelected;
   }
 
   backgroupDbClick(event: MouseEvent) {

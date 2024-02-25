@@ -56,7 +56,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
             <tis-page-header-left *ngIf="dataxProcess && dataXWorkerStatus">
                 <ng-container *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated">
                     <nz-tag  nzColor="processing">
-                        <a target="_blank" [routerLink]="'/base/datax-worker'"><i nz-icon nzType="link"
+                        <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon nzType="link"
                                                                                   nzTheme="outline"></i>分布式执行</a>
                     </nz-tag>
                     <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button

@@ -74,9 +74,9 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
 
-    let appTisService: TISService = this.tisService;
-    appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    e.basicModule = this;
+    // let appTisService: TISService = this.tisService;
+    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
     this.savePlugin.emit(e);
 
     // console.log(k8sReplicsSpec.k8sControllerSpec);
