@@ -106,15 +106,15 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
       <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
       <tis-header-tool>
         <ng-container *ngIf="cancel.observers.length>0">
-          <button nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button>
+          <button [disabled]="formDisabled" nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button>
           &nbsp;
         </ng-container>
         <ng-container *ngIf="goBackBtnShow && goBack.observers.length>0">
-          <button nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步
+          <button [disabled]="formDisabled" nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步
           </button> &nbsp;
         </ng-container>
         <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
-          <button nz-button nzType="primary" (click)="goOn.emit($event)">
+          <button [disabled]="formDisabled" nz-button nzType="primary" (click)="goOn.emit($event)">
             <i nz-icon nzType="step-forward"
               nzTheme="outline"></i>下一步
           </button>
@@ -135,6 +135,8 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
 })
 export class TisStepsToolbarComponent implements AfterContentInit {
 
+  @Input()
+  public formDisabled = false;
   @Input()
   goOnBtnShow = true;
   @Input()
@@ -158,6 +160,7 @@ export class TisStepsToolbarComponent implements AfterContentInit {
   }
 
   cancelSteps() {
+
     this.modal.confirm({
       nzTitle: '<i>确认</i>',
       nzContent: '<b>您是否确定要退出此流程</b>',

@@ -312,6 +312,9 @@ export class TabletView implements NextObserver<any> {
    * @param _typeMetas
    */
   constructor(private _elementKeys: Array<string>, private _dbLatestMcols: Array<ReaderColMeta>, private _mcols: Array<ReaderColMeta>, private _typeMetas: Array<DataTypeMeta>) {
+    if (!_mcols) {
+      throw new Error("param _mcols can not be null");
+    }
     let index = 0;
     // console.log(this._mcols);
     // console.log(this._dbLatestMcols);
@@ -333,15 +336,18 @@ export class TabletView implements NextObserver<any> {
     //     }
     // });
     // this._dbLatestMcols = tmp;
-    index = 0;
-    this._dbLatestMcols.forEach((c) => {
-      c.index = ++index;
-      c.ip = new ItemPropVal();
-      // @ts-ignore
-      c.extraProps = c.extraProps | {}
-      RowAssist.setDocFieldSplitMetas(c
-        , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
-    });
+    if(_dbLatestMcols){
+      index = 0;
+      this._dbLatestMcols.forEach((c) => {
+        c.index = ++index;
+        c.ip = new ItemPropVal();
+        // @ts-ignore
+        c.extraProps = c.extraProps | {}
+        RowAssist.setDocFieldSplitMetas(c
+          , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
+      });
+    }
+
   }
 
   next(errorContent: any): void {
