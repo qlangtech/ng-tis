@@ -32,7 +32,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
     <tis-steps [type]="dto.processModel" [step]="0"></tis-steps>
     <nz-spin [nzSpinning]="this.formDisabled">
       <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()"
-                           (goOn)="createIndexStep1Next()"></tis-steps-tools-bar>
+                           (goOn)="createIndexStep1Next()" [formDisabled]="formDisabled"></tis-steps-tools-bar>
       <div style="width: 80%;margin: 0 auto;">
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
@@ -86,12 +86,14 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createIndexStep1Next(): void {
+    this.formDisabled = true;
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     this.savePlugin.emit(e);
   }
 
   afterSaveReader(event: PluginSaveResponse) {
+    this.formDisabled = false;
     if (event.saveSuccess) {
 
       if (event.hasBiz()) {
