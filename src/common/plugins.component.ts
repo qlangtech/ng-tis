@@ -810,18 +810,18 @@ export class NotebookwrapperComponent implements OnInit {
   selector: 'item-prop-val',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-    <nz-form-item [hidden]="hide">
-      <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
-                     [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
-                                                                 *ngIf="descContent || asyncHelp"
-                                                                 nz-icon nzType="question-circle"
-                                                                 nzTheme="twotone"
-                                                                 (click)="toggleDescContentShow()"></i>
-      </nz-form-label>
-      <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
-                       [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
-        <ng-container [ngSwitch]="_pp.primaryVal">
-          <ng-container *ngSwitchCase="true">
+      <nz-form-item [hidden]="hide">
+          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
+                         [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
+                                                                     *ngIf="descContent || asyncHelp"
+                                                                     nz-icon nzType="question-circle"
+                                                                     nzTheme="twotone"
+                                                                     (click)="toggleDescContentShow()"></i>
+          </nz-form-label>
+          <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
+                           [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+              <ng-container [ngSwitch]="_pp.primaryVal">
+                  <ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}"
                     [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -829,10 +829,22 @@ export class NotebookwrapperComponent implements OnInit {
                              [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"
                              [placeholder]="_pp.placeholder"/>
                   </ng-container>
+                 <ng-container *ngSwitchCase="10">
+                      <nz-date-picker
+                        nzShowTime
+                        [nzFormat]="_pp.dateTimeFormat"
+                        [(ngModel)]="_pp.primary"
+                        [nzPlaceHolder]="_pp.placeholder"
+                        (nzOnOpenChange)="inputValChange(_pp,null)"
+                      ></nz-date-picker>
+                  </ng-container>
                   <ng-container *ngSwitchCase="4">
-                       <nz-input-number style="width: 50%;" [disabled]="disabled" *ngIf="_pp.primaryVal"
-                                        [(ngModel)]="_pp.primary"
-                                        [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
+
+                      <nz-input-number style="width: 50%;" [disabled]="disabled" *ngIf="_pp.primaryVal"
+                         [(ngModel)]="_pp.primary"
+                         [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
+
+
                   </ng-container>
                   <ng-container *ngSwitchCase="2">
                       <ng-container [ngSwitch]="disabled ? '' : _pp.getEProp('style') ">
@@ -904,83 +916,83 @@ export class NotebookwrapperComponent implements OnInit {
                        ><button [disabled]="fileupload.nzFileList.length > 0" nz-button><i nz-icon nzType="upload"></i>上传</button></nz-upload>
                  </ng-container>
               </span>
-            <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon
-                                                                             nzType="question-circle"
-                                                                             nzTheme="outline"></i></a>
-            <ng-container *ngIf="this.createRouter && !this.disabled">
-              <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link"
-                      [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
-              <nz-dropdown-menu #menu="nzDropdownMenu">
-                <ul nz-menu>
-                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                    <a (click)="openPluginDialog(_pp , p )">
-                      <i nz-icon nzType="plus"
-                         nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
-                    </a>
-                  </li>
-                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
-                    <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink">
-                      <i nz-icon nzType="link"
-                         nzTheme="outline"></i>管理</a>
-                    <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)">
-                      <i nz-icon nzType="link"
-                         nzTheme="outline"></i>管理</a>
-                  </li>
-                  <li nz-menu-item>
-                    <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload"
-                                                            nzTheme="outline"></i>刷新</a>
-                  </li>
-                </ul>
-              </nz-dropdown-menu>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngSwitchCase="false">
+                      <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon
+                                                                                       nzType="question-circle"
+                                                                                       nzTheme="outline"></i></a>
+                      <ng-container *ngIf="this.createRouter && !this.disabled">
+                          <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link"
+                                  [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
+                          <nz-dropdown-menu #menu="nzDropdownMenu">
+                              <ul nz-menu>
+                                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                                      <a (click)="openPluginDialog(_pp , p )">
+                                          <i nz-icon nzType="plus"
+                                             nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
+                                      </a>
+                                  </li>
+                                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
+                                      <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink">
+                                          <i nz-icon nzType="link"
+                                             nzTheme="outline"></i>管理</a>
+                                      <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)">
+                                          <i nz-icon nzType="link"
+                                             nzTheme="outline"></i>管理</a>
+                                  </li>
+                                  <li nz-menu-item>
+                                      <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload"
+                                                                              nzTheme="outline"></i>刷新</a>
+                                  </li>
+                              </ul>
+                          </nz-dropdown-menu>
+                      </ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="false">
 
-            <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled"
-                       [name]="_pp.key"
-                       nzAllowClear [ngModel]="_pp.descVal.impl"
-                       (ngModelChange)="changePlugin(_pp,$event)"
-                       [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
-              <nz-option *ngFor="let e of _pp.descVal.descriptors.values()"
-                         [nzLabel]="e.displayName"
-                         [nzValue]="e.impl"></nz-option>
-            </nz-select>
+                      <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled"
+                                 [name]="_pp.key"
+                                 nzAllowClear [ngModel]="_pp.descVal.impl"
+                                 (ngModelChange)="changePlugin(_pp,$event)"
+                                 [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
+                          <nz-option *ngFor="let e of _pp.descVal.descriptors.values()"
+                                     [nzLabel]="e.displayName"
+                                     [nzValue]="e.impl"></nz-option>
+                      </nz-select>
 
-            <button *ngIf="_pp.descVal.extensible" nz-button nzType="link"
-                    (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload"
-                                                                           nzTheme="outline"></i></button>
+                      <button *ngIf="_pp.descVal.extensible" nz-button nzType="link"
+                              (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload"
+                                                                                     nzTheme="outline"></i></button>
 
-            <ng-template #renderExtraPluginTemplate>
-              <nz-divider></nz-divider>
-              <div class="container">
-                <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
-                        (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus"
-                                                                   nzTheme="outline"></i>添加
-                </button>
-              </div>
-            </ng-template>
+                      <ng-template #renderExtraPluginTemplate>
+                          <nz-divider></nz-divider>
+                          <div class="container">
+                              <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
+                                      (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus"
+                                                                                 nzTheme="outline"></i>添加
+                              </button>
+                          </div>
+                      </ng-template>
 
-            <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
-                  [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
-                  *ngIf=" _pp.descVal.propVals.length >0">
-              <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
-                <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
-                           [(ngModel)]="_pp.descVal.showAllField"
-                           [ngModelOptions]="{standalone: true}"></nz-switch>
-              </div>
-              <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
-                             [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
-                             *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
-            </form>
-          </ng-container>
-        </ng-container>
-        <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info"
-                  [nzDescription]="helpTpl" nzCloseable></nz-alert>
-        <ng-template #helpTpl>
-          <markdown class="tis-markdown" [data]="descContent"></markdown>
-        </ng-template>
-      </nz-form-control>
-    </nz-form-item>  `,
+                      <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
+                            [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
+                            *ngIf=" _pp.descVal.propVals.length >0">
+                          <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
+                              <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                                         [(ngModel)]="_pp.descVal.showAllField"
+                                         [ngModelOptions]="{standalone: true}"></nz-switch>
+                          </div>
+                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
+                                         [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
+                                         *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
+                      </form>
+                  </ng-container>
+              </ng-container>
+              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info"
+                        [nzDescription]="helpTpl" nzCloseable></nz-alert>
+              <ng-template #helpTpl>
+                  <markdown class="tis-markdown" [data]="descContent"></markdown>
+              </ng-template>
+          </nz-form-control>
+      </nz-form-item>  `,
   styles: [
     `
       .form-label-verical {

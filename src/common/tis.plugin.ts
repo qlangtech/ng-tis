@@ -111,6 +111,7 @@ export class ItemPropVal extends ErrorFeedback {
   public _eprops: { string: any };
   private dftVal: any;
   placeholder: string;
+  dateTimeFormat:string;
   _primaryVal: any = undefined;
   // 是否是主键
   pk: boolean;
@@ -129,6 +130,7 @@ export class ItemPropVal extends ErrorFeedback {
     this._eprops = vals || {};
     this.dftVal = this._eprops[KEY_DEFAULT_VALUE];
     this.placeholder = this._eprops['placeholder'] || '';
+    this.dateTimeFormat = this._eprops['dateTimeFormat'] || 'yyyy-MM-dd HH:mm:ss';
   }
 
   public setMcolsEnums(elementKeys: Array<string>, dbLatestMcols: Array<ReaderColMeta>, mcols: Array<ReaderColMeta>, typeMetas: Array<DataTypeMeta>) {

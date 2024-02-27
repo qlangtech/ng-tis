@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -195,7 +196,8 @@
       <workItem from="1705377890569" duration="81714000" />
       <workItem from="1707259878361" duration="16991000" />
       <workItem from="1708064889532" duration="6439000" />
-      <workItem from="1708498515669" duration="24584000" />
+      <workItem from="1708498515669" duration="28236000" />
+      <workItem from="1709011380537" duration="6512000" />
     </task>
     <servers />
   </component>
