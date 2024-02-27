@@ -82,6 +82,7 @@ import {NzCardModule} from 'ng-zorro-antd/card';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzListModule} from 'ng-zorro-antd/list';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import {BuildProgressComponent, ProgressComponent, ProgressTitleComponent} from "./core.build.progress.component";
 import {NgTerminalModule} from 'ng-terminal';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
@@ -155,7 +156,7 @@ import { LaunchK8SClusterWaittingProcessComponent } from './launch.waitting.proc
       storageType: 'localStorage'
     }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule,
     // NgxTisCommonLibModule ,
-    NzUploadModule,
+    NzUploadModule,NzDatePickerModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule, NzPageHeaderModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,

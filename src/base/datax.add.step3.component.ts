@@ -45,7 +45,7 @@ import {PluginExtraProps} from "../runtime/misc/RCDeployment";
     <!--          </tis-page-header>-->
     <!--      </tis-form>-->
     <nz-spin [nzSpinning]="this.formDisabled">
-      <tis-steps-tools-bar [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0"
+      <tis-steps-tools-bar [formDisabled]="formDisabled" [title]="'Reader '+ this.dto.readerDescriptor.displayName" [goBackBtnShow]="_offsetStep>0"
                            (cancel)="cancel()" (goBack)="goback()" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-plugins (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
                    [shallInitializePluginItems]="false" [_heteroList]="hlist" [pluginMeta]="[this.pluginCategory]"
@@ -167,7 +167,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
 
   // 执行下一步
   public createStepNext(): void {
-
+    this.formDisabled = true;
     let savePluginEvent = new SavePluginEvent();
     savePluginEvent.notShowBizMsg = true;
     this.savePlugin.emit(savePluginEvent);
@@ -188,6 +188,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
   }
 
   afterSaveReader(response: PluginSaveResponse) {
+    this.formDisabled = false;
     if (!response.saveSuccess) {
       return;
     }
@@ -209,8 +210,6 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
           this.nextStep.emit(next);
         }
       });
-
-
 
 
   }
