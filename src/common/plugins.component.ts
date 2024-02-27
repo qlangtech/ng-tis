@@ -831,7 +831,7 @@ export class NotebookwrapperComponent implements OnInit {
                   </ng-container>
                  <ng-container *ngSwitchCase="10">
                       <nz-date-picker
-                        nzShowTime
+                        nzShowTime [disabled]="disabled"
                         [nzFormat]="_pp.dateTimeFormat"
                         [(ngModel)]="_pp.primary"
                         [nzPlaceHolder]="_pp.placeholder"
