@@ -564,14 +564,18 @@ export class Item {
         fieldsErrs = errorFields[index];
         item = items[index];
         let itemProp: ItemPropVal;
+        let containAdvanceField = false;
         fieldsErrs.forEach((fieldErr) => {
 
           let ip = item.vals[fieldErr.name];
           // console.log([item.vals, fieldErr, item.vals[fieldErr.name], ip]);
           if (ip instanceof ItemPropVal) {
+
             itemProp = ip;
             itemProp.error = fieldErr.content;
-
+            if(itemProp.advance){
+            containAdvanceField = true;
+            }
             if (!itemProp.primaryVal) {
               if (fieldErr.errorfields.length !== 1) {
                 throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
@@ -582,6 +586,11 @@ export class Item {
             throw new Error("illegal type");
           }
         });
+
+        if(containAdvanceField){
+          // 错误字段中有在高级选项中的字段，需要将高级字段展示打开
+          item.showAllField = true;
+        }
       }
     }
   }

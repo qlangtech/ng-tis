@@ -672,7 +672,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // 如果 传入的tisService 中设置了appname的header那可以通过plugin的表单提交一并提交到服务端
     let formContext = this;
     // console.log(_heteroList);
-    PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow, (r) => {
+    PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow
+      , (r) => {
       // 成功了
       this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
       if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
@@ -713,13 +714,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       this.processResult(r);
       this.cdr.detectChanges();
       let pluginErrorFields = r.errorfields;
-      // console.log(pluginErrorFields);
+
       let index = 0;
       // let tmpHlist: HeteroList[] = [];
       _heteroList.forEach((h) => {
         let items: Item[] = h.items;
         let errorFields = pluginErrorFields[index++];
-        // console.log(errorFields);
+         console.log(errorFields);
         Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
       });
       this.cdr.detectChanges();
@@ -1273,7 +1274,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
   inputValChange(_pp: ItemPropVal, $event: Event) {
     // console.log($event);
-    delete _pp.error;
+    delete _pp._error;
     // console.log("inputValChange");
     // $event.stopPropagation();
   }
