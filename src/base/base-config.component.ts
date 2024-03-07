@@ -39,7 +39,9 @@ enum PluginCategory {
           <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzSelectedIndex]="selectedIndex">
               <nz-tab nzTitle="全局" (nzClick)="goto('global')" (nzDeselect)="configDeSelect($event)">
                   <ng-template nz-tab>
-                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true" [plugins]="['k8s-images','params-cfg']" (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
+                      <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true"
+                                   [plugins]="['flink-image','dft-image','powerjob-image','params-cfg']"
+                                   (ajaxOccur)="buildStep1ParamsSetComponentAjax($event)"></tis-plugins>
                   </ng-template>
               </nz-tab>
               <!--              <nz-tab nzTitle="实时" (nzClick)="goto('incr')" (nzDeselect)="configDeSelect($event)">-->

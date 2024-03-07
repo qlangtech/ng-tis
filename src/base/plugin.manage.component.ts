@@ -25,7 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
+import {HeteroList, IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -47,21 +47,22 @@ enum PluginTab {
           nz-icon nzType="redo" nzTheme="outline"></i>重试
       </button>
     </ng-template>
-
+    <!-- 过滤条件 -->
     <div nz-row nzJustify="start" nzAlign="middle" class="filter-container">
       <div nz-col nzSpan="18" *ngIf="_extendPoint && _extendPoint.length>0">
         <label><i nz-icon nzType="filter" nzTheme="outline"></i>扩展点：</label>
-        <nz-select class="filter-extendpoint" [(ngModel)]="filterExtendPoint" [nzSize]="'small'"
+        <nz-select [disabled]="checkedAllAvailable" class="filter-extendpoint" [(ngModel)]="filterExtendPoint" [nzSize]="'small'"
                    nzMode="multiple">
           <nz-option *ngFor="let option of _extendPoint" [nzLabel]="option" [nzValue]="option"></nz-option>
         </nz-select>
       </div>
       <div nz-col nzSpan="6" *ngIf="this.endType">
         <label><i nz-icon nzType="filter" nzTheme="outline"></i>端类型：</label>
-        <nz-switch [(ngModel)]="filterEndType" (ngModelChange)="refreshPluginList()"
+        <nz-switch [disabled]="checkedAllAvailable" [(ngModel)]="filterEndType" (ngModelChange)="refreshPluginList()"
                    [nzCheckedChildren]="this.endType"></nz-switch>
       </div>
     </div>
+
     <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
       <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
         <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
@@ -73,13 +74,21 @@ enum PluginTab {
               </button>
             </nz-affix>
             <tis-page [rows]="avaliablePlugs">
-              <tis-col title="安装" width="4">
+              <tis-col title="安装" width="5">
                 <ng-template let-item="r">
-                  <label nz-checkbox
+                  <label nz-checkbox [disabled]="checkedAllAvailable"
                          [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
                 </ng-template>
               </tis-col>
-              <tis-col title="插件" (search)="queryAvailablePlugin($event)" width="15">
+              <tis-col width="5">
+                <ng-template let-item="r">
+                  <div>
+                                      <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon
+                                            [nzType]="icon" nzTheme="fill"></span>
+                  </div>
+                </ng-template>
+              </tis-col>
+              <tis-col title="插件" (search)="queryAvailablePlugin($event)" width="20">
                 <ng-template let-item="r">
                   <a href="javascript:void(0)">{{item.name}}</a>
                   <div class="tis-tags">
@@ -139,16 +148,17 @@ enum PluginTab {
             </tis-page>
           </ng-template>
         </nz-tab>
-        <nz-tab nzTitle="已安装" (nzClick)="openInstalledPlugins()">
+        <nz-tab [nzTitle]="installedTpl" (nzClick)="openInstalledPlugins()">
           <ng-template nz-tab>
             <tis-page [rows]="installedPlugs">
-              <tis-col   width="5">
+              <tis-col width="10">
                 <ng-template let-item="r">
-                <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon [nzType]="icon" nzTheme="fill"></span>
+                                  <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon
+                                        [nzType]="icon" nzTheme="fill"></span>
                 </ng-template>
               </tis-col>
 
-              <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="15">
+              <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="20">
                 <ng-template let-item="r">
                   <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc"
                                                                    *ngIf="item.classifier">{{item.classifier}}</i>
@@ -189,6 +199,9 @@ enum PluginTab {
           </ng-template>
         </nz-tab>
       </nz-tabset>
+      <ng-template #installedTpl>
+        <span nz-icon nzType="check-circle" nzTheme="outline"></span>已安装
+      </ng-template>
       <ng-template #extraTemplate>
       </ng-template>
     </nz-spin>
@@ -228,7 +241,7 @@ enum PluginTab {
 export class PluginManageComponent extends BasicFormComponent implements OnInit {
 
   pager: Pager = new Pager(1, 1);
-  avaliablePlugs: Array<any> = [];
+  avaliablePlugs: Array<AvaliablePlugin> = [];
   installedPlugs: Array<PluginInfo> = [];
   selectedIndex = 0;
 
@@ -238,6 +251,10 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
    * 当前是否在抽屉模式
    */
   drawerModel = false;
+  /**
+   * 是否选中所有可安装的插件，例如在安装powerjob 相关的插件包中，需要安装A、B两个tpi安装包，在打开drawer时就会设置该值位true，需要让用户把这些安装包一起安装
+   */
+  checkedAllAvailable = false;
 
   // 目标扩展点接口名
   _extendPoint: Array<string>;
@@ -258,14 +275,21 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
    * @param endType 数据端类型，如：mysql，sqlserver，oracle 等
    */
   public static openPluginManage(drawerService: NzDrawerService
-    , extendPoint: string | Array<string>, endType: string, filterTags: Array<string>): NzDrawerRef<PluginManageComponent, any> {
+    , extendPoint: string | Array<string>, endType: string, filterTags: Array<string>, checkedAllAvailable?: boolean): NzDrawerRef<PluginManageComponent, any> {
     const drawerRef = drawerService.create<PluginManageComponent, {}, {}>({
       nzWidth: "70%",
       nzPlacement: "right",
       nzTitle: `插件管理`,
       nzContent: PluginManageComponent,
-      nzContentParams: {drawerModel: true, extendPoint: extendPoint, endType: endType, filterTags: filterTags}
+      nzContentParams: {
+        drawerModel: true,
+        checkedAllAvailable: checkedAllAvailable,
+        extendPoint: extendPoint,
+        endType: endType,
+        filterTags: filterTags
+      }
     });
+
     return drawerRef;
   }
 
@@ -304,7 +328,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   get canInstall(): boolean {
-    return this.avaliablePlugs.find((p) => p.checked)
+    return this.avaliablePlugs.find((p) => p.checked) !== undefined;
   }
 
   get canUnInstall(): boolean {
@@ -312,7 +336,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   ngOnInit(): void {
-
+ //console.log("dddd");
     this.paramObservable = this.drawerModel ? new Subject<Params>() : this.route.params;
     this.paramObservable.subscribe((params: Params) => {
       let tab = params["tab"];
@@ -348,6 +372,10 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
         if (err) {
           this.updateSiteLoadErr = err;
         }
+        let availablePlugins: Array<AvaliablePlugin> = r.bizresult.rows;
+        availablePlugins.forEach((a) => {
+          a.checked = this.checkedAllAvailable;
+        });
         this.avaliablePlugs = r.bizresult.rows;
       });
   }
@@ -360,7 +388,11 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
         if (r.success) {
           this.updateSiteLoadErr = null;
           this.pager = Pager.create(r);
-          this.avaliablePlugs = r.bizresult.rows;
+          let availablePlugins: Array<AvaliablePlugin> = r.bizresult.rows;
+          availablePlugins.forEach((a) => {
+            a.checked = this.checkedAllAvailable;
+          });
+          this.avaliablePlugs = availablePlugins;
           this.selectedIndex = 0;
         }
       });
@@ -452,7 +484,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   updateCenterLoading(load: boolean) {
-    this.formDisabled = load;
+   // this.formDisabled = load;
   }
 
   queryAvailablePlugin(event: { query: string; reset: boolean }) {
@@ -464,6 +496,40 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
 
+}
+
+interface AvaliablePlugin {
+  "popularity": string;
+  "releaseTimestamp": number;
+  "requiredCore": string;
+  "size": number;
+  "sizeLiteral": string,
+  "sourceId": string,
+  "title": string,
+  "url": string,
+  "version": string;//"4.0.0",
+  "wiki": string;//"https://plugins.jenkins.io/tis-datax-local-powerjob-executor"
+  "endTypes": Array<string>;
+  "displayName": string; //"tis-datax-local-powerjob-executor",
+  dependencies: Array<{ name: string, value: string }>;
+
+  // "extendPoints":{
+  //   "com.qlangtech.tis.datax.job.DataXJobWorker":[
+  //     "com.qlangtech.tis.plugin.datax.powerjob.K8SDataXPowerJobUsingExistCluster",
+  //     "com.qlangtech.tis.plugin.datax.powerjob.K8SDataXPowerJobJobTemplate",
+  //     "com.qlangtech.tis.plugin.datax.powerjob.K8SDataXPowerJobOverwriteTemplate"
+  //   ],
+  //   "com.qlangtech.tis.datax.DataXJobSubmit":[
+  //     "com.qlangtech.tis.plugin.datax.DistributedPowerJobDataXJobSubmit"
+  //   ],
+  //   "com.qlangtech.tis.plugin.datax.powerjob.TriggerStrategy":[
+  //     "com.qlangtech.tis.plugin.datax.powerjob.impl.trigger.CrontabTriggerStrategy",
+  //     "com.qlangtech.tis.plugin.datax.powerjob.impl.trigger.NoneTriggerStrategy"
+  //   ]
+  // },
+  extendPoints: Map<string, Array<string>>;
+  // 是否选中
+  checked: boolean;
 }
 
 interface PluginInfo {

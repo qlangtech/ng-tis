@@ -93,16 +93,25 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     step1Buttons: [
       {
         label: '创建PowerJob执行器', click: (step1) => {
+          if (!step1.dto.hasSetHetero) {
+            step1.openPowerJobRelevantPlugin();
+            return;
+          }
           step1.onClick();
         }
       },
       {
         label: '接入已有PowerJob集群', click: (step1) => {
+          if (!step1.dto.hasSetHetero) {
+            step1.openPowerJobRelevantPlugin();
+            return;
+          }
           step1.onClickAddExistPowerjobCluster();
         }
       }
     ]
     , step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => {
+     // console.log(desc);
       cpt.initPowerJobRelevantProperties(desc);
     }
     , step1HeteroGetter: (dto: DataxWorkerDTO) => {
@@ -210,6 +219,12 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
     , step1Buttons: [
       {
         label: '创建执行器', click: (step1) => {
+
+          if (!step1.dto.hasSetHetero) {
+            step1.openFlinkClusterRelevantPlugin();
+            return;
+          }
+
           step1.onClick();
         }
       }

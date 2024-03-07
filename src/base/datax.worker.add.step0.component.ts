@@ -24,13 +24,14 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {IntendDirect} from "../common/MultiViewDAG";
-import {PluginsComponent} from "../common/plugins.component";
+import {ItemPropValComponent, PluginsComponent} from "../common/plugins.component";
 import {PowerjobCptType} from "./datax.worker.component";
-import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, PluginName, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {dataXWorkerCfg} from "./base.manage-routing.module";
 import {Observable, Subject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {KEY_APPNAME} from "./datax.worker.running.component";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
   template: `
@@ -70,7 +71,7 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
   @Input() dto: DataxWorkerDTO;
   @Output() nextStep = new EventEmitter<any>();
 
-  constructor(tisService: TISService, modalService: NzModalService, private route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, private route: ActivatedRoute, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
@@ -153,46 +154,119 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
   public initFlinkClusterRelevantProperties(desc: Array<Descriptor>): void {
     let flinkCluster = desc.find((dec) => PowerjobCptType.FlinkCluster.toString() === dec.displayName);
     if (!flinkCluster) {
-      throw new Error("powerjobServer can not be null");
+      // throw new Error("powerjobServer can not be null");
+      this.openFlinkClusterRelevantPlugin();
+      return;
     }
-    let pluginCategory: PluginType = {name: 'datax-worker', require: true};
-    this.dto.flinkClusterHetero = PluginsComponent.pluginDesc(flinkCluster, pluginCategory);
+    // let pluginCategory: PluginType = {name: 'datax-worker', require: true};
+    this.dto.flinkClusterHetero = PluginsComponent.pluginDesc(flinkCluster, this.flinkPluginCategory);
+    this.dto.hasSetHetero = true;
   }
 
+
+  private powerJobPluginCategory: PluginType = {
+    name: 'datax-worker', require: true, descFilter: {
+      endType: () => 'powerjob',
+      localDescFilter: (desc) => true
+    }
+  };
+
+  private flinkPluginCategory: PluginType = {
+    name: 'datax-worker', require: true, descFilter: {
+      endType: () => 'flink',
+      localDescFilter: (desc) => true
+    }
+  };
+
   public initPowerJobRelevantProperties(desc: Array<Descriptor>): void {
+    // console.log(desc);
     let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
     let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
     let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
     let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
-    if (!powerjobServer) {
-      throw new Error("powerjobServer can not be null");
-    }
-    if (!powerjobUseExistCluster) {
-      throw new Error("powerjobUseExistCluster can not be null");
-    }
-    if (!powerjobWorker) {
-      throw new Error("powerjobWorker can not be null");
-    }
-    if (!jobTpl) {
-      throw new Error("jobTpl can not be null");
+
+
+    if (!powerjobServer || !powerjobUseExistCluster || !powerjobWorker || !jobTpl) {
+
+      // let pluginMeta: PluginType = {
+      //   name: 'datax-worker', require: true,
+      //   descFilter: {
+      //     endType: () => 'powerjob',
+      //     localDescFilter: (desc) => true
+      //   }
+      // };
+
+      // ItemPropValComponent.openPluginInstall(
+      //   this.drawerService, this, 'PowerJob'
+      //   , 'com.qlangtech.tis.datax.job.DataXJobWorker', this.pluginCategory);
+      this.openPowerJobRelevantPlugin();
+      return;
     }
 
-    let pluginCategory: PluginType = {name: 'datax-worker', require: true};
-    this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, pluginCategory);
-    this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, pluginCategory);
-    this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, pluginCategory);
-    this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, pluginCategory);
+    // if (!powerjobServer) {
+    //   throw new Error("powerjobServer can not be null");
+    // }
+    // if (!powerjobUseExistCluster) {
+    //   throw new Error("powerjobUseExistCluster can not be null");
+    // }
+    // if (!powerjobWorker) {
+    //   throw new Error("powerjobWorker can not be null");
+    // }
+    // if (!jobTpl) {
+    //   throw new Error("jobTpl can not be null");
+    // }
+
+
+    this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, this.powerJobPluginCategory);
+    this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.powerJobPluginCategory);
+    this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, this.powerJobPluginCategory);
+    this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, this.powerJobPluginCategory);
+    this.dto.hasSetHetero = true;
+  }
+
+  public openPowerJobRelevantPlugin() {
+    ItemPropValComponent.openPluginInstall(
+      this.drawerService, this, 'PowerJob'
+      , 'com.qlangtech.tis.datax.job.DataXJobWorker'
+      , this.powerJobPluginCategory, true, (aftInstallPluginClose) => {
+        // console.log(aftInstallPluginClose);
+        this.ngOnInit();
+      });
+  }
+
+  public openFlinkClusterRelevantPlugin() {
+    ItemPropValComponent.openPluginInstall(
+      this.drawerService, this, 'Flink'
+      , 'com.qlangtech.tis.datax.job.DataXJobWorker'
+      , this.flinkPluginCategory, true, (aftInstallPluginClose) => {
+        // console.log(aftInstallPluginClose);
+        this.ngOnInit();
+      });
   }
 
   onClick() {
+
+    // if (!this.dto.hasSetHetero) {
+    //   this.openPowerJobRelevantPlugin();
+    //   return;
+    // }
+
     this.nextStep.emit(this.dto);
   }
 
   onClickAddExistPowerjobCluster() {
+
+    // if (!this.dto.hasSetHetero) {
+    //   this.openPowerJobRelevantPlugin();
+    //   return;
+    // }
+
     this.dto.usingPowderJobUseExistCluster = true;
     let direct: IntendDirect = {dto: this.dto, cpt: DataxWorkerAddExistPowerjobClusterComponent};
     this.nextStep.emit(direct)
   }
+
+
 }
 
 export class WorkerDTO {

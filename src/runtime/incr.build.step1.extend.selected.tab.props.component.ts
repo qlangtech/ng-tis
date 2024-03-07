@@ -5,7 +5,7 @@ import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginTyp
 import {TISService} from "../common/tis.service";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {DataxAddStep4Component} from "../base/datax.add.step4.component";
+import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
 import {TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {PluginsComponent} from "../common/plugins.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -94,7 +94,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
 
   tabSelectIndex = 0;
   items: TransferItem[] = [];
-
+ // batchSettableTabs: Array<ISubDetailTransferMeta> = [];
   pluginMetas: PluginType[] = [];
   subFormHetero: HeteroList = new HeteroList();
 
@@ -139,7 +139,16 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
             disabled: false,
             meta: Object.assign({id: `${subformId}`}, readerDesc.subFormMeta)
           });
+
+          // this.batchSettableTabs.push({
+          //   id: subformId,
+          //   fieldName: subformId,
+          //   idList: [],
+          //   setted: false
+          // })
+
         });
+       // this.batchSettableTabs = [...this.batchSettableTabs];
         this.items = [...this.items];
       });
   }

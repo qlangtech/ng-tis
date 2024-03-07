@@ -55,7 +55,7 @@ import {
 } from "./tis.plugin";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {Subscription} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
@@ -674,59 +674,59 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     // console.log(_heteroList);
     PluginsComponent.postHeteroList(formContext, pluginTypes, _heteroList, savePluginEvent, this.errorsPageShow
       , (r) => {
-      // 成功了
-      this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
-      if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
-        this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
-      } else {
-        if (savePluginEvent.verifyConfig && r.success) {
-          if (!r.msg || r.msg.length < 1) {
-            this.notification.create('success', '校验成功', "表单配置无误");
+        // 成功了
+        this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
+        if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
+          this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
+        } else {
+          if (savePluginEvent.verifyConfig && r.success) {
+            if (!r.msg || r.msg.length < 1) {
+              this.notification.create('success', '校验成功', "表单配置无误");
+            }
+          }
+
+          if (savePluginEvent.createOrGetNotebook && r.success) {
+            if (this.startNotebook.observers.length > 0) {
+              this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
+            } else {
+              const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
+                nzWidth: "80%",
+                nzPlacement: "right",
+                nzContent: NotebookwrapperComponent,
+                nzContentParams: {},
+                nzClosable: false
+              });
+              // this.router.navigate()
+
+              this.router.navigate(["/", {outlets: {"zeppelin": `z/zeppelin/notebook/${r.bizresult}`}}], {relativeTo: this.route})
+            }
           }
         }
 
-        if (savePluginEvent.createOrGetNotebook && r.success) {
-          if (this.startNotebook.observers.length > 0) {
-            this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
-          } else {
-            const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
-              nzWidth: "80%",
-              nzPlacement: "right",
-              nzContent: NotebookwrapperComponent,
-              nzContentParams: {},
-              nzClosable: false
-            });
-            // this.router.navigate()
-
-            this.router.navigate(["/", {outlets: {"zeppelin": `z/zeppelin/notebook/${r.bizresult}`}}], {relativeTo: this.route})
+        if (!this.errorsPageShow && r.success) {
+          // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
+          if (this.showSaveButton && r.msg.length > 0) {
+            // this.notification.create('success', '成功dd', r.msg[0]);
           }
+          return;
         }
-      }
 
-      if (!this.errorsPageShow && r.success) {
-        // 如果在其他流程中嵌入执行（showSaveButton = false） 一般不需要显示成功信息
-        if (this.showSaveButton && r.msg.length > 0) {
-          // this.notification.create('success', '成功dd', r.msg[0]);
-        }
-        return;
-      }
+        this.processResult(r);
+        this.cdr.detectChanges();
+        let pluginErrorFields = r.errorfields;
 
-      this.processResult(r);
-      this.cdr.detectChanges();
-      let pluginErrorFields = r.errorfields;
-
-      let index = 0;
-      // let tmpHlist: HeteroList[] = [];
-      _heteroList.forEach((h) => {
-        let items: Item[] = h.items;
-        let errorFields = pluginErrorFields[index++];
-         console.log(errorFields);
-        Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
+        let index = 0;
+        // let tmpHlist: HeteroList[] = [];
+        _heteroList.forEach((h) => {
+          let items: Item[] = h.items;
+          let errorFields = pluginErrorFields[index++];
+          console.log(errorFields);
+          Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
+        });
+        this.cdr.detectChanges();
+      }, (err) => {
+        this.ajaxOccur.emit(new PluginSaveResponse(false, false, savePluginEvent));
       });
-      this.cdr.detectChanges();
-    }, (err) => {
-      this.ajaxOccur.emit(new PluginSaveResponse(false, false, savePluginEvent));
-    });
 
     if (event) {
       event.stopPropagation();
@@ -811,18 +811,18 @@ export class NotebookwrapperComponent implements OnInit {
   selector: 'item-prop-val',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <nz-form-item [hidden]="hide">
-          <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
-                         [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
-                                                                     *ngIf="descContent || asyncHelp"
-                                                                     nz-icon nzType="question-circle"
-                                                                     nzTheme="twotone"
-                                                                     (click)="toggleDescContentShow()"></i>
-          </nz-form-label>
-          <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
-                           [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
-              <ng-container [ngSwitch]="_pp.primaryVal">
-                  <ng-container *ngSwitchCase="true">
+    <nz-form-item [hidden]="hide">
+      <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
+                     [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
+                                                                 *ngIf="descContent || asyncHelp"
+                                                                 nz-icon nzType="question-circle"
+                                                                 nzTheme="twotone"
+                                                                 (click)="toggleDescContentShow()"></i>
+      </nz-form-label>
+      <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
+                       [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
+        <ng-container [ngSwitch]="_pp.primaryVal">
+          <ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}"
                     [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -842,8 +842,8 @@ export class NotebookwrapperComponent implements OnInit {
                   <ng-container *ngSwitchCase="4">
 
                       <nz-input-number style="width: 50%;" [disabled]="disabled" *ngIf="_pp.primaryVal"
-                         [(ngModel)]="_pp.primary"
-                         [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
+                                       [(ngModel)]="_pp.primary"
+                                       [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number>
 
 
                   </ng-container>
@@ -917,83 +917,83 @@ export class NotebookwrapperComponent implements OnInit {
                        ><button [disabled]="fileupload.nzFileList.length > 0" nz-button><i nz-icon nzType="upload"></i>上传</button></nz-upload>
                  </ng-container>
               </span>
-                      <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon
-                                                                                       nzType="question-circle"
-                                                                                       nzTheme="outline"></i></a>
-                      <ng-container *ngIf="this.createRouter && !this.disabled">
-                          <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link"
-                                  [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
-                          <nz-dropdown-menu #menu="nzDropdownMenu">
-                              <ul nz-menu>
-                                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
-                                      <a (click)="openPluginDialog(_pp , p )">
-                                          <i nz-icon nzType="plus"
-                                             nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
-                                      </a>
-                                  </li>
-                                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
-                                      <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink">
-                                          <i nz-icon nzType="link"
-                                             nzTheme="outline"></i>管理</a>
-                                      <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)">
-                                          <i nz-icon nzType="link"
-                                             nzTheme="outline"></i>管理</a>
-                                  </li>
-                                  <li nz-menu-item>
-                                      <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload"
-                                                                              nzTheme="outline"></i>刷新</a>
-                                  </li>
-                              </ul>
-                          </nz-dropdown-menu>
-                      </ng-container>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="false">
+            <a *ngIf="this.helpUrl" target="_blank" [href]="this.helpUrl"><i nz-icon
+                                                                             nzType="question-circle"
+                                                                             nzTheme="outline"></i></a>
+            <ng-container *ngIf="this.createRouter && !this.disabled">
+              <button class="assist-btn" nz-button nz-dropdown nzSize="small" nzType="link"
+                      [nzDropdownMenu]="menu">{{createRouter.label}}<i nz-icon nzType="down"></i></button>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item *ngFor="let p of createRouter.plugin">
+                    <a (click)="openPluginDialog(_pp , p )">
+                      <i nz-icon nzType="plus"
+                         nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
+                    </a>
+                  </li>
+                  <li nz-menu-item [ngSwitch]="!!createRouter.routerLink">
+                    <a *ngSwitchCase="true" target="_blank" [href]="createRouter.routerLink">
+                      <i nz-icon nzType="link"
+                         nzTheme="outline"></i>管理</a>
+                    <a *ngSwitchCase="false" (click)="openSelectableInputManager(createRouter)">
+                      <i nz-icon nzType="link"
+                         nzTheme="outline"></i>管理</a>
+                  </li>
+                  <li nz-menu-item>
+                    <a (click)="reloadSelectableItems()"><i nz-icon nzType="reload"
+                                                            nzTheme="outline"></i>刷新</a>
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
 
-                      <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled"
-                                 [name]="_pp.key"
-                                 nzAllowClear [ngModel]="_pp.descVal.impl"
-                                 (ngModelChange)="changePlugin(_pp,$event)"
-                                 [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
-                          <nz-option *ngFor="let e of _pp.descVal.descriptors.values()"
-                                     [nzLabel]="e.displayName"
-                                     [nzValue]="e.impl"></nz-option>
-                      </nz-select>
+            <nz-select [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible}" [disabled]="disabled"
+                       [name]="_pp.key"
+                       nzAllowClear [ngModel]="_pp.descVal.impl"
+                       (ngModelChange)="changePlugin(_pp,$event)"
+                       [nzDropdownRender]="_pp.descVal.extensible?renderExtraPluginTemplate:null">
+              <nz-option *ngFor="let e of _pp.descVal.descriptors.values()"
+                         [nzLabel]="e.displayName"
+                         [nzValue]="e.impl"></nz-option>
+            </nz-select>
 
-                      <button *ngIf="_pp.descVal.extensible" nz-button nzType="link"
-                              (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload"
-                                                                                     nzTheme="outline"></i></button>
+            <button *ngIf="_pp.descVal.extensible" nz-button nzType="link"
+                    (click)="freshDescPropDescriptors(_pluginImpl,_pp)"><i nz-icon nzType="reload"
+                                                                           nzTheme="outline"></i></button>
 
-                      <ng-template #renderExtraPluginTemplate>
-                          <nz-divider></nz-divider>
-                          <div class="container">
-                              <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
-                                      (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus"
-                                                                                 nzTheme="outline"></i>添加
-                              </button>
-                          </div>
-                      </ng-template>
+            <ng-template #renderExtraPluginTemplate>
+              <nz-divider></nz-divider>
+              <div class="container">
+                <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
+                        (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus"
+                                                                   nzTheme="outline"></i>添加
+                </button>
+              </div>
+            </ng-template>
 
-                      <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
-                            [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
-                            *ngIf=" _pp.descVal.propVals.length >0">
-                          <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
-                              <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
-                                         [(ngModel)]="_pp.descVal.showAllField"
-                                         [ngModelOptions]="{standalone: true}"></nz-switch>
-                          </div>
-                          <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
-                                         [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
-                                         *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
-                      </form>
-                  </ng-container>
-              </ng-container>
-              <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info"
-                        [nzDescription]="helpTpl" nzCloseable></nz-alert>
-              <ng-template #helpTpl>
-                  <markdown class="tis-markdown" [data]="descContent"></markdown>
-              </ng-template>
-          </nz-form-control>
-      </nz-form-item>  `,
+            <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
+                  [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
+                  *ngIf=" _pp.descVal.propVals.length >0">
+              <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
+                <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                           [(ngModel)]="_pp.descVal.showAllField"
+                           [ngModelOptions]="{standalone: true}"></nz-switch>
+              </div>
+              <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
+                             [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
+                             *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
+            </form>
+          </ng-container>
+        </ng-container>
+        <nz-alert *ngIf="descContent && descContentShow" (nzOnClose)="descContentShow= false" nzType="info"
+                  [nzDescription]="helpTpl" nzCloseable></nz-alert>
+        <ng-template #helpTpl>
+          <markdown class="tis-markdown" [data]="descContent"></markdown>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>  `,
   styles: [
     `
       .form-label-verical {
@@ -1154,35 +1154,71 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
   }
 
-  openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
+
+  static openPluginInstall(drawerService: NzDrawerService, cpt: BasicFormComponent
+    , descName: string, notFoundExtension: string | Array<string>, pluginMeta: PluginType, checkedAllAvailable: boolean, afterClosePluginInstall?: (value: any) => void) {
+    cpt.modalService.confirm({
+      nzTitle: '确认',
+      nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
+      nzOkText: '开始安装',
+      nzCancelText: '取消',
+      nzOnOk: () => {
+        let endType = null;
+
+        if (HeteroList.isDescFilterDefined(pluginMeta)) {
+          endType = pluginMeta.descFilter.endType();
+        }
+        const drawerRef = PluginManageComponent.openPluginManage(drawerService, notFoundExtension, endType, [], checkedAllAvailable);
+        if (afterClosePluginInstall) {
+          drawerRef.afterClose.subscribe(afterClosePluginInstall);
+        }
+        // drawerRef.afterClose.subscribe(() => {
+        // this.afterPluginAddClose.emit();
+        //})
+      }
+    });
+  }
+
+  static checkAndInstallPlugin(drawerService: NzDrawerService, cpt: BasicFormComponent, pluginMeta: PluginType, targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
     let descName = targetPlugin.descName;
     let url = "/coredefine/corenodemanage.ajax";
-    //console.log(this.pluginMeta);
-    this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
+    return cpt.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
       .then((r) => {
         if (!r.success) {
           if (r.bizresult.notFoundExtension) {
-            this.modalService.confirm({
-              nzTitle: '确认',
-              nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
-              nzOkText: '开始安装',
-              nzCancelText: '取消',
-              nzOnOk: () => {
-                let endType = null;
 
-                if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
-                  endType = this.pluginMeta.descFilter.endType();
-                }
-                const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType, []);
-                drawerRef.afterClose.subscribe(() => {
-                  // this.afterPluginAddClose.emit();
-                })
-              }
-            });
+            ItemPropValComponent.openPluginInstall(drawerService, cpt, descName, r.bizresult.notFoundExtension, pluginMeta, false);
+
+            // cpt.modalService.confirm({
+            //   nzTitle: '确认',
+            //   nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
+            //   nzOkText: '开始安装',
+            //   nzCancelText: '取消',
+            //   nzOnOk: () => {
+            //     let endType = null;
+            //
+            //     if (HeteroList.isDescFilterDefined(pluginMeta)) {
+            //       endType = pluginMeta.descFilter.endType();
+            //     }
+            //     const drawerRef = PluginManageComponent.openPluginManage(drawerService, r.bizresult.notFoundExtension, endType, []);
+            //     drawerRef.afterClose.subscribe(() => {
+            //       // this.afterPluginAddClose.emit();
+            //     })
+            //   }
+            // });
           }
           return;
+        } else {
+          return PluginsComponent.wrapDescriptors(r.bizresult);
         }
-        let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+      });
+  }
+
+  openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
+
+    ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, this.pluginMeta, targetPlugin)
+      .then((desc) => {
+        // let desc = PluginsComponent.wrapDescriptors(r.bizresult);
         desc.forEach((d) => {
           // console.log(targetPlugin);
           let pluginTp: PluginType = {
@@ -1198,12 +1234,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                // enum
-                // db detail
-                // let item: Item = Object.assign(new Item(d), );
-                // let nn = new ValOption();
-                // n.name = biz.detailed.identityName;
-                // n.impl = d.impl;
+                              // enum
+                              // db detail
+                              // let item: Item = Object.assign(new Item(d), );
+                              // let nn = new ValOption();
+                              // n.name = biz.detailed.identityName;
+                              // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -1233,6 +1269,87 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           });
         });
       });
+
+
+    // let descName = targetPlugin.descName;
+    // let url = "/coredefine/corenodemanage.ajax";
+    // //console.log(this.pluginMeta);
+    // this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
+    //   .then((r) => {
+    //     if (!r.success) {
+    //       if (r.bizresult.notFoundExtension) {
+    //         this.modalService.confirm({
+    //           nzTitle: '确认',
+    //           nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
+    //           nzOkText: '开始安装',
+    //           nzCancelText: '取消',
+    //           nzOnOk: () => {
+    //             let endType = null;
+    //
+    //             if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
+    //               endType = this.pluginMeta.descFilter.endType();
+    //             }
+    //             const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType, []);
+    //             drawerRef.afterClose.subscribe(() => {
+    //               // this.afterPluginAddClose.emit();
+    //             })
+    //           }
+    //         });
+    //       }
+    //       return;
+    //     }
+    //     // 需要的plugin已经安装上了
+    //     let desc = PluginsComponent.wrapDescriptors(r.bizresult);
+    //     desc.forEach((d) => {
+    //       // console.log(targetPlugin);
+    //       let pluginTp: PluginType = {
+    //         name: targetPlugin.hetero,
+    //         require: true,
+    //         extraParam: "append_true,targetItemDesc_" + d.displayName
+    //       };
+    //       if (targetPlugin.extraParam) {
+    //         pluginTp.extraParam += (',' + targetPlugin.extraParam);
+    //       }
+    //
+    //       PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
+    //         //  console.log(_pp);
+    //         switch (_pp.type) {
+    //           case TYPE_ENUM: // enum
+    //             // enum
+    //             // db detail
+    //             // let item: Item = Object.assign(new Item(d), );
+    //             // let nn = new ValOption();
+    //             // n.name = biz.detailed.identityName;
+    //             // n.impl = d.impl;
+    //
+    //             if (biz.detailed) {
+    //               let db = biz.detailed;
+    //               let enums = _pp.getEProp('enum');
+    //               // console.log(enums);
+    //               _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
+    //             } else {
+    //               // console.log(biz);
+    //               throw new Error('invalid biz:' + d.displayName);
+    //             }
+    //             break;
+    //           case TYPE_PLUGIN_SELECTION: // select
+    //             if (Array.isArray(biz)) {
+    //               // select
+    //               let ids: Array<string> = biz;
+    //               ids.forEach((id) => {
+    //                 let n = new ValOption();
+    //                 n.name = id;
+    //                 n.impl = d.impl;
+    //                 _pp.options = [n, ..._pp.options]
+    //               });
+    //             }
+    //             break;
+    //           default:
+    //             throw new Error(`error type:${_pp.type}`);
+    //         }
+    //       });
+    //     });
+    //   });
   }
 
   toggleDescContentShow() {
