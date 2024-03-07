@@ -95,8 +95,9 @@ export class ProgressTitleComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
       <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumb]="showBreadcrumb">
-          <button nz-button (click)="openReltimeLog()">实时日志</button>&nbsp;
-          <button nzType="primary" nzDanger [disabled]="isSpinning || !progressStat.running" nz-button (click)="cancelJob()"><i nz-icon nzType="stop" nzTheme="outline"></i>终止</button>
+          <button nz-button (click)="openReltimeLog()">执行日志</button>&nbsp;
+          <button nzType="primary" nzDanger [disabled]="isSpinning || !progressStat.running || formDisabled" nz-button (click)="cancelJob()">
+            <i nz-icon nzType="stop" nzTheme="outline"></i>终止</button>
       </tis-page-header>
       <nz-spin [nzSpinning]="isSpinning" [nzDelay]="1000" nzSize="large">
           <div class="stat-header">
@@ -123,7 +124,7 @@ export class ProgressTitleComponent {
               <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
                   <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
                       <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
-                          <dt>{{t.name}} <span *ngIf="!t.waiting && t.processed> 0 " class='percent-status'>({{t.processed}} <span *ngIf="t.all>0">/{{t.all}}</span>)</span></dt>
+                          <dt>{{t.name}} <span  *ngIf="!t.waiting && t.processed> 0 " class='percent-status'>({{t.processed| number: '1.0-0'}} <span  *ngIf="t.all>0">/{{t.all| number: '1.0-0'}}</span>)</span></dt>
                           <tis-progress [val]="t"></tis-progress>
                       </li>
                   </ul>
@@ -200,30 +201,30 @@ export class ProgressTitleComponent {
   `,
   styles: [
       `
-          .percent-status {
-              font-size: 6px;
-              color: #c5c5c5;
-          }
+        .percent-status {
+          font-size: 10px;
+          color: #1c1313;
+        }
 
-          .stat-header {
-              margin-bottom: 10px;
-          }
+        .stat-header {
+          margin-bottom: 10px;
+        }
 
-          .child-block {
-              list-style-type: none;
-          }
+        .child-block {
+          list-style-type: none;
+        }
 
-          .child-block li {
-              display: block;
-              width: 25%;
-              float: left;
-              padding-right: 8px;
-          }
+        .child-block li {
+          display: block;
+          width: 25%;
+          float: left;
+          padding-right: 8px;
+        }
 
-          .layout {
-              height: 80vh;
-          }
-    `
+        .layout {
+          height: 80vh;
+        }
+      `
   ]
 })
 export class BuildProgressComponent extends AppFormComponent implements AfterViewInit, OnDestroy {

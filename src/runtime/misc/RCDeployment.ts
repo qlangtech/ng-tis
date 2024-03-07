@@ -303,6 +303,8 @@ export class DataxWorkerDTO {
   powderJobWorkerHetero: HeteroList[] = [];
   powderjobJobTplHetero: HeteroList[] = [];
 
+  hasSetHetero = false;
+
   usingPowderJobUseExistCluster = false;
 
 
