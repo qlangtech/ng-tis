@@ -874,9 +874,12 @@ export class NotebookwrapperComponent implements OnInit {
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="6">
+                    <!--select-->
                       <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
-                           <nz-option *ngFor="let e of _pp.options" [nzLabel]="e.name" [nzValue]="e.name"></nz-option>
+                           <nz-option nzCustomContent *ngFor="let e of _pp.options"  [nzLabel]="e.name" [nzValue]="e.name">
+                             <span *ngIf="e.endType" nzTheme="fill" nz-icon nz [nzType]="e.endType"></span> {{e.name}}
+                           </nz-option>
                        </nz-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">

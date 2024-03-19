@@ -6,15 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/core.build.progress.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/error.detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/error.detail.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/error.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/error.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/flink.cluster.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/flink.cluster.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/init.system.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/init.system.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/launch.waitting.process.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/launch.waitting.process.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step1.extend.selected.tab.props.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +207,8 @@
       <workItem from="1707259878361" duration="16991000" />
       <workItem from="1708064889532" duration="6439000" />
       <workItem from="1708498515669" duration="28236000" />
-      <workItem from="1709011380537" duration="45223000" />
+      <workItem from="1709011380537" duration="53759000" />
+      <workItem from="1710341418442" duration="23403000" />
     </task>
     <servers />
   </component>

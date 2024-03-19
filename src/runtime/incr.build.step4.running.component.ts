@@ -18,7 +18,7 @@
 
 import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
+import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -333,11 +333,11 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   reload() {
     IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
-    //  if(this.dto.state !== incrStatus.state){
-    //  console.log(this.dto);
-        this.dto = incrStatus;
-        this.successNotify("状态已更新");
-     // }
+      //  if(this.dto.state !== incrStatus.state){
+      //  console.log(this.dto);
+      this.dto = incrStatus;
+      this.successNotify("状态已更新");
+      // }
     }, false);
   }
 
@@ -379,6 +379,14 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     // });
   }
 
+  // public static channelDelete(base: BasicFormComponent): Promise<TisResponseResult> {
+  //   return base.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+  //     if (r.success) {
+  //       return r;
+  //     }
+  //   });
+  // }
+
   /**
    * 删除增量通道
    */
@@ -389,17 +397,26 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     //   nzOkText: '执行',
     //   nzCancelText: '取消',
     //   nzOnOk: () => {
-    this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
-      if (r.success) {
-        this.successNotify(`已经成功删除增量实例${this.currentApp.appName}`);
-        //  this.router.navigate(["."], {relativeTo: this.route});
-        this.nextStep.next(this.dto);
-      } else {
-        cpt.restoreInitialState()
-      }
-    }, (_) => {
-      cpt.restoreInitialState()
+
+    TISService.channelDelete(this.tisService).then((r) => {
+      this.successNotify(`已经成功删除增量实例${this.currentApp.appName}`);
+      //  this.router.navigate(["."], {relativeTo: this.route});
+      this.nextStep.next(this.dto);
+    }, () => {
+      cpt.restoreInitialState();
     });
+
+    // this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+    //   if (r.success) {
+    //     this.successNotify(`已经成功删除增量实例${this.currentApp.appName}`);
+    //     //  this.router.navigate(["."], {relativeTo: this.route});
+    //     this.nextStep.next(this.dto);
+    //   } else {
+    //     cpt.restoreInitialState()
+    //   }
+    // }, (_) => {
+    //   cpt.restoreInitialState()
+    // });
     //   }
     // });
   }

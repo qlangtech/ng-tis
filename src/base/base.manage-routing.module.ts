@@ -30,7 +30,7 @@ import {SnapshotsetComponent} from "../common/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
 import {DataxWorkerComponent, PowerjobCptType} from "./datax.worker.component";
-import {DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
+import {Breadcrumb, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
@@ -111,7 +111,7 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
       }
     ]
     , step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => {
-     // console.log(desc);
+      // console.log(desc);
       cpt.initPowerJobRelevantProperties(desc);
     }
     , step1HeteroGetter: (dto: DataxWorkerDTO) => {
@@ -169,7 +169,7 @@ const flinkClusterHeteroPkGetter: (dto: DataxWorkerDTO) => ItemPropVal = (dto: D
   }
   return null;
 }
-
+const FlinkSessionPageHeader = "添加Kubernetes Session执行器";
 // @ts-ignore
 export const flinkClusterCfg: { processMeta: ProcessMeta }
   = {
@@ -178,6 +178,13 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
       name: PowerjobCptType.FlinkCluster,
       require: true,
       extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+    },
+    breadcrumbGetter: (params) => {
+      let crumb: Breadcrumb = flinkSessionDetail.processMeta.breadcrumbGetter(params);
+      return {
+        breadcrumb: crumb.breadcrumb,
+        name: FlinkSessionPageHeader
+      }
     },
     successCreateNext: (step3: DataxWorkerAddStep3Component) => {
       // DataxWorkerComponent.getJobWorkerMeta(this, null, step3.dto.processMeta)
@@ -211,7 +218,7 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
     launchClusterMethod: "Launch_flink_cluster",
     relaunchClusterMethod: "relaunch_flink_cluster",
     targetName: flinkClusterCfgTargetName
-    , pageHeader: "Flink Kubernetes Session执行器"
+    , pageHeader: FlinkSessionPageHeader
     // , createButtonLabel: "创建Flink Native Cluster执行器"
     , notCreateTips: "还未创建Flink Kubernetes Session执行器，创建之后可以将Flink Job提交到Kubernetes Session集群，高效并行执行数据实时同步任务"
     , stepsType: StepType.CreateFlinkCluster

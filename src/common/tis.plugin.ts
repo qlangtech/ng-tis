@@ -926,6 +926,8 @@ export interface IFieldError {
 export class ValOption {
   public impl: string;
   public name: string;
+  // 端类型，mysql，docker，sqlserver
+  public endType:string;
 }
 
 export interface OptionEnum {

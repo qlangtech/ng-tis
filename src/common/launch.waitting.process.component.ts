@@ -65,7 +65,7 @@ export function openWaittingProcessComponent(drawerService: NzDrawerService, sub
             </div>
             <div nz-col nzSpan="16" class="process-height">
 
-              <ng-terminal #term></ng-terminal>
+              <ng-terminal  #term></ng-terminal>
 
             </div>
           </div>

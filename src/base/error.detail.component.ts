@@ -20,18 +20,19 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {BasicFormComponent, BasicSideBar} from "../common/basic.form.component";
-import {TISService} from "../common/tis.service";
+import {SystemError, TISService} from "../common/tis.service";
 import {EditorConfiguration} from "codemirror";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 // 查看操作日志
 @Component({
   template: `
-      <nz-alert class="tool-bar" *ngIf="showErrlistLink" nzType="info" [nzMessage]="msgTemplate"></nz-alert>
-      <ng-template #msgTemplate>
-          <a target="_blank" routerLink="/base/sys-errors"> <i nz-icon nzType="link" nzTheme="outline"></i> 异常列表</a>
-      </ng-template>
-      <tis-codemirror [ngModel]="content" [config]="codeMirrirOpts" [size]="{width:'100%',height:'100%'}"></tis-codemirror>
+    <nz-alert class="tool-bar" *ngIf="showErrlistLink" nzType="info" [nzMessage]="msgTemplate"></nz-alert>
+    <ng-template #msgTemplate>
+      <a target="_blank" routerLink="/base/sys-errors"> <i nz-icon nzType="link" nzTheme="outline"></i> 异常列表</a>
+    </ng-template>
+    <tis-codemirror [ngModel]="content" [config]="codeMirrirOpts"
+                    [size]="{width:'100%',height:'100%'}"></tis-codemirror>
   `
 })
 export class ErrorDetailComponent extends BasicFormComponent implements OnInit {
@@ -55,6 +56,15 @@ export class ErrorDetailComponent extends BasicFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // if (this.sysErrCode) {
+    //   switch (this.sysErrCode) {
+    //     case SystemError.FLINK_CLUSTER_LOSS_OF_CONTACT: {
+    //
+    //       break;
+    //     }
+    //     default:
+    //   }
+    // }
 
     this.httpPost('/runtime/operation_detail.ajax'
       , `action=operation_log_action&event_submit_do_get_error_detail=y&logfilename=${this.logFileName}`)
