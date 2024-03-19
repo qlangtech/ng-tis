@@ -36,11 +36,11 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 @Component({
   template: `
     <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
-      <nz-alert nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController"
-                nzShowIcon></nz-alert>
-      <ng-template #unableToUseK8SController>
-        因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面
-      </ng-template>
+<!--      <nz-alert nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController"-->
+<!--                nzShowIcon></nz-alert>-->
+<!--      <ng-template #unableToUseK8SController>-->
+<!--        因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面-->
+<!--      </ng-template>-->
 
       <nz-empty style="height: 500px"
                 nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

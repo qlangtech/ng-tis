@@ -427,7 +427,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     //
     // });
 
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker&targetName=' + this.dto.processMeta.targetName
+    this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker&targetName=' + this.currentApp.name //this.dto.processMeta.targetName
       , {})
       .then((r) => {
         // console.log("xxxxxxxx");
@@ -566,7 +566,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
             ></nz-progress>
             <ng-template #podProgress>
               <span nz-icon *ngIf="progressStat === 'active'" [nzType]="'sync'" [nzSpin]="true"></span>
-              {{this.rcDeployment.pods.length}}/{{this.toPodNum.targetPodNum}} <br/>
+              {{this.rcDeployment.pods.length}}/{{this.toPodNum.targetPodNum}} <i class="union-pod">pod</i> <br/>
               <button *ngIf="showErrorLogs" nz-button nzType="link" (click)="openError()">error</button>
             </ng-template>
             <nz-button-group *ngIf="this.rcDeployment.replicaScalable" style="margin-left: 5px">
@@ -650,6 +650,13 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     </nz-page-header>
 
   `
+  ,
+  styles:[
+    `.union-pod {
+      font-size: 9px;
+      color: #5d5d5d;
+    }`
+  ]
 })
 export class PodsListComponent extends BasicFormComponent implements AfterViewInit, OnInit {
 
@@ -799,6 +806,7 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
       // console.log(data);
       // this.collectionOptionList = data;
       // this.isLoading = false;
+      this.formDisabled = true;
       this._progressStat = 'active';
       this.rcDeployment.rcScalaLog = undefined;
       let evtSubject: EventSourceSubject = DataxWorkerAddStep3Component.createLaunchingEventSubject(
@@ -845,6 +853,7 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
           case EventType.SSE_CLOSE:
             if (this._progressStat === 'active') {
               this._progressStat = 'success';
+              this.formDisabled = false;
             }
           case EventType.TASK_EXECUTE_STEPS:
             break;

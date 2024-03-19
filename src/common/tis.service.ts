@@ -16,10 +16,10 @@
  *   limitations under the License.
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {EventEmitter, Injectable, NgZone} from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
-import {CurrentCollection, WSMessage} from './basic.form.component';
+import {BasicFormComponent, CurrentCollection, WSMessage} from './basic.form.component';
 import {Observable, Observer, Subject} from "rxjs";
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
@@ -31,6 +31,11 @@ import {ErrorDetailComponent} from "../base/error.detail.component";
 import {TISBaseProfile} from "./navigate.bar.component";
 import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex} from "./LatestSelectedIndex";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzModalRef} from "ng-zorro-antd/modal/modal-ref";
+import {OnClickCallback} from "ng-zorro-antd/modal/modal-types";
+import {IncrBuildStep4RunningComponent} from "../runtime/incr.build.step4.running.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 declare var TIS: any;
 
@@ -39,6 +44,10 @@ export const WS_CLOSE_MSG = 'event_close_ws';
 //       result = result.set('appid', '' + this.currApp.appid);
 export const KEY_APPNAME = 'appname';
 export const KEY_APP_ID = 'appid';
+
+export enum SystemError {
+  FLINK_CLUSTER_LOSS_OF_CONTACT = 'FLINK_CLUSTER_LOSS_OF_CONTACT'
+}
 
 // @ts-ignore
 @Injectable()
@@ -63,8 +72,8 @@ export class TISService {
     });
   }
 
-  constructor(protected http: HttpClient
-              // , private modalService: NgbModal
+  constructor(protected http: HttpClient, private router: Router, private route: ActivatedRoute
+    , private modalService: NzModalService
     , public notification: NzNotificationService, private drawerService: NzDrawerService, public _zone: NgZone, private _localStorageService: LocalStorageService) {
   }
 
@@ -294,6 +303,7 @@ export class TISService {
         return result;
       }
       let logFileName: string[];
+      let errCode: SystemError = null;
       let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
         if (typeof r === 'string') {
           return `<li>${r}</li>`
@@ -302,23 +312,76 @@ export class TISService {
           //   "logFileName":"20220504130948886",
           //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
           // }
+          if (r.errCode) {
+            errCode = SystemError[r.errCode];
+            if (!errCode) {
+              throw new Error("invalid errCode:" + r.errCode);
+            }
+          }
           logFileName = [r.logFileName];
           return `<li><a>详细</a> ${r.message}  </li>`
         } else {
           throw new Error('illegal type:' + r);
         }
       }).join('') + '</ul>';
-      // console.log(errContent);
-      let nref = this.notification.create('error', '错误', errContent, {nzDuration: 6000, nzStyle: {width: "600px"}})
-      nref.onClick.subscribe((ee) => {
-        let pe = <PointerEvent>ee;
-        let target: any = pe.target;
-        if (target.nodeName === 'A') {
-          // console.log(logFileName);
-          // this.drawerService.create()
-          TISService.openSysErrorDetail(this.drawerService, true, logFileName[0]);
+
+
+      if (errCode) {
+        // console.log(errCode);
+        let sysErrorRestoreStrategy: SysErrorRestoreStrategy = null;
+        let mref: NzModalRef = null;
+        switch (errCode) {
+          case SystemError.FLINK_CLUSTER_LOSS_OF_CONTACT:
+            let okEventEmitter = new EventEmitter<any>();
+            sysErrorRestoreStrategy = {
+              title: "服务端Flink服务已经失联，是否要重新创建增量通道？",
+              okText: "重新创建",
+              cancelText: "等等再说",
+              onOKExec: okEventEmitter
+            }
+            okEventEmitter.subscribe((ist) => {
+              if (mref) {
+                let cfg = mref.getConfig();
+                cfg.nzOkLoading = true;
+                TISService.channelDelete(this)
+                  .then((r) => {
+                    // TODO 页面重定向
+                    this.router.navigate(["/x", this.currApp.appName], {relativeTo: this.route});
+                    mref.close();
+                  }).finally(() => {
+                  cfg.nzOkLoading = false;
+                });
+              }
+
+            })
+          default:
         }
-      })
+        //
+        //
+        mref = this.modalService.error({
+          nzWidth: 500,
+          nzTitle: sysErrorRestoreStrategy.title,
+          nzContent: errContent,
+          nzOkText: sysErrorRestoreStrategy.okText,
+          nzCancelText: sysErrorRestoreStrategy.cancelText,
+          nzOnOk: sysErrorRestoreStrategy.onOKExec
+        });
+
+
+      } else {
+        // console.log(errContent);
+        let nref = this.notification.create('error', '错误', errContent, {nzDuration: 6000, nzStyle: {width: "600px"}})
+        nref.onClick.subscribe((ee) => {
+          let pe = <PointerEvent>ee;
+          let target: any = pe.target;
+          if (target.nodeName === 'A') {
+            // console.log(logFileName);
+            // this.drawerService.create()
+            TISService.openSysErrorDetail(this.drawerService, true, logFileName[0]);
+          }
+        })
+      }
+
       if (result.errorfields && result.errorfields.length > 0) {
         return result;
       }
@@ -326,6 +389,13 @@ export class TISService {
     }
   }
 
+  public static channelDelete(tisService: TISService): Promise<TisResponseResult> {
+    return tisService.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+      if (r.success) {
+        return r;
+      }
+    });
+  }
 
   protected handleError = (error: any): Promise<any> => {
     // console.log(error);
@@ -420,6 +490,14 @@ export class TISService {
 
   }
 }
+
+
+interface SysErrorRestoreStrategy {
+  title: string;
+  okText: string;
+  cancelText: string;
+  onOKExec: EventEmitter<any>;
+};
 
 export class EventSourceSubject {
   constructor(public targetResName: string, private eventSource: EventSource, private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]>) {

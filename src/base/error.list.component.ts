@@ -30,21 +30,22 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 @Component({
   template: `
 
-      <tis-page-header title="系统异常" [showBreadcrumb]="showBreadcrumb">
-      </tis-page-header>
-      <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
-          <tis-col title="异常摘要" width="30">
-              <ng-template let-l='r'>{{l.abstractInfo}}</ng-template>
-          </tis-col>
-          <tis-col title="创建时间">
-              <ng-template let-l='r'>{{l.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</ng-template>
-          </tis-col>
-          <tis-col title="操作">
-              <ng-template let-l='r'>
-                  <button nz-button [nzType]="'link'" (click)="sysErrorDetail(l.logFileName)"><i nz-icon nzType="eye" nzTheme="outline"></i></button>
-              </ng-template>
-          </tis-col>
-      </tis-page>
+    <tis-page-header title="系统异常" [showBreadcrumb]="showBreadcrumb">
+    </tis-page-header>
+    <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
+      <tis-col title="异常摘要" width="30">
+        <ng-template let-l='r'>{{l.abstractInfo}}</ng-template>
+      </tis-col>
+      <tis-col title="创建时间">
+        <ng-template let-l='r'>{{l.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</ng-template>
+      </tis-col>
+      <tis-col title="操作">
+        <ng-template let-l='r'>
+          <button nz-button [nzType]="'link'" (click)="sysErrorDetail(l.logFileName)"><i nz-icon nzType="eye"
+                                                                                         nzTheme="outline"></i></button>
+        </ng-template>
+      </tis-col>
+    </tis-page>
   `
 })
 export class ErrorListComponent extends BasicFormComponent implements OnInit {

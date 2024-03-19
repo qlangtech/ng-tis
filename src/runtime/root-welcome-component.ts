@@ -39,7 +39,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
                 <div class="tis-card-content">
                   <div class="compose">
                     <h1>实例</h1>
-                    dataX
+                    Pipeline
                   </div>
                 </div>
               </nz-card>

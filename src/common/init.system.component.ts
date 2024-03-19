@@ -52,7 +52,7 @@ export class InitSystemComponent extends BasicFormComponent implements OnInit {
       this._percent += 2;
     }, 500);
     let url = '/runtime/applist.ajax?action=sys_initialize_action&emethod=init';
-    this.httpPost(url, '').then((r) => {
+    this.httpPost(url, 'disableTransaction=true').then((r) => {
       clearInterval(timer);
       if (r.success) {
         this.activeModal.close(r);

@@ -28,19 +28,34 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 
 @Component({
   template: `
-      <nz-spin nzSize="large" [nzSpinning]="formDisabled">
+      <nz-spin class="container" nzSize="large" [nzSpinning]="formDisabled">
           <nz-empty
-                  [nzNotFoundImage]="
-        'https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'
-      "
+                  [nzNotFoundImage]="notFoundImageTpl"
                   [nzNotFoundContent]="contentTpl"
+                  [nzNotFoundFooter]="footerTpl"
           >
+            <ng-template #notFoundImageTpl>
+              <p>
+                <span  nz-icon nzType="stream-computing" style="font-size: 100px;" nzTheme="outline"> </span>
+              </p>
+            </ng-template>
               <ng-template #contentTpl>
+                <span  > <i style="font-size: 20px" nz-icon nzType="blibli" nzTheme="fill"></i>
+                  <a target="_blank" href="https://www.bilibili.com/video/BV1nX4y1h7SW">MySQL同步Doris作为示例，让初次使用者能够更快熟悉操作</a>         </span>
+              </ng-template>
+              <ng-template #footerTpl>
                   <button nz-button nzType="primary" (click)="createIncrSyncChannal()">创建增量通道</button>
               </ng-template>
           </nz-empty>
       </nz-spin>
-  `
+  `,
+  styles:[
+    `
+      .container {
+       margin-top: 30px;
+      }
+    `
+  ]
 })
 export class IncrBuildStep0Component extends AppFormComponent implements AfterContentInit {
   @Output() nextStep = new EventEmitter<any>();

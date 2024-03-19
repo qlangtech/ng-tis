@@ -39,15 +39,15 @@ import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
     <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="clusters" (go-page)="goPage($event)">
       <tis-col title="名称" width="20">
         <ng-template let-l='r'>
-          <dl id="cluster-desc">
+          <dl class="cluster-desc">
             <dt>ClusterId</dt>
             <dd> <a [routerLink]="'/base/flink-session-detail/'+l.clusterId">{{l.clusterId}}</a></dd>
             <dt>Namespace</dt>
             <dd>{{l.k8sNamespace}}</dd>
             <dt>BasePath</dt>
             <dd>{{l.k8sBasePath}}</dd>
-            <dt>管道</dt>
-            <dd> <a><span nz-icon nzType="link" nzTheme="outline"></span>{{l.dataXName}}</a></dd>
+<!--            <dt>管道</dt>-->
+<!--            <dd> <a><span nz-icon nzType="link" nzTheme="outline"></span>{{l.dataXName}}</a></dd>-->
 
           </dl>
           </ng-template>
@@ -69,11 +69,13 @@ import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
     </tis-page>
   `,
   styles:[
-    `#cluster-desc dt{
+    `.cluster-desc dt {
       float: left;
-      color: #1f8ffb;
+      font-weight: bold;
+      color: #676767;
     }
-    #cluster-desc dd{
+
+    .cluster-desc dd {
       margin: 0 0 0 80px;
     }
     `
