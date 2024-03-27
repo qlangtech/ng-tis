@@ -288,6 +288,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static openPluginDialog(opts: OpenPluginDialogOptions, b: BasicFormComponent
     , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void): NzModalRef<any> {
+    //console.log("openPluginDialog  ");
     let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
     let addDb: PluginsComponent = modalRef.getContentComponent();
 
@@ -298,8 +299,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.disableNotebook = true;
 
     if (opts.shallLoadSavedItems) {
+      //console.log("shallLoadSavedItems  ");
       addDb.setPlugins([pluginTp], opts.opt);
     } else {
+      //console.log("not shallLoadSavedItems");
       addDb._heteroList = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
       addDb.setPluginMeta([pluginTp])
     }

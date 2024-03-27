@@ -33,32 +33,32 @@ import {NzModalService} from "ng-zorro-antd/modal";
               <ul nz-menu nzMode="inline">
                   <li nz-menu-item nzMatchRouter nzMatchRouterExact>
                       <a [routerLink]="['./']">
-                          <i class="fa fa-tachometer fa-2x" aria-hidden="true"></i>主控台</a>
+                        <span class="icon-large" nz-icon nzType="dashboard" nzTheme="outline"></span>主控台</a>
                   </li>
                   <li nz-menu-item nzMatchRouter nzMatchRouterExact>
                       <a routerLink="./notebook">
-                          <i class="fa fa-book fa-2x" aria-hidden="true"></i>Notebook</a>
+                        <span class="icon-large" nz-icon nzType="book" nzTheme="outline"></span>Notebook</a>
                   </li>
-<!--                  <li nz-menu-item nzMatchRouter>-->
-<!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
-<!--                  </li>-->
-
-                <li nz-menu-item nzMatchRouter>
-                  <a routerLink="./manage"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>管理</a>
-                </li>
+                  <!--                  <li nz-menu-item nzMatchRouter>-->
+                  <!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
+                  <!--                  </li>-->
 
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./app_build_history" ><i aria-hidden="true" class="fa fa-cog fa-2x"></i>批量构建</a>
+                      <a routerLink="./manage"><span class="icon-large" nz-icon nzType="control" nzTheme="outline"></span>管理</a>
+                  </li>
+
+                  <li nz-menu-item nzMatchRouter>
+                      <a routerLink="./app_build_history"> <span class="icon-large" nz-icon nzType="batch-computing" nzTheme="fill"></span>批量构建</a>
                   </li>
                   <li nz-menu-item nzMatchRouter>
                       <a routerLink="./incr_build">
-                          <i aria-hidden="true" class="fa fa-truck fa-2x"></i>实时同步</a>
+                          <span class="icon-large" nz-icon nzType="stream-computing" nzTheme="outline"> </span> 实时同步</a>
                   </li>
-<!--                  <li nz-menu-item nzMatchRouter>-->
-<!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->
-<!--                  </li>-->
+                  <!--                  <li nz-menu-item nzMatchRouter>-->
+                  <!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->
+                  <!--                  </li>-->
                   <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./operationlog"><i class="fa fa-pencil fa-2x" aria-hidden="true"></i>操作历史</a>
+                      <a routerLink="./operationlog"><span class="icon-large" nz-icon nzType="history" nzTheme="outline"></span>操作历史</a>
                   </li>
               </ul>
           </nz-sider>
@@ -72,6 +72,10 @@ import {NzModalService} from "ng-zorro-antd/modal";
 
   `,
   styles: [`
+    .icon-large {
+      font-size: 1.5em;
+      margin-right: 4px;
+    }
       a:link {
           color: black;
       }

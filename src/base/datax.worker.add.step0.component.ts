@@ -35,35 +35,40 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
   template: `
-    <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
-<!--      <nz-alert nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController"-->
-<!--                nzShowIcon></nz-alert>-->
-<!--      <ng-template #unableToUseK8SController>-->
-<!--        因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面-->
-<!--      </ng-template>-->
+      <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
+          <!--      <nz-alert nzType="warning" nzMessage="告知" [nzDescription]="unableToUseK8SController"-->
+          <!--                nzShowIcon></nz-alert>-->
+          <!--      <ng-template #unableToUseK8SController>-->
+          <!--        因架构调整，基于K8S执行的分布式DataX任务执行器，和Flink任务执行器需要做新的调整，会将Zookeeper组建依赖去掉，会在<strong>4.0.0版本</strong>中重新与大家见面-->
+          <!--      </ng-template>-->
 
-      <nz-empty style="height: 500px"
-                nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                [nzNotFoundFooter]="footerTpl"
-                [nzNotFoundContent]="contentTpl"
-      >
-        <ng-template #contentTpl>
-          <span>{{this.dto.processMeta.notCreateTips}}</span>
-        </ng-template>
-        <ng-template #footerTpl>
+          <nz-empty style="height: 500px"
+                    [nzNotFoundImage]="notFoundImage"
+                    [nzNotFoundFooter]="footerTpl"
+                    [nzNotFoundContent]="contentTpl"
+          >
+              <ng-template #contentTpl>
+                  <span>{{this.dto.processMeta.notCreateTips}}</span>
+              </ng-template>
+              <ng-template #footerTpl>
 
-          <nz-space class="btn-block">
-            <ng-container *ngFor="let btn of this.dto.processMeta.step1Buttons;let i =index">
-              <button *nzSpaceItem [disabled]="this.formDisabled" nz-button
-                      [nzType]="i<1 ? 'primary':'default'"
-                      (click)="btn.click(this)">{{btn.label}}</button>
-            </ng-container>
-          </nz-space>
+                  <nz-space class="btn-block">
+                      <ng-container *ngFor="let btn of this.dto.processMeta.step1Buttons;let i =index">
+                          <button *nzSpaceItem [disabled]="this.formDisabled" nz-button
+                                  [nzType]="i<1 ? 'primary':'default'"
+                                  (click)="btn.click(this)">{{btn.label}}</button>
+                      </ng-container>
+                  </nz-space>
 
 
-        </ng-template>
-      </nz-empty>
-    </nz-spin>
+              </ng-template>
+              <ng-template #notFoundImage>
+                  <p style="margin: 20px">
+                      <span style="font-size: 8em" nz-icon [nzType]="dto.processMeta.endType" nzTheme="fill"></span>
+                  </p>
+              </ng-template>
+          </nz-empty>
+      </nz-spin>
   `
 })
 export class DataxWorkerAddStep0Component extends BasicFormComponent implements AfterViewInit, OnInit {
@@ -85,7 +90,17 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     // let promise =    Promise.resolve();
     let success$ = new Subject<any>();
 
-    DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, true, module)
+    let opt: SavePluginEvent = null;
+
+    if (appendParams) {
+      let p = appendParams.find((param) => param.key === KEY_APPNAME);
+      if (p) {
+        opt = new SavePluginEvent();
+        opt.overwriteHttpHeaderOfAppName(p.val);
+      }
+    }
+
+    DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, true, module, opt)
       .then((dto) => {
         let rList = dto.workDesc;
         let desc = Array.from(rList.values());
@@ -96,15 +111,7 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
           appendParams: appendParams
         };
         // console.log([pluginDesc,pluginCategory]);
-        let opt = null;
 
-        if (appendParams) {
-          let p = appendParams.find((param) => param.key === KEY_APPNAME);
-          if (p) {
-            opt = new SavePluginEvent();
-            opt.overwriteHttpHeaderOfAppName(p.val);
-          }
-        }
         // console.log(dto);
         let containTplRewriterPlugin = dto.typedPluginCount[PowerjobCptType.JobTplAppOverwrite];
         let modelRef = PluginsComponent.openPluginDialog({
@@ -128,9 +135,9 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     return success$.asObservable();
   }
 
-  public static getWorkDescs(targetName: string, addJobTplOverwritePlugin: boolean, module: BasicFormComponent): Promise<WorkerDTO> {
+  public static getWorkDescs(targetName: string, addJobTplOverwritePlugin: boolean, module: BasicFormComponent, e?: SavePluginEvent): Promise<WorkerDTO> {
     return module.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=datax_action&emethod=worker_desc&targetName=${targetName}&addJobTplOverwritePlugin=${addJobTplOverwritePlugin}`)
+      , `action=datax_action&emethod=worker_desc&targetName=${targetName}&addJobTplOverwritePlugin=${addJobTplOverwritePlugin}`, e)
       .then((r) => {
         if (r.success) {
           let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);

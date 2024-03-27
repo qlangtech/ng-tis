@@ -163,11 +163,11 @@ export class BasicFormComponent {
   }
 
   // 发送http post请求
-  public httpPost(url: string, body: string): Promise<TisResponseResult> {
+  public httpPost(url: string, body: string, e?: SavePluginEvent): Promise<TisResponseResult> {
     this.formDisabled = true;
     NProgress.start();
     this.clearProcessResult();
-    return this.tisService.httpPost(url, body).then(this.webExecuteCallback).catch(this.handleError);
+    return this.tisService.httpPost(url, body, e).then(this.webExecuteCallback).catch(this.handleError);
     // return this.tisService._zone.runOutsideAngular(()=>{
     //
     // })

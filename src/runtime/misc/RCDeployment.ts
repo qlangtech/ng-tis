@@ -255,6 +255,7 @@ export interface Breadcrumb {
 }
 
 export interface ProcessMeta {
+  endType: string,
   init_get_job_worker_meta: string;
   targetNameGetter: (params: Params, justGroup?: boolean, dto?: DataxWorkerDTO) => string;
   runningTabRouterGetter: (params: Params) => Array<string>;
@@ -286,6 +287,8 @@ export interface ProcessMeta {
   launchClusterMethod: string;
   relaunchClusterMethod: string;
   runningStepCfg: { showPowerJobWorkflowInstance: boolean, defaultTabExecute: (cpt: DataxWorkerRunningComponent) => void }
+
+  afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => void;
 }
 
 export class DataXJobWorkerStatus extends K8SControllerStatus {

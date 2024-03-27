@@ -40,6 +40,7 @@ import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {K8SRCSpec} from "../common/k8s.replics.spec.component";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
+import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
 const flinkClusterCfgTargetName = PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
@@ -51,10 +52,14 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
   = {
 
   processMeta: {
+    endType: 'powerjob',
     step1PluginType: {
       name: 'datax-worker',
       require: true,
       extraParam: "dataxName_" + PowerjobCptType.Server
+    },
+    afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
+      cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));
     },
     successCreateNext: (step3: DataxWorkerAddStep3Component) => {
       DataxWorkerComponent.getJobWorkerMeta(step3, null, step3.dto.processMeta)
@@ -174,10 +179,14 @@ const FlinkSessionPageHeader = "添加Kubernetes Session执行器";
 export const flinkClusterCfg: { processMeta: ProcessMeta }
   = {
   processMeta: {
+    endType: 'flink',
     step1PluginType: {
       name: PowerjobCptType.FlinkCluster,
       require: true,
       extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+    },
+    afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
+      cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));
     },
     breadcrumbGetter: (params) => {
       let crumb: Breadcrumb = flinkSessionDetail.processMeta.breadcrumbGetter(params);
@@ -273,12 +282,17 @@ const get_flink_session = 'get_flink_session';
 export const flinkSessionDetail: { processMeta: ProcessMeta }
   = {
   processMeta: {
+    endType: 'flink',
     step1PluginType: null,
     breadcrumbGetter: (params) => {
       return {
         breadcrumb: ['Flink Cluster', '/base/flink-cluster-list'],
         name: params[KEY_TARGET_NAME]
       }
+    },
+    afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
+      // cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));
+      cpt.router.navigate(["/base/flink-cluster-list"]);
     },
     successCreateNext: (step3: DataxWorkerAddStep3Component) => {
       throw  new Error("shall not execute");

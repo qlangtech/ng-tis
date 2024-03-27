@@ -40,7 +40,6 @@ import {PodsListComponent} from "../base/datax.worker.running.component";
         </ng-template>
         <nz-page-header>
           <nz-page-header-title>
-
             <nz-space>
 
               <span *nzSpaceItem><nz-tag >
@@ -60,7 +59,7 @@ import {PodsListComponent} from "../base/datax.worker.running.component";
           </nz-page-header-title>
           <nz-page-header-extra>
             <nz-space>
-              <button *nzSpaceItem nz-button nzType="primary" (click)="relauchIncrProcess()">重启</button>
+              <button *nzSpaceItem nz-button nzType="primary" (click)="relauchIncrProcess()"><span nz-icon nzType="reload" nzTheme="outline"></span>重启</button>
             </nz-space>
 
 
@@ -199,10 +198,14 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
    */
   relauchIncrProcess() {
     this._transactionProcessing = true;
+
+   // this.processMeta.targetNameGetter()
+    console.log(this.logType);
     switch (this.logType) {
       case LogType.DATAX_WORKER_POD_LOG:
         this.httpPost('/coredefine/corenodemanage.ajax'
-          , "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name + "&targetName=" + this.processMeta.targetName)
+          , "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name + "&targetName=" + this.processMeta.targetNameGetter(this.route.snapshot.params)// this.processMeta.targetName
+        )
           .then((r) => {
 
             if (r.success) {
