@@ -46,8 +46,23 @@ export const KEY_APPNAME = 'appname';
 export const KEY_APP_ID = 'appid';
 
 export enum SystemError {
-  FLINK_CLUSTER_LOSS_OF_CONTACT = 'FLINK_CLUSTER_LOSS_OF_CONTACT'
+  FLINK_INSTANCE_LOSS_OF_CONTACT = 'FLINK_INSTANCE_LOSS_OF_CONTACT',
+  FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT = 'FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT',
+  POWER_JOB_CLUSTER_LOSS_OF_CONTACT = 'POWER_JOB_CLUSTER_LOSS_OF_CONTACT'
 }
+
+// "errCode":{
+//   "code":"FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT",
+//     "payload":{
+//     "targetName":"flink-cluster"
+//   }
+// },
+
+interface ErrorVal {
+  code: SystemError;
+  payload: [string: any]
+}
+
 
 // @ts-ignore
 @Injectable()
@@ -303,6 +318,7 @@ export class TISService {
         return result;
       }
       let logFileName: string[];
+      let errorVal: ErrorVal = null;
       let errCode: SystemError = null;
       let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
         if (typeof r === 'string') {
@@ -313,10 +329,12 @@ export class TISService {
           //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
           // }
           if (r.errCode) {
-            errCode = SystemError[r.errCode];
+            errorVal = r.errCode;
+            errCode = SystemError[errorVal.code];
             if (!errCode) {
               throw new Error("invalid errCode:" + r.errCode);
             }
+            errorVal.code = errCode;
           }
           logFileName = [r.logFileName];
           return `<li><a>详细</a> ${r.message}  </li>`
@@ -330,34 +348,72 @@ export class TISService {
         // console.log(errCode);
         let sysErrorRestoreStrategy: SysErrorRestoreStrategy = null;
         let mref: NzModalRef = null;
+        let okEventEmitter = new EventEmitter<any>();
         switch (errCode) {
-          case SystemError.FLINK_CLUSTER_LOSS_OF_CONTACT:
-            let okEventEmitter = new EventEmitter<any>();
+          case SystemError.FLINK_INSTANCE_LOSS_OF_CONTACT: {
+
             sysErrorRestoreStrategy = {
               title: "服务端Flink服务已经失联，是否要重新创建增量通道？",
               okText: "重新创建",
               cancelText: "等等再说",
-              onOKExec: okEventEmitter
+              onOKExec: okEventEmitter,
+              afterSuccessRestore: (errVal) => {
+                this.router.navigate(["/x", errVal.payload[KEY_APPNAME]], {relativeTo: this.route});
+              }
             }
-            okEventEmitter.subscribe((ist) => {
-              if (mref) {
-                let cfg = mref.getConfig();
-                cfg.nzOkLoading = true;
-                TISService.channelDelete(this)
-                  .then((r) => {
-                    // TODO 页面重定向
-                    this.router.navigate(["/x", this.currApp.appName], {relativeTo: this.route});
-                    mref.close();
-                  }).finally(() => {
-                  cfg.nzOkLoading = false;
+
+            break;
+          }
+          case SystemError.FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT: {
+            sysErrorRestoreStrategy = {
+              title: "服务端Flink Session服务已经失联，是否要重新创建？",
+              okText: "重新创建",
+              cancelText: "等等再说",
+              onOKExec: okEventEmitter,
+              afterSuccessRestore: (errVal) => {
+                this.router.navigate(["/base/flink-cluster-list"], {relativeTo: this.route});
+              }
+            }
+            break;
+          }
+          case SystemError.POWER_JOB_CLUSTER_LOSS_OF_CONTACT: {
+            sysErrorRestoreStrategy = {
+              title: "PowerJob服务已经失联，是否要重新创建？",
+              okText: "重新创建",
+              cancelText: "等等再说",
+              onOKExec: okEventEmitter,
+              afterSuccessRestore: (errVal) => {
+                // https://stackoverflow.com/questions/40983055/how-to-reload-the-current-route-with-the-angular-2-router
+                this.router.navigateByUrl('/', {skipLocationChange: true})
+                  .then(() => {
+                  this.router.navigate(["/base/datax-worker"]);
                 });
               }
-
-            })
+            }
+            break;
+          }
           default:
+            throw new Error("invalid errorCode:" + errCode);
         }
-        //
-        //
+
+        okEventEmitter.subscribe((ist) => {
+          if (mref) {
+            let cfg = mref.getConfig();
+            cfg.nzOkLoading = true;
+            TISService.restoreExcpetion(this, errorVal)
+              .then((r) => {
+                sysErrorRestoreStrategy.afterSuccessRestore(errorVal);
+                // TODO 页面重定向
+                //  this.router.navigate(["/x", this.currApp.appName], {relativeTo: this.route});
+                mref.close();
+              }).finally(() => {
+              cfg.nzOkLoading = false;
+            });
+          }
+
+        });
+
+
         mref = this.modalService.error({
           nzWidth: 500,
           nzTitle: sysErrorRestoreStrategy.title,
@@ -391,6 +447,25 @@ export class TISService {
 
   public static channelDelete(tisService: TISService): Promise<TisResponseResult> {
     return tisService.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_incr_delete=y&action=core_action").then((r) => {
+      if (r.success) {
+        return r;
+      }
+    });
+  }
+
+  /**
+   * 恢复系统异常
+   * @param tisService
+   * @private
+   */
+  private static restoreExcpetion(tisService: TISService, errorVal: ErrorVal): Promise<TisResponseResult> {
+
+    let params = "event_submit_do_exception_restore=y&action=operation_log_action&errorCode=" + errorVal.code;
+    for (let key in errorVal.payload) {
+      params += ('&' + key + "=" + errorVal.payload[key]);
+    }
+
+    return tisService.httpPost('/runtime/addapp.ajax', params).then((r) => {
       if (r.success) {
         return r;
       }
@@ -497,6 +572,7 @@ interface SysErrorRestoreStrategy {
   okText: string;
   cancelText: string;
   onOKExec: EventEmitter<any>;
+  afterSuccessRestore: (errVal: ErrorVal) => void
 };
 
 export class EventSourceSubject {

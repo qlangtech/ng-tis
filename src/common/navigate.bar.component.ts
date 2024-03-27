@@ -128,7 +128,9 @@ import {expressionType} from "@angular/compiler/src/output/output_ast";
           </nz-select>
         </li>
       </ng-container>
+
       <li class="user-profile" nz-menu-item nzMatchRouter>
+
         <button nz-button nzType="link" (click)="openTisAbout()">关于</button>
         <button nz-button nz-dropdown [nzDropdownMenu]="user">
           <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
@@ -153,6 +155,9 @@ import {expressionType} from "@angular/compiler/src/output/output_ast";
             <image xlink:href="/images/icon/tis-log.svg" width="70"/>
           </svg>
         </ng-template>
+      </li>
+      <li class="user-profile" nz-menu-item nzMatchRouter>
+        <a href="https://github.com/datavane/tis" target="_blank"><span style="color: white;font-size: 1.2em" nz-icon nzType="github" nzTheme="outline"></span></a>
       </li>
       <!--
                 <li nz-menu-item>

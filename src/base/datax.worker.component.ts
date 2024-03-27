@@ -139,8 +139,8 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
 
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
 
-    this.route.params.subscribe((params) => {
-      //console.log(params);
+    let next = (params) => {
+       console.log(params);
       DataxWorkerComponent.getJobWorkerMeta(this, params, this.processMeta).then((dataXWorkerStatus) => {
         if (dataXWorkerStatus.k8sReplicationControllerCreated) {
           this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
@@ -152,7 +152,15 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
 
         }
       })
-    });
+    };
+
+    // this.route.queryParams.subscribe((query) => {
+    //   // 当实例删除后为了页面刷新一下，加了一个update参数
+    //   if (query['update']) {
+    //     next.apply(this.route.params);
+    //   }
+    // });
+    this.route.params.subscribe(next);
 
 
     // this.httpPost('/coredefine/corenodemanage.ajax'

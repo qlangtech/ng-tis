@@ -67,7 +67,7 @@ export const KEY_APPNAME = "appname";
       <nz-tabset nzSize="large" [(nzSelectedIndex)]="tabSelectIndex" [nzTabBarExtraContent]="extraTemplate"
                  #tabsetComponent>
         <ng-container *ngIf="dto.rcDeployment?.status">
-          <nz-tab nzTitle="基本" (nzSelect)="profileTabSelect()">
+          <nz-tab [nzTitle]="profileTitle" (nzSelect)="profileTabSelect()">
             <ng-template nz-tab>
               <div style="margin-top: 8px;"
                    *ngTemplateOutlet="promoteServerHost;context:{server_port_host:this.dto.payloads['server_port_host']}">
@@ -87,7 +87,7 @@ export const KEY_APPNAME = "appname";
               -->
             </ng-template>
           </nz-tab>
-          <nz-tab nzTitle="规格" (nzSelect)="envTabSelect()">
+          <nz-tab [nzTitle]="specificationTitle" (nzSelect)="envTabSelect()">
             <ng-template nz-tab>
               <rc-spec *ngFor="let rc of dto.rcDeployments" [rcDeployment]="rc"></rc-spec>
             </ng-template>
@@ -214,16 +214,23 @@ export const KEY_APPNAME = "appname";
 
           <ng-template #unableToUseK8SController>
 
-            可直接打开PowerJob控制台 &nbsp;<a target="_blank"
-                                              [href]="server_port_host"><i nz-icon nzType="link"
-                                                                           nzTheme="outline"></i>控制台</a>
+            可直接打开{{this.dto.processMeta.pageHeader}}控制台 &nbsp;<a target="_blank" [href]="server_port_host"><i nz-icon nzType="link"   nzTheme="outline"></i>控制台</a>
           </ng-template>
         </nz-alert>
 
       </ng-template>
+      <ng-template #profileTitle>
+        <span nz-icon [nzType]="dto.processMeta.endType" nzTheme="outline"></span>基本
+      </ng-template>
       <ng-template #cfgTitle>
         <span nz-icon nzType="file" nzTheme="outline"></span>配置
       </ng-template>
+      <ng-template #specificationTitle>
+        <span nz-icon nzType="ordered-list" nzTheme="outline"></span>规格
+      </ng-template>
+
+
+
       <ng-template #controller>
         <span nz-icon nzType="setting" nzTheme="outline"></span>操作
       </ng-template>
@@ -282,7 +289,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   workflows: PowerJobWorkflow[] = [];
 
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router, notification: NzNotificationService, public _zone: NgZone) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, public router: Router, notification: NzNotificationService, public _zone: NgZone) {
     super(tisService, route, modalService, notification);
   }
 
@@ -423,17 +430,13 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
 
   dataXWorkerDelete(cpt: ControlPanelComponent) {
 
-    // this.confirm(`是否确定要将${this.dto.processMeta.pageHeader}从K8S容器中删除`, () => {
-    //
-    // });
-
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=remove_datax_worker&targetName=' + this.currentApp.name //this.dto.processMeta.targetName
       , {})
       .then((r) => {
-        // console.log("xxxxxxxx");
         cpt.enableComponent();
         if (r.success) {
-          this.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: this.dto.processMeta}));
+          this.dto.processMeta.afterSuccessDelete(this);
+         // this.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: this.dto.processMeta}));
         }
       });
 
