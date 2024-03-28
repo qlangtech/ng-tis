@@ -20,21 +20,25 @@ import {Component, OnInit} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzModalRef} from "ng-zorro-antd/modal";
+import {ActivatedRoute, Router} from "@angular/router";
+import {NzProgressStatusType} from "ng-zorro-antd/progress/typings";
 
 @Component({
   template: `
-      <nz-alert nzType="info" nzMessage="初次使用TIS，系统需要对相关配置进行初始化" nzShowIcon></nz-alert>
-      <tis-page-header [result]="this.result" [showBreadcrumb]="false">
-          <button nz-button nzType="primary" (click)="startInitialize()" [nzLoading]="_startInitialize">开始初始化</button>
-      </tis-page-header>
-      <nz-progress *ngIf="_startInitialize" [nzPercent]="_percent" nzStatus="active"></nz-progress>
+    <nz-alert nzType="info" nzMessage="初次使用TIS，系统需要对相关配置进行初始化" nzShowIcon></nz-alert>
+    <tis-page-header [result]="this.result" [showBreadcrumb]="false">
+      <button nz-button nzType="primary" (click)="startInitialize()" [nzLoading]="_startInitialize">开始初始化</button>
+    </tis-page-header>
+    <nz-progress *ngIf="_startInitialize" [nzPercent]="_percent" [nzStatus]="_progressStatus"></nz-progress>
   `
 })
 export class InitSystemComponent extends BasicFormComponent implements OnInit {
   _startInitialize = false;
   _percent = 0;
 
-  constructor(tisService: TISService, private activeModal: NzModalRef) {
+  _progressStatus: NzProgressStatusType = 'active';
+
+  constructor(tisService: TISService, private activeModal: NzModalRef, private router: Router, private route: ActivatedRoute) {
     super(tisService);
   }
 
@@ -56,9 +60,20 @@ export class InitSystemComponent extends BasicFormComponent implements OnInit {
       clearInterval(timer);
       if (r.success) {
         this.activeModal.close(r);
+        this._progressStatus = "success";
+        // this.router.navigateByUrl('/', {skipLocationChange: true})
+        //   .then(() => {
+        //     this.router.navigate(["/"]);
+        //   });
+        window.location.reload();
       } else {
         this.processResult(r);
+        this._progressStatus = 'exception';
       }
+    }, () => {
+      this._progressStatus = 'exception';
+    }).finally(() => {
+
     });
   }
 }
