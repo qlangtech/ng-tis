@@ -56,6 +56,7 @@ import {PluginsComponent} from "../common/plugins.component";
 import {languages} from "monaco-editor";
 import {NzTabSetComponent} from "ng-zorro-antd/tabs/tabset.component";
 import {LaunchK8SClusterWaittingProcessComponent} from "../common/launch.waitting.process.component";
+import {DataxWorkerComponent} from "./datax.worker.component";
 
 export const KEY_APPNAME = "appname";
 
@@ -137,7 +138,8 @@ export const KEY_APPNAME = "appname";
               <incr-pod-logs-status *ngIf="selectedPod" [selectedPod]="selectedPod"
                                     [processMeta]="this.dto.processMeta" [rcDeployments]="dto.rcDeployments"
                                     [msgSubject]="this.msgSubject"
-                                    [logType]="logtype"></incr-pod-logs-status>
+                                    [logType]="logtype"
+                                    (afterOnePodRelaunch)="logsStatusOnePodLauch()"></incr-pod-logs-status>
             </ng-template>
           </nz-tab>
         </ng-container>
@@ -214,7 +216,8 @@ export const KEY_APPNAME = "appname";
 
           <ng-template #unableToUseK8SController>
 
-            可直接打开{{this.dto.processMeta.pageHeader}}控制台 &nbsp;<a target="_blank" [href]="server_port_host"><i nz-icon nzType="link"   nzTheme="outline"></i>控制台</a>
+            可直接打开{{this.dto.processMeta.pageHeader}}控制台 &nbsp;<a target="_blank" [href]="server_port_host"><i
+            nz-icon nzType="link" nzTheme="outline"></i>控制台</a>
           </ng-template>
         </nz-alert>
 
@@ -230,12 +233,12 @@ export const KEY_APPNAME = "appname";
       </ng-template>
 
 
-
       <ng-template #controller>
         <span nz-icon nzType="setting" nzTheme="outline"></span>操作
       </ng-template>
       <ng-template #extraTemplate>
-        <button nz-button nzType="link"><i nz-icon nzType="sync" nzTheme="outline"></i>更新</button>
+        <button nz-button nzType="link" (click)="refreshStatus()"><i nz-icon nzType="sync" nzTheme="outline"></i>更新
+        </button>
       </ng-template>
     </nz-spin>
   `
@@ -293,6 +296,34 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     super(tisService, route, modalService, notification);
   }
 
+  refreshStatus() {
+    this.reloadStatus().then((status) => {
+      this.successNotify(this.dto.processMeta.pageHeader + "状态已更新");
+    });
+  }
+
+  private reloadStatus(): Promise<DataXJobWorkerStatus> {
+    return DataxWorkerComponent.getJobWorkerMeta(this, this.route.snapshot.params, this.dto.processMeta)
+      .then((dataXWorkerStatus) => {
+        if (dataXWorkerStatus.k8sReplicationControllerCreated) {
+          //  Object.assign(this.dto,dataXWorkerStatus)
+          for (let key in dataXWorkerStatus) {
+            this.dto[key] = dataXWorkerStatus[key];
+          }
+          return dataXWorkerStatus;
+        }
+      });
+  }
+
+  logsStatusOnePodLauch() {
+
+    this.reloadStatus().then(status => {
+      this.router.navigate(["."], {relativeTo: this.route, fragment: "profile"});
+      this.tabSelectIndex = 0;
+    })
+
+  }
+
   public gotoPage(page: number): void {
     // this.tisService._zone.runOutsideAngular(()=>{
     this.httpPost('/coredefine/corenodemanage.ajax'
@@ -317,7 +348,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
     let params = this.route.snapshot.params;
     this.route.fragment.subscribe((fragment) => {
       let targetTab = fragment;//['targetTab'];
-      //  console.log(targetTab);
+      //console.log(targetTab);
       switch (targetTab) {
         case 'log':
           if (!this.podNameSub) {
@@ -436,7 +467,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
         cpt.enableComponent();
         if (r.success) {
           this.dto.processMeta.afterSuccessDelete(this);
-         // this.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: this.dto.processMeta}));
+          // this.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: this.dto.processMeta}));
         }
       });
 
@@ -654,7 +685,7 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
 
   `
   ,
-  styles:[
+  styles: [
     `.union-pod {
       font-size: 9px;
       color: #5d5d5d;

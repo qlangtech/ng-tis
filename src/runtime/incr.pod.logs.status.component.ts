@@ -16,7 +16,16 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, Component, Input, OnDestroy, ViewChild} from "@angular/core";
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -42,14 +51,15 @@ import {PodsListComponent} from "../base/datax.worker.running.component";
           <nz-page-header-title>
             <nz-space>
 
-              <span *nzSpaceItem><nz-tag >
+              <span *nzSpaceItem><nz-tag>
                 <ng-container [ngSwitch]="this.logMonitorTimeout">
                   <span *ngSwitchCase="false" nz-icon [nzType]="'sync'" [nzSpin]="true"></span>
                   <span *ngSwitchCase="true" nz-icon nzType="stop" nzTheme="outline"></span>
                 </ng-container>
                 {{this._selectedPod?.phase}}</nz-tag>
-<!--                {{this._selectedPod?.name}}--></span>
-              <nz-select  *nzSpaceItem nzPlaceHolder="Choose" nzShowSearch [ngModel]="this._selectedPod?.name" (ngModelChange)="targetPodChange($event)">
+                <!--                {{this._selectedPod?.name}}--></span>
+              <nz-select *nzSpaceItem nzPlaceHolder="Choose" nzShowSearch [ngModel]="this._selectedPod?.name"
+                         (ngModelChange)="targetPodChange($event)">
                 <nz-option-group *ngFor="let rc of this.rcDeployments" [nzLabel]="rc.name">
                   <nz-option *ngFor="let pod of rc.pods" [nzValue]="pod.name" [nzLabel]="pod.name"></nz-option>
                 </nz-option-group>
@@ -59,7 +69,10 @@ import {PodsListComponent} from "../base/datax.worker.running.component";
           </nz-page-header-title>
           <nz-page-header-extra>
             <nz-space>
-              <button *nzSpaceItem nz-button nzType="primary" (click)="relauchIncrProcess()"><span nz-icon nzType="reload" nzTheme="outline"></span>重启</button>
+              <button *nzSpaceItem nz-button nzType="primary" (click)="relauchIncrProcess()"><span nz-icon
+                                                                                                   nzType="reload"
+                                                                                                   nzTheme="outline"></span>重启
+              </button>
             </nz-space>
 
 
@@ -92,15 +105,19 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
   logMonitorTimeout = false;
   _selectedPod: K8sPodState;
 
+  @Output()
+  afterOnePodRelaunch = new EventEmitter();
+
   @Input()
-  rcDeployments: Array<RCDeployment> =[];
+  rcDeployments: Array<RCDeployment> = [];
 
   // podStatChange: Subject<K8sPodState> = new Subject<K8sPodState>();
   targetPodChange(targetPod: any) {
- // console.log(event);
+    // console.log(event);
 
-    PodsListComponent.viewPodLog(this.processMeta, this.route, this.router, {name:targetPod});
+    PodsListComponent.viewPodLog(this.processMeta, this.route, this.router, {name: targetPod});
   }
+
   @Input()
   set selectedPod(podStat: K8sPodState) {
     // console.log("set selectedPod");
@@ -199,28 +216,29 @@ export class IncrPodLogsStatusComponent extends AppFormComponent implements Afte
   relauchIncrProcess() {
     this._transactionProcessing = true;
 
-   // this.processMeta.targetNameGetter()
-    console.log(this.logType);
+    // this.processMeta.targetNameGetter()
+    // console.log(this.logType);
     switch (this.logType) {
       case LogType.DATAX_WORKER_POD_LOG:
         this.httpPost('/coredefine/corenodemanage.ajax'
-          , "event_submit_do_relaunch_pod_process=y&action=datax_action&podName=" + this.selectedPod.name + "&targetName=" + this.processMeta.targetNameGetter(this.route.snapshot.params)// this.processMeta.targetName
-        )
-          .then((r) => {
+          , "event_submit_do_relaunch_pod_process=y&action=datax_action&podName="
+          + this.selectedPod.name + "&targetName=" + this.processMeta.targetNameGetter(this.route.snapshot.params)
+        ).then((r) => {
 
-            if (r.success) {
-              this.successNotify(`已经成功触发重启Powerjob实例${this.selectedPod.name}`);
-              setTimeout(() => {
-                // console.log("navigate");
-                this.router.navigate(["/base/datax-worker", "profile"], {relativeTo: this.route});
-                this._transactionProcessing = false;
-              }, 3000);
-            } else {
+          if (r.success) {
+            this.successNotify(`已经成功触发重启实例${this.selectedPod.name}`);
+            setTimeout(() => {
+              // console.log("navigate");
+              this.afterOnePodRelaunch.emit();
+              // this.processMeta.endType
               this._transactionProcessing = false;
-            }
-          }, (reason) => {
+            }, 3000);
+          } else {
             this._transactionProcessing = false;
-          });
+          }
+        }, (reason) => {
+          this._transactionProcessing = false;
+        });
         return;
       case LogType.INCR_DEPLOY_STATUS_CHANGE:
         this.httpPost('/coredefine/corenodemanage.ajax', "event_submit_do_relaunch_incr_process=y&action=core_action")

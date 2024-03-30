@@ -140,7 +140,7 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
 
     let next = (params) => {
-       console.log(params);
+      // console.log(params);
       DataxWorkerComponent.getJobWorkerMeta(this, params, this.processMeta).then((dataXWorkerStatus) => {
         if (dataXWorkerStatus.k8sReplicationControllerCreated) {
           this.multiViewDAG.loadComponent(DataxWorkerRunningComponent, dataXWorkerStatus);
