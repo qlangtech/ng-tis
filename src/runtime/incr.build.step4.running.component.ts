@@ -16,15 +16,14 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
+import {AfterContentInit, Component, EventEmitter, OnDestroy, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
+import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
-import {map} from "rxjs/operators";
-import {IndexIncrStatus, K8sPodState, LogType} from "./misc/RCDeployment";
+import {IndexIncrStatus} from "./misc/RCDeployment";
 import {TisResponseResult} from "../common/tis.plugin";
 import {ControlPanelComponent} from "../common/control.panel.component";
 

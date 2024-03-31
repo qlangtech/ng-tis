@@ -17,7 +17,7 @@
  */
 
 import {TISService} from './tis.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Injectable, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
 // @ts-ignore
@@ -25,7 +25,7 @@ import * as NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 
-import {NzNotificationService, NzNotificationRef} from "ng-zorro-antd/notification";
+import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd/notification";
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {Subject} from "rxjs";
 import {map} from "rxjs/operators";
@@ -33,7 +33,6 @@ import {LogType} from "../runtime/misc/RCDeployment";
 
 import {AppType} from "./application";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
-import {TISMeta} from "./navigate.bar.component";
 
 /**
  * Created by baisui on 2017/4/12 0012.

@@ -18,15 +18,12 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {HeteroList, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
-import {ActivatedRoute, Router} from "@angular/router";
-import {NzNotificationService} from "ng-zorro-antd/notification";
-import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {PowerjobCptType} from "./datax.worker.component";
 
 

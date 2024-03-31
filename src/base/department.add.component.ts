@@ -20,7 +20,7 @@ import {TISService} from '../common/tis.service';
 import {Component, Input, OnInit} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 
-import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzModalRef} from "ng-zorro-antd/modal";
 import {Item} from "../common/tis.plugin";
 
 

@@ -16,16 +16,16 @@
  *   limitations under the License.
  */
 
-import {Component, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
+import {Component, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "./tis.service";
 import {CompareEachOtherComponent} from "../corecfg/compare.eachother.component";
 import {BasicFormComponent, CurrentCollection} from "./basic.form.component";
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Pager} from "./pagination.component";
 
-declare var jQuery: any;
+// declare var jQuery: any;
 
 /// <reference path="./ty" />
 

@@ -39,7 +39,6 @@ import {IncrBuildComponent} from "./incr.build.component";
 import {NzStepsModule} from 'ng-zorro-antd/steps';
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {IncrBuildStep0Component} from "./incr.build.step0.component";
-// import {IncrBuildStep2Component} from "./incr.build.step2.component";
 import {IncrBuildStep3Component} from "./incr.build.step3.component";
 import {IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent} from "./incr.build.step1.component";
 import {IncrBuildStep2SetSinkComponent} from "./incr.build.step2.setSink.components";

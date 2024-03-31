@@ -1,12 +1,12 @@
 import {AfterContentInit, Component, EventEmitter, Input, Output} from "@angular/core";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {IndexIncrStatus} from "./misc/RCDeployment";
-import {Descriptor, HeteroList, Item, ItemPropVal, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, HeteroList, Item, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {TISService} from "../common/tis.service";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
-import {TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
+import {DataxAddStep4Component} from "../base/datax.add.step4.component";
+import {TransferItem} from "ng-zorro-antd/transfer";
 import {PluginsComponent} from "../common/plugins.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 

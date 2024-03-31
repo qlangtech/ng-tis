@@ -17,12 +17,8 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {BasicFormComponent} from "../common/basic.form.component";
 import {LocalStorageService} from "angular-2-local-storage";
 import {TISService} from "../common/tis.service";
-import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
-import {TisResponseResult} from "../common/tis.plugin";
-import * as NProgress from "nprogress/nprogress";
 
 // 这个类专门负责router
 @Component({

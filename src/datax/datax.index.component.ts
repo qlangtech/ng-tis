@@ -16,9 +16,9 @@
  *   limitations under the License.
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TISService} from '../common/tis.service';
-import {RouterOutlet, ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 

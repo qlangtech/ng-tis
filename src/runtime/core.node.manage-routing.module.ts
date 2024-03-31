@@ -19,7 +19,16 @@
 import {Injectable, NgModule} from '@angular/core';
 import {CorenodemanageComponent} from './corenodemanage.component';
 
-import {ActivatedRoute, ActivatedRouteSnapshot, CanActivateChild, Router, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivateChild,
+  Router,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+  UrlTree
+} from '@angular/router';
 import {SnapshotsetComponent} from '../common/snapshotset.component';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {IndexQueryComponent} from './index.query.component';
@@ -31,7 +40,6 @@ import {IncrBuildComponent} from "./incr.build.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {BuildProgressComponent} from "../common/core.build.progress.component";
-import {Observable} from "rxjs";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 

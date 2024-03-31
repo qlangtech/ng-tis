@@ -34,16 +34,14 @@ import {Breadcrumb, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeploym
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
-import {NotebookwrapperComponent} from "../common/plugins.component";
-import {Descriptor, HeteroList, ItemPropVal, PluginMeta, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, ItemPropVal, PluginMeta, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
-import {K8SRCSpec} from "../common/k8s.replics.spec.component";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
-const flinkClusterCfgTargetName = PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
+const flinkClusterCfgTargetName = ()=> PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
 const dataXWorkerCfgTargetName = "datax-worker";
 
 const KEY_TARGET_NAME = 'targetName';
@@ -208,12 +206,12 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
 
       let itemPkVal = flinkClusterHeteroPkGetter(dto);
       if (itemPkVal) {
-        return flinkClusterCfgTargetName + "/" + itemPkVal.primary;
+        return flinkClusterCfgTargetName() + "/" + itemPkVal.primary;
       }
-      return flinkClusterCfgTargetName + (justGroup ? '' : '/dummpnameX');
+      return flinkClusterCfgTargetName() + (justGroup ? '' : '/dummpnameX');
     },
     runningTabRouterGetter: (params) => {
-      return [flinkClusterCfgTargetName];
+      return [flinkClusterCfgTargetName()];
     },
     init_get_job_worker_meta: get_job_worker_meta,
     runningStepCfg: {
@@ -226,7 +224,7 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
     },
     launchClusterMethod: "Launch_flink_cluster",
     relaunchClusterMethod: "relaunch_flink_cluster",
-    targetName: flinkClusterCfgTargetName
+    targetName: flinkClusterCfgTargetName()
     , pageHeader: FlinkSessionPageHeader
     // , createButtonLabel: "创建Flink Native Cluster执行器"
     , notCreateTips: "还未创建Flink Kubernetes Session执行器，创建之后可以将Flink Job提交到Kubernetes Session集群，高效并行执行数据实时同步任务"
@@ -260,7 +258,7 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
             throw new Error("itemPkVal can not be null");
           }
           return <PluginMeta>{
-            name: flinkClusterCfgTargetName,
+            name: flinkClusterCfgTargetName(),
             require: true,
             extraParam: 'dataxName_' + itemPkVal.primary
           };
@@ -299,7 +297,7 @@ export const flinkSessionDetail: { processMeta: ProcessMeta }
     },
     targetNameGetter: (params) => {
       // @ts-ignore
-      return flinkClusterCfgTargetName + "/" + params[KEY_TARGET_NAME];
+      return flinkClusterCfgTargetName() + "/" + params[KEY_TARGET_NAME];
     },
     init_get_job_worker_meta: get_flink_session,
     runningTabRouterGetter: (params) => {
@@ -340,7 +338,7 @@ export const flinkSessionDetail: { processMeta: ProcessMeta }
           //   throw new Error("itemPkVal can not be null");
           // }
           return <PluginMeta>{
-            name: flinkClusterCfgTargetName,
+            name: flinkClusterCfgTargetName(),
             require: true,
             extraParam: 'dataxName_' + params[KEY_TARGET_NAME]
           };

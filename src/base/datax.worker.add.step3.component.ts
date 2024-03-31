@@ -16,18 +16,8 @@
  *   limitations under the License.
  */
 
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input, NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from "@angular/core";
-import {EventSourceSubject, EventType, ExecuteStep, MessageData, TISService} from "../common/tis.service";
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from "@angular/core";
+import {EventSourceSubject, TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 
@@ -35,12 +25,10 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 
 import {K8SRCSpec, K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
-import {DataxWorkerDTO, ScalaLog} from "../runtime/misc/RCDeployment";
-import {DataxWorkerComponent, PowerjobCptType} from "./datax.worker.component";
-import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {NgTerminal} from "ng-terminal";
-import {Subject, Subscription} from "rxjs";
-import {HeteroList, PluginType} from "../common/tis.plugin";
+import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
+import {PowerjobCptType} from "./datax.worker.component";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {PluginType} from "../common/tis.plugin";
 import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";

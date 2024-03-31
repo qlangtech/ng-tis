@@ -16,15 +16,7 @@
  *   limitations under the License.
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactoryResolver,
-  Input,
-  OnInit,
-  ViewChild,
-  ViewContainerRef
-} from "@angular/core";
+import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
@@ -39,10 +31,7 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {Breadcrumb, DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
-import {isBooleanLiteralLike} from "codelyzer/util/utils";
-import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
-import {TisResponseResult} from "../common/tis.plugin";
 
 export enum PowerjobCptType {
   Server = ("powerjob-server"),

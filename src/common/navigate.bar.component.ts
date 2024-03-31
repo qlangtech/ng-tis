@@ -35,7 +35,6 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
-import {expressionType} from "@angular/compiler/src/output/output_ast";
 
 
 @Component({

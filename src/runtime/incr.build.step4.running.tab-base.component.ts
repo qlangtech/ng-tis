@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild} from "@angular/core";
+import {AfterContentInit, Component, Input, OnDestroy, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 
@@ -25,7 +25,6 @@ import {ChartDataSets, ChartOptions} from "chart.js";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
-import {map} from "rxjs/operators";
 import {NgTerminal} from "ng-terminal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 

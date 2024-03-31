@@ -26,7 +26,7 @@ import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.ex
 import {IntendDirect} from "../common/MultiViewDAG";
 import {ItemPropValComponent, PluginsComponent} from "../common/plugins.component";
 import {PowerjobCptType} from "./datax.worker.component";
-import {Descriptor, PluginName, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {dataXWorkerCfg} from "./base.manage-routing.module";
 import {Observable, Subject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";

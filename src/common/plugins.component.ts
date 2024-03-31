@@ -36,10 +36,14 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {ActivatedRoute, Router} from "@angular/router";
 import {
   AttrDesc,
+  CONST_FORM_LAYOUT_VERTICAL,
   Descriptor,
   HeteroList,
+  IFieldError,
   Item,
   ItemPropVal,
+  OptionEnum,
+  PARAM_END_TYPE,
   PluginMeta,
   PluginName,
   PluginSaveResponse,
@@ -47,21 +51,17 @@ import {
   SavePluginEvent,
   TisResponseResult,
   TYPE_ENUM,
-  PARAM_END_TYPE,
   TYPE_PLUGIN_SELECTION,
-  CONST_FORM_LAYOUT_VERTICAL,
-  ValOption,
-  OptionEnum, DescribleVal, IFieldError
+  ValOption
 } from "./tis.plugin";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
-import {FunctionCall} from "@angular/compiler";
 
 
 @Component({

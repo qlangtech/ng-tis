@@ -16,12 +16,11 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from "@angular/core";
+import {AfterContentInit, AfterViewInit, Component, EventEmitter, Input, Output} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
-import {IncrBuildComponent} from "./incr.build.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 

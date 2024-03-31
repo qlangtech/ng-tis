@@ -22,7 +22,7 @@ import {Component} from '@angular/core';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {NzModalService} from "ng-zorro-antd/modal";
 
-declare var jQuery: any;
+// declare var jQuery: any;
 
 // 添加全局参数
 @Component({

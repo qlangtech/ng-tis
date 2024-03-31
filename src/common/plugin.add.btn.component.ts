@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@
 import {Descriptor} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
-import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button/button.component";
 

@@ -28,13 +28,14 @@ import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {
-    DataBase,
-    Descriptor,
-    HeteroList, IColumnMeta,
-    Item,
-    PluginSaveResponse,
-    PluginType, SuccessAddedDBTabs,
-    TisResponseResult
+  DataBase,
+  Descriptor,
+  HeteroList,
+  IColumnMeta,
+  Item,
+  PluginSaveResponse,
+  PluginType,
+  SuccessAddedDBTabs
 } from "../common/tis.plugin";
 import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {NzModalService} from "ng-zorro-antd/modal";

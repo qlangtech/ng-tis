@@ -16,12 +16,12 @@
  *   limitations under the License.
  */
 
-import {Component, ElementRef, ViewChild} from "@angular/core";
+import {Component} from "@angular/core";
 import {TISService} from "../common/tis.service";
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
-import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzModalService} from "ng-zorro-antd/modal";
 import {ChartDataSets, ChartOptions} from "chart.js";
 
 
