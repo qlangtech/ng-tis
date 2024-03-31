@@ -25,7 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {HeteroList, IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
+import {IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
 
 enum PluginTab {
   avail = 'avaliable',

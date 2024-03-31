@@ -16,22 +16,13 @@
  *   limitations under the License.
  */
 
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnInit,
-  Output
-} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzSelectSizeType} from "ng-zorro-antd/select";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {NzCascaderOption} from "ng-zorro-antd/cascader";
-import {DatasourceComponent, KEY_DB_ID} from "../offline/ds.component";
+import {DatasourceComponent} from "../offline/ds.component";
 import {DataBase, IColumnMeta, SuccessAddedDBTabs} from "./tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 

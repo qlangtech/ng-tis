@@ -25,7 +25,6 @@ import {Descriptor, PluginMeta, PluginSaveResponse, SavePluginEvent} from "../co
 import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {IntendDirect} from "../common/MultiViewDAG";
-import {DataxAddStep4Component} from "../base/datax.add.step4.component";
 import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.extend.selected.tab.props.component";
 
 

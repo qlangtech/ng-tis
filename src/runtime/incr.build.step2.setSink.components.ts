@@ -28,10 +28,7 @@ import {SavePluginEvent} from "../common/tis.plugin";
 import {EditorConfiguration} from "codemirror";
 import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
-import {
-  LaunchK8SClusterWaittingProcessComponent,
-  openWaittingProcessComponent
-} from "../common/launch.waitting.process.component";
+import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {CreateLaunchingTarget} from "../base/datax.worker.add.step3.component";
 

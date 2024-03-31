@@ -22,38 +22,26 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from
 import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {interval, Observable, of, Subject, timer} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {
   DataXJobWorkerStatus,
   DataxWorkerDTO,
   K8sPodState,
   LogType,
-  PowerJobWorkflow, ProcessMeta, RCDeployment,
+  PowerJobWorkflow,
+  ProcessMeta,
+  RCDeployment,
   RcHpaStatus
 } from "../runtime/misc/RCDeployment";
 import {ControlPanelComponent} from "../common/control.panel.component";
 import {Pager} from "../common/pagination.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  reduce,
-  scan,
-  switchMap,
-  takeUntil,
-  throttleTime
-} from 'rxjs/operators';
-import {
-  CreateLaunchingTarget,
-  DataxWorkerAddStep3Component
-} from "./datax.worker.add.step3.component";
+import {debounceTime, map} from 'rxjs/operators';
+import {CreateLaunchingTarget, DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {NzProgressStatusType} from "ng-zorro-antd/progress/typings";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {dataXWorkerCfg} from "./base.manage-routing.module";
-import {PluginsComponent} from "../common/plugins.component";
-import {languages} from "monaco-editor";
 import {NzTabSetComponent} from "ng-zorro-antd/tabs/tabset.component";
 import {LaunchK8SClusterWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {DataxWorkerComponent} from "./datax.worker.component";

@@ -47,7 +47,7 @@ import {NzSelectModule} from 'ng-zorro-antd/select';
 import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {LocalStorageModule} from 'angular-2-local-storage';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
-import {NzIconModule, NzIconService} from 'ng-zorro-antd/icon';
+import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {
   ItemPropValComponent,
@@ -82,7 +82,7 @@ import {NzCardModule} from 'ng-zorro-antd/card';
 import {NzMenuModule} from 'ng-zorro-antd/menu';
 import {NzLayoutModule} from 'ng-zorro-antd/layout';
 import {NzListModule} from 'ng-zorro-antd/list';
-import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import {NzDatePickerModule} from 'ng-zorro-antd/date-picker';
 import {BuildProgressComponent, ProgressComponent, ProgressTitleComponent} from "./core.build.progress.component";
 import {NgTerminalModule} from 'ng-terminal';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
@@ -131,10 +131,8 @@ import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
 import {ControlPanelComponent} from "./control.panel.component";
 import {SchemaEditComponent} from "./schema.edit.component";
-import {TISService} from "./tis.service";
-import {IconDefinition} from "@ant-design/icons-angular";
 import {FullBuildHistoryComponent} from './full.build.history.component';
-import { LaunchK8SClusterWaittingProcessComponent } from './launch.waitting.process.component';
+import {LaunchK8SClusterWaittingProcessComponent} from './launch.waitting.process.component';
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries

@@ -35,7 +35,6 @@ import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
 import {loadMonaco} from "@zeppelin/app.module";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {IconDefinition} from "@ant-design/icons-angular";
-import {TisResponseResult} from "../common/tis.plugin";
 
 registerLocaleData(zh);
 

@@ -25,7 +25,6 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Pager} from "../common/pagination.component";
 import {TISService} from "../common/tis.service";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
-import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 
 // 查看操作日志
 @Component({

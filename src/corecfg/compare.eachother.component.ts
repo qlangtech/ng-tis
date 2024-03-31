@@ -16,11 +16,11 @@
  *   limitations under the License.
  */
 
-import {Component, OnInit, Input, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, Input, OnInit, ViewContainerRef} from '@angular/core';
 
 import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
-import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {NzModalRef} from "ng-zorro-antd/modal";
 
 declare var jQuery: any;
 

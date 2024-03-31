@@ -24,7 +24,6 @@ import {NzModalService} from "ng-zorro-antd/modal";
 
 // 会员权限管理
 @Component({
-  //  templateUrl: '/runtime/membership.htm'
   template: `
     <h1>Membership</h1>
   `

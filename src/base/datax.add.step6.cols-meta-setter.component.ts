@@ -20,7 +20,7 @@ import {AfterViewInit, Component, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Item, ItemPropVal, ReaderColMeta, DataTypeMeta, TabletView} from "../common/tis.plugin";
+import {Item, ItemPropVal, ReaderColMeta, TabletView} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 

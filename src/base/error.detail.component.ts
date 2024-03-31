@@ -20,7 +20,7 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {BasicFormComponent, BasicSideBar} from "../common/basic.form.component";
-import {SystemError, TISService} from "../common/tis.service";
+import {TISService} from "../common/tis.service";
 import {EditorConfiguration} from "codemirror";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
