@@ -20,7 +20,7 @@ import {NgModule} from '@angular/core';
 
 import {BaseMangeIndexComponent} from './base.manage.index.component';
 
-import {Routes, RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {DepartmentListComponent} from './department.list.component';
 import {ApplistComponent} from './applist.component';
 import {OperationLogComponent} from '../common/operation.log.component';
@@ -29,7 +29,7 @@ import {BaseConfigComponent} from "./base-config.component";
 import {SnapshotsetComponent} from "../common/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
-import {DataxWorkerComponent, PowerjobCptType} from "./datax.worker.component";
+import {DataxWorkerComponent} from "./datax.worker.component";
 import {Breadcrumb, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
@@ -41,6 +41,18 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
+
+export enum PowerjobCptType {
+  Server = ("powerjob-server"),
+  Worker = ("powerjob-worker"),
+  JobTpl = ("powerjob-job-tpl"),
+  UsingExistCluster = ("powerjob-use-exist-cluster"),
+  // applicationAware
+  JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite"),
+  FlinkCluster = ("flink-cluster"),
+  FlinkKubernetesApplicationCfg = ("flink-kubernetes-application-cfg")
+}
+
 const flinkClusterCfgTargetName = ()=> PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
 const dataXWorkerCfgTargetName = "datax-worker";
 

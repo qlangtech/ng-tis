@@ -25,11 +25,10 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 import {PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
-import {PowerjobCptType} from "../base/datax.worker.component";
 import {PluginsComponent} from "./plugins.component";
 import {NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {KEY_DB_ID} from "../offline/ds.component";
-import {dataXWorkerCfg} from "../base/base.manage-routing.module";
+import {dataXWorkerCfg, PowerjobCptType} from "../base/base.manage-routing.module";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 

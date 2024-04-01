@@ -23,11 +23,11 @@ import FlinkJobDetail = flink.job.detail.FlinkJobDetail;
 import {Descriptor, HeteroList, PluginName, PluginType, SavePluginEvent} from "../../common/tis.plugin";
 import {ExecuteStep, MessageData} from "../../common/tis.service";
 import {DataxWorkerAddStep0Component} from "../../base/datax.worker.add.step0.component";
-import {PowerjobCptType} from "../../base/datax.worker.component";
 import {DataxWorkerAddStep1Component} from "../../base/datax.worker.add.step1.component";
 import {Params} from "@angular/router";
 import {DataxWorkerAddStep3Component} from "../../base/datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "../../base/datax.worker.running.component";
+import {PowerjobCptType} from "../../base/base.manage-routing.module";
 
 /**
  * Copyright (c) 2020 QingLang, Inc. <baisui@qlangtech.com>

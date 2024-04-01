@@ -33,17 +33,6 @@ import {Breadcrumb, DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 
-export enum PowerjobCptType {
-  Server = ("powerjob-server"),
-  Worker = ("powerjob-worker"),
-  JobTpl = ("powerjob-job-tpl"),
-  UsingExistCluster = ("powerjob-use-exist-cluster"),
-  // applicationAware
-  JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite"),
-  FlinkCluster = ("flink-cluster"),
-  FlinkKubernetesApplicationCfg = ("flink-kubernetes-application-cfg")
-}
-
 @Component({
   template: `
     <tis-page-header [breadcrumb]="breadcrumb.breadcrumb" [title]="breadcrumb.name">

@@ -23,8 +23,8 @@ import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {NextObserver, Subject} from "rxjs";
 import {JSONFile} from "@angular/cli/utilities/json-file";
-import {PowerjobCptType} from "../base/datax.worker.component";
 import {KEY_APPNAME} from "./tis.service";
+import {PowerjobCptType} from "../base/base.manage-routing.module";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
