@@ -26,7 +26,7 @@ import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
-import {PowerjobCptType} from "./datax.worker.component";
+import {PowerjobCptType} from "./base.manage-routing.module";
 
 @Component({
   template: `

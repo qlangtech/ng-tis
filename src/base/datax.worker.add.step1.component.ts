@@ -25,7 +25,7 @@ import {PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plu
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {ActivatedRoute} from "@angular/router";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
-import {PowerjobCptType} from "./datax.worker.component";
+import {PowerjobCptType} from "./base.manage-routing.module";
 
 
 @Component({

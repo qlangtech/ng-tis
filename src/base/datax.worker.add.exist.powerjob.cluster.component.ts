@@ -24,7 +24,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
-import {PowerjobCptType} from "./datax.worker.component";
+import {PowerjobCptType} from "./base.manage-routing.module";
 
 
 @Component({
