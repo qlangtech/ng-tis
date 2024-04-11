@@ -35,7 +35,10 @@ import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
 import {loadMonaco} from "@zeppelin/app.module";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {IconDefinition} from "@ant-design/icons-angular";
+import {LocalStorageService} from "angular-2-local-storage";
 
+
+const local_endtype_icons = 'local_endtype_icons';
 registerLocaleData(zh);
 
 export function markedOptionsFactory(): MarkedOptions {
@@ -125,38 +128,52 @@ export function markedOptionsFactory(): MarkedOptions {
 
 })
 export class AppModule {
-  constructor(iconService: NzIconService, tisService: TISService) {
-    // console.log('iconService');
-    // console.log( iconService.getCachedIcons() );
-    //(async function () {
 
+  private appendIconService(iconService: NzIconService, iconDefs: Array<TISIconDefinition>): void {
 
-    tisService.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=plugin_action&emethod=get_endtype_icons`)
+    let id: TISIconDefinition = null;
+    let ref: IconDefinition = null;
+    let iconMap: Map<string, TISIconDefinition> = new Map<string, TISIconDefinition>();
+
+    for (let i = 0; i < iconDefs.length; i++) {
+      id = iconDefs[i];
+      iconMap.set(id.name + "_" + id.theme, id);
+    }
+
+    for (let i = 0; i < iconDefs.length; i++) {
+      id = iconDefs[i];
+      if (id.ref) {
+        ref = iconMap.get(id.ref + "_" + id.theme);
+        if (!ref) {
+          throw new Error("resource reference:'" + id.ref + "_" + id.theme + "' can not be null");
+        }
+        iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+      } else {
+        iconService.addIcon(iconDefs[i]);
+      }
+    }
+  }
+
+  constructor(iconService: NzIconService, tisService: TISService, _localStorageService: LocalStorageService) {
+    let localEndTypesIcons: LocalEndtypeIcons = _localStorageService.get(local_endtype_icons)
+   // console.log(localEndTypesIcons);
+    let requestBody = `action=plugin_action&emethod=get_endtype_icons`;
+    if (localEndTypesIcons) {
+      requestBody += ("&vertoken=" + localEndTypesIcons.verToken);
+      this.appendIconService(iconService, localEndTypesIcons.iconsDefs);
+    }
+
+    tisService.httpPost('/coredefine/corenodemanage.ajax', requestBody)
       .then((result) => {
-        let iconDefs: Array<TISIconDefinition> = result.bizresult;
-        let id: TISIconDefinition = null;
-        let ref: IconDefinition = null;
-        let iconMap: Map<string, TISIconDefinition> = new Map<string, TISIconDefinition>();
+        let r: LocalEndtypeIcons = result.bizresult;
 
-        for (let i = 0; i < iconDefs.length; i++) {
-          id = iconDefs[i];
-          iconMap.set(id.name + "_" + id.theme, id);
+        if (r.iconsDefs.length > 0) {
+          this.appendIconService(iconService, r.iconsDefs);
+          _localStorageService.set(local_endtype_icons, r);
         }
 
-        for (let i = 0; i < iconDefs.length; i++) {
-          id = iconDefs[i];
-          if (id.ref) {
-            ref = iconMap.get(id.ref + "_" + id.theme);
-            if (!ref) {
-              throw new Error("resource reference:'" + id.ref + "_" + id.theme + "' can not be null");
-            }
-            iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
-          } else {
-            iconService.addIcon(iconDefs[i]);
-          }
-        }
-       // console.log("xxxxxxxxxxxxxxxxxxxxx");
+
+        // console.log("xxxxxxxxxxxxxxxxxxxxx");
       });
     // })();
     //
@@ -164,6 +181,12 @@ export class AppModule {
 
   }
 
+}
+
+interface LocalEndtypeIcons {
+  // 引用其他类型的Icon
+  iconsDefs: Array<TISIconDefinition>;
+  verToken: string;
 }
 
 interface TISIconDefinition extends IconDefinition {

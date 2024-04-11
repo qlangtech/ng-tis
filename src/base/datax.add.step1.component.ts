@@ -32,11 +32,22 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
     <tis-steps [type]="dto.processModel" [step]="0"></tis-steps>
     <nz-spin [nzSpinning]="this.formDisabled">
       <tis-steps-tools-bar [title]="'基本信息'" (cancel)="cancel()"
-                           (goOn)="createIndexStep1Next()" [formDisabled]="formDisabled"></tis-steps-tools-bar>
-      <div style="width: 80%;margin: 0 auto;">
+                           (goOn)="createIndexStep1Next()" [formDisabled]="formDisabled">
+      </tis-steps-tools-bar>
+      <nz-alert nzType="info" [nzMessage]="InformationalNotes" ></nz-alert>
+      <ng-template #InformationalNotes>
+        <blibli videoId="BV1eh4y1o7yQ">构建MySQL到Doris批量同步通道</blibli>
+        <blibli videoId="BV1nX4y1h7SW">构建MySQ实时同步Doris示例,实现数据毫秒级同步</blibli>
+      </ng-template>
+
+
+      <div style="clear: both;width: 80%;margin: 0 auto;">
+
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
                      [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+
+
       </div>
     </nz-spin>
     <!-- Content here -->
