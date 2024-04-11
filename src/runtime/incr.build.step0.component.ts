@@ -40,8 +40,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
               </p>
             </ng-template>
               <ng-template #contentTpl>
-                <span  > <i style="font-size: 20px" nz-icon nzType="blibli" nzTheme="fill"></i>
-                  <a target="_blank" href="https://www.bilibili.com/video/BV1nX4y1h7SW">MySQL同步Doris作为示例，让初次使用者能够更快熟悉操作</a>         </span>
+                <blibli videoId="BV1nX4y1h7SW">MySQ实时同步Doris作为示例，让初次使用者能够更快熟悉操作</blibli>
               </ng-template>
               <ng-template #footerTpl>
                   <button nz-button nzType="primary" (click)="createIncrSyncChannal()">创建增量通道</button>

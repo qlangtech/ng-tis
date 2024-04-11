@@ -133,6 +133,7 @@ import {ControlPanelComponent} from "./control.panel.component";
 import {SchemaEditComponent} from "./schema.edit.component";
 import {FullBuildHistoryComponent} from './full.build.history.component';
 import {LaunchK8SClusterWaittingProcessComponent} from './launch.waitting.process.component';
+import {BliBliComponent} from "./common.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries
@@ -160,7 +161,7 @@ import {LaunchK8SClusterWaittingProcessComponent} from './launch.waitting.proces
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
-  declarations: [LaunchK8SClusterWaittingProcessComponent,
+  declarations: [BliBliComponent,LaunchK8SClusterWaittingProcessComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
@@ -173,7 +174,7 @@ import {LaunchK8SClusterWaittingProcessComponent} from './launch.waitting.proces
     , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
-  exports: [LaunchK8SClusterWaittingProcessComponent,SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
+  exports: [BliBliComponent,LaunchK8SClusterWaittingProcessComponent,SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
     , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent
     , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

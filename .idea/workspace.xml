@@ -5,18 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/common.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step0.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step1.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2-2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2-2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step2.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.step3.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/app.module-jit.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step0.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +75,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" />
       <recent name="$PROJECT_DIR$/src/common/tis.plugin.ts" />
       <recent name="$PROJECT_DIR$/src/common/getDocFieldSplitMetas.ts" />
     </key>
@@ -206,7 +201,8 @@
       <workItem from="1708498515669" duration="28236000" />
       <workItem from="1709011380537" duration="53759000" />
       <workItem from="1710341418442" duration="55807000" />
-      <workItem from="1711444715700" duration="18986000" />
+      <workItem from="1711444715700" duration="26218000" />
+      <workItem from="1712731771330" duration="5666000" />
     </task>
     <servers />
   </component>
