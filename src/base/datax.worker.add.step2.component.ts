@@ -25,7 +25,7 @@ import {ActivatedRoute} from "@angular/router";
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
-import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
+import {K8SRCSpec, K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {PowerjobCptType} from "./base.manage-routing.module";
 
@@ -36,9 +36,9 @@ import {PowerjobCptType} from "./base.manage-routing.module";
       <tis-header-tool>
         <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;
         <button nz-button nzType="primary"
-                                                                                            (click)="createStep1Next(k8sReplicsSpec)">
-        下一步
-      </button>
+                (click)="createStep1Next(k8sReplicsSpec)">
+          下一步
+        </button>
       </tis-header-tool>
     </tis-page-header>
     <nz-spin [nzSpinning]="this.formDisabled">
@@ -52,7 +52,8 @@ import {PowerjobCptType} from "./base.manage-routing.module";
       </div>
       <h4>资源规格</h4>
       <div class="item-block">
-        <k8s-replics-spec [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem" #k8sReplicsSpec [labelSpan]="5">
+        <k8s-replics-spec [hpaDisabled]="true" [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem" #k8sReplicsSpec
+                          [labelSpan]="5">
         </k8s-replics-spec>
       </div>
     </nz-spin>
@@ -65,7 +66,7 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.Worker};
+  pluginCategory: PluginType = {name: 'datax-worker', require: true, extraParam: "dataxName_" + PowerjobCptType.Worker};
   errorItem: Item;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
@@ -83,37 +84,15 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   }
 
   createStep1Next(spec: K8SReplicsSpecComponent) {
-    // console.log(k8sReplicsSpec.k8sControllerSpec);
-   // console.log([spec.validate(),this.dto.powderJobServerRCSpec]);
     if (!spec.validate()) {
       return;
     }
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
-    e.serverForward ="coredefine:datax_action:save_datax_worker";
+    e.serverForward = "coredefine:datax_action:save_datax_worker";
     e.postPayload = {"k8sSpec": this.dto.powderJobWorkerRCSpec};
     e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
-    // let appTisService: TISService = this.tisService;
-    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    // e.basicModule = this;
     this.savePlugin.emit(e);
-
-    // =================================
-    // let rcSpec = k8sReplicsSpec.k8sControllerSpec;
-    // let e = new SavePluginEvent();
-    // e.notShowBizMsg = true;
-    // this.jsonPost(`/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_datax_worker&targetName=${this.dto.processMeta.targetName}`
-    //   , {
-    //     k8sSpec: rcSpec,
-    //   }, e)
-    //   .then((r) => {
-    //     if (r.success) {
-    //       this.dto.powderJobServerRCSpec = rcSpec;
-    //       this.nextStep.emit(this.dto);
-    //     } else {
-    //       this.errorItem = Item.processFieldsErr(r);
-    //     }
-    //   });
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -124,7 +103,16 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
 
 
   ngOnInit(): void {
-    console.log(this.dto);
+    // console.log(this.dto);
+    if (!this.dto.powderJobWorkerRCSpec) {
+      let dftSpec = K8SReplicsSpecComponent.createInitRcSpec();
+      dftSpec.cuplimit = 2;
+      dftSpec.memorylimit = 4;
+      dftSpec.memoryrequest = 3;
+      dftSpec.memoryrequestunit = dftSpec.memorylimitunit;
+
+      this.dto.powderJobWorkerRCSpec = dftSpec;
+    }
   }
 
 
