@@ -144,7 +144,12 @@ export const KEY_APPNAME = "appname";
                   <strong>{{u.id}}</strong>/<a [routerLink]="['/x',u.wfName,'app_build_history']">{{u.wfName}}</a>
                 </ng-template>
               </tis-col>
-              <tis-col title="定时信息" width="14" field="cronInfo"></tis-col>
+              <tis-col title="定时信息" width="14">
+                <ng-template let-u='r'>
+                  <button nz-button  nzType="dashed"><span nz-icon nzType="clock-circle" nzTheme="outline"></span>{{u.cronInfo}}</button>
+                </ng-template>
+
+              </tis-col>
               <tis-col title="状态">
                 <ng-template let-u='r'>
                   <nz-switch [nzDisabled]="true" [ngModel]="u.enable" nzCheckedChildren="开"

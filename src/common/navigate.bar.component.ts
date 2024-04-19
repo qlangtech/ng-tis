@@ -144,6 +144,7 @@ import {Application} from "./application";
         <ng-template #tisAbout>
           <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
             <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="发版时间"><img src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
             <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
           </nz-descriptions>
           <svg version="1.1"
@@ -156,7 +157,8 @@ import {Application} from "./application";
         </ng-template>
       </li>
       <li class="user-profile" nz-menu-item nzMatchRouter>
-        <a href="https://github.com/datavane/tis" target="_blank"><span style="color: white;font-size: 1.2em" nz-icon nzType="github" nzTheme="outline"></span></a>
+        <img src="https://img.shields.io/github/stars/datavane/tis.svg" />
+
       </li>
       <!--
                 <li nz-menu-item>
