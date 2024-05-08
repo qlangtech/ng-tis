@@ -79,6 +79,7 @@ export class WFControllerComponent extends BasicFormComponent implements OnInit 
         }
       }
       DataxAddComponent.getDataXMeta(this, StepType.CreateWorkflow, app).then((dto) => {
+
         dto.execModel = ExecModel.Reader;
         dto.addStep2ComponentCfg = addStepCptCfg;
         // dto.processModel = StepType.UpdateDataxReader;

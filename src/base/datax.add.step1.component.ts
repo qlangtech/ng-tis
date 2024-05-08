@@ -36,8 +36,16 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
       </tis-steps-tools-bar>
       <nz-alert nzType="info" [nzMessage]="InformationalNotes" ></nz-alert>
       <ng-template #InformationalNotes>
-        <blibli videoId="BV1eh4y1o7yQ">构建MySQL到Doris批量同步通道</blibli>
-        <blibli videoId="BV1nX4y1h7SW">构建MySQ实时同步Doris示例,实现数据毫秒级同步</blibli>
+        <ng-container [ngSwitch]="dto.inWorkflowProcess">
+          <ng-container *ngSwitchCase="true">
+            <blibli videoId="BV1du411W7Ns">T+1离线分析示例</blibli> &nbsp;
+            <a href="https://tis.pub/docs/example/dataflow/" target="_blank"><span nz-icon nzType="book" nzTheme="outline"></span>示例说明</a>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <blibli videoId="BV1eh4y1o7yQ">构建MySQL到Doris批量同步通道</blibli>
+            <blibli videoId="BV1nX4y1h7SW">构建MySQ实时同步Doris示例,实现数据毫秒级同步</blibli>
+          </ng-container>
+        </ng-container>
       </ng-template>
 
 
@@ -99,6 +107,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   public createIndexStep1Next(): void {
     this.formDisabled = true;
     let e = new SavePluginEvent();
+   // e.
     e.notShowBizMsg = true;
     this.savePlugin.emit(e);
   }

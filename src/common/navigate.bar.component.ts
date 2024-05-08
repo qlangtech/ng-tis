@@ -157,8 +157,16 @@ import {Application} from "./application";
         </ng-template>
       </li>
       <li class="user-profile" nz-menu-item nzMatchRouter>
-        <img src="https://img.shields.io/github/stars/datavane/tis.svg" />
 
+        <span nz-tooltip [nzTooltipTitle]="tisStarsTpl" nzTooltipTrigger="click">
+          <img  src="https://img.shields.io/github/stars/datavane/tis.svg" />
+        </span >
+          <ng-template #tisStarsTpl>
+          <div>
+            <div>如果觉得TIS对您有帮助，请加一个小星星吧</div>
+            <div><a href="https://github.com/datavane/tis" target="_blank">https://github.com/datavane/tis</a></div>
+          </div>
+        </ng-template>
       </li>
       <!--
                 <li nz-menu-item>
