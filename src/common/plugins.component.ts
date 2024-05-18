@@ -880,7 +880,8 @@ export class NotebookwrapperComponent implements OnInit {
                     <!--select-->
                       <nz-select [disabled]="disabled" [(ngModel)]="_pp.primary" [name]="_pp.key"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
-                           <nz-option nzCustomContent *ngFor="let e of _pp.options"  [nzLabel]="e.name" [nzValue]="e.name">
+                           <nz-option nzCustomContent *ngFor="let e of _pp.options" [nzLabel]="e.name"
+                                      [nzValue]="e.name">
                              <span *ngIf="e.endType" nzTheme="fill" nz-icon nz [nzType]="e.endType"></span> {{e.name}}
                            </nz-option>
                        </nz-select>
@@ -972,7 +973,7 @@ export class NotebookwrapperComponent implements OnInit {
             <ng-template #renderExtraPluginTemplate>
               <nz-divider></nz-divider>
               <div class="container">
-                <button style="width: 100%" nz-button nzType="dashed" nzSize="small"
+                <button style="width: 100%;background-color: #f8f5d1" nz-button nzType="dashed" nzSize="small"
                         (click)="addNewPlugin(_pluginImpl,_pp)"><i nz-icon nzType="plus"
                                                                    nzTheme="outline"></i>添加
                 </button>
@@ -1185,35 +1186,24 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     });
   }
 
-  static checkAndInstallPlugin(drawerService: NzDrawerService, cpt: BasicFormComponent, pluginMeta: PluginType, targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
+  static checkAndInstallPlugin(drawerService: NzDrawerService
+    , cpt: BasicFormComponent
+    , pluginMeta: PluginType
+    , targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
     let descName = targetPlugin.descName;
     let url = "/coredefine/corenodemanage.ajax";
     return cpt.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
       .then((r) => {
         if (!r.success) {
           if (r.bizresult.notFoundExtension) {
-
+            //console.log(pluginMeta);
+            if (!pluginMeta) {
+              //  throw new Error("pluginMeta can not be null");
+            }
             ItemPropValComponent.openPluginInstall(drawerService, cpt, descName, r.bizresult.notFoundExtension, pluginMeta, false);
 
-            // cpt.modalService.confirm({
-            //   nzTitle: '确认',
-            //   nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
-            //   nzOkText: '开始安装',
-            //   nzCancelText: '取消',
-            //   nzOnOk: () => {
-            //     let endType = null;
-            //
-            //     if (HeteroList.isDescFilterDefined(pluginMeta)) {
-            //       endType = pluginMeta.descFilter.endType();
-            //     }
-            //     const drawerRef = PluginManageComponent.openPluginManage(drawerService, r.bizresult.notFoundExtension, endType, []);
-            //     drawerRef.afterClose.subscribe(() => {
-            //       // this.afterPluginAddClose.emit();
-            //     })
-            //   }
-            // });
           }
-          return;
+          return Promise.reject("notFoundExtension install plugin first");
         } else {
           return PluginsComponent.wrapDescriptors(r.bizresult);
         }
@@ -1221,9 +1211,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
-
+    //console.log(this.pluginMeta);
     ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, this.pluginMeta, targetPlugin)
       .then((desc) => {
+        if (!desc) {
+          throw new Error("desc can not be null");
+        }
         // let desc = PluginsComponent.wrapDescriptors(r.bizresult);
         desc.forEach((d) => {
           // console.log(targetPlugin);
@@ -1240,12 +1233,12 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
-                              // enum
-                              // db detail
-                              // let item: Item = Object.assign(new Item(d), );
-                              // let nn = new ValOption();
-                              // n.name = biz.detailed.identityName;
-                              // n.impl = d.impl;
+                // enum
+                // db detail
+                // let item: Item = Object.assign(new Item(d), );
+                // let nn = new ValOption();
+                // n.name = biz.detailed.identityName;
+                // n.impl = d.impl;
 
                 if (biz.detailed) {
                   let db = biz.detailed;
@@ -1274,6 +1267,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             }
           });
         });
+      }, (rejectReason) => {
+       // console.log(rejectReason);
       });
 
 
