@@ -865,6 +865,9 @@ export class HeteroList {
   pluginCategory: PluginType;
 
   public static isDescFilterDefined(type: PluginType): type is PluginMeta {
+    if(!type){
+      return false;
+    }
     let filter = (<PluginMeta>type).descFilter;
     return !!filter && !!filter.endType;
   }

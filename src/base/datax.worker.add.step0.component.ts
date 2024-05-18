@@ -48,6 +48,12 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
           >
               <ng-template #contentTpl>
                   <span>{{this.dto.processMeta.notCreateTips}}</span>
+                <ng-container *ngIf="this.dto.containPowerJob">
+                  <br/>
+                  <blibli videoId="BV16M4m1r7yj">TIS与PowerJob整合案例演示</blibli> &nbsp;
+                  <a target="_blank" href="https://tis.pub/docs/install/powerjob/k8s"><span nz-icon nzType="file-text" nzTheme="outline"></span>操作说明</a>
+                </ng-container>
+
               </ng-template>
               <ng-template #footerTpl>
 
