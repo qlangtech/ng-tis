@@ -422,13 +422,30 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
         // console.log([pm, bizArray]);
+        let pt: PluginType;
+        let m: PluginMeta;
         for (let i = 0; i < pm.length; i++) {
           //
-          let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pm[i]);
+          pt = pm[i];
+          let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pt);
+          m = (pt as PluginMeta);
+          if (m.require && (h.items.length < 1)) {
+             // 增加一个默认值
+            h.descriptors.forEach((desc, key) => {
+              if (m.descFilter && m.descFilter.localDescFilter(desc)) {
+                Descriptor.addNewItem(h, desc, false, (_, propVal) => {
+                  return propVal;
+                });
+              }
+            })
+
+
+          }
           //   console.log([bizArray[i], pm[i], h]);
           _heteroList.push(h);
         }
       }
+      // console.log(_heteroList);
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       return r;
     })
@@ -1186,7 +1203,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     });
   }
 
-  static checkAndInstallPlugin(drawerService: NzDrawerService
+  public static checkAndInstallPlugin(drawerService: NzDrawerService
     , cpt: BasicFormComponent
     , pluginMeta: PluginType
     , targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
@@ -1268,7 +1285,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           });
         });
       }, (rejectReason) => {
-       // console.log(rejectReason);
+        // console.log(rejectReason);
       });
 
 
@@ -1608,7 +1625,7 @@ interface CreatorRouter {
   plugin: Array<TargetPlugin>;
 }
 
-interface TargetPlugin {
+export interface TargetPlugin {
   hetero: PluginName;
   extraParam?: string;
   descName?: string;
