@@ -24,251 +24,292 @@ import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
-import {PluginSaveResponse, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
-import {PluginsComponent} from "./plugins.component";
-import {NzTreeNodeOptions} from "ng-zorro-antd/tree";
-import {KEY_DB_ID} from "../offline/ds.component";
-import {dataXWorkerCfg, PowerjobCptType} from "../base/base.manage-routing.module";
+import {Descriptor, PluginType, TisResponseResult} from "./tis.plugin";
+import {PluginsComponent, ItemPropValComponent, TargetPlugin} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
-    selector: "full-build-history",
-    template: `
-        <div style="margin-top: 8px;" *ngIf="dataxProcess && dataXWorkerStatus">
-            <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知"
-                      [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
-            <ng-template #unableToUseK8SController>
-                当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启
-                <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
-            </ng-template>
-            <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告"
-                      [nzDescription]="installLocal" nzShowIcon></nz-alert>
-            <ng-template #installLocal>
-                当前DataX任务执行器需要安装（<strong>单机版</strong>）执行器，请先安装
-                <tis-plugin-add-btn [extendPoint]="'com.qlangtech.tis.datax.DataXJobSubmit'" [descriptors]="[]">添加
-                </tis-plugin-add-btn>
-            </ng-template>
-        </div>
-        <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb"
-                         [result]="result" (refesh)="refesh()">
-            <tis-page-header-left *ngIf="dataxProcess && dataXWorkerStatus">
-                <ng-container *ngIf="dataXWorkerStatus.k8sReplicationControllerCreated">
-                    <nz-tag  nzColor="processing">
-                        <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon nzType="link"
-                                                                                  nzTheme="outline"></i>分布式执行</a>
-                    </nz-tag>
-                    <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button
-                            nzType="default"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑
-                    </button>
-                </ng-container>
-            </tis-page-header-left>
-            <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nzType="primary"><i
-                    class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建
-            </button> &nbsp;
-        </tis-page-header>
-        <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
-            <tis-col title="ID" width="10">
-                <ng-template let-rr="r">
-                    <a [routerLink]="['./', rr.id]">#{{rr.id}}</a>
-                </ng-template>
-            </tis-col>
-            <tis-col title="状态" width="10">
-                <ng-template let-rr='r'>
-                    <i nz-icon [nzType]="rr.stateClass" [ngStyle]="{'color':rr.stateColor}" aria-hidden="true"></i>
-                    {{rr.literalState}}
-                </ng-template>
-            </tis-col>
-            <tis-col title="阶段描述" width="24">
-                <ng-template let-rr='r'>
-                    <nz-tag [nzColor]="'blue'">{{rr.startPhase}}</nz-tag>
-                    <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
-                    <nz-tag [nzColor]="'blue'">{{rr.endPhase}}</nz-tag>
-                </ng-template>
-            </tis-col>
+  selector: "full-build-history",
+  template: `
+    <div style="margin-top: 8px;" *ngIf="dataxProcess && dataXWorkerStatus">
+      <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知"
+                [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
+      <ng-template #unableToUseK8SController>
+        当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启
+        <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
+      </ng-template>
+      <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告"
+                [nzDescription]="installLocal" nzShowIcon></nz-alert>
+      <ng-template #installLocal>
+        当前DataX任务执行器需要安装（<strong>单机版</strong>）执行器，请先安装
+        <tis-plugin-add-btn [extendPoint]="'com.qlangtech.tis.datax.DataXJobSubmit'" [descriptors]="[]">添加
+        </tis-plugin-add-btn>
+      </ng-template>
+    </div>
+    <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb"
+                     [result]="result" (refesh)="refesh()">
+      <tis-page-header-left *ngIf="dataxProcess && dataXWorkerStatus">
+        <ng-container [ngSwitch]="dataXWorkerStatus.k8sReplicationControllerCreated">
+          <ng-container *ngSwitchCase="true">
+            <nz-tag nzColor="processing">
+              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon nzType="link"
+                                                                                           nzTheme="outline"></i>分布式执行</a>
+            </nz-tag>
+            <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button
+                    nzType="default"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑
+            </button>
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
+                    nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>执行参数
+            </button>
+          </ng-container>
+        </ng-container>
 
-            <tis-col title="开始时间" width="12">
-                <ng-template let-rr='r'>
-                    {{rr.createTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                </ng-template>
-            </tis-col>
+      </tis-page-header-left>
+      <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nzType="primary"><i
+        class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建
+      </button> &nbsp;
+    </tis-page-header>
+    <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
+      <tis-col title="ID" width="10">
+        <ng-template let-rr="r">
+          <a [routerLink]="['./', rr.id]">#{{rr.id}}</a>
+        </ng-template>
+      </tis-col>
+      <tis-col title="状态" width="10">
+        <ng-template let-rr='r'>
+          <i nz-icon [nzType]="rr.stateClass" [ngStyle]="{'color':rr.stateColor}" aria-hidden="true"></i>
+          {{rr.literalState}}
+        </ng-template>
+      </tis-col>
+      <tis-col title="阶段描述" width="24">
+        <ng-template let-rr='r'>
+          <nz-tag [nzColor]="'blue'">{{rr.startPhase}}</nz-tag>
+          <i nz-icon nzType="arrow-right" nzTheme="outline"></i>
+          <nz-tag [nzColor]="'blue'">{{rr.endPhase}}</nz-tag>
+        </ng-template>
+      </tis-col>
 
-            <tis-col title="耗时" width="12">
-                <ng-template let-rr='r'>
-                    {{rr.consuming}}
-                </ng-template>
-            </tis-col>
-            <tis-col title="触发方式" width="10">
-                <ng-template let-rr='r'>{{rr.triggerType}}</ng-template>
-            </tis-col>
-        </tis-page>
-    `,
-    styles: [
-        `
-            nz-alert {
-                margin-top: 5px;
-            }
-        `
-    ]
+      <tis-col title="开始时间" width="12">
+        <ng-template let-rr='r'>
+          {{rr.createTime | date : "yyyy/MM/dd HH:mm:ss"}}
+        </ng-template>
+      </tis-col>
+
+      <tis-col title="耗时" width="12">
+        <ng-template let-rr='r'>
+          {{rr.consuming}}
+        </ng-template>
+      </tis-col>
+      <tis-col title="触发方式" width="10">
+        <ng-template let-rr='r'>{{rr.triggerType}}</ng-template>
+      </tis-col>
+    </tis-page>
+  `,
+  styles: [
+    `
+      nz-alert {
+        margin-top: 5px;
+      }
+    `
+  ]
 })
 export class FullBuildHistoryComponent extends BasicFormComponent implements OnInit {
-    pager: Pager = new Pager(1, 1, 0);
-    buildHistory: any[] = [];
-    wfid: number;
+  pager: Pager = new Pager(1, 1, 0);
+  buildHistory: any[] = [];
+  wfid: number;
 
-    breadcrumb: string[];
+  breadcrumb: string[];
 
-    showBreadcrumb = false;
-    @Input()
-    dataxProcess = false;
-    dataXWorkerStatus: DataXJobWorkerStatus;
+  showBreadcrumb = false;
+  @Input()
+  dataxProcess = false;
+  dataXWorkerStatus: DataXJobWorkerStatus;
 
-    constructor(tisService: TISService, modalService: NzModalService
-        , private router: Router, private route: ActivatedRoute
-        , private cd: ChangeDetectorRef, notification: NzNotificationService
-    ) {
-        super(tisService, modalService, notification);
-        cd.detach();
+  constructor(tisService: TISService, modalService: NzModalService
+    , private router: Router, private route: ActivatedRoute
+    , private cd: ChangeDetectorRef, notification: NzNotificationService, private drawerService: NzDrawerService
+  ) {
+    super(tisService, modalService, notification);
+    cd.detach();
+  }
+
+
+  ngOnInit(): void {
+
+    let data = this.route.snapshot.data;
+    let b = data['showBreadcrumb'];
+    let datax = data['datax'];
+    if (datax) {
+      this.dataxProcess = !!datax;
     }
+    this.showBreadcrumb = !!b;
 
 
-    ngOnInit(): void {
+    this.route.params
+      .subscribe((params: Params) => {
+        this.wfid = parseInt(params['wfid'], 10);
 
-        let data = this.route.snapshot.data;
-        let b = data['showBreadcrumb'];
-        let datax = data['datax'];
-        if (datax) {
-            this.dataxProcess = !!datax;
-        }
-        this.showBreadcrumb = !!b;
+        this.route.queryParams.subscribe((p) => {
+          this.httpPost('/coredefine/full_build_history.ajax'
+            , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
+            if (!this.breadcrumb) {
+              let wfname = r.bizresult.payload[0];
+              this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
+            }
+            this.pager = Pager.create(r);
+            this.buildHistory = r.bizresult.rows;
 
-
-        this.route.params
-            .subscribe((params: Params) => {
-                this.wfid = parseInt(params['wfid'], 10);
-
-                this.route.queryParams.subscribe((p) => {
-                    this.httpPost('/coredefine/full_build_history.ajax'
-                        , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
-                        if (!this.breadcrumb) {
-                            let wfname = r.bizresult.payload[0];
-                            this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
-                        }
-                        this.pager = Pager.create(r);
-                        this.buildHistory = r.bizresult.rows;
-
-                        if (this.dataxProcess) {
-                            this.httpPost('/coredefine/corenodemanage.ajax'
-                                , `action=datax_action&emethod=get_datax_worker_meta&disableRcdeployment=true`).then((rr) => {
-                                if (rr.success) {
-                                    this.dataXWorkerStatus = rr.bizresult;
-                                }
-                                this.cd.reattach();
-                            });
-                        } else {
-                            this.cd.reattach();
-                        }
-                    });
-                });
-            });
-    }
+            if (this.dataxProcess) {
+              this.httpPost('/coredefine/corenodemanage.ajax'
+                , `action=datax_action&emethod=get_datax_worker_meta&disableRcdeployment=true`).then((rr) => {
+                if (rr.success) {
+                  this.dataXWorkerStatus = rr.bizresult;
+                }
+                this.cd.reattach();
+              });
+            } else {
+              this.cd.reattach();
+            }
+          });
+        });
+      });
+  }
 
 // 刷新列表
-    public refesh(): void {
-        this.ngOnInit();
+  public refesh(): void {
+    this.ngOnInit();
+  }
+
+  public triggerFullBuild(): void {
+    let processStrategy = this.dataxProcess ?
+      {
+        url: "/coredefine/coredefine.ajax",
+        post: "action=datax_action&emethod=trigger_fullbuild_task",
+        sucMsg: 'DataX任务已经触发'
+      } : {
+        url: "/coredefine/coredefine.ajax",
+        post: "action=core_action&emethod=trigger_fullbuild_task",
+        sucMsg: '全量索引构建已经触发'
+      };
+
+    if (this.dataXWorkerStatus) {
+      this.dataXWorkerStatus.installLocal = false;
     }
 
-    public triggerFullBuild(): void {
-        let processStrategy = this.dataxProcess ?
-            {
-                url: "/coredefine/coredefine.ajax",
-                post: "action=datax_action&emethod=trigger_fullbuild_task",
-                sucMsg: 'DataX任务已经触发'
-            } : {
-                url: "/coredefine/coredefine.ajax",
-                post: "action=core_action&emethod=trigger_fullbuild_task",
-                sucMsg: '全量索引构建已经触发'
-            };
+    if (this.appNotAware) {
+      // 单纯数据流触发
+      processStrategy = {
+        url: "/offline/datasource.ajax",
+        post: `action=offline_datasource_action&emethod=execute_workflow&id=${this.wfid}`,
+        sucMsg: '数据流构建已经触发'
+      };
+    }
+    this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
+      if (!r.success) {
+        // let p =   <Promise<any>>r;
+        return;
+      }
+      let taskid = r.bizresult.taskid;
+      let msg: Array<any> = [];
+      msg.push({
+        'content': processStrategy.sucMsg
+        , 'link': {'content': `查看构建状态(${taskid})`, 'href': './' + taskid}
+      });
+      this.httpPost("/coredefine/coredefine.ajax", `action=core_action&emethod=get_workflow_build_history&taskid=${taskid}`)
+        .then((rr) => {
+          this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
+          this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
+        });
+    }, (r: TisResponseResult) => {
+      if (!r.success && r.bizresult && this.dataXWorkerStatus) {
+        this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
+      }
+    })
 
-        if (this.dataXWorkerStatus) {
-            this.dataXWorkerStatus.installLocal = false;
-        }
+  }
 
-        if (this.appNotAware) {
-            // 单纯数据流触发
-            processStrategy = {
-                url: "/offline/datasource.ajax",
-                post: `action=offline_datasource_action&emethod=execute_workflow&id=${this.wfid}`,
-                sucMsg: '数据流构建已经触发'
-            };
+  public gotoPage(p: number) {
+    Pager.go(this.router, this.route, p);
+  }
+
+  editLocalJob() {
+
+    let targetDesc = 'DataXSubmitParams';
+    let pluginMeta: PluginType = {
+      "name": 'params-cfg',
+      "require": true,
+      "extraParam": "targetItemDesc_" + targetDesc,
+      "descFilter": {
+        "localDescFilter": (desc: Descriptor) => {
+        //  console.log(desc);
+          return targetDesc === desc.displayName;
         }
-        this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
-            if (!r.success) {
-                // let p =   <Promise<any>>r;
-                return;
-            }
-            let taskid = r.bizresult.taskid;
-            let msg: Array<any> = [];
-            msg.push({
-                'content': processStrategy.sucMsg
-                , 'link': {'content': `查看构建状态(${taskid})`, 'href': './' + taskid}
+      }
+    };
+    let targetPlugin: TargetPlugin = {
+      hetero: 'params-cfg',
+      descName: targetDesc
+    };
+    ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, pluginMeta, targetPlugin)
+      .then((desc) => {
+        if (!desc) {
+          throw new Error("desc can not be null");
+        }
+        desc.forEach((d) => {
+
+
+          PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
+            , this, d, pluginMeta, "设置任务触发参数", (biz) => {
             });
-            this.httpPost("/coredefine/coredefine.ajax", `action=core_action&emethod=get_workflow_build_history&taskid=${taskid}`)
-                .then((rr) => {
-                    this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
-                    this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
-                });
-        }, (r: TisResponseResult) => {
-            if (!r.success && r.bizresult && this.dataXWorkerStatus) {
-                this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
-            }
-        })
+        });
+      }, (rejectReason) => {
+        // console.log(rejectReason);
+      });
+  }
 
-    }
+  editDistributeJob() {
+    // this.openDialog(DistPowerJobTemplateOverwriteComponent,{});
 
-    public gotoPage(p: number) {
-        Pager.go(this.router, this.route, p);
-    }
+    // this.httpPost('/coredefine/corenodemanage.ajax'
+    //   , `action=datax_action&emethod=worker_desc&targetName=${dataXWorkerCfg.processMeta.targetName}`)
+    //   .then((r) => {
+    //     if (r.success) {
+    //       let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
+    //       console.log(rList);
+    //     }});
 
-    editDistributeJob() {
-        // this.openDialog(DistPowerJobTemplateOverwriteComponent,{});
+    DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this);
 
-        // this.httpPost('/coredefine/corenodemanage.ajax'
-        //   , `action=datax_action&emethod=worker_desc&targetName=${dataXWorkerCfg.processMeta.targetName}`)
-        //   .then((r) => {
-        //     if (r.success) {
-        //       let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
-        //       console.log(rList);
-        //     }});
-
-        DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this);
-
-        // DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, this)
-        //     .then((rList) => {
-        //
-        //         let desc = Array.from(rList.values());
-        //         let pluginDesc = desc.find((dec) => PowerjobCptType.JobTplAppOverwrite.toString() === dec.displayName);
-        //         let pluginCategory: PluginType = {name: PowerjobCptType.JobTplAppOverwrite, require: true};
-        //
-        //         let modelRef = PluginsComponent.openPluginDialog({
-        //                 shallLoadSavedItems: true,
-        //                 savePluginEventCreator: () => {
-        //                     let evnet = new SavePluginEvent();
-        //                     evnet.serverForward = "coredefine:datax_action:update_power_job"
-        //                     return evnet;
-        //                 }
-        //             }, this, pluginDesc
-        //             , pluginCategory
-        //             , `更新PowerJob任务配置`
-        //             , (plugin) => {
-        //                 this.successNotify("更新PowerJob任务配置成功");
-        //                 modelRef.close();
-        //             });
-        //
-        //     });
+    // DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, this)
+    //     .then((rList) => {
+    //
+    //         let desc = Array.from(rList.values());
+    //         let pluginDesc = desc.find((dec) => PowerjobCptType.JobTplAppOverwrite.toString() === dec.displayName);
+    //         let pluginCategory: PluginType = {name: PowerjobCptType.JobTplAppOverwrite, require: true};
+    //
+    //         let modelRef = PluginsComponent.openPluginDialog({
+    //                 shallLoadSavedItems: true,
+    //                 savePluginEventCreator: () => {
+    //                     let evnet = new SavePluginEvent();
+    //                     evnet.serverForward = "coredefine:datax_action:update_power_job"
+    //                     return evnet;
+    //                 }
+    //             }, this, pluginDesc
+    //             , pluginCategory
+    //             , `更新PowerJob任务配置`
+    //             , (plugin) => {
+    //                 this.successNotify("更新PowerJob任务配置成功");
+    //                 modelRef.close();
+    //             });
+    //
+    //     });
 
 
-    }
+  }
 }
 
 // @Component({
