@@ -98,6 +98,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
           if (hlist.items.length < 1) {
             Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
           }
+          console.log(hlist);
           this.hlist = [hlist];
         }
       });

@@ -24,13 +24,14 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {IntendDirect} from "../common/MultiViewDAG";
-import {ItemPropValComponent, PluginsComponent} from "../common/plugins.component";
+import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {dataXWorkerCfg, PowerjobCptType} from "./base.manage-routing.module";
 import {Observable, Subject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {KEY_APPNAME} from "./datax.worker.running.component";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {ItemPropValComponent} from "../common/plugin/item-prop-val.component";
 
 @Component({
   template: `

@@ -255,9 +255,9 @@ export abstract class BasicSidebarDTO {
     `
   ],
   template: `
-    <div class="sidebar">
+    <div [ngClass]="{'sidebar': !tabBarExtraContent}">
       <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
-      <div [ngClass]="{'float-right': true}">
+      <div [ngClass]="{'float-right': !tabBarExtraContent}">
         <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
         <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
       </div>
@@ -271,6 +271,11 @@ export class SideBarToolBar extends BasicFormComponent {
   @Input() saveDisabled = false;
   @Output() delete = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
+
+  /**
+   * 是否是在tabs 右侧控制栏中的按钮
+   */
+  @Input() tabBarExtraContent = false;
 
   constructor(tisService: TISService, ngModalService: NzModalService) {
     super(tisService, ngModalService);

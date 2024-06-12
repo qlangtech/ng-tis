@@ -50,7 +50,6 @@ import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {
-  ItemPropValComponent,
   NotebookwrapperComponent,
   PluginsComponent,
   SelectionInputAssistComponent
@@ -130,10 +129,15 @@ import {PluginManageComponent} from "../base/plugin.manage.component";
 import {TerminalComponent} from "./terminal.component";
 import {ErrorDetailComponent} from "../base/error.detail.component";
 import {ControlPanelComponent} from "./control.panel.component";
-import {SchemaEditComponent} from "./schema.edit.component";
 import {FullBuildHistoryComponent} from './full.build.history.component';
 import {LaunchK8SClusterWaittingProcessComponent} from './launch.waitting.process.component';
 import {BliBliComponent} from "./common.component";
+import {TransformerRulesComponent} from "./multi-selected/transformer.rules.component";
+import {JdbcTypeComponent} from "./multi-selected/jdbc.type.component";
+import {SchemaEditComponent} from "./multi-selected/schema.edit.component";
+import {JdbcTypePropsComponent} from "./multi-selected/jdbc.type.props.component";
+import {ItemPropValComponent} from "./plugin/item-prop-val.component";
+import {UdfDescLiteria} from "./multi-selected/basic.tuples.view.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries
@@ -161,7 +165,7 @@ import {BliBliComponent} from "./common.component";
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
-  declarations: [BliBliComponent,LaunchK8SClusterWaittingProcessComponent,
+  declarations: [JdbcTypePropsComponent,UdfDescLiteria,BliBliComponent,LaunchK8SClusterWaittingProcessComponent,TransformerRulesComponent,JdbcTypeComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent

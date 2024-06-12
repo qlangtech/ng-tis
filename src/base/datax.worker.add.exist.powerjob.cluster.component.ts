@@ -21,7 +21,7 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {EXTRA_PARAM_DATAX_NAME, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {PowerjobCptType} from "./base.manage-routing.module";
@@ -53,7 +53,7 @@ export class DataxWorkerAddExistPowerjobClusterComponent extends BasicFormCompon
     @Input() dto: DataxWorkerDTO;
     @Output() nextStep = new EventEmitter<any>();
     @Output() preStep = new EventEmitter<any>();
-    pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.Server};
+    pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:EXTRA_PARAM_DATAX_NAME+ PowerjobCptType.Server};
 
     constructor(tisService: TISService, modalService: NzModalService) {
         super(tisService, modalService);

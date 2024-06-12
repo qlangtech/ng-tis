@@ -20,9 +20,10 @@ import {AfterViewInit, Component, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Item, ItemPropVal, ReaderColMeta, TabletView} from "../common/tis.plugin";
+import {Item, ItemPropVal, ReaderColMeta} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MongoColsTabletView} from "../common/multi-selected/schema.edit.component";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -80,7 +81,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
   writerFromTabName: string;
   // colsMeta: Array<ReaderColMeta> = [];
   // typeMetas: Array<DataTypeMeta> = [];
-  tabView: TabletView = new TabletView([], [], [], []);
+  tabView: MongoColsTabletView = new MongoColsTabletView([], [], [], []);
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
@@ -102,7 +103,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
         // console.log(typeMetas);
         let tabMapper = r.bizresult.tabMapper;
 
-        this.tabView = new TabletView([], null, tabMapper.sourceCols, typeMetas);
+        this.tabView = new MongoColsTabletView([], null, tabMapper.sourceCols, typeMetas);
 
         this.writerTargetTabName = tabMapper.to;
         this.writerFromTabName = tabMapper.from;

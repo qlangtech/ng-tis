@@ -24,11 +24,26 @@ import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
-import {Descriptor, PluginType, TisResponseResult} from "./tis.plugin";
-import {PluginsComponent, ItemPropValComponent, TargetPlugin} from "./plugins.component";
+import {Descriptor, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
+import {PluginsComponent} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {ItemPropValComponent} from "./plugin/item-prop-val.component";
+import {TargetPlugin} from "./plugin/type.utils";
+
+class ProcessStrategy {
+// {
+//   url: "/coredefine/coredefine.ajax",
+//   post: "action=datax_action&emethod=trigger_fullbuild_task",
+//   sucMsg: 'DataX任务已经触发'
+// }
+  constructor(public url: string, public post: string, public sucMsg: string) {
+
+
+  }
+
+}
 
 @Component({
   selector: "full-build-history",
@@ -54,7 +69,8 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
         <ng-container [ngSwitch]="dataXWorkerStatus.k8sReplicationControllerCreated">
           <ng-container *ngSwitchCase="true">
             <nz-tag nzColor="processing">
-              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon nzType="link"
+              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon
+                                                                                           nzType="link"
                                                                                            nzTheme="outline"></i>分布式执行</a>
             </nz-tag>
             <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button
@@ -69,9 +85,24 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
         </ng-container>
 
       </tis-page-header-left>
-      <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nzType="primary"><i
-        class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建
-      </button> &nbsp;
+      <!--          <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nz-dropdown [nzDropdownMenu]="menu4" nzType="primary"><i-->
+      <!--                  class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建 <span nz-icon nzType="down"></span>-->
+      <!--          </button> &nbsp;-->
+
+      <!--          <nz-dropdown-menu #menu4="nzDropdownMenu">-->
+      <!--              <ul nz-menu>-->
+      <!--                  <li nz-menu-item (click)="triggerPartialBuild()">部份构建</li>-->
+      <!--              </ul>-->
+      <!--          </nz-dropdown-menu>-->
+
+
+      <tis-plugin-add-btn [btnSize]="'default'"
+                          [extendPoint]="jobTriggerExend"
+                          [descriptors]="[]" [initDescriptors]="true" (primaryBtnClick)="triggerFullBuild()"
+                          (addPlugin)="triggerPartialBuild($event)">
+        <i class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建 <span nz-icon nzType="down"></span>
+      </tis-plugin-add-btn>
+
     </tis-page-header>
     <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
       <tis-col title="ID" width="10">
@@ -129,6 +160,9 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   dataxProcess = false;
   dataXWorkerStatus: DataXJobWorkerStatus;
 
+  jobTriggerExend = 'com.qlangtech.tis.plugin.trigger.JobTrigger';
+
+
   constructor(tisService: TISService, modalService: NzModalService
     , private router: Router, private route: ActivatedRoute
     , private cd: ChangeDetectorRef, notification: NzNotificationService, private drawerService: NzDrawerService
@@ -184,17 +218,38 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     this.ngOnInit();
   }
 
+  /**
+   * 部份表构建
+   */
+  public triggerPartialBuild(pluginDesc: Descriptor): void {
+    //console.log(desc);
+    let opt = new SavePluginEvent();
+    opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
+
+
+    PluginsComponent.openPluginDialog({
+        saveBtnLabel: '触发构建',
+        shallLoadSavedItems: false, savePluginEventCreator: () => {
+          return opt;
+        }
+      }
+      , this, pluginDesc
+      , {name: 'jobTrigger', require: true}
+      , `任务触发`
+      , (biz) => {
+        // console.log(taskId);
+        let rr: TisResponseResult = {
+          success: biz.success,
+          bizresult: biz
+        }
+        this.processTriggerResult(this.getProcessStrategy(true), Promise.resolve(rr));
+
+      });
+  }
+
+
   public triggerFullBuild(): void {
-    let processStrategy = this.dataxProcess ?
-      {
-        url: "/coredefine/coredefine.ajax",
-        post: "action=datax_action&emethod=trigger_fullbuild_task",
-        sucMsg: 'DataX任务已经触发'
-      } : {
-        url: "/coredefine/coredefine.ajax",
-        post: "action=core_action&emethod=trigger_fullbuild_task",
-        sucMsg: '全量索引构建已经触发'
-      };
+    let processStrategy = this.getProcessStrategy(this.dataxProcess);
 
     if (this.dataXWorkerStatus) {
       this.dataXWorkerStatus.installLocal = false;
@@ -208,7 +263,47 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
         sucMsg: '数据流构建已经触发'
       };
     }
-    this.httpPost(processStrategy.url, processStrategy.post).then((r) => {
+    this.processTriggerResult(processStrategy, this.httpPost(processStrategy.url, processStrategy.post));
+    //   .then((r) => {
+    //   if (!r.success) {
+    //     // let p =   <Promise<any>>r;
+    //     return;
+    //   }
+    //   let taskid = r.bizresult.taskid;
+    //   let msg: Array<any> = [];
+    //   msg.push({
+    //     'content': processStrategy.sucMsg
+    //     , 'link': {'content': `查看构建状态(${taskid})`, 'href': './' + taskid}
+    //   });
+    //   this.httpPost("/coredefine/coredefine.ajax", `action=core_action&emethod=get_workflow_build_history&taskid=${taskid}`)
+    //     .then((rr) => {
+    //       this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
+    //       this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
+    //     });
+    // }, (r: TisResponseResult) => {
+    //   if (!r.success && r.bizresult && this.dataXWorkerStatus) {
+    //     this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
+    //   }
+    // })
+
+  }
+
+  private getProcessStrategy(dataxProcess: boolean) {
+    let processStrategy = dataxProcess ?
+      new ProcessStrategy(
+        "/coredefine/coredefine.ajax",
+        "action=datax_action&emethod=trigger_fullbuild_task",
+        'DataX任务已经触发'
+      ) : new ProcessStrategy(
+        "/coredefine/coredefine.ajax",
+        "action=core_action&emethod=trigger_fullbuild_task",
+        '全量索引构建已经触发'
+      );
+    return processStrategy;
+  }
+
+  private processTriggerResult(processStrategy: ProcessStrategy, triggerPromise: Promise<TisResponseResult>) {
+    triggerPromise.then((r) => {
       if (!r.success) {
         // let p =   <Promise<any>>r;
         return;
@@ -229,7 +324,6 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
         this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
       }
     })
-
   }
 
   public gotoPage(p: number) {
@@ -245,7 +339,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       "extraParam": "targetItemDesc_" + targetDesc,
       "descFilter": {
         "localDescFilter": (desc: Descriptor) => {
-        //  console.log(desc);
+          //  console.log(desc);
           return targetDesc === desc.displayName;
         }
       }
