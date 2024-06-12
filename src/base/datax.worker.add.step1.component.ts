@@ -21,7 +21,7 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {EXTRA_PARAM_DATAX_NAME, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {ActivatedRoute} from "@angular/router";
 import {K8SReplicsSpecComponent} from "../common/k8s.replics.spec.component";
@@ -73,7 +73,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
   pluginCategory: PluginType = {
     name: PowerjobCptType.FlinkCluster,
     require: true,
-    extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+    extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.FlinkCluster
   };
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {

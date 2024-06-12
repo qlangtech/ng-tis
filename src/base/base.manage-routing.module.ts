@@ -34,7 +34,7 @@ import {Breadcrumb, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeploym
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
-import {Descriptor, ItemPropVal, PluginMeta, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, EXTRA_PARAM_DATAX_NAME, ItemPropVal, PluginMeta, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
@@ -66,7 +66,7 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     step1PluginType: {
       name: 'datax-worker',
       require: true,
-      extraParam: "dataxName_" + PowerjobCptType.Server
+      extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.Server
     },
     afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
       cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));
@@ -193,7 +193,7 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
     step1PluginType: {
       name: PowerjobCptType.FlinkCluster,
       require: true,
-      extraParam: "dataxName_" + PowerjobCptType.FlinkCluster
+      extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.FlinkCluster
     },
     afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
       cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));

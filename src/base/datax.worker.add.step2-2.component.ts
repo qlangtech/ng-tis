@@ -24,7 +24,7 @@ import {ActivatedRoute} from "@angular/router";
 
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {EXTRA_PARAM_DATAX_NAME, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {PowerjobCptType} from "./base.manage-routing.module";
 
@@ -53,7 +53,7 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:"dataxName_"+ PowerjobCptType.JobTpl};
+  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:EXTRA_PARAM_DATAX_NAME+ PowerjobCptType.JobTpl};
   errorItem: Item;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {

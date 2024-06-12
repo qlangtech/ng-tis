@@ -25,6 +25,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
+import {Descriptor, PluginType} from "../common/tis.plugin";
 
 
 @Component({
@@ -34,7 +35,10 @@ import {StepType} from "../common/steps.component";
       <tis-page-header *ngIf="this.dto?.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
                        [title]="this.dto.dataxPipeName">
       </tis-page-header>
-      <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
+ <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
+
+
+
   `,
   styles: [`
   `]

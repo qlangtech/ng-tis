@@ -17,24 +17,31 @@
  */
 
 // import {EventEmitter} from "@angular/core";
-import {BasicFormComponent} from "./basic.form.component";
 import {NzSelectModeType} from "ng-zorro-antd/select";
 import {TablePojo} from "../offline/table.add.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
-import {NextObserver, Subject} from "rxjs";
-import {JSONFile} from "@angular/cli/utilities/json-file";
 import {KEY_APPNAME} from "./tis.service";
 import {PowerjobCptType} from "../base/base.manage-routing.module";
+import {RecordTransformer, TransformerRuleTabletView} from "./multi-selected/transformer.rules.component";
+import {TuplesProperty} from "./plugin/type.utils";
+import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
+import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
 export const PARAM_END_TYPE = "&endType=";
 
+export const EXTRA_PARAM_DATAX_NAME = "dataxName_";
+
 export const KEY_OPTIONS_ENUM = "enum";
 
 export declare type PluginName =
   'mq'
+  | 'transformer'
+  | 'target-column'
+  | 'transformerUDF'
+  | 'jobTrigger'
   | 'incr-config'
   | 'sinkFactory'
   | 'k8s-config'
@@ -111,7 +118,7 @@ export class ItemPropVal extends ErrorFeedback {
   public _eprops: { string: any };
   private dftVal: any;
   placeholder: string;
-  dateTimeFormat:string;
+  dateTimeFormat: string;
   _primaryVal: any = undefined;
   // 是否是主键
   pk: boolean;
@@ -134,18 +141,43 @@ export class ItemPropVal extends ErrorFeedback {
   }
 
   public setMcolsEnums(elementKeys: Array<string>, dbLatestMcols: Array<ReaderColMeta>, mcols: Array<ReaderColMeta>, typeMetas: Array<DataTypeMeta>) {
-    let tabView = new TabletView(elementKeys, dbLatestMcols, mcols, typeMetas);
+    let tabView = new MongoColsTabletView(elementKeys, dbLatestMcols, mcols, typeMetas);
     this.setEProp(KEY_OPTIONS_ENUM, tabView);
+    this._tupleViewType = tabView.viewType();
   }
 
-  public get isMcolsEnums(): boolean {
-    let enumVal = this.getEProp(KEY_OPTIONS_ENUM)
-    return enumVal instanceof TabletView;
+  public setTransformerRules(elementKeys: Array<string>, transformerRule: Array<RecordTransformer>, typeMetas: Array<DataTypeMeta> //, _sourceTabCols: Array<CMeta>
+  ) {
+    // console.log(dbLatestMcols);
+    let tabView = new TransformerRuleTabletView(transformerRule, typeMetas);
+    this.setEProp(KEY_OPTIONS_ENUM, tabView);
+    this._tupleViewType = tabView.viewType();
   }
 
-  public get mcolsEnums(): TabletView {
-    let enumVal = this.getEProp(KEY_OPTIONS_ENUM)
+  public setTableView(tabView: TuplesProperty) {
+    // console.log(dbLatestMcols);
+    // let tabView = new TransformerRuleTabletView(transformerRule, typeMetas);
+    this.setEProp(KEY_OPTIONS_ENUM, tabView);
+    this._tupleViewType = tabView.viewType();
+  }
+
+
+  private _tupleViewType: TuplesPropertyType;
+
+  /**
+   * in class ItemPropVal
+   */
+  public get tuplesViewType(): TuplesPropertyType {
+    return this._tupleViewType;
+  }
+
+  public get mcolsEnums(): TuplesProperty {
+    let enumVal: TuplesProperty = this.getEProp(KEY_OPTIONS_ENUM)
     return enumVal;
+  }
+
+  public set mcolsEnums(tuplesProp: TuplesProperty) {
+    this.setEProp(KEY_OPTIONS_ENUM, tuplesProp);
   }
 
   public setPropValEnums(cols: Array<{ name: string, value: string }>, colItemChecked?: (optVal) => boolean) {
@@ -244,12 +276,17 @@ export class Descriptor {
   public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
     , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
     let nItem = new Item(des);
+
     nItem.displayName = des.displayName;
     nItem.implUrl = des.implUrl;
     // nItem.containAdvance = des.containAdvance;
     des.attrs.forEach((attr) => {
-      nItem.vals[attr.key] = itemPropSetter(attr.key, attr.addNewEmptyItemProp(updateModel));
+      //Item.wrapItemPropVal
+      nItem.vals[attr.key] = itemPropSetter(attr.key, ((attr.addNewEmptyItemProp(updateModel))));
     });
+
+    // nItem.wrapItemVals();
+
     let nitems: Item[] = [];
     // console.log(h.items);
     h.items.forEach((r) => {
@@ -303,136 +340,13 @@ export interface TisResponseResult {
   errorfields?: Array<Array<Array<IFieldError> | Map<string, Array<IFieldError>>>>;
 }
 
-
-export class TabletView implements NextObserver<any> {
-
-  /**
-   *
-   * @param _elementKeys ReaderColMeta 中包含哪些keys
-   * @param _dbLatestMcols
-   * @param _mcols
-   * @param _typeMetas
-   */
-  constructor(private _elementKeys: Array<string>, private _dbLatestMcols: Array<ReaderColMeta>, private _mcols: Array<ReaderColMeta>, private _typeMetas: Array<DataTypeMeta>) {
-    if (!_mcols) {
-      throw new Error("param _mcols can not be null");
-    }
-    let index = 0;
-    // console.log(this._mcols);
-    // console.log(this._dbLatestMcols);
-    this._mcols.forEach((c: ReaderColMeta) => {
-      c.index = ++index;
-      c.ip = new ItemPropVal();
-      // @ts-ignore
-      c.extraProps = c.extraProps | {}
-
-      RowAssist.setDocFieldSplitMetas(c
-        , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
-    });
-
-    // 删除字段测试
-    // let tmp = [];
-    // this._dbLatestMcols.forEach((cm) => {
-    //     if (cm.name !== "member_price") {
-    //         tmp.push(cm);
-    //     }
-    // });
-    // this._dbLatestMcols = tmp;
-    if(_dbLatestMcols){
-      index = 0;
-      this._dbLatestMcols.forEach((c) => {
-        c.index = ++index;
-        c.ip = new ItemPropVal();
-        // @ts-ignore
-        c.extraProps = c.extraProps | {}
-        RowAssist.setDocFieldSplitMetas(c
-          , RowAssist.getDocFieldSplitMetas(c).map((r) => new RowAssist(r.name, r.jsonPath, r.type)));
-      });
-    }
-
-  }
-
-  next(errorContent: any): void {
-    // console.log(errorContent);
-  }
-
-
-  public get isContainDBLatestMcols(): boolean {
-    return !!this._dbLatestMcols;
-  }
-
-  public get mcols(): Array<ReaderColMeta> {
-    return this._mcols;
-  }
-
-  /**
-   * 数据库中可能添加了新的字段，或者已经删除了某列
-   */
-  public synchronizeMcols(): SynchronizeMcolsResult {
-    // return this._mcols;
-    let syncResult: SynchronizeMcolsResult;
-    if (this._dbLatestMcols) {
-      let result = [];
-      syncResult = new SynchronizeMcolsResult(result);
-      let lastestCol: ReaderColMeta;
-      let col: ReaderColMeta;
-      let idxCol = 0;
-      outter: for (let i = 0; i < this._dbLatestMcols.length; i++) {
-        lastestCol = this._dbLatestMcols[i];
-        while (idxCol < this._mcols.length) {
-          col = this._mcols[idxCol];
-          if (lastestCol.name === col.name) {
-            col.index = i + 1;
-            result.push(col);
-            idxCol++;
-          } else {
-            let find = -1;
-            if ((find = this.findRemain(lastestCol, idxCol + 1)) < 0) {
-              // 说明 lastestCol 是数据库中新增的
-              syncResult.newAddCols.push(lastestCol.name);
-            } else {
-              // 说明 col 已经在数据库中被删除了，那应该跳过了
-              syncResult.deletedCols.push(col.name);
-              idxCol = find;
-              lastestCol = this._mcols[idxCol++];
-            }
-            lastestCol.index = i + 1;
-            result.push(lastestCol);
-            // 需要遍历需要的所有
-
-          }
-          continue outter;
-        }
-      }
-      delete this._dbLatestMcols
-      // 需要将最新引用设置上，不然表单提交时无法将最新的表单内容提交到服务端
-      this._mcols = result;
-      return syncResult;
-    } else {
-      return new SynchronizeMcolsResult(this._mcols);
-    }
-  }
-
-
-  private findRemain(target: ReaderColMeta, startIdxCol: number): number {
-    let find = -1;
-    for (let idx = startIdxCol; idx < this._mcols.length; idx++) {
-      if (target.name === this._mcols[idx].name) {
-        return (find = idx);
-      }
-    }
-
-    return find;
-  }
-
-  public get typeMetas(): Array<DataTypeMeta> {
-    return this._typeMetas;
-  }
-
-  elementContainKey(testElementKey: string): boolean {
-    return this._elementKeys.indexOf(testElementKey) > -1;
-  }
+export enum TuplesPropertyType {
+  MongoCols = ('mongoCols'),
+  JdbcTypeProps = ("jdbcTypeProps"),
+  TransformerRules = ('transformerRules'),
+  SimpleCols = ('simpleCols')
 }
+
 
 export class SynchronizeMcolsResult {
   syncCols: Array<ReaderColMeta> = [];
@@ -461,8 +375,8 @@ export class SynchronizeMcolsResult {
 
 export interface ReaderColMeta {
   index: number;
-  name: string;
-  type: string | any;
+  name:  Item |string;
+  type: string | DataTypeDesc;
   disable: boolean;
   ip: ItemPropVal;
   // extraProps?: { string?: any };
@@ -484,6 +398,11 @@ export interface DataTypeMeta {
   //   // "unsigned": false,
   //   // "unsignedToken": ""
   // }
+}
+
+export interface CMeta {
+  "name": string,
+  "type": DataTypeDesc
 }
 
 export interface DataTypeDesc {
@@ -573,8 +492,8 @@ export class Item {
 
             itemProp = ip;
             itemProp.error = fieldErr.content;
-            if(itemProp.advance){
-            containAdvanceField = true;
+            if (itemProp.advance) {
+              containAdvanceField = true;
             }
             if (!itemProp.primaryVal) {
               if (fieldErr.errorfields.length !== 1) {
@@ -587,7 +506,7 @@ export class Item {
           }
         });
 
-        if(containAdvanceField){
+        if (containAdvanceField) {
           // 错误字段中有在高级选项中的字段，需要将高级字段展示打开
           item.showAllField = true;
         }
@@ -611,8 +530,8 @@ export class Item {
   }
 
   public static wrapItemPropVal(v: any, at: AttrDesc): ItemPropVal {
-    if (v === undefined || v === null) {
-      return;
+    if (v === undefined || v === null || v instanceof ItemPropVal) {
+      return v;
     }
     let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
     // console.log([at.key, at]);
@@ -627,46 +546,10 @@ export class Item {
       // console.log([ii,at]);
       newVal.descVal = at.createDescribleVal(ii);
     } else {
+      // console.log([at.key, at.isMultiSelectableType]);
       if (at.isMultiSelectableType) {
-        if (!Array.isArray(v)) {
-          // console.log(v);
-          throw new Error("expect val type is array but is not");
-        }
-        // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
-        if (!at.eprops) {
-          // console.log(at);
-          throw new Error("at.eprops can not be null");
-        }
-        let enumVal = at.eprops[KEY_OPTIONS_ENUM];
-        let mcols: Array<ReaderColMeta>;
-        let typeMetas: Array<DataTypeMeta>;
-        if (mcols = enumVal["tabMapper"]) {
+        this.buildMultiSelectedAttr(v, at, newVal);
 
-          let elementKeys: Array<string> = enumVal["elementKeys"];
-          typeMetas = enumVal["colMetas"];
-          newVal.setMcolsEnums(elementKeys || [], mcols, (v.length > 0) ? v : mcols, typeMetas);
-        } else {
-          let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
-          if (!selectableCol) {
-            throw new Error("selectableCol can not be null");
-          }
-          let cols: Array<{ name: string, value: string }> = null;
-          if (selectableCol.length < 1) {
-            cols = v.map((r) => {
-              return {name: r, value: r}
-            });
-            newVal.setPropValEnums(cols, (_) => true);
-          } else {
-            cols = selectableCol.map((c) => {
-              return {"name": c.label, "value": c.val}
-            });
-            newVal.setPropValEnums(cols, (sval) => {
-              return !!v.find((optVal) => optVal === sval);
-            });
-          }
-        }
-
-        // console.log([selectableCol, cols]);
 
       } else {
         newVal._primaryVal = v;
@@ -678,7 +561,96 @@ export class Item {
   }
 
 
-  // containAdvance = false;
+  public static buildMultiSelectedAttr(val: Array<any>, at: AttrDesc, newVal: ItemPropVal) {
+    if (!at.isMultiSelectableType) {
+      throw new Error("attr " + at.key + " must be multi selectable type");
+    }
+    if (!Array.isArray(val)) {
+      // console.log(v);
+      //throw new Error("expect val type is array but is not");
+    }
+    // console.log([at, v, at.eprops[KEY_OPTIONS_ENUM]]);
+    if (!at.eprops) {
+      // console.log(at);
+      throw new Error("at.eprops can not be null");
+    }
+    let enumVal = at.eprops[KEY_OPTIONS_ENUM];
+    let mcols: Array<ReaderColMeta>;
+    let typeMetas: Array<DataTypeMeta>;
+
+
+    if (mcols = enumVal["tabMapper"]) {
+      // console.log(v);
+      let contentType: TuplesPropertyType = enumVal["viewContentType"];
+      let elementKeys: Array<string> = enumVal["elementKeys"];
+      typeMetas = enumVal["colMetas"];
+      switch (contentType) {
+        case TuplesPropertyType.MongoCols: {
+          newVal.setMcolsEnums(elementKeys || [], mcols, (val.length > 0) ? val : mcols, typeMetas);
+          break;
+        }
+        case TuplesPropertyType.TransformerRules: {
+
+
+          let transformerRule: Array<RecordTransformer> = [...val];
+          // console.log(val);
+          //              transformerRule.forEach((rule) => {
+          // console.log(rule.udf.impl);
+          //               // let udf = new Item();
+          //
+          //               return  rule;
+          //              });
+          // console.log(TuplesPropertyType.TransformerRules);
+          newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas);
+          break;
+        }
+        case TuplesPropertyType.JdbcTypeProps: {
+          let isCollection: boolean = enumVal["isList"]
+         // console.log(val);
+          let jdbcProps: Array<JdbcTypeProp> = Array.isArray(val) ? [...val] : [val];
+          //console.log(enumVal);
+          // plugin 中的元素是否是集合，例如： CopyValUDF中的to 属性为 isCollection 为false
+
+          let tabCols: Array<CMeta> = enumVal["sourceTabCols"];
+          let tabColsMapper: Map<string, CMeta> = new Map();
+          tabCols.forEach((col) => {
+            tabColsMapper.set(col.name, col);
+          });
+
+          let dftType: DataTypeDesc = enumVal["dftStrType"];
+          newVal.setTableView(new JdbcTypePropsProperty(jdbcProps, isCollection, typeMetas, tabColsMapper, dftType));
+          break;
+        }
+        default:
+          throw new Error(`error content type:${contentType}`)
+
+      }
+
+      // console.log([mcols,elementKeys,typeMetas]);
+
+    } else {
+      let selectableCol: Array<{ val: string, label: string }> = at.eprops[KEY_OPTIONS_ENUM];
+      if (!selectableCol) {
+        throw new Error("selectableCol can not be null");
+      }
+      let cols: Array<{ name: string, value: string }> = null;
+      if (selectableCol.length < 1) {
+        cols = val.map((r) => {
+          return {name: r, value: r}
+        });
+        newVal.setPropValEnums(cols, (_) => true);
+      } else {
+        cols = selectableCol.map((c) => {
+          return {"name": c.label, "value": c.val}
+        });
+        newVal.setPropValEnums(cols, (sval) => {
+          return !!val.find((optVal) => optVal === sval);
+        });
+      }
+    }
+  }
+
+// containAdvance = false;
 
   /**
    * 字段中是否包含高级字段（可以隐藏）
@@ -689,6 +661,7 @@ export class Item {
 
 
   constructor(_dspt: Descriptor, public updateModel = false) {
+    // console.log(_dspt);
     // if (dspt) {
     //   this.impl = dspt.impl;
     // }
@@ -828,6 +801,10 @@ export class AttrDesc {
           }
         }
       }
+    } else {
+      if (this.isMultiSelectableType) {
+        Item.buildMultiSelectedAttr([], this, desVal);
+      }
     }
     return desVal;
   }
@@ -865,7 +842,7 @@ export class HeteroList {
   pluginCategory: PluginType;
 
   public static isDescFilterDefined(type: PluginType): type is PluginMeta {
-    if(!type){
+    if (!type) {
       return false;
     }
     let filter = (<PluginMeta>type).descFilter;
@@ -930,7 +907,7 @@ export class ValOption {
   public impl: string;
   public name: string;
   // 端类型，mysql，docker，sqlserver
-  public endType:string;
+  public endType: string;
 }
 
 export interface OptionEnum {
@@ -1037,3 +1014,4 @@ export class RowAssist {
     return ip;
   }
 }
+

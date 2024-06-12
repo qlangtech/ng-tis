@@ -17,28 +17,42 @@
  */
 
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from "@angular/core";
 import {Descriptor} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button/button.component";
+import {PluginsComponent} from "./plugins.component";
 
 @Component({
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <ng-container [ngSwitch]="this.descriptors.length> 0 ">
+
+    <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers || this.descriptors.length> 0 ">
       <ng-container *ngSwitchCase="true">
-        <button [style]="btnStyle" nz-button nz-dropdown [nzSize]="btnSize" [nzDropdownMenu]="menu"
-                [disabled]="this.disabled">
+
+        <button [style]="btnStyle" nz-button nz-dropdown
+                [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
+                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize" [nzDropdownMenu]="menu"
+                [disabled]="this.disabled || this.formDisabled">
           <ng-content></ng-content>
         </button>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-              <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype" nzTheme="outline"></span> {{d.displayName}}</a>
+              <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
+                                                 nzTheme="outline"></span> {{d.displayName}}</a>
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item (click)="addNewPlugin()">
@@ -49,7 +63,7 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
       </ng-container>
       <ng-container *ngSwitchCase="false">
         <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
-                [disabled]="this.disabled">
+                [disabled]="this.disabled || this.formDisabled">
           <i nz-icon nzType="api" nzTheme="outline"></i>添加
         </button>
       </ng-container>
@@ -57,9 +71,14 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
 
   `
 })
-export class PluginAddBtnComponent extends BasicFormComponent {
+export class PluginAddBtnComponent extends BasicFormComponent implements OnInit {
   @Input()
   descriptors: Array<Descriptor> = [];
+
+  @Input()
+  initDescriptors = false;
+
+
   @Input()
   extendPoint: string | Array<string>;
 
@@ -82,16 +101,42 @@ export class PluginAddBtnComponent extends BasicFormComponent {
   addPlugin = new EventEmitter<Descriptor>();
 
   @Output()
+  primaryBtnClick = new EventEmitter<void>();
+
+  @Output()
   afterPluginAddClose = new EventEmitter<Descriptor>();
 
 
   constructor(tisService: TISService
-    , private drawerService: NzDrawerService) {
+    , private drawerService: NzDrawerService, private cd: ChangeDetectorRef) {
     super(tisService);
+    this.formDisabled = true;
   }
 
   addNewPluginItem(desc: Descriptor) {
     this.addPlugin.emit(desc);
+  }
+
+  get hasPrimaryBtnClickObservers(): boolean {
+    return this.primaryBtnClick.observers.length > 0;
+  }
+
+
+  ngOnInit(): void {
+
+    if (this.descriptors.length < 1 && this.initDescriptors) {
+      PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
+        .then((descs) => {
+
+          this.descriptors = Array.from(descs.values());
+          this.cd.detectChanges();
+          //   console.log([this.descriptors,this.initDescriptors,this.extendPoint,this.descriptors]);
+        }).finally(() => {
+        this.formDisabled = false;
+      });
+    } else {
+      this.formDisabled = false;
+    }
   }
 
   addNewPlugin() {
