@@ -81,6 +81,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     let dataxNameParam = `&processModel=${this.dto.processModel}`;
     if (this.dto.dataxPipeName) {
       dataxNameParam += `&dataxName=${this.dto.dataxPipeName}`;
@@ -98,7 +99,7 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
           if (hlist.items.length < 1) {
             Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (_, p) => p);
           }
-          console.log(hlist);
+         // console.log(hlist);
           this.hlist = [hlist];
         }
       });
@@ -126,6 +127,9 @@ export class DataxAddStep1Component extends BasicDataXAddComponent implements On
         if (!this.dto.dataxPipeName) {
           throw new Error("have not set dataxPipeName properly");
         }
+        // if(!this.tisService.currentApp){
+        //   this.tisService.currentApp =
+        // }
         this.nextStep.next(this.dto);
       } else {
         throw new Error("have not set biz result");

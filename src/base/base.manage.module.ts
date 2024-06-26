@@ -43,9 +43,7 @@ import {DataxWorkerComponent} from "./datax.worker.component";
 import {DataxWorkerAddStep1Component} from "./datax.worker.add.step1.component";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {DataxWorkerAddStep2Component} from "./datax.worker.add.step2.component";
-import {
-  DataxWorkerAddStep3Component
-} from "./datax.worker.add.step3.component";
+import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent} from "./datax.worker.running.component";
 
 import {MarkdownModule} from "ngx-markdown";
@@ -58,7 +56,8 @@ import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 
 @NgModule({
   id: 'basemanage',
-  imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule, NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
+  imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule
+    , NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
   declarations: [FlinkClusterListComponent,
     ApplistComponent, ErrorListComponent, DepartmentAddComponent, BaseMangeIndexComponent //
     , BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent

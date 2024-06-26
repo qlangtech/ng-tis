@@ -23,7 +23,7 @@ import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {KEY_APPNAME} from "./tis.service";
 import {PowerjobCptType} from "../base/base.manage-routing.module";
 import {RecordTransformer, TransformerRuleTabletView} from "./multi-selected/transformer.rules.component";
-import {TuplesProperty} from "./plugin/type.utils";
+import {KEY_subform_DetailIdValue, TuplesProperty} from "./plugin/type.utils";
 import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
 import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
 
@@ -146,10 +146,12 @@ export class ItemPropVal extends ErrorFeedback {
     this._tupleViewType = tabView.viewType();
   }
 
-  public setTransformerRules(elementKeys: Array<string>, transformerRule: Array<RecordTransformer>, typeMetas: Array<DataTypeMeta> //, _sourceTabCols: Array<CMeta>
+  public setTransformerRules(elementKeys: Array<string>
+    , transformerRule: Array<RecordTransformer>
+    , typeMetas: Array<DataTypeMeta>, selectedTab: string
   ) {
     // console.log(dbLatestMcols);
-    let tabView = new TransformerRuleTabletView(transformerRule, typeMetas);
+    let tabView = new TransformerRuleTabletView(selectedTab, transformerRule, typeMetas);
     this.setEProp(KEY_OPTIONS_ENUM, tabView);
     this._tupleViewType = tabView.viewType();
   }
@@ -259,12 +261,64 @@ export class Descriptor {
   }
   subForm: boolean;
 
+  public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
+    : Map<string /* impl */, Descriptor> {
+    if (!descriptors) {
+      throw new Error("param descriptors can not be null");
+    }
+    let descMap: Map<string /* impl */, Descriptor> = new Map();
+    let d: Descriptor = null;
+    let attrs: AttrDesc[];
+    let attr: AttrDesc;
+    // console.log(descriptors);
+    for (let impl in descriptors) {
+      d = Object.assign(new Descriptor(), descriptors[impl]);
+      attrs = [];
+      d.attrs.forEach((a) => {
+
+        attr = Object.assign(new AttrDesc(), a);
+        if (attr.describable) {
+          attr.descriptors = Descriptor.wrapDescriptors(attr.descriptors);
+        }
+        if (attr.options) {
+          let opts: ValOption[] = [];
+          attr.options.forEach((opt) => {
+            opts.push(Object.assign(new ValOption(), opt));
+          });
+          attr.options = opts;
+        }
+        attrs.push(attr);
+      });
+      d.attrs = attrs;
+      descMap.set(impl, d);
+    }
+    // console.log(descMap);
+    return descMap;
+  }
+
   public get endtype(): string {
     return this.extractProps['endType'];
   }
 
   public get supportIcon(): boolean {
     return !!this.extractProps['supportIcon'];
+  }
+
+  public static createNewItem(des: Descriptor, updateModel: boolean
+    , itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal): Item {
+    if (!itemPropSetter) {
+      itemPropSetter = (_, propVal) => propVal;
+    }
+    let nItem = new Item(des);
+
+    nItem.displayName = des.displayName;
+    nItem.implUrl = des.implUrl;
+    // nItem.containAdvance = des.containAdvance;
+    des.attrs.forEach((attr) => {
+      //Item.wrapItemPropVal
+      nItem.vals[attr.key] = itemPropSetter(attr.key, ((attr.addNewEmptyItemProp(updateModel))));
+    });
+    return nItem
   }
 
   /**
@@ -275,27 +329,27 @@ export class Descriptor {
    */
   public static addNewItem(h: HeteroList, des: Descriptor, updateModel: boolean
     , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
-    let nItem = new Item(des);
+    let nItem = Descriptor.createNewItem(des, updateModel, itemPropSetter);
 
-    nItem.displayName = des.displayName;
-    nItem.implUrl = des.implUrl;
-    // nItem.containAdvance = des.containAdvance;
-    des.attrs.forEach((attr) => {
-      //Item.wrapItemPropVal
-      nItem.vals[attr.key] = itemPropSetter(attr.key, ((attr.addNewEmptyItemProp(updateModel))));
-    });
+    // nItem.displayName = des.displayName;
+    // nItem.implUrl = des.implUrl;
+    // // nItem.containAdvance = des.containAdvance;
+    // des.attrs.forEach((attr) => {
+    //   //Item.wrapItemPropVal
+    //   nItem.vals[attr.key] = itemPropSetter(attr.key, ((attr.addNewEmptyItemProp(updateModel))));
+    // });
 
     // nItem.wrapItemVals();
 
-    let nitems: Item[] = [];
-    // console.log(h.items);
-    h.items.forEach((r) => {
-      nitems.push(r);
-    });
-    //
-    nitems.push(nItem);
+    // let nitems: Item[] = [];
+    // // console.log(h.items);
+    // h.items.forEach((r) => {
+    //   nitems.push(r);
+    // });
+    // //
+    // nitems.push(nItem);
 
-    h.items = nitems;
+    h.items = [...h.items, nItem]; //nitems;
   }
 
 
@@ -375,7 +429,7 @@ export class SynchronizeMcolsResult {
 
 export interface ReaderColMeta {
   index: number;
-  name:  Item |string;
+  name: Item | string;
   type: string | DataTypeDesc;
   disable: boolean;
   ip: ItemPropVal;
@@ -477,7 +531,7 @@ export class Item {
   public static processErrorField(errorFields: Array<Array<IFieldError>>, items: Item[]) {
     let item: Item = null;
     let fieldsErrs: Array<IFieldError> = null;
-
+    //console.log([errorFields,items]);
     if (errorFields) {
       for (let index = 0; index < errorFields.length; index++) {
         fieldsErrs = errorFields[index];
@@ -487,7 +541,7 @@ export class Item {
         fieldsErrs.forEach((fieldErr) => {
 
           let ip = item.vals[fieldErr.name];
-          // console.log([item.vals, fieldErr, item.vals[fieldErr.name], ip]);
+          // console.log([item.vals, fieldErr.name, fieldErr, item.vals[fieldErr.name], ip]);
           if (ip instanceof ItemPropVal) {
 
             itemProp = ip;
@@ -591,22 +645,34 @@ export class Item {
         }
         case TuplesPropertyType.TransformerRules: {
 
-
+          let selectedTab: string = enumVal[KEY_subform_DetailIdValue];
           let transformerRule: Array<RecordTransformer> = [...val];
-          // console.log(val);
-          //              transformerRule.forEach((rule) => {
-          // console.log(rule.udf.impl);
-          //               // let udf = new Item();
-          //
-          //               return  rule;
-          //              });
-          // console.log(TuplesPropertyType.TransformerRules);
-          newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas);
+          newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas, selectedTab);
           break;
         }
         case TuplesPropertyType.JdbcTypeProps: {
-          let isCollection: boolean = enumVal["isList"]
-         // console.log(val);
+
+          let selectedTab: string = enumVal[KEY_subform_DetailIdValue];
+          //  console.log(selectedTab);
+
+          let isCollection: boolean = enumVal["isList"];
+          let dftListElementDesc: Descriptor = null;
+          let selectFromExistField: boolean = false;
+          if (isCollection) {
+            // console.log(enumVal);
+            let dftDescs = Descriptor.wrapDescriptors(enumVal["dftListElementDesc"]);
+            for (let desc of dftDescs.values()) {
+              dftListElementDesc = desc;
+              break;
+            }
+            if (!dftListElementDesc) {
+              console.log(["dftDescs", dftDescs]);
+              throw new Error("dftListElementDesc can not be null");
+            }
+            // 字段类型是否呈现selector 下列列表的形式，下来列表的可选表从当前选中表的列选择
+            selectFromExistField = enumVal["selectFromExistField"];
+          }
+          // console.log(val);
           let jdbcProps: Array<JdbcTypeProp> = Array.isArray(val) ? [...val] : [val];
           //console.log(enumVal);
           // plugin 中的元素是否是集合，例如： CopyValUDF中的to 属性为 isCollection 为false
@@ -618,7 +684,9 @@ export class Item {
           });
 
           let dftType: DataTypeDesc = enumVal["dftStrType"];
-          newVal.setTableView(new JdbcTypePropsProperty(jdbcProps, isCollection, typeMetas, tabColsMapper, dftType));
+
+
+          newVal.setTableView(new JdbcTypePropsProperty(selectedTab, jdbcProps, isCollection, selectFromExistField, dftListElementDesc, typeMetas, tabColsMapper, dftType));
           break;
         }
         default:
@@ -882,6 +950,10 @@ export class HeteroList {
 export class PluginSaveResponse {
   constructor(public saveSuccess: boolean, public formDisabled: boolean, private savePluginEvent: SavePluginEvent, private bizResult?: any) {
 
+  }
+
+  public getPostPayloadPropery(key: string): any {
+    return this.savePluginEvent && this.savePluginEvent.postPayload && this.savePluginEvent.postPayload[key];
   }
 
   public get verify(): boolean {

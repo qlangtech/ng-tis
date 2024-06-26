@@ -83,7 +83,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
         if (r.success) {
           if (r.bizresult) {
 
-            let d = PluginsComponent.wrapDescriptors(r.bizresult.desc);
+            let d = Descriptor.wrapDescriptors(r.bizresult.desc);
             d.forEach((entry) => {
               desc = entry;
             });

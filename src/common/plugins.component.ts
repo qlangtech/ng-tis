@@ -156,8 +156,7 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
                                   [endType]="h.endType"
                                   [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
                                   (afterPluginAddClose)="updateHeteroListDesc(h)"
-                                  (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon
-                                                                                  nzType="down"></i>
+                                  (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i>
               </tis-plugin-add-btn>
 
             </ng-container>
@@ -256,6 +255,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Output() ajaxOccur = new EventEmitter<PluginSaveResponse>();
   @Output() afterSave = new EventEmitter<PluginSaveResponse>();
+  @Output() afterVerifyConfig = new EventEmitter<PluginSaveResponse>();
 
   @Output() startNotebook = new EventEmitter<PluginSaveResponse>();
 
@@ -301,7 +301,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.formControlSpan = 19;
     addDb.shallInitializePluginItems = false;
     addDb.disableNotebook = true;
-    console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
+   // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
     if (opts.shallLoadSavedItems) {
       //console.log("shallLoadSavedItems  ");
       if (opts.item) {
@@ -309,10 +309,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
       addDb.setPlugins([pluginTp], opts.opt);
     } else {
-      console.log("shall not LoadSavedItems  ");
+     // console.log("shall not LoadSavedItems  ");
       try {
         let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
-        console.log(hlist);
+       // console.log(hlist);
         if (opts.item) {
           for (let i = 0; i < hlist.length; i++) {
             hlist[i].items = [opts.item];
@@ -330,6 +330,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     addDb.showSaveButton = true;
+    // addDb.ajaxOccur.subscribe((r)=>{
+    //   if(!r.saveSuccess){
+    //     console.log(r);
+    //     throw new Error(r.biz());
+    //   }
+    // });
     addDb.afterSave.subscribe((r: PluginSaveResponse) => {
       // console.log(r);
       if (r && r.saveSuccess && r.hasBiz()) {
@@ -362,7 +368,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static wrapperHeteroList(he: HeteroList, pm: PluginType): HeteroList {
     let h: HeteroList = Object.assign(new HeteroList(), he, {"pluginCategory": pm});
-    let descMap = PluginsComponent.wrapDescriptors(h.descriptors);
+    let descMap = Descriptor.wrapDescriptors(h.descriptors);
     // console.log(descMap);
     h.descriptors = descMap;
     // 遍历item
@@ -474,37 +480,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
-    : Map<string /* impl */, Descriptor> {
-    let descMap: Map<string /* impl */, Descriptor> = new Map();
-    let d: Descriptor = null;
-    let attrs: AttrDesc[];
-    let attr: AttrDesc;
-    // console.log(descriptors);
-    for (let impl in descriptors) {
-      d = Object.assign(new Descriptor(), descriptors[impl]);
-      attrs = [];
-      d.attrs.forEach((a) => {
 
-        attr = Object.assign(new AttrDesc(), a);
-        if (attr.describable) {
-          attr.descriptors = this.wrapDescriptors(attr.descriptors);
-        }
-        if (attr.options) {
-          let opts: ValOption[] = [];
-          attr.options.forEach((opt) => {
-            opts.push(Object.assign(new ValOption(), opt));
-          });
-          attr.options = opts;
-        }
-        attrs.push(attr);
-      });
-      d.attrs = attrs;
-      descMap.set(impl, d);
-    }
-    // console.log(descMap);
-    return descMap;
-  }
 
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
@@ -673,7 +649,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems(e?: SavePluginEvent) {
-    //  console.log(this.plugins);
+     // console.log(this.plugins);
     PluginsComponent.initializePluginItems(this, this.plugins, true //
       , (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
         if (success) {
@@ -728,7 +704,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
               this.notification.create('success', '校验成功', "表单配置无误");
             }
           }
-
+          this.afterVerifyConfig.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult))
           if (savePluginEvent.createOrGetNotebook && r.success) {
             if (this.startNotebook.observers.length > 0) {
               this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
@@ -758,17 +734,19 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         this.processResult(r);
         this.cdr.detectChanges();
         let pluginErrorFields = r.errorfields;
-
         let index = 0;
         // let tmpHlist: HeteroList[] = [];
         _heteroList.forEach((h) => {
           let items: Item[] = h.items;
-          let errorFields = pluginErrorFields[index++];
-          //  console.log(errorFields);
-          Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
+          if(pluginErrorFields){
+            let errorFields = pluginErrorFields[index++];
+            //  console.log(errorFields);
+            Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
+          }
         });
         this.cdr.detectChanges();
       }, (err) => {
+      console.log(err);
         this.ajaxOccur.emit(new PluginSaveResponse(false, false, savePluginEvent));
       });
 
@@ -820,7 +798,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     return form.httpPost(url, params)
       .then((r) => {
         if (r.success) {
-          let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
+          let descMap = Descriptor.wrapDescriptors(r.bizresult)
           return descMap;
         }
       });

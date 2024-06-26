@@ -9,8 +9,8 @@ import {DataTypeDesc, DataTypeMeta} from "../tis.plugin";
     <nz-form-item>
       <ng-container [ngSwitch]="!!_type">
         <nz-space *ngSwitchCase="true">
-          <nz-select *nzSpaceItem nzShowSearch class="type-select" [disabled]="disable"
-                     nzDropdownMatchSelectWidth="true" [(ngModel)]="_type.type"
+          <nz-select  *nzSpaceItem nzShowSearch class="type-select" [disabled]="disable"
+                     [nzDropdownMatchSelectWidth]="false" [(ngModel)]="_type.type"
                      nzPlaceHolder="请选择" (ngModelChange)="typeChange(_type)">
             <nz-option [nzValue]="tp.type.type" [nzLabel]="tp.type.typeName"
                        *ngFor="let tp of this._supportTypes"></nz-option>
@@ -62,6 +62,9 @@ import {DataTypeDesc, DataTypeMeta} from "../tis.plugin";
 
   `,
   styles: [`
+    .type-select{
+     width: 13em;
+    }
     nz-form-item {
       margin: 0px;
     }

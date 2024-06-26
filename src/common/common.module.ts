@@ -112,7 +112,7 @@ import {NzCascaderModule} from 'ng-zorro-antd/cascader';
 import {SideBarToolBar} from "./basic.form.component";
 import {K8SReplicsSpecComponent} from "./k8s.replics.spec.component";
 import {DataxAddStep7Component, ViewGenerateCfgComponent} from "../base/datax.add.step7.confirm.component";
-import {DataxAddStep4Component, PluginSubFormComponent, SelectedTabsComponent} from "../base/datax.add.step4.component";
+import {DataxAddStep4Component, SelectedTabsComponent} from "../base/datax.add.step4.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {DataxAddStep1Component} from "../base/datax.add.step1.component";
 import {DataxAddStep2Component} from "../base/datax.add.step2.component";
@@ -138,6 +138,10 @@ import {SchemaEditComponent} from "./multi-selected/schema.edit.component";
 import {JdbcTypePropsComponent} from "./multi-selected/jdbc.type.props.component";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {UdfDescLiteria} from "./multi-selected/basic.tuples.view.component";
+
+import { TableTransformerComponent } from './selectedtab/table.transformer.component';
+import { TableBaseComponent } from './selectedtab/table.base.component';
+import { PluginSubFormComponent } from './selectedtab/plugin-sub-form.component';
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries
@@ -171,7 +175,7 @@ import {UdfDescLiteria} from "./multi-selected/basic.tuples.view.component";
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     TimeConsumePipe, SafePipe, ItemPropValPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
-    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,
+    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,TableTransformerComponent,TableBaseComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
     TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component

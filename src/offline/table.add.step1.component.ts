@@ -81,7 +81,7 @@ export class TableAddStep1Component extends TableAddStep implements OnInit {
       .then(result => {
         if (result.success) {
           _dto.processMeta = result.bizresult.processMeta;
-          let rdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(result.bizresult.readerDesc).values();
+          let rdescIt: IterableIterator<Descriptor> = Descriptor.wrapDescriptors(result.bizresult.readerDesc).values();
           // dto.writerDescriptor = wdescIt.next().value;
           _dto.readerDescriptor = rdescIt.next().value;
           // console.log(dto);

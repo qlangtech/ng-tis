@@ -45,8 +45,7 @@ import {dataXWorkerCfg} from "./base.manage-routing.module";
 import {NzTabSetComponent} from "ng-zorro-antd/tabs/tabset.component";
 import {LaunchK8SClusterWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
-
-export const KEY_APPNAME = "appname";
+import {KEY_APPNAME} from "../common/plugin/type.utils";
 
 @Component({
   template: `

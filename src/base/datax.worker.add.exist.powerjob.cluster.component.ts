@@ -21,7 +21,13 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {NzModalService} from "ng-zorro-antd/modal";
-import {EXTRA_PARAM_DATAX_NAME, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent
+} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {PowerjobCptType} from "./base.manage-routing.module";
@@ -92,7 +98,7 @@ export class DataxWorkerAddExistPowerjobClusterComponent extends BasicFormCompon
             , `action=datax_action&emethod=worker_desc&targetName=${this.dto.processMeta.targetName}`)
             .then((r) => {
                 if (r.success) {
-                    let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
+                    let rList = Descriptor.wrapDescriptors(r.bizresult.pluginDesc);
 
                     let desc = Array.from(rList.values());
                     let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
