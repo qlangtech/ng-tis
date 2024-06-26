@@ -119,7 +119,7 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
                          <transformer-rules [(tabletView)]="_pp.mcolsEnums" [error]="_pp.error"></transformer-rules>
                       </ng-container>
                      <ng-container *ngSwitchCase="'jdbcTypeProps'">
-                         <jdbc-type-props [(tabletView)]="_pp.mcolsEnums" [error]="_pp.error"></jdbc-type-props>
+                         <jdbc-type-props [tabletView]="_pp.mcolsEnums" [error]="_pp.error"></jdbc-type-props>
                       </ng-container>
                       <ng-container *ngSwitchDefault>
                          <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']"
@@ -340,7 +340,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     return this.httpPost(url, params)
       .then((r) => {
         if (r.success) {
-          let descMap = PluginsComponent.wrapDescriptors(r.bizresult)
+          let descMap = Descriptor.wrapDescriptors(r.bizresult)
           return descMap;
         }
       });
@@ -423,7 +423,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           }
           return Promise.reject("notFoundExtension install plugin first");
         } else {
-          return PluginsComponent.wrapDescriptors(r.bizresult);
+          return Descriptor.wrapDescriptors(r.bizresult);
         }
       });
   }

@@ -60,9 +60,9 @@ import {Subject} from "rxjs";
 })
 export class DataxAddComponent extends AppFormComponent implements AfterViewInit, OnInit {
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
-
-  @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
   multiViewDAG: MultiViewDAG;
+  @ViewChild('proessErr', {read: TemplateRef, static: true}) proessErrRef: TemplateRef<NzSafeAny>;
+
 
   public static getDataXMeta(cpt: BasicFormComponent, stepType: StepType, app: CurrentCollection, execId?: string): Promise<DataxDTO> {
     return cpt.httpPost("/coredefine/corenodemanage.ajax"
@@ -75,8 +75,8 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           dto.dataxPipeName = app.appName;
           dto.processMeta = r.bizresult.processMeta;
           // this.dto.readerDescriptor = null;
-          let wdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc).values();
-          let rdescIt: IterableIterator<Descriptor> = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc).values();
+          let wdescIt: IterableIterator<Descriptor> = Descriptor.wrapDescriptors(r.bizresult.writerDesc).values();
+          let rdescIt: IterableIterator<Descriptor> = Descriptor.wrapDescriptors(r.bizresult.readerDesc).values();
           dto.writerDescriptor = wdescIt.next().value;
           dto.readerDescriptor = rdescIt.next().value;
           return dto;

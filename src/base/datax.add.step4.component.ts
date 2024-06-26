@@ -23,19 +23,17 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {
-  AttrDesc,
-  Descriptor, EXTRA_PARAM_DATAX_NAME,
-  HeteroList, IFieldError,
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
+  HeteroList,
+  IFieldError,
   Item,
   ItemPropVal,
-  KEY_OPTIONS_ENUM,
-  OptionEnum,
   PluginMeta,
   PluginSaveResponse,
   PluginType,
   SavePluginEvent,
-  TisResponseResult,
-  TYPE_PLUGIN_MULTI_SELECTION
+  TisResponseResult
 } from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
@@ -43,6 +41,10 @@ import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ExecModel} from "./datax.add.step7.confirm.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {KEY_subform_DetailIdValue} from "../common/plugin/type.utils";
+import {PluginSubFormComponent} from "../common/selectedtab/plugin-sub-form.component";
+
+// import {PluginSubFormComponent} from "./selectedtab/plugin-sub-form.component";
 
 
 enum TableSetterStatus {
@@ -194,7 +196,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
       this.descriptor.displayName, this.descriptor.impl, meta.fieldName
-      , this.dataXReaderTargetName + ",subformDetailIdValue_" + detailId, this.skipSubformDescNullError)];
+      , this.dataXReaderTargetName + "," + KEY_subform_DetailIdValue + "_" + detailId, this.skipSubformDescNullError)];
     // console.log(pluginMeta);
     let ip = this.subFormHetero.items[0].vals[meta.id];
     if (ip instanceof ItemPropVal) {
@@ -295,7 +297,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
             rawItems.set(item.impl, item);
           })
 
-          let descMap = PluginsComponent.wrapDescriptors(tabDesc[tabName]);
+          let descMap = Descriptor.wrapDescriptors(tabDesc[tabName]);
           let tabItems: Array<Item> = [];
           descMap.forEach((val, _) => {
 
@@ -353,6 +355,12 @@ export class SelectedTabsComponent extends BasicFormComponent {
       return {name: m.name, require: m.require, extraParam: m.extraParam};
     });
     // console.log([hlist,pluginMeta]);
+
+
+    if (!this.tisService.currentApp) {
+
+    }
+
     const drawerRef = this.drawerService.create<
       PluginSubFormComponent
       , { hetero: HeteroList[] }
@@ -367,19 +375,10 @@ export class SelectedTabsComponent extends BasicFormComponent {
       }
     });
     drawerRef.afterClose.subscribe(hetero => {
-      // console.log("close");
       if (!hetero) {
         return;
       }
       meta.setted = true;
-      // console.log([this.subFormHetero.items[0].vals,hetero.hetero.items]);
-      // for (let itemIndex = 0; itemIndex < hetero.hetero.items.length; itemIndex++) {
-      //
-      // }
-      // console.log(hetero.hetero.items[0].vals);
-      // @ts-ignore
-      // this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items[0].vals;
-
       this.subFormHetero.items[0].vals[detailId] = hetero.hetero.items;
       this.subFormItemSetterFlag.set(detailId, true);
     });
@@ -426,11 +425,6 @@ export class SelectedTabsComponent extends BasicFormComponent {
                    [nzShowSelectAll]="true"
                    [nzRenderList]="[renderList, renderList]"
       >
-        <!--              <ng-template #footer let-direction>-->
-        <!--                  <button *ngIf="direction=='left'" nzSize="small" nz-button (click)="reload()" style=" margin: 5px;">-->
-        <!--                      <i nz-icon nzType="reload" nzTheme="outline"></i>Reload-->
-        <!--                  </button>-->
-        <!--              </ng-template>-->
         <ng-template
           #renderList
           let-items
@@ -620,10 +614,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   ngOnInit(): void {
     this.formLayout = this.createModel ? "vertical" : "horizontal";
     super.ngOnInit();
+
+
   }
 
   protected initialize(_: CurrentCollection): void {
-
+    if (!_) {
+      // 在新增模式下 currentApp 是为空的
+      this.tisService.currentApp = new CurrentCollection(0, this.dto.dataxPipeName);
+    }
+    console.log(this.tisService.currentApp);
     // console.log(this.dto.readerDescriptor);
     this.initializeSubFieldForms(true);
   }
@@ -631,7 +631,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   private initializeSubFieldForms(useCache: boolean): Promise<TisResponseResult> {
     return DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
       , useCache, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-        console.log([subFieldForms, subFormHetero]);
+        //  console.log([subFieldForms, subFormHetero]);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         this.transferList.splice(0);
@@ -802,121 +802,6 @@ export interface ISubDetailTransferMeta {
 interface GetDateMethodMeta {
   method: string;
   params: Array<string>;
-}
-
-
-@Component({
-  // selector: 'nz-drawer-custom-component',
-  template: `
-
-
-    <nz-tabset [nzTabBarExtraContent]="extraTemplate">
-      <nz-tab [nzTitle]="'基本' ">
-
-        <tis-plugins [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="pluginMeta"
-                     (ajaxOccur)="verifyPluginConfig($event)"
-                     [savePlugin]="savePlugin" [formControlSpan]="21"
-                     [showSaveButton]="false" [shallInitializePluginItems]="false" [_heteroList]="hetero"></tis-plugins>
-      </nz-tab>
-      <nz-tab [nzTitle]="'Transformer'" (nzClick)="initTransformerHetero()">
-        <tis-plugins [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="transformerPluginMeta"
-                     (ajaxOccur)="verifyPluginConfig($event)"
-                     [savePlugin]="transformerSavePlugin" [formControlSpan]="21"
-                     [showSaveButton]="false" [shallInitializePluginItems]="false"
-                     [_heteroList]="transformerHetero"></tis-plugins>
-
-      </nz-tab>
-    </nz-tabset>
-    <ng-template #extraTemplate>
-      <sidebar-toolbar [tabBarExtraContent]="true" [deleteDisabled]="true" (close)="close()"
-                       (save)="_saveClick()"></sidebar-toolbar>
-    </ng-template>
-
-
-  `
-})
-export class PluginSubFormComponent extends BasicFormComponent implements OnInit {
-  @Input() hetero: HeteroList[] = [];
-  @Input() pluginMeta: PluginType[] = [];
-
-  @Input()
-  meta: ISubDetailTransferMeta;
-
-  transformerHetero: HeteroList[] = [];
-
-  //  transformerPluginMeta : PluginType[] =[
-  //   {
-  //     name: "transformer",
-  //     require: true
-  //   }
-  // ]
-
-  transformerPluginMeta: PluginMeta[] = []
-
-  savePlugin = new EventEmitter<{ verifyConfig: boolean }>();
-  transformerSavePlugin = new EventEmitter<{ verifyConfig: boolean }>();
-
-  // constructor() {
-  // }
-  constructor(tisService: TISService, public drawer: NzDrawerRef<{ hetero: HeteroList }>) {
-    super(tisService);
-  }
-
-  ngOnInit(): void {
-    let currApp = this.tisService.currentApp;
-    this.transformerPluginMeta = [
-      {
-        name: "transformer",
-        require: true
-        , extraParam: EXTRA_PARAM_DATAX_NAME + currApp.appName + ",id_" + this.meta.id
-        , descFilter:
-          {
-            localDescFilter: (desc: Descriptor) => true
-          }
-      }
-    ]
-  }
-
-  close(): void {
-    this.drawer.close();
-  }
-
-  verifyPluginConfig(e: PluginSaveResponse) {
-    if (e.saveSuccess && e.verify) {
-      this.drawer.close({hetero: this.hetero[0]});
-    }
-  }
-
-  _saveClick() {
-    // detail table info 表单只进行校验，不保存
-    // this.savePlugin.emit({verifyConfig: true});
-    this.transformerSavePlugin.emit({verifyConfig: false});
-    // drawerRef.close();
-  }
-
-  initTransformerHetero() {
-    // console.log(this.pluginMeta);
-
-    let m = this.transformerPluginMeta[0]; //DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
-
-    // let meta = <ISubDetailTransferMeta>{id: 'emp_photo'};
-
-    // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
-    //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-    console.log(this.meta);
-    DataxAddStep4Component.processSubFormHeteroList(this, m, this.meta, null // , subFormHetero.descriptorList[0]
-    ).then((hlist: HeteroList[]) => {
-      // this.openSubDetailForm(meta, pluginMeta, hlist);
-      console.log(hlist);
-
-      hlist.forEach((h) => {
-        PluginsComponent.addDefaultItem(m, h);
-      })
-
-
-      this.transformerHetero = hlist;
-    });
-  }
 }
 
 

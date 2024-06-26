@@ -322,7 +322,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
                     // console.log(result.bizresult);
                     let dbs = result.bizresult.dbs;
 
-                    let descList = PluginsComponent.wrapDescriptors(result.bizresult.pluginDesc);
+                    let descList = Descriptor.wrapDescriptors(result.bizresult.pluginDesc);
                     this.datasourceDesc = Array.from(descList.values());
                     this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
                     if (updateTreeInit) {
@@ -573,7 +573,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
                                 this.createFacadePluginsMetas(db.dbName);
                             }
                         } else if (type === NodeType.TAB) {
-                            let descs: Map<string /* impl */, Descriptor> = PluginsComponent.wrapDescriptors(biz);
+                            let descs: Map<string /* impl */, Descriptor> = Descriptor.wrapDescriptors(biz);
                             let desc: Descriptor = descs.values().next().value;
                             //  console.log([biz, descs, desc]);
                             let dbName = targetNode.parentNode.title;

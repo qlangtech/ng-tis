@@ -29,9 +29,9 @@ import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {dataXWorkerCfg, PowerjobCptType} from "./base.manage-routing.module";
 import {Observable, Subject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
-import {KEY_APPNAME} from "./datax.worker.running.component";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {ItemPropValComponent} from "../common/plugin/item-prop-val.component";
+import {KEY_APPNAME} from "../common/plugin/type.utils";
 
 @Component({
   template: `
@@ -146,7 +146,7 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
       , `action=datax_action&emethod=worker_desc&targetName=${targetName}&addJobTplOverwritePlugin=${addJobTplOverwritePlugin}`, e)
       .then((r) => {
         if (r.success) {
-          let rList = PluginsComponent.wrapDescriptors(r.bizresult.pluginDesc);
+          let rList = Descriptor.wrapDescriptors(r.bizresult.pluginDesc);
           return new WorkerDTO(rList, r.bizresult.typedPluginCount);
         }
       });

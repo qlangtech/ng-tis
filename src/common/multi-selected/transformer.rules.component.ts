@@ -14,7 +14,7 @@ import {
   HeteroList,
   Item,
   ItemPropVal,
-  PluginMeta,
+  PluginMeta, PluginType,
   ReaderColMeta,
   SavePluginEvent,
   TuplesPropertyType
@@ -55,7 +55,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
    * @param _typeMetas 可用的jdbc类型集合
    * @param _sourceTabCols 目标表可选的列
    */
-  constructor(private _mcols: Array<RecordTransformer>, private _typeMetas: Array<DataTypeMeta> //, private _sourceTabCols: Array<CMeta>
+  constructor(public selectedTab: string, private _mcols: Array<RecordTransformer>, private _typeMetas: Array<DataTypeMeta> //, private _sourceTabCols: Array<CMeta>
   ) {
     this._mcols.forEach((t) => {
       if (!t.ip) {
@@ -105,20 +105,20 @@ export class TransformerRuleTabletView implements TuplesProperty {
       <page-header>
         <nz-space>
           <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
-                  nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
+                  nzTooltipTitle="添加一个新的处理器"
                   nzType="primary" (click)="addRule()"><span nz-icon nzType="appstore-add"
                                                              nzTheme="outline"></span>添加
           </button>
 
-          <button *nzSpaceItem nz-button nzDanger nzSize="small" nz-tooltip
-                  nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
+          <button *nzSpaceItem nz-button [disabled]="!deleteBtnDisable" nzDanger nzSize="small" nz-tooltip
+                  nzTooltipTitle="从列表中删除一个已有的处理器"
                   nzType="default" (click)="deleteRule()"><span nz-icon nzType="delete"
                                                                 nzTheme="outline"></span>删除
           </button>
         </nz-space>
       </page-header>
 
-      <tis-col title="Index" width="3">
+      <tis-col title="选择" width="5">
         <ng-template let-u='r'>
           <nz-form-control>
             <label nz-checkbox nzSize="small" [(ngModel)]="u.disable"></label>
@@ -153,77 +153,20 @@ export class TransformerRuleTabletView implements TuplesProperty {
 
       <tis-col title="描述">
         <ng-template let-u='r'>
-          <div class="item-block item-block-absolute"  *ngIf="u.udfDescLiteria">
+          <div class="item-block item-block-absolute" *ngIf="u.udfDescLiteria">
             <h4>{{u.udf.dspt.displayName}}:</h4>
-            <udf-desc-literia [descAry]="u.udfDescLiteria" ></udf-desc-literia>
+            <udf-desc-literia [descAry]="u.udfDescLiteria"></udf-desc-literia>
 
             <div class="absolute-btn-element">
               <button nz-button nzType="default" (click)="updateTransformerRule(u)" nzSize="small">编辑</button>
             </div>
           </div>
-
-          <!--          <nz-form-item>-->
-          <!--            <nz-form-control [nzValidateStatus]="u.ip.validateStatus"-->
-          <!--                             [nzHasFeedback]="u.ip.hasFeedback"-->
-          <!--                             [nzErrorTip]="u.ip.error">-->
-          <!--              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Column"-->
-          <!--                         [nzDropdownRender]="renderVirtualTemplate" [(ngModel)]="u.target"-->
-          <!--                         (ngModelChange)="targetColChange(u,$event)">-->
-          <!--                <nz-option nzLabel="请选择" [nzValue]="''"></nz-option>-->
-          <!--                <nz-option [nzLabel]="col.name" [nzValue]="col.name"-->
-          <!--                           *ngFor="let col of this.sourceTabCols"></nz-option>-->
-          <!--              </nz-select>-->
-
-          <!--            </nz-form-control>-->
-          <!--          </nz-form-item>-->
-
-          <!--          <div [ngClass]="{'ant-form-item-has-error':!!u.targetError}">-->
-          <!--            <tis-plugin-add-btn [ngClass]="{'ant-input':!!u.targetError}" [btnSize]="'small'"-->
-          <!--                                (addPlugin)="setTargetColumn(u,$event)"-->
-          <!--                                (primaryBtnClick)="updateTargetColumn(u)"-->
-          <!--                                [extendPoint]="targetColumnExtendPoint"-->
-          <!--                                [descriptors]="this.targetColumnDescriptors" [initDescriptors]="false">-->
-          <!--              <span nz-icon nzType="edit" nzTheme="outline"></span>-->
-
-          <!--              <ng-container [ngSwitch]="!!u.target">-->
-          <!--                <span *ngSwitchCase="true">{{u.target.dspt.displayName}}</span>-->
-          <!--                <span *ngSwitchDefault>设置</span>-->
-          <!--              </ng-container>-->
-          <!--              <span nz-icon nzType="down"></span>-->
-          <!--            </tis-plugin-add-btn>-->
-          <!--            <span *ngIf="u.targetError" style="color: red;">{{u.targetError}}</span>-->
-          <!--            <nz-tag nzColor="default" *ngIf="u.targetDescLiteria">-->
-          <!--              &nbsp;-->
-          <!--              <ng-container *ngFor="let literia of u.targetDescLiteria">-->
-          <!--                <span>{{literia}}</span><br/>-->
-          <!--              </ng-container>-->
-          <!--            </nz-tag>-->
-          <!--          </div>-->
-
         </ng-template>
       </tis-col>
-
-
     </tis-page>
-
-
-
-    <ng-template #renderVirtualTemplate>
-      <nz-divider></nz-divider>
-      <div class="container">
-        <input type="text" nz-input #inputElement/>
-        <a class="add-item" (click)="addVirtualTargetCol(inputElement)">
-          <span nz-icon nzType="plus"></span>
-          添加
-        </a>
-      </div>
-    </ng-template>
-
   `
   , styles: [
     `
-
-
       .item-block-absolute {
         position: relative;
       }
@@ -235,7 +178,6 @@ export class TransformerRuleTabletView implements TuplesProperty {
         width: 50px;
         height: 100px;
       }
-
 
 
       .container {
@@ -276,17 +218,16 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 
   transformerExtendPoint = 'com.qlangtech.tis.plugin.datax.transformer.UDFDefinition';
 
-  transformerUDFPluginMeta: PluginMeta[] = [
-    {
-      name: "transformerUDF",
-      require: true
-      , extraParam: EXTRA_PARAM_DATAX_NAME + "mysql_mysql"
-      , descFilter:
-        {
-          localDescFilter: (desc: Descriptor) => true
-        }
-    }
-  ];
+  // transformerUDFPluginMeta: PluginMeta = null;
+  // {
+  //   name: "transformerUDF",
+  //   require: true
+  //   , extraParam: EXTRA_PARAM_DATAX_NAME + "mysql_mysql"
+  //   , descFilter:
+  //     {
+  //       localDescFilter: (desc: Descriptor) => true
+  //     }
+  // };
 
 
   transformerUDFdescriptors: Array<Descriptor> = [];
@@ -294,6 +235,8 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   //sourceTabCols: Array<CMeta> = [];
 
   transformerRules: Array<RecordTransformer>
+  // transformerRules :
+  transformerRulesView: TransformerRuleTabletView;
 
   constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
     super(tisService, modalService, notification);
@@ -301,13 +244,22 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   }
 
 
+  get deleteBtnDisable(): boolean {
+
+    for (let t of this.transformerRules) {
+      if (t.disable) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @Input()
   set error(errors: Array<any>) {
     if (!Array.isArray(errors)) {
       return;
     }
-    console.log(errors);
+    // console.log(errors);
     // KEY_DOC_FIELD_SPLIT_METAS
     let err: { name: string, };
 
@@ -332,33 +284,6 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
             colMeta.udfError = err[key];
             break;
           }
-          // case KEY_COLUMN_SIZE:
-          // case KEY_DECIMAL_DIGITS:
-          //   colMeta.type[key + KEY_FEEDBAKC] = new ErrorFeedback(err[key]);
-          //   break;
-          // case KEY_DOC_FIELD_SPLIT_METAS:
-          //   let splitMetasErrors: Array<any> = err[key];
-          //   //        console.log(splitMetasErrors);
-          //   let metaErr = null;
-          //   let splitMetas: Array<RowAssist> = RowAssist.getDocFieldSplitMetas(colMeta);
-          //   let ra: RowAssist = null;
-          //   for (let idxMeta = 0; idxMeta < splitMetasErrors.length; idxMeta++) {
-          //     ra = splitMetas[idxMeta];
-          //     metaErr = splitMetasErrors[idxMeta];
-          //     for (let errKey in metaErr) {
-          //       switch (errKey) {
-          //         case KEY_COLUMN_SIZE:
-          //         case KEY_DECIMAL_DIGITS:
-          //           ra.type[errKey + KEY_FEEDBAKC] = new ErrorFeedback(metaErr[errKey]);
-          //           break;
-          //         default:
-          //           ra.getIp(errKey).error = metaErr[errKey];
-          //       }
-          //       // console.log([ra,idxMeta]);
-          //     }
-          //   }
-          //
-          //   break;
           default:
             console.log(key);
           // throw new Error("error key:" + key);
@@ -376,18 +301,27 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   @Input()
   public set tabletView(view: TuplesProperty) {
     super.tabletView = (view);
-    console.log(view);
-    let transformerRules = <TransformerRuleTabletView>view;
+    // console.log(view);
+    this.transformerRulesView = <TransformerRuleTabletView>view;
     // this.sourceTabCols = transformerRules.sourceTabCols;
     // console.log(this.sourceTabCols);
     //  this.cd.detectChanges();
   }
 
   ngOnInit(): void {
-    // this.cd.detach();
-    let m = this.transformerUDFPluginMeta[0];
-    // console.log( this.transformerRules);
-    let meta = <ISubDetailTransferMeta>{id: 'emp_photo'};
+
+    let m: PluginType = {
+      name: "transformerUDF",
+      require: true
+      , extraParam: EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name
+      , descFilter:
+        {
+          localDescFilter: (desc: Descriptor) => true
+        }
+    };
+
+    let meta = <ISubDetailTransferMeta>{id: this.transformerRulesView.selectedTab};
+    console.log([m,meta]);
     /**
      * 获取UDF Transformer
      */
@@ -423,42 +357,6 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         // this.transformerHetero = hlist;
       });
 
-    // /**
-    //  * 获取Target Cols
-    //  */
-    // DataxAddStep4Component.processSubFormHeteroList(this, this.targetColumnPluginMeta, meta, null)
-    //   .then((hlist: HeteroList[]) => {
-    //     // this.openSubDetailForm(meta, pluginMeta, hlist);
-    //     // console.log(hlist);
-    //
-    //     hlist.forEach((h) => {
-    //
-    //       this.targetColumnDescriptors = Array.from(h.descriptors.values());
-    //
-    //       this.transformerRules.forEach((rule) => {
-    //         let desc = h.descriptors.get(rule.target.impl);
-    //         if (!desc) {
-    //           console.log(h.descriptors);
-    //           throw new Error("desc impl:" + rule.target.impl + " relevant desc can not be null");
-    //         }
-    //
-    //         let target: any = rule.target;
-    //
-    //         let newUdf: Item = Object.assign(new Item(desc), {vals: target});
-    //         newUdf.wrapItemVals();
-    //         // rule.udfDescLiteria =
-    //         rule.target = newUdf;
-    //         rule.targetDescLiteria = <Array<string>>target.literia
-    //       });
-    //       // console.log(   this.transformerRules);
-    //     });
-    //     this.cd.detectChanges();
-    //   });
-    // this.cd.detectChanges();
-    //
-    //
-    // this.transformerHetero = hlist;
-    //});
 
     this.cd.detectChanges();
   }
@@ -469,19 +367,18 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     if (!udfItem) {
       return;
     }
-    console.log(udfItem);
+    //console.log(udfItem);
     TransformerRulesComponent.openTransformerRuleDialog(this, udfItem.dspt, udfItem).then((biz) => {
       rtransformer.udf = biz.item;
       rtransformer.udfError = null;
       rtransformer.udfDescLiteria = biz.descLiteria;
     }).finally(this.freshController);
-    ;
   }
 
 
   private freshController = () => {
     let basicCpt = this;
-    console.log("finally");
+    //console.log("finally");
     basicCpt.transformerRules = [...basicCpt.transformerRules];
     basicCpt.transformerUDFdescriptors = [...basicCpt.transformerUDFdescriptors];
     // basicCpt.targetColumnDescriptors = [...basicCpt.targetColumnDescriptors];
@@ -491,9 +388,9 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 
 
   tarnsformerSet(rtransformer: RecordTransformer, desc: Descriptor) {
-    console.log([rtransformer, desc]);
+    //console.log([rtransformer, desc]);
     TransformerRulesComponent.openTransformerRuleDialog(this, desc).then((biz) => {
-      console.log(biz);
+      // console.log(biz);
       rtransformer.udf = biz.item;
       rtransformer.udfError = null;
       rtransformer.udfDescLiteria = biz.descLiteria;
@@ -502,7 +399,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   }
 
   static openTransformerRuleDialog(basicCpt: BasicFormComponent, desc: Descriptor, item?: Item)
-    : Promise<{ item: Item, descLiteria:  Array<UdfDesc> }> {
+    : Promise<{ item: Item, descLiteria: Array<UdfDesc> }> {
     let opt = new SavePluginEvent();
     // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
 
@@ -519,12 +416,14 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         }
         , basicCpt, desc
         , {name: 'jobTrigger', require: true}
-        , `设置字段处理${desc.displayName}`
+        , `设置 ${desc.displayName}`
         , (biz) => {
           console.log(biz);
 
           let newUdf: Item = Object.assign(new Item(desc), {vals: biz});
           newUdf.wrapItemVals();
+
+          //  console.log([biz,newUdf]);
           // rtransformer.udf = newUdf;
           // rtransformer.udfError = null;
           // rtransformer.udfDescLiteria = <Array<string>>biz.literia;
@@ -559,7 +458,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   }
 
   private emitNewTransformerRuleTabletView() {
-    this.tabletViewChange.emit(new TransformerRuleTabletView(this.transformerRules, this._view.typeMetas));
+    this.tabletViewChange.emit(new TransformerRuleTabletView(this.transformerRulesView.selectedTab, this.transformerRules, this._view.typeMetas));
   }
 
   deleteRule() {
@@ -574,13 +473,13 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     this.emitNewTransformerRuleTabletView();
   }
 
-  addVirtualTargetCol(input: HTMLInputElement) {
-    const value = input.value;
-    // if (this.listOfItem.indexOf(value) === -1) {
-    //   this.listOfItem = [...this.listOfItem, input.value || `New item ${this.index++}`];
-    // }
-    // this.httpPost();
-  }
+  // addVirtualTargetCol(input: HTMLInputElement) {
+  //   const value = input.value;
+  // if (this.listOfItem.indexOf(value) === -1) {
+  //   this.listOfItem = [...this.listOfItem, input.value || `New item ${this.index++}`];
+  // }
+  // this.httpPost();
+  //}
 
 
 }

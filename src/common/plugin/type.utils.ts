@@ -1,5 +1,7 @@
 import {DataTypeMeta, Item, PluginName, ReaderColMeta, SavePluginEvent, TuplesPropertyType} from "../tis.plugin";
 
+export const  KEY_subform_DetailIdValue = "subformDetailIdValue";
+
 export interface CreatorRouter {
   routerLink: string;
   label: string;
@@ -36,3 +38,5 @@ export interface TuplesProperty {
   mcols: Array<ReaderColMeta>;
   typeMetas: Array<DataTypeMeta>;
 }
+
+export const KEY_APPNAME = "appname";

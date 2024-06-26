@@ -29,11 +29,12 @@ import {
 import {NzModalService} from "ng-zorro-antd/modal";
 import {PageHeaderLeftComponent} from "./pager.header.component";
 import {TisResponseResult} from "./tis.plugin";
+import {NzDirectionType} from "ng-zorro-antd/steps/steps.component";
 
 
-// const typeCreateIndex = "createIndex";
 
 export enum StepType {
+  ManageSelectedTable = "manageSelectedTable",
   CreateIndex = "createIndex",
   CreateIncr = "createIncr",
   CreateDatax = "createDatax",
@@ -48,13 +49,13 @@ export enum StepType {
 @Component({
   selector: 'tis-steps',
   template: `
-    <div class="tis-steps">
-      <h2 class="caption">{{processMap.get(this.type).caption}}</h2>
-      <nz-steps [nzCurrent]="step">
-        <nz-step *ngFor="let s of this.processMap.get(this.type).steps let i = index" [nzTitle]="stepLiteria[i]"
-                 [nzDescription]="s"></nz-step>
-      </nz-steps>
-    </div>
+      <div [ngClass]="{'tis-steps':showCaption}">
+          <h2 *ngIf="showCaption" class="caption">{{processMap.get(this.type).caption}}</h2>
+          <nz-steps [nzDirection]="direct" [nzCurrent]="step" >
+              <nz-step *ngFor="let s of this.processMap.get(this.type).steps let i = index" [nzTitle]="stepLiteria[i]"
+                       [nzDescription]="s"></nz-step>
+          </nz-steps>
+      </div>
   `,
   styles: [
     `
@@ -74,9 +75,13 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   stepLiteria = ["第一步", "第二步", "第三步", "第四步", "第五步", "第六步", "第七步", "第八步", "第九步"]
   @Input()
   type: StepType;
-
+  @Input()
+  showCaption = true;
   @Input()
   step = 0;
+
+  @Input()
+ direct : NzDirectionType = 'horizontal';
 
   constructor() {
     // let createIndexPhase: Array<string> = ;
@@ -88,6 +93,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
     this.processMap.set(StepType.UpdateDataxWriter, new CaptionSteps("数据管道 Writer 更 新", ["Writer设置", "表映射", "确认"]));
     this.processMap.set(StepType.CreateWorkderOfDataX, new CaptionSteps("PowerJob分布式调度器添加", ["PowerJob-Server", "PowerJob-Worker", "PowerJob-任务", "确认"]));
     this.processMap.set(StepType.CreateFlinkCluster, new CaptionSteps("Flink Kubernetes Session执行器添加", ["K8S基本信息", "确认"]));
+    this.processMap.set(StepType.ManageSelectedTable, new CaptionSteps("表设置", ["基本设置", "Transformer设置"]));
   }
 
   ngOnInit(): void {
@@ -113,7 +119,9 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
           <button [disabled]="formDisabled" nz-button (click)="goBack.emit($event)"><i nz-icon nzType="step-backward" nzTheme="outline"></i>上一步
           </button> &nbsp;
         </ng-container>
+
         <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
+          <ng-content select="break-next"></ng-content>
           <button [disabled]="formDisabled" nz-button nzType="primary" (click)="goOn.emit($event)">
             <i nz-icon nzType="step-forward"
               nzTheme="outline"></i>下一步

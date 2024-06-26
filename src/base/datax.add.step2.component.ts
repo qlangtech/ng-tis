@@ -117,8 +117,8 @@ export class DataxAddStep2Component extends BasicDataXAddComponent implements On
       , 'action=datax_action&emethod=get_supported_reader_writer_types&writerPluginTag=' + cfg.writerPluginTag)
       .then((r) => {
         if (r.success) {
-          let rList = PluginsComponent.wrapDescriptors(r.bizresult.readerDesc);
-          let wList = PluginsComponent.wrapDescriptors(r.bizresult.writerDesc);
+          let rList = Descriptor.wrapDescriptors(r.bizresult.readerDesc);
+          let wList = Descriptor.wrapDescriptors(r.bizresult.writerDesc);
           // this.readerDesc = Array.from(rList.values());
           // this.writerDesc = Array.from(wList.values());
           return {"readerDescs": Array.from(rList.values()), "writerDescs": Array.from(wList.values())};
