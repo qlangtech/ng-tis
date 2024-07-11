@@ -9,10 +9,10 @@ const KEY_SKIP_TRANSFORMER = 'skip';
   // selector: 'nz-drawer-custom-component',
   template: `
 
-    <tis-steps-tools-bar [formDisabled]="formDisabled"
+    <tis-steps-tools-bar [nextBtnPrimary]="false" [formDisabled]="formDisabled"
                          [goBackBtnShow]="this.dto.offsetStep>0" (goOn)="createStepNext()">
       <break-next>
-        <button [disabled]="formDisabled" nz-button (click)="saveAndSkipTransformer()">
+        <button nzType="primary" [disabled]="formDisabled" nz-button (click)="saveAndSkipTransformer()">
           <i nz-icon nzType="save" nzTheme="outline"></i>保存(跳过Transformer设置)
         </button>
       </break-next>

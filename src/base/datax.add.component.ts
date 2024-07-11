@@ -208,6 +208,17 @@ export interface DataXCfgFile {
   fileName: string;//:"totalpayinfo_0.json"
 }
 
+// "transformerInfo":[
+//   {
+//     "ruleCount":3,
+//     "tableName":"base"
+//   }
+// ]
+export interface TransformerInfo {
+  ruleCount: number;
+  tableName: string;
+}
+
 export class DataxDTO {
   static KEY_PROCESS_MODEL = 'processModel';
   execModel: ExecModel = ExecModel.Create;

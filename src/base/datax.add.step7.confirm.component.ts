@@ -30,13 +30,16 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {HeteroList, Item, PluginSaveResponse, PluginType} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
-import {DataXCfgFile, DataxDTO} from "./datax.add.component";
+import {DataXCfgFile, DataxDTO, TransformerInfo} from "./datax.add.component";
 import {CodemirrorComponent} from "../common/codemirror.component";
 import {KEY_APPNAME} from "../common/plugin/type.utils";
+import {TableTransformerComponent} from "src/common/selectedtab/table.transformer.component";
+import {SelectedTabDTO} from "../common/selectedtab/plugin-sub-form.component";
+import {ISubDetailTransferMeta} from "./datax.add.step4.component";
 
 export enum ExecModel {
   Create, Reader
@@ -103,16 +106,24 @@ export enum ExecModel {
         </div>
       </ng-container>
 
-      <ng-container *ngIf=" dto.supportBatch">
 
+      <nz-page-header *ngIf="transformerRules.length>0" [nzGhost]="true">
+        <nz-page-header-title>Transformer</nz-page-header-title>
+        <nz-page-header-content class="item-block child-block script-block">
+          <ul>
+            <li *ngFor="let f of transformerRules">
+              <nz-badge nzSize="small" [nzCount]="f.ruleCount">
+                <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
+                  <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
+                </button>
+              </nz-badge>
+            </li>
+          </ul>
+        </nz-page-header-content>
+      </nz-page-header>
+      <ng-container *ngIf=" dto.supportBatch">
         <nz-page-header [nzGhost]="true">
           <nz-page-header-title>DataX脚本</nz-page-header-title>
-
-          <!--          <nz-page-header-extra>-->
-          <!--            <nz-space>-->
-          <!--              <button *nzSpaceItem nz-button nzSize="small" (click)="reGenerate()">重新生成</button>-->
-          <!--            </nz-space>-->
-          <!--          </nz-page-header-extra>-->
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of genCfgFileList">
@@ -241,6 +252,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   execModel: ExecModel = ExecModel.Create;
   inUpdate = false;
   genCfgFileList: Array<DataXCfgFile> = [];
+  transformerRules: Array<TransformerInfo> = [];
   createDDLFileList: Array<string> = [];
   lastestGenFileTime: number;
 
@@ -297,6 +309,9 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
           this.genCfgFileList = cfgs.dataxFiles;
           this.createDDLFileList = cfgs.createDDLFiles;
           this.lastestGenFileTime = cfgs.genTime;
+          // @ts-ignore
+          this.transformerRules = cfgs.transformerInfo;
+          // console.log([this.transformerRules,cfgs.transformerInfo]);
           return r.bizresult;
         }
       });
@@ -359,6 +374,28 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       'formatMode': 'application/ld+json',
       'titlePrefix': 'DataX Config File ',
       'type': GenCfgFileType.datax
+    });
+  }
+
+  showTransformer(tableName: string) {
+
+    let meta = <ISubDetailTransferMeta> {id:tableName};
+    let basePluginMeta: PluginType[] = []
+    let baseHetero: HeteroList[] = [];
+
+    let dto = new SelectedTabDTO(meta, basePluginMeta, baseHetero);
+    const drawerRef = this.drawerService.create<TableTransformerComponent, {}, {}>({
+      // 此处宽度不能用百分比，不然内部的codemirror显示会有问题
+      nzWidth: "900px",
+      // nzHeight: "80%",
+      nzPlacement: "right",
+      nzTitle: `Transformer of '${tableName}' `,
+      nzContent: TableTransformerComponent,
+      nzWrapClassName: 'get-gen-cfg-file',
+      nzContentParams: {
+        readonly: true,
+        dto: dto
+      }
     });
   }
 
@@ -483,6 +520,7 @@ class GenerateCfgs {
   dataxFiles: Array<DataXCfgFile>;
   createDDLFiles: Array<string>;
   genTime: number;
+  transformerInfo: Array<TransformerInfo>;
 }
 
 @Component({

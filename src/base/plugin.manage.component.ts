@@ -25,7 +25,10 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Observable, Subject} from "rxjs";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {IFieldError, PARAM_END_TYPE} from "../common/tis.plugin";
+import {Descriptor, IFieldError, PARAM_END_TYPE, PluginType} from "../common/tis.plugin";
+import {TargetPlugin} from "../common/plugin/type.utils";
+import {ItemPropValComponent} from "../common/plugin/item-prop-val.component";
+import {PluginsComponent} from "../common/plugins.component";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -51,14 +54,16 @@ enum PluginTab {
     <div nz-row nzJustify="start" nzAlign="middle" class="filter-container">
       <div nz-col nzSpan="18" *ngIf="_extendPoint && _extendPoint.length>0">
         <label><i nz-icon nzType="filter" nzTheme="outline"></i>扩展点：</label>
-        <nz-select [disabled]="checkedAllAvailable" class="filter-extendpoint" [(ngModel)]="filterExtendPoint" [nzSize]="'small'"
+        <nz-select [disabled]="checkedAllAvailable" class="filter-extendpoint" [(ngModel)]="filterExtendPoint"
+                   [nzSize]="'small'"
                    nzMode="multiple">
           <nz-option *ngFor="let option of _extendPoint" [nzLabel]="option" [nzValue]="option"></nz-option>
         </nz-select>
       </div>
       <div nz-col nzSpan="6" *ngIf="this.endType">
         <label><i nz-icon nzType="filter" nzTheme="outline"></i>端类型：</label>
-        <nz-switch [disabled]="checkedAllAvailable" [(ngModel)]="filterEndType" (ngModelChange)="refreshPluginList()"
+        <nz-switch [disabled]="checkedAllAvailable" [(ngModel)]="filterEndType"
+                   (ngModelChange)="refreshPluginList()"
                    [nzCheckedChildren]="this.endType"></nz-switch>
       </div>
     </div>
@@ -68,10 +73,17 @@ enum PluginTab {
         <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
           <ng-template nz-tab>
             <nz-affix class="tool-bar" [nzOffsetTop]="20">
-              <button [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary"
-                      (click)="installPlugin()">
-                <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
-              </button>
+              <nz-space>
+                <button *nzSpaceItem [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary"
+                        (click)="installPlugin()">
+                  <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
+                </button>
+
+                <button *nzSpaceItem [nzSize]="'small'" nz-button nzType="default"
+                        (click)="uploadPlugin()">
+                  <i nz-icon nzType="cloud-upload" nzTheme="outline"></i>上传
+                </button>
+              </nz-space>
             </nz-affix>
             <tis-page [rows]="avaliablePlugs">
               <tis-col title="安装" width="5">
@@ -293,7 +305,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
     return drawerRef;
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
+  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute,private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
@@ -336,7 +348,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   ngOnInit(): void {
- //console.log("dddd");
+    //console.log("dddd");
     this.paramObservable = this.drawerModel ? new Subject<Params>() : this.route.params;
     this.paramObservable.subscribe((params: Params) => {
       let tab = params["tab"];
@@ -484,7 +496,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   updateCenterLoading(load: boolean) {
-   // this.formDisabled = load;
+    // this.formDisabled = load;
   }
 
   queryAvailablePlugin(event: { query: string; reset: boolean }) {
@@ -496,6 +508,40 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
 
+  uploadPlugin() {
+
+    let targetDesc = 'UploadCustomizedTPI';
+    let pluginMeta: PluginType = {
+      "name": 'uploadCustomizedTPI',
+      "require": true,
+      "extraParam": "targetItemDesc_" + targetDesc,
+      "descFilter": {
+        "localDescFilter": (desc: Descriptor) => {
+          //  console.log(desc);
+          return targetDesc === desc.displayName;
+        }
+      }
+    };
+    let targetPlugin: TargetPlugin = {
+      hetero: 'uploadCustomizedTPI',
+      descName: targetDesc
+    };
+    ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, pluginMeta, targetPlugin)
+      .then((desc) => {
+        if (!desc) {
+          throw new Error("desc can not be null");
+        }
+        desc.forEach((d) => {
+
+
+          PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
+            , this, d, pluginMeta, "上传用户自定义插件包", (biz) => {
+            });
+        });
+      }, (rejectReason) => {
+        // console.log(rejectReason);
+      });
+  }
 }
 
 interface AvaliablePlugin {

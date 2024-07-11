@@ -166,7 +166,7 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
               <th>存储</th>
               <th><span>可排序</span>
               </th>
-              <th>操作</th>
+<!--              <th>操作</th>-->
           </tr>
           </thead>
           <tbody>
@@ -214,29 +214,29 @@ export class SchemaExpertAppCreateEditComponent extends BasicEditComponent imple
                   <td [class.has-danger-right]="f.errInfo.fieldPropRequiredError">
                       <label nz-checkbox [(ngModel)]="f.docval" [ngModelOptions]="{standalone: true}"></label>
                   </td>
-                  <td>
-                      <button nz-button nzType="link" (click)="deleteColumn(f)">
-                          <i class="fa fa-trash-o"
-                             aria-hidden="true"></i></button>
-                  </td>
+<!--                  <td>-->
+<!--                      <button nz-button nzType="link" (click)="deleteColumn(f)">-->
+<!--                          <i class="fa fa-trash-o"-->
+<!--                             aria-hidden="true"></i></button>-->
+<!--                  </td>-->
               </tr>
               <tr [nzExpand]="f.editorOpen">
-                  <td colspan="7">
+                  <td colspan="6">
                       <!--
                       <button nz-button nzType="link" (click)="f.editorOpen=false"><i nz-icon nzType="close-circle" nzTheme="outline"></i></button>
                       -->
                       &nbsp;&nbsp;&nbsp;&nbsp;
-                      <nz-button-group>
-                          <button nz-button nzSize="small" (click)="columnMove(i,false)">
-                              <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                          </button>
-                          <button nz-button nzSize="small" (click)="columnMove(i,true)">
-                              <i class="fa fa-arrow-down" aria-hidden="true"></i>
-                          </button>
-                          <button nz-button nzSize="small" (click)="downAddColumn(i,f)">
-                              添加
-                          </button>
-                      </nz-button-group>
+<!--                      <nz-button-group>-->
+<!--                          <button nz-button nzSize="small" (click)="columnMove(i,false)">-->
+<!--                              <i class="fa fa-arrow-up" aria-hidden="true"></i>-->
+<!--                          </button>-->
+<!--                          <button nz-button nzSize="small" (click)="columnMove(i,true)">-->
+<!--                              <i class="fa fa-arrow-down" aria-hidden="true"></i>-->
+<!--                          </button>-->
+<!--                          <button nz-button nzSize="small" (click)="downAddColumn(i,f)">-->
+<!--                              添加-->
+<!--                          </button>-->
+<!--                      </nz-button-group>-->
                       &nbsp;
                       <label nz-checkbox [(ngModel)]="f.uniqueKey" (ngModelChange)="pkSelectChange($event,f)">设置为主键</label>
                       <label nz-checkbox [(ngModel)]="f.sharedKey" (ngModelChange)="sharedKeySelectChange($event,f)">设置为分组键</label>

@@ -39,9 +39,11 @@ export const KEY_OPTIONS_ENUM = "enum";
 export declare type PluginName =
   'mq'
   | 'transformer'
+  | 'noStore'
+  | 'uploadCustomizedTPI'
   | 'target-column'
   | 'transformerUDF'
-  | 'jobTrigger'
+  // | 'jobTrigger'
   | 'incr-config'
   | 'sinkFactory'
   | 'k8s-config'
@@ -373,6 +375,11 @@ export class Descriptor {
     return note;
   }
 
+  public get manipulate(): PluginManipulate {
+    let manipulate: PluginManipulate = this.extractProps["manipulate"];
+    return manipulate;
+  }
+
   public get supportBatch(): boolean {
     return !!this.extractProps["supportBatch"];
   }
@@ -383,6 +390,14 @@ export interface NotebookMeta {
   ability: boolean;
   // 服务端是否激活
   activate: boolean;
+}
+
+/**
+ * 插件操作扩展点
+ */
+export interface PluginManipulate {
+  //扩展点
+  extendPoint: string;
 }
 
 export interface TisResponseResult {
@@ -647,6 +662,7 @@ export class Item {
 
           let selectedTab: string = enumVal[KEY_subform_DetailIdValue];
           let transformerRule: Array<RecordTransformer> = [...val];
+          console.log(transformerRule);
           newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas, selectedTab);
           break;
         }

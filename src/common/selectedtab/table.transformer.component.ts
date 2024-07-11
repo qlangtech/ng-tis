@@ -12,7 +12,7 @@ import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-com
 
   template: `
 
-    <tis-steps-tools-bar [formDisabled]="formDisabled"
+    <tis-steps-tools-bar *ngIf="!readonly" [formDisabled]="formDisabled"
                          [goBackBtnShow]="this.dto.offsetStep>0" (goBack)="goBack()" >
 
       <final-exec-controller>
@@ -23,7 +23,7 @@ import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-com
       </final-exec-controller>
 
     </tis-steps-tools-bar>
-    <tis-plugins [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="transformerPluginMeta"
+    <tis-plugins [disabled]="readonly" [disableVerify]="true" [getCurrentAppCache]="true" [pluginMeta]="transformerPluginMeta"
                  (afterSave)="verifyPluginConfig($event)"
                  [savePlugin]="transformerSavePlugin" [formControlSpan]="21"
                  [showSaveButton]="false" [shallInitializePluginItems]="false"
@@ -35,13 +35,15 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
   transformerSavePlugin = new EventEmitter<{ verifyConfig: boolean }>();
   transformerHetero: HeteroList[] = [];
 
+  readonly :boolean = false;
+
   constructor(tisService: TISService, drawer: NzDrawerRef<{ hetero: HeteroList }>) {
     super(tisService, drawer);
   }
 
   ngOnInit(): void {
    // this.dto.offsetStep = 1;
-    console.log(this.tisService);
+   // console.log(this.tisService);
     let currApp = this.tisService.currentApp;
     this.transformerPluginMeta = [
       {
@@ -57,7 +59,7 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
     this.initTransformerHetero();
   }
   verifyPluginConfig(e: PluginSaveResponse) {
-    console.log([e.saveSuccess,e.verify]);
+    //console.log([e.saveSuccess,e.verify]);
     if (e.saveSuccess) {
       this.drawer.close({hetero: this.dto.baseHetero[0]});
     }

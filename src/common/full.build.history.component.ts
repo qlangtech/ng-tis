@@ -234,7 +234,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
         }
       }
       , this, pluginDesc
-      , {name: 'jobTrigger', require: true}
+      , {name: 'noStore', require: true}
       , `任务触发`
       , (biz) => {
         // console.log(taskId);

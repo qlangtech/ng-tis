@@ -122,7 +122,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
 
         <ng-container *ngIf="goOnBtnShow && goOn.observers.length>0">
           <ng-content select="break-next"></ng-content>
-          <button [disabled]="formDisabled" nz-button nzType="primary" (click)="goOn.emit($event)">
+          <button [disabled]="formDisabled" nz-button [nzType]="nextBtnPrimary? 'primary' : 'default'" (click)="goOn.emit($event)">
             <i nz-icon nzType="step-forward"
               nzTheme="outline"></i>下一步
           </button>
@@ -142,6 +142,9 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   ]
 })
 export class TisStepsToolbarComponent implements AfterContentInit {
+
+  @Input()
+  nextBtnPrimary = true;
 
   @Input()
   public formDisabled = false;
