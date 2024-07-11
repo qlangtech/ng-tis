@@ -102,7 +102,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
           </p>
         </ng-template>
       </page-row-assist>
-      <page-header>
+      <page-header *ngIf="!readonly">
         <nz-space>
           <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
                   nzTooltipTitle="添加一个新的处理器"
@@ -118,7 +118,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
         </nz-space>
       </page-header>
 
-      <tis-col title="选择" width="5">
+      <tis-col *ngIf="!readonly" title="选择" width="5">
         <ng-template let-u='r'>
           <nz-form-control>
             <label nz-checkbox nzSize="small" [(ngModel)]="u.disable"></label>
@@ -131,7 +131,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
           <div [ngClass]="{'ant-form-item-has-error':!!u.udfError}">
             <!--            (primaryBtnClick)="triggerFullBuild()"-->
             <!--            -->
-            <tis-plugin-add-btn [ngClass]="{'ant-input':!!u.udfError}" [btnSize]="'small'"
+            <tis-plugin-add-btn [disabled]="this.readonly" [ngClass]="{'ant-input':!!u.udfError}" [btnSize]="'small'"
                                 (addPlugin)="tarnsformerSet(u,$event)"
                                 (primaryBtnClick)="updateTransformerRule(u)"
                                 [extendPoint]="transformerExtendPoint"
@@ -157,8 +157,8 @@ export class TransformerRuleTabletView implements TuplesProperty {
             <h4>{{u.udf.dspt.displayName}}:</h4>
             <udf-desc-literia [descAry]="u.udfDescLiteria"></udf-desc-literia>
 
-            <div class="absolute-btn-element">
-              <button nz-button nzType="default" (click)="updateTransformerRule(u)" nzSize="small">编辑</button>
+            <div *ngIf="!readonly" class="absolute-btn-element">
+              <button nz-button nzType="default" (click)="updateTransformerRule(u)" nzSize="small"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑</button>
             </div>
           </div>
         </ng-template>
@@ -174,7 +174,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
       .absolute-btn-element {
         position: absolute; /* 设置为absolute以实现绝对定位 */
         top: 5px; /* 距离容器顶部50像素 */
-        right: 0px; /* 距离容器左侧50像素 */
+        right: 20px; /* 距离容器左侧50像素 */
         width: 50px;
         height: 100px;
       }
@@ -213,21 +213,13 @@ export class TransformerRuleTabletView implements TuplesProperty {
 export class TransformerRulesComponent extends BasicTuplesViewComponent implements OnInit//implements AfterContentInit, OnDestroy
 {
 
+  @Input()
+  readonly :boolean = false;
+
   @Output()
   tabletViewChange = new EventEmitter<TransformerRuleTabletView>();
 
   transformerExtendPoint = 'com.qlangtech.tis.plugin.datax.transformer.UDFDefinition';
-
-  // transformerUDFPluginMeta: PluginMeta = null;
-  // {
-  //   name: "transformerUDF",
-  //   require: true
-  //   , extraParam: EXTRA_PARAM_DATAX_NAME + "mysql_mysql"
-  //   , descFilter:
-  //     {
-  //       localDescFilter: (desc: Descriptor) => true
-  //     }
-  // };
 
 
   transformerUDFdescriptors: Array<Descriptor> = [];
@@ -321,7 +313,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     };
 
     let meta = <ISubDetailTransferMeta>{id: this.transformerRulesView.selectedTab};
-    console.log([m,meta]);
+   // console.log([m,meta]);
     /**
      * 获取UDF Transformer
      */
@@ -343,7 +335,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 
             let udf: any = rule.udf;
 
-            let newUdf: Item = Object.assign(new Item(desc), {vals: udf});
+            let newUdf: Item = Object.assign(new Item(desc), {vals: udf.vals});
             newUdf.wrapItemVals();
             // rule.udfDescLiteria =
             rule.udf = newUdf;
@@ -367,6 +359,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     if (!udfItem) {
       return;
     }
+   // console.log(udfItem);
     //console.log(udfItem);
     TransformerRulesComponent.openTransformerRuleDialog(this, udfItem.dspt, udfItem).then((biz) => {
       rtransformer.udf = biz.item;
@@ -415,10 +408,10 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
           }
         }
         , basicCpt, desc
-        , {name: 'jobTrigger', require: true}
+        , {name: 'noStore', require: true}
         , `设置 ${desc.displayName}`
         , (biz) => {
-          console.log(biz);
+        //  console.log(biz);
 
           let newUdf: Item = Object.assign(new Item(desc), {vals: biz});
           newUdf.wrapItemVals();

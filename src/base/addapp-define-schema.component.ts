@@ -70,7 +70,7 @@ import {NzTabsCanDeactivateFn} from "ng-zorro-antd/tabs";
               <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate" [nzCanDeactivate]="canDeactivate">
                   <nz-tab [nzTitle]="foolTitleTemplate">
                       <visualizing-schema-editor [engineType]="this.engineType" [bizResult]="stupidModal"></visualizing-schema-editor>
-                  </nz-tab>
+                  </nz-tab>Ω
                   <nz-tab [nzTitle]="expertTitleTemplate">
                       <ng-template nz-tab>
                           <expert-schema-editor [engineType]="this.engineType" [schemaXmlContent]="stupidModal.schemaXmlContent"

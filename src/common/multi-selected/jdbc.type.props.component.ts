@@ -339,12 +339,13 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
         }
 
         let existCol = this._jdbcTypeProps.getTabColInExistMapper(prop.name.pk.primary);
+
         if (existCol) {
           prop.type = existCol.type;
         } else {
           prop.type = this._jdbcTypeProps.dftType;
         }
-
+        console.log([existCol,prop.type,this._jdbcTypeProps,prop.name,prop.name.pk.primary])
       }).finally(() => {
 
      // console.log("finally");

@@ -116,7 +116,7 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
                                             [tabletView]="_pp.mcolsEnums"></db-schema-editor>
                        </ng-container>
                       <ng-container *ngSwitchCase="'transformerRules'">
-                         <transformer-rules [(tabletView)]="_pp.mcolsEnums" [error]="_pp.error"></transformer-rules>
+                         <transformer-rules [readonly]="this.disabled" [(tabletView)]="_pp.mcolsEnums" [error]="_pp.error"></transformer-rules>
                       </ng-container>
                      <ng-container *ngSwitchCase="'jdbcTypeProps'">
                          <jdbc-type-props [tabletView]="_pp.mcolsEnums" [error]="_pp.error"></jdbc-type-props>

@@ -95,7 +95,7 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
         <div style="clear: both;margin-bottom:3px;"></div>
 
       </ng-container>
-      <ng-template #pluginForm let-h="h" let-index="index">
+      <ng-template #pluginForm let-h="h" let-index="index" let-pluginMeta="pluginMeta">
         <div class="extension-point" [id]="h.identity">
           <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
             <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a>
@@ -125,12 +125,17 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
             <button *ngIf="!disableVerify && item.dspt.veriflable" nz-button nzSize="small"
                     (click)="configCheck(h , item,$event)"><i
               nz-icon nzType="check" nzTheme="outline"></i>校验
-            </button> &nbsp;
-            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
-                    nzSize="small"
-                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
-                                                               nzTheme="outline"></i>Notebook
-            </button>
+            </button>&nbsp;<button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
+                                   nzSize="small"
+                                   (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
+                                                                              nzTheme="outline"></i>Notebook
+          </button>&nbsp;
+            <tis-plugin-add-btn *ngIf="item.dspt.manipulate" [btnSize]="'small'"
+                                [extendPoint]="item.dspt.manipulate.extendPoint"
+                                [descriptors]="[]" [initDescriptors]="true"
+                                (addPlugin)="pluginManipulate(pluginMeta,item,$event)">
+              操作 <span nz-icon nzType="down"></span>
+            </tis-plugin-add-btn>
           </div>
           <div style="clear: both"></div>
           <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
@@ -150,7 +155,8 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
           <nz-collapse-panel *ngFor="let h of _heteroList;let i = index" [nzHeader]="h.caption"
                              [nzActive]="true"
                              [nzDisabled]="!shallInitializePluginItems">
-            <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
             <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
               <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
                                   [endType]="h.endType"
@@ -164,7 +170,8 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
         </nz-collapse>
         <ng-container *ngSwitchCase="false">
           <ng-container *ngFor="let h of _heteroList;let i = index">
-            <ng-container *ngTemplateOutlet="pluginForm;context:{h:h,index:i}"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
           </ng-container>
         </ng-container>
       </form>
@@ -259,6 +266,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Output() startNotebook = new EventEmitter<PluginSaveResponse>();
 
+  @Output()
+  afterPluginManipulate = new EventEmitter<PluginSaveResponse>();
   @ViewChild('notebookNotActivate', {read: TemplateRef, static: true}) notebookNotActivate: TemplateRef<NzSafeAny>;
   @Input() disableNotebook = false;
 
@@ -301,7 +310,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.formControlSpan = 19;
     addDb.shallInitializePluginItems = false;
     addDb.disableNotebook = true;
-   // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
+    // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
     if (opts.shallLoadSavedItems) {
       //console.log("shallLoadSavedItems  ");
       if (opts.item) {
@@ -309,10 +318,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
       addDb.setPlugins([pluginTp], opts.opt);
     } else {
-     // console.log("shall not LoadSavedItems  ");
+      // console.log("shall not LoadSavedItems  ");
       try {
         let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
-       // console.log(hlist);
+        // console.log(hlist);
         if (opts.item) {
           for (let i = 0; i < hlist.length; i++) {
             hlist[i].items = [opts.item];
@@ -351,19 +360,36 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
     return pluginMeta.map((p) => {
-      let param: any = p;
-      // console.log(param);
-      if (param.name) {
-        let t: PluginMeta = param;
-        let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
-        if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
-          metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
-        }
-        return metaParam;
-      } else {
-        return p;
-      }
+      // let param: any = p;
+      // // console.log(param);
+      // if (param.name) {
+      //   let t: PluginMeta = param;
+      //   let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
+      //   if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
+      //     metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
+      //   }
+      //   return metaParam;
+      // } else {
+      //   return p;
+      // }
+      return PluginsComponent.getPluginMetaParam(p);
     }).join("&plugin=");
+  }
+
+
+  public static getPluginMetaParam(p: PluginType): string {
+    let param: any = p;
+    // console.log(param);
+    if (param.name) {
+      let t: PluginMeta = <PluginMeta>param;
+      let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
+      if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
+        metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
+      }
+      return metaParam;
+    } else {
+      return `${p}`;
+    }
   }
 
   public static wrapperHeteroList(he: HeteroList, pm: PluginType): HeteroList {
@@ -480,9 +506,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-
-
-
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
     , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
 
@@ -498,10 +521,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     if (savePluginEvent.serverForward) {
       postData.serverForward = savePluginEvent.serverForward;
-      if (savePluginEvent.postPayload) {
-        postData = Object.assign(postData, savePluginEvent.postPayload);
-      }
+      // if (savePluginEvent.postPayload) {
+      //   postData = Object.assign(postData, savePluginEvent.postPayload);
+      // }
     }
+
+    if (savePluginEvent.postPayload) {
+      postData = Object.assign(postData, savePluginEvent.postPayload);
+    }
+
     // console.log([postData,savePluginEvent.postPayload]);
     // console.log([savePluginEvent]);
 
@@ -649,7 +677,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public initializePluginItems(e?: SavePluginEvent) {
-     // console.log(this.plugins);
+    // console.log(this.plugins);
     PluginsComponent.initializePluginItems(this, this.plugins, true //
       , (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
         if (success) {
@@ -686,6 +714,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   _savePluginInfo(event: MouseEvent, savePluginEvent: SavePluginEvent, pluginTypes: PluginType[], _heteroList: HeteroList[]) {
     // console.log(JSON.stringify(this._heteroList.items));
+    // console.log(savePluginEvent);
     this.ajaxOccur.emit(new PluginSaveResponse(false, true, savePluginEvent));
     // console.log(this.plugins);
     // let pluginMeta = PluginsComponent.getPluginMetaParams(this.plugins);
@@ -738,7 +767,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // let tmpHlist: HeteroList[] = [];
         _heteroList.forEach((h) => {
           let items: Item[] = h.items;
-          if(pluginErrorFields){
+          if (pluginErrorFields) {
             let errorFields = pluginErrorFields[index++];
             //  console.log(errorFields);
             Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
@@ -746,7 +775,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         });
         this.cdr.detectChanges();
       }, (err) => {
-      console.log(err);
+        console.log(err);
         this.ajaxOccur.emit(new PluginSaveResponse(false, false, savePluginEvent));
       });
 
@@ -804,6 +833,42 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       });
   }
 
+
+  /**
+   * 插件操作
+   * @param pluginDesc
+   */
+  public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
+
+    //console.log(desc);
+    let opt = new SavePluginEvent();
+    opt.postPayload = {
+      'manipulateTarget': item
+      , 'manipulatePluginMeta': PluginsComponent.getPluginMetaParam(pluginMeta)
+    };
+    // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
+
+
+    PluginsComponent.openPluginDialog({
+        saveBtnLabel: '执行',
+        shallLoadSavedItems: false, savePluginEventCreator: () => {
+          return opt;
+        }
+      }
+      , this, pluginDesc
+      , {name: 'noStore', require: true}
+      , `${pluginDesc.displayName}`
+      , (biz) => {
+         console.log(biz);
+        // let rr: TisResponseResult = {
+        //   success: true,
+        //   bizresult: biz
+        // }
+        this.afterPluginManipulate.emit(new PluginSaveResponse(true, false, null, biz));
+        // this.processTriggerResult(this.getProcessStrategy(true), Promise.resolve(rr));
+
+      });
+  }
 }
 
 @Component({

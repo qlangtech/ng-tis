@@ -44,11 +44,11 @@ import {PluginsComponent} from "./plugins.component";
 
         <button [style]="btnStyle" nz-button nz-dropdown
                 [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
-                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize" [nzDropdownMenu]="menu"
+                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize" [nzDropdownMenu]="this.disabled?null:menu"
                 [disabled]="this.disabled || this.formDisabled">
           <ng-content></ng-content>
         </button>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
+        <nz-dropdown-menu  #menu="nzDropdownMenu">
           <ul nz-menu>
             <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
               <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"

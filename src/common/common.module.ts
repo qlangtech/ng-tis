@@ -166,7 +166,7 @@ import { PluginSubFormComponent } from './selectedtab/plugin-sub-form.component'
     NzUploadModule,NzDatePickerModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule, NzPageHeaderModule,
-    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,
+    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,NzBadgeModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
   declarations: [JdbcTypePropsComponent,UdfDescLiteria,BliBliComponent,LaunchK8SClusterWaittingProcessComponent,TransformerRulesComponent,JdbcTypeComponent,
