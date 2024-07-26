@@ -51,7 +51,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
 
       <div style="clear: both;width: 80%;margin: 0 auto;">
 
-        <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+        <tis-plugins [disableManipulate]="true" [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
                      [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
 

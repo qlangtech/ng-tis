@@ -142,6 +142,7 @@ import {UdfDescLiteria} from "./multi-selected/basic.tuples.view.component";
 import { TableTransformerComponent } from './selectedtab/table.transformer.component';
 import { TableBaseComponent } from './selectedtab/table.base.component';
 import { PluginSubFormComponent } from './selectedtab/plugin-sub-form.component';
+import {PreviewComponent} from "./preview.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
 // angular libraries: https://angular.io/guide/creating-libraries
@@ -169,7 +170,7 @@ import { PluginSubFormComponent } from './selectedtab/plugin-sub-form.component'
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,NzBadgeModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
-  declarations: [JdbcTypePropsComponent,UdfDescLiteria,BliBliComponent,LaunchK8SClusterWaittingProcessComponent,TransformerRulesComponent,JdbcTypeComponent,
+  declarations: [PreviewComponent,JdbcTypePropsComponent,UdfDescLiteria,BliBliComponent,LaunchK8SClusterWaittingProcessComponent,TransformerRulesComponent,JdbcTypeComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent

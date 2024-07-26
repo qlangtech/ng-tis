@@ -5,26 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/preview.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step1.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/schema.expert.create.edit.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/schema.expert.create.edit.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.base.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.base.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/steps.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/steps.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/flink.job.detail.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -229,7 +218,9 @@
       <workItem from="1716719063569" duration="190479000" />
       <workItem from="1718349896264" duration="35471000" />
       <workItem from="1718938058406" duration="41735000" />
-      <workItem from="1719809793163" duration="48096000" />
+      <workItem from="1719809793163" duration="56169000" />
+      <workItem from="1721529815916" duration="13740000" />
+      <workItem from="1721876155908" duration="1466000" />
     </task>
     <servers />
   </component>

@@ -39,16 +39,18 @@ import {PluginsComponent} from "./plugins.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
 
-    <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers || this.descriptors.length> 0 ">
+    <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 ">
       <ng-container *ngSwitchCase="true">
 
         <button [style]="btnStyle" nz-button nz-dropdown
                 [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
-                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize" [nzDropdownMenu]="this.disabled?null:menu"
+                (mouseenter)="lazyInitialize()"
+                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
+                [nzDropdownMenu]="this.disabled?null:menu"
                 [disabled]="this.disabled || this.formDisabled">
           <ng-content></ng-content>
         </button>
-        <nz-dropdown-menu  #menu="nzDropdownMenu">
+        <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
               <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
@@ -77,6 +79,9 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
   @Input()
   initDescriptors = false;
+
+  @Input()
+  lazyInitDescriptors = false;
 
 
   @Input()
@@ -123,20 +128,31 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
 
   ngOnInit(): void {
+    this.startInitDescriptors(!this.lazyInitDescriptors);
+  }
 
+  private startInitDescriptors(shallExec: boolean) {
     if (this.descriptors.length < 1 && this.initDescriptors) {
-      PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
-        .then((descs) => {
+      if (shallExec) {
+        PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
+          .then((descs) => {
 
-          this.descriptors = Array.from(descs.values());
-          this.cd.detectChanges();
-          //   console.log([this.descriptors,this.initDescriptors,this.extendPoint,this.descriptors]);
-        }).finally(() => {
+            this.descriptors = Array.from(descs.values());
+            this.cd.detectChanges();
+            //   console.log([this.descriptors,this.initDescriptors,this.extendPoint,this.descriptors]);
+          }).finally(() => {
+          this.formDisabled = false;
+        });
+      } else {
         this.formDisabled = false;
-      });
+      }
     } else {
       this.formDisabled = false;
     }
+  }
+
+  lazyInitialize() {
+    this.startInitDescriptors(this.lazyInitDescriptors);
   }
 
   addNewPlugin() {

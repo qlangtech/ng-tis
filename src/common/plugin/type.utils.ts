@@ -1,6 +1,15 @@
-import {DataTypeMeta, Item, PluginName, ReaderColMeta, SavePluginEvent, TuplesPropertyType} from "../tis.plugin";
+import {
+  DataTypeMeta,
+  Item,
+  PluginName,
+  ReaderColMeta,
+  SavePluginEvent,
+  TisResponseResult,
+  TuplesPropertyType
+} from "../tis.plugin";
+import {BasicFormComponent} from "../basic.form.component";
 
-export const  KEY_subform_DetailIdValue = "subformDetailIdValue";
+export const KEY_subform_DetailIdValue = "subformDetailIdValue";
 
 export interface CreatorRouter {
   routerLink: string;
@@ -40,3 +49,19 @@ export interface TuplesProperty {
 }
 
 export const KEY_APPNAME = "appname";
+
+export interface ITableAlias {
+  from: string;
+  to: string;
+  error: string;
+}
+
+export function getTableMapper(module: BasicFormComponent, dataxPipeName: string): Promise<Array<ITableAlias>> {
+  let url = '/coredefine/corenodemanage.ajax';
+  return module.httpPost(url, 'action=datax_action&emethod=get_table_mapper&dataxName=' + dataxPipeName)
+    .then((r) => {
+      if (r.success) {
+        return <Array<ITableAlias>>r.bizresult;
+      }
+    });
+}
