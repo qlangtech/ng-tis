@@ -23,6 +23,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {Item, ItemPropVal} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
+import {getTableMapper, ITableAlias} from "../common/plugin/type.utils";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -106,10 +107,15 @@ export class DataxAddStep6Component extends BasicDataXAddComponent implements On
 
   protected initialize(app: CurrentCollection): void {
     // this.dto.dataxPipeName
-    let url = '/coredefine/corenodemanage.ajax';
-    this.httpPost(url, 'action=datax_action&emethod=get_table_mapper&dataxName=' + this.dto.dataxPipeName).then((r) => {
-      this.tabAliasList = r.bizresult;
-    });
+    // let url = '/coredefine/corenodemanage.ajax';
+    // this.httpPost(url, 'action=datax_action&emethod=get_table_mapper&dataxName=' + this.dto.dataxPipeName).then((r) => {
+    //   this.tabAliasList = r.bizresult;
+    // });
+
+    getTableMapper(this,this.dto.dataxPipeName)
+      .then((result)=>{
+      this.tabAliasList = result;
+    })
   }
 
   ngAfterViewInit(): void {
@@ -144,8 +150,3 @@ export class DataxAddStep6Component extends BasicDataXAddComponent implements On
   }
 }
 
-interface ITableAlias {
-  from: string;
-  to: string;
-  error: string;
-}

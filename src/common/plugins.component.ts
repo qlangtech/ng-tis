@@ -130,11 +130,11 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
                                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
                                                                               nzTheme="outline"></i>Notebook
           </button>&nbsp;
-            <tis-plugin-add-btn *ngIf="item.dspt.manipulate" [btnSize]="'small'"
+            <tis-plugin-add-btn *ngIf="!disableManipulate && item.dspt.manipulate" [btnSize]="'small'"
                                 [extendPoint]="item.dspt.manipulate.extendPoint"
                                 [descriptors]="[]" [initDescriptors]="true"
-                                (addPlugin)="pluginManipulate(pluginMeta,item,$event)">
-              操作 <span nz-icon nzType="down"></span>
+                                (addPlugin)="pluginManipulate(pluginMeta,item,$event)" [lazyInitDescriptors]="true">
+              <span nz-icon nzType="setting" nzTheme="outline"></span> <span nz-icon nzType="down"></span>
             </tis-plugin-add-btn>
           </div>
           <div style="clear: both"></div>
@@ -224,6 +224,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   // disabled = false;
 
   @Input()
+  disableManipulate = false;
+  @Input()
   disableVerify: boolean;
 
   @Input()
@@ -308,6 +310,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.errorsPageShow = true;
     addDb.getCurrentAppCache = true;
     addDb.formControlSpan = 19;
+    addDb.disableManipulate = true;
     addDb.shallInitializePluginItems = false;
     addDb.disableNotebook = true;
     // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);

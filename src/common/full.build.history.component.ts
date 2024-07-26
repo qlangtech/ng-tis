@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {TISService} from "./tis.service";
 import {BasicFormComponent} from "./basic.form.component";
 
@@ -24,13 +24,16 @@ import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
-import {Descriptor, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
+import {Descriptor, HeteroList, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {PluginsComponent} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {TargetPlugin} from "./plugin/type.utils";
+import {PluginSubFormComponent} from "./selectedtab/plugin-sub-form.component";
+import { NzSafeAny } from "ng-zorro-antd/core/types";
+import {PreviewComponent} from "./preview.component";
 
 class ProcessStrategy {
 // {
@@ -48,6 +51,9 @@ class ProcessStrategy {
 @Component({
   selector: "full-build-history",
   template: `
+
+    <ng-template #previewTpl><span nz-icon nzType="preview" nzTheme="fill"></span> 数据预览</ng-template>
+
     <div style="margin-top: 8px;" *ngIf="dataxProcess && dataXWorkerStatus">
       <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知"
                 [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
@@ -82,8 +88,10 @@ class ProcessStrategy {
                     nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>执行参数
             </button>
           </ng-container>
-        </ng-container>
-
+        </ng-container>&nbsp;
+        <button (click)="previewData()" [disabled]="formDisabled" nzSize="small" nz-button
+                nzType="default"> <ng-container *ngTemplateOutlet="previewTpl"></ng-container>
+        </button>
       </tis-page-header-left>
       <!--          <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nz-dropdown [nzDropdownMenu]="menu4" nzType="primary"><i-->
       <!--                  class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建 <span nz-icon nzType="down"></span>-->
@@ -149,6 +157,7 @@ class ProcessStrategy {
   ]
 })
 export class FullBuildHistoryComponent extends BasicFormComponent implements OnInit {
+  @ViewChild('previewTpl', {read: TemplateRef, static: true}) previewTpl: TemplateRef<NzSafeAny>;
   pager: Pager = new Pager(1, 1, 0);
   buildHistory: any[] = [];
   wfid: number;
@@ -403,6 +412,26 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     //     });
 
 
+  }
+
+  /**
+   * 预览数据
+   */
+  previewData() {
+
+    const drawerRef = this.drawerService.create({
+      nzHeight: "80%",
+      nzTitle: this.previewTpl,
+      nzMaskClosable: false,
+      nzContent: PreviewComponent,
+      nzPlacement: 'bottom',
+      nzContentParams: {
+
+      }
+    });
+    drawerRef.afterClose.subscribe(hetero => {
+
+    });
   }
 }
 
