@@ -90,7 +90,9 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
   public synchronizeMcols(): SynchronizeMcolsResult {
     // return this._mcols;
     let syncResult: SynchronizeMcolsResult;
+
     if (this._dbLatestMcols) {
+     // console.log(this._dbLatestMcols);
       let result = [];
       syncResult = new SynchronizeMcolsResult(result);
       let lastestCol: ReaderColMeta;
@@ -98,7 +100,7 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
       let idxCol = 0;
       outter: for (let i = 0; i < this._dbLatestMcols.length; i++) {
         lastestCol = this._dbLatestMcols[i];
-        while (idxCol < this._mcols.length) {
+        if (idxCol < this._mcols.length) {
           col = this._mcols[idxCol];
           if (lastestCol.name === col.name) {
             col.index = i + 1;
@@ -118,13 +120,17 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
             lastestCol.index = i + 1;
             result.push(lastestCol);
             // 需要遍历需要的所有
-
           }
           continue outter;
+        }else {
+          lastestCol.index = i + 1;
+          syncResult.newAddCols.push(<string>lastestCol.name);
+          result.push(lastestCol);
         }
       }
       delete this._dbLatestMcols
       // 需要将最新引用设置上，不然表单提交时无法将最新的表单内容提交到服务端
+      //console.log(result);
       this._mcols = result;
       return syncResult;
     } else {
