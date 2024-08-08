@@ -420,7 +420,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   previewData() {
 
     const drawerRef = this.drawerService.create({
-      nzHeight: "80%",
+      nzHeight: "90%",
       nzTitle: this.previewTpl,
       nzMaskClosable: false,
       nzContent: PreviewComponent,
