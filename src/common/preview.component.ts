@@ -1,12 +1,10 @@
-import {AppFormComponent, BasicFormComponent, CurrentCollection} from "./basic.form.component";
+import {AppFormComponent, CurrentCollection} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {getTableMapper, ITableAlias} from "./plugin/type.utils";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {NzDrawerRef} from "ng-zorro-antd/drawer";
-import {HeteroList} from "./tis.plugin";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
