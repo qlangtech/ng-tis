@@ -130,12 +130,29 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
                                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
                                                                               nzTheme="outline"></i>Notebook
           </button>&nbsp;
-            <tis-plugin-add-btn *ngIf="!disableManipulate && item.dspt.manipulate" [btnSize]="'small'"
-                                [extendPoint]="item.dspt.manipulate.extendPoint"
-                                [descriptors]="[]" [initDescriptors]="true"
-                                (addPlugin)="pluginManipulate(pluginMeta,item,$event)" [lazyInitDescriptors]="true">
-              <span nz-icon nzType="setting" nzTheme="outline"></span> <span nz-icon nzType="down"></span>
-            </tis-plugin-add-btn>
+            <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
+              <tis-plugin-add-btn [btnSize]="'small'"
+                                  [extendPoint]="item.dspt.manipulate.extendPoint"
+                                  [descriptors]="[]" [initDescriptors]="true"
+                                  (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
+                                  [lazyInitDescriptors]="true">
+                <span nz-icon nzType="setting" nzTheme="outline"></span> <span nz-icon
+                                                                               nzType="down"></span>
+              </tis-plugin-add-btn>
+              &nbsp;
+              <nz-space>
+                <!--PluginManipulate { descMeta: Descriptor, identityName: string }-->
+                <ng-container *ngFor="let m of item.dspt.manipulate.stored let i = index">
+                  <button style="background-color: #fae8ae" *nzSpaceItem nz-button nzSize="small"
+                          nzShape="round" (click)="openManipulateStore(pluginMeta,item,item.dspt,m)">
+                    <ng-container [ngSwitch]="m.descMeta.supportIcon">
+                      <span *ngSwitchCase="true" nz-icon [nzType]="m.descMeta.endtype"></span>
+                      <span *ngSwitchDefault nz-icon nzType="tags"></span>
+                    </ng-container>
+                    {{i + 1}}</button>
+                </ng-container>
+              </nz-space>
+            </ng-container>
           </div>
           <div style="clear: both"></div>
           <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
@@ -838,17 +855,55 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   /**
+   *
+   * @param hostDspt 宿主Descriptpr
+   * @param manipuldateMeta
+   */
+  openManipulateStore(pluginMeta: PluginType, hostItem: Item,hostDspt: Descriptor, manipuldateMeta: {  identityName: string }) {
+    //console.log([hostDspt, manipuldateMeta.descMeta]);
+    let opt = this.createPostPayload(hostItem, pluginMeta);
+
+    this.httpPost('/coredefine/corenodemanage.ajax'
+      , "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + hostDspt.impl + "&identityName=" + manipuldateMeta.identityName)
+      .then((result) => {
+
+        let descMap = Descriptor.wrapDescriptors(result.bizresult.desc);
+
+        for (let [_, desc] of descMap) {
+          let i: Item = Object.assign(new Item(desc), result.bizresult.item);
+           i.wrapItemVals();
+
+          PluginsComponent.openPluginDialog({
+              saveBtnLabel: '更新同步',
+              shallLoadSavedItems: false
+              , item: i
+              , savePluginEventCreator: () => {
+                return opt;
+              }
+            }
+            , this, desc // manipuldateMeta.descMeta
+            , {name: 'noStore', require: true}
+            , `${desc.displayName}`
+            , (biz) => {
+
+            });
+          break;
+        }
+
+        //  console.log(result.bizresult)
+      });
+
+
+  }
+
+  /**
    * 插件操作
    * @param pluginDesc
    */
   public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
-
+    //console.log(item.dspt.manipulate);
     //console.log(desc);
-    let opt = new SavePluginEvent();
-    opt.postPayload = {
-      'manipulateTarget': item
-      , 'manipulatePluginMeta': PluginsComponent.getPluginMetaParam(pluginMeta)
-    };
+    let opt = this.createPostPayload(item, pluginMeta);
     // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
 
 
@@ -862,7 +917,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       , {name: 'noStore', require: true}
       , `${pluginDesc.displayName}`
       , (biz) => {
-         console.log(biz);
+        // console.log(biz);
         // let rr: TisResponseResult = {
         //   success: true,
         //   bizresult: biz
@@ -871,6 +926,22 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // this.processTriggerResult(this.getProcessStrategy(true), Promise.resolve(rr));
 
       });
+  }
+
+
+  /**
+   *
+   * @param hostItem 宿主item
+   * @param pluginMeta
+   * @private
+   */
+  private createPostPayload(hostItem: Item, pluginMeta: PluginType) {
+    let opt = new SavePluginEvent();
+    opt.postPayload = {
+      'manipulateTarget': hostItem
+      , 'manipulatePluginMeta': PluginsComponent.getPluginMetaParam(pluginMeta)
+    };
+    return opt;
   }
 }
 

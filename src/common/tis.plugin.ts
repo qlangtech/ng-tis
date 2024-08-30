@@ -263,6 +263,47 @@ export class Descriptor {
   }
   subForm: boolean;
 
+  private static wrapDescriptor(d: Descriptor): Descriptor {
+
+
+    if (d.manipulate) {
+      let pluginManipulate = d.manipulate;
+      let storeMeta: { descMeta: Descriptor, identityName: string };
+      if (pluginManipulate.stored) {
+        for (let i = 0; i < pluginManipulate.stored.length; i++) {
+          storeMeta = pluginManipulate.stored[i];
+
+          storeMeta.descMeta = Descriptor.wrapDescriptor(Object.assign(new Descriptor(), {attrs: []}, storeMeta.descMeta /**没有attrs*/));
+
+         // console.log(storeMeta.descMeta);
+          // let i: Item = Object.assign(new Item(desc), pluginManipulate.stored[i]);
+          // i.wrapItemVals();
+        }
+      }
+    }
+
+
+    let attrs: AttrDesc[] = [];
+    let attr: AttrDesc;
+    d.attrs.forEach((a) => {
+
+      attr = Object.assign(new AttrDesc(), a);
+      if (attr.describable) {
+        attr.descriptors = Descriptor.wrapDescriptors(attr.descriptors);
+      }
+      if (attr.options) {
+        let opts: ValOption[] = [];
+        attr.options.forEach((opt) => {
+          opts.push(Object.assign(new ValOption(), opt));
+        });
+        attr.options = opts;
+      }
+      attrs.push(attr);
+    });
+    d.attrs = attrs;
+    return d;
+  }
+
   public static wrapDescriptors(descriptors: Map<string /* impl */, Descriptor>)
     : Map<string /* impl */, Descriptor> {
     if (!descriptors) {
@@ -270,31 +311,35 @@ export class Descriptor {
     }
     let descMap: Map<string /* impl */, Descriptor> = new Map();
     let d: Descriptor = null;
-    let attrs: AttrDesc[];
-    let attr: AttrDesc;
+    // let attrs: AttrDesc[];
+    // let attr: AttrDesc;
     // console.log(descriptors);
     for (let impl in descriptors) {
       d = Object.assign(new Descriptor(), descriptors[impl]);
-      attrs = [];
-      d.attrs.forEach((a) => {
 
-        attr = Object.assign(new AttrDesc(), a);
-        if (attr.describable) {
-          attr.descriptors = Descriptor.wrapDescriptors(attr.descriptors);
-        }
-        if (attr.options) {
-          let opts: ValOption[] = [];
-          attr.options.forEach((opt) => {
-            opts.push(Object.assign(new ValOption(), opt));
-          });
-          attr.options = opts;
-        }
-        attrs.push(attr);
-      });
-      d.attrs = attrs;
-      descMap.set(impl, d);
+      descMap.set(impl, Descriptor.wrapDescriptor(d));
+
+      // console.log(d);
+      // attrs = [];
+      // d.attrs.forEach((a) => {
+      //
+      //   attr = Object.assign(new AttrDesc(), a);
+      //   if (attr.describable) {
+      //     attr.descriptors = Descriptor.wrapDescriptors(attr.descriptors);
+      //   }
+      //   if (attr.options) {
+      //     let opts: ValOption[] = [];
+      //     attr.options.forEach((opt) => {
+      //       opts.push(Object.assign(new ValOption(), opt));
+      //     });
+      //     attr.options = opts;
+      //   }
+      //   attrs.push(attr);
+      // });
+      // d.attrs = attrs;
+      // descMap.set(impl, d);
     }
-    // console.log(descMap);
+
     return descMap;
   }
 
@@ -398,6 +443,17 @@ export interface NotebookMeta {
 export interface PluginManipulate {
   //扩展点
   extendPoint: string;
+  /**
+   * <pre>
+   * displayName: "Export To Dolphinscheduler"
+   * endType: "ds"
+   * identityName:"ttt"
+   * impl:"com.qlangtech.tis.plugin.datax.doplinscheduler.export.ExportTISPipelineToDolphinscheduler"
+   * implUrl : "http://tis.pub/docs/plugin/plugins/#comqlangtechtisplugindataxdoplinschedulerexportexporttispipelinetodolphinscheduler"
+   * supportIcon :true
+   * </pre>
+   */
+  stored: Array<{ descMeta: Descriptor, identityName: string }>;
 }
 
 export interface TisResponseResult {
