@@ -410,7 +410,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         , basicCpt, desc
         , {name: 'noStore', require: true}
         , `设置 ${desc.displayName}`
-        , (biz) => {
+        , (_,biz) => {
         //  console.log(biz);
 
           let newUdf: Item = Object.assign(new Item(desc), {vals: biz});

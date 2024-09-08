@@ -18,7 +18,7 @@
 import {NzUploadModule} from 'ng-zorro-antd/upload';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from "@angular/core";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ItemPropValPipe, TimeConsumePipe} from "../common/date.format.pipe";
+import {ErrorMsgPipe, ItemPropValPipe, TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {
   PaginationComponent,
@@ -175,7 +175,7 @@ import {PreviewComponent} from "./preview.component";
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, SafePipe, ItemPropValPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    TimeConsumePipe, SafePipe, ItemPropValPipe,ErrorMsgPipe ,PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,TableTransformerComponent,TableBaseComponent,
     CompareEachOtherComponent, CompareResultComponent,
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,

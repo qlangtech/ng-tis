@@ -107,20 +107,7 @@ export enum ExecModel {
       </ng-container>
 
 
-      <nz-page-header *ngIf="transformerRules.length>0" [nzGhost]="true">
-        <nz-page-header-title>Transformer</nz-page-header-title>
-        <nz-page-header-content class="item-block child-block script-block">
-          <ul>
-            <li *ngFor="let f of transformerRules">
-              <nz-badge nzSize="small" [nzCount]="f.ruleCount">
-                <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
-                  <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
-                </button>
-              </nz-badge>
-            </li>
-          </ul>
-        </nz-page-header-content>
-      </nz-page-header>
+
       <ng-container *ngIf=" dto.supportBatch">
         <nz-page-header [nzGhost]="true">
           <nz-page-header-title>DataX脚本</nz-page-header-title>
@@ -170,6 +157,20 @@ export enum ExecModel {
           </nz-page-header-content>
         </nz-page-header>
       </ng-container>
+      <nz-page-header *ngIf="transformerRules.length>0" [nzGhost]="true">
+        <nz-page-header-title>Transformer</nz-page-header-title>
+        <nz-page-header-content class="item-block child-block script-block">
+          <ul>
+            <li *ngFor="let f of transformerRules">
+              <nz-badge nzSize="small" [nzCount]="f.ruleCount">
+                <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
+                  <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
+                </button>
+              </nz-badge>
+            </li>
+          </ul>
+        </nz-page-header-content>
+      </nz-page-header>
       <nz-page-header [nzGhost]="true">
         <nz-page-header-title>基本信息</nz-page-header-title>
         <nz-page-header-content class="item-block">

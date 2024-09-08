@@ -6,8 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/date.format.pipe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/date.format.pipe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/msg.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/msg.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/preview.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/preview.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +225,9 @@
       <workItem from="1719809793163" duration="56169000" />
       <workItem from="1721529815916" duration="13740000" />
       <workItem from="1721876155908" duration="43182000" />
-      <workItem from="1724413056699" duration="29714000" />
+      <workItem from="1724413056699" duration="33532000" />
+      <workItem from="1725432288491" duration="832000" />
+      <workItem from="1725498329842" duration="24656000" />
     </task>
     <servers />
   </component>

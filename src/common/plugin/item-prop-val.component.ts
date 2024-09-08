@@ -26,7 +26,7 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
     <nz-form-item [hidden]="hide">
-      <nz-form-label [ngClass]="{'form-label-verical':!horizontal}" [nzSpan]="horizontal? 5: null"
+      <nz-form-label [ngClass]="{'form-label-verical':!horizontal,'tis-form-item-label':true}" [nzSpan]="horizontal? 5: null"
                      [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
                                                                  *ngIf="descContent || asyncHelp"
                                                                  nz-icon nzType="question-circle"
@@ -221,6 +221,9 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
     </nz-form-item>  `,
   styles: [
     `
+      .tis-form-item-label{
+        font-weight: bold;
+      }
       .form-label-verical {
         margin-top: 8px;
       }
@@ -447,7 +450,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             pluginTp.extraParam += (',' + targetPlugin.extraParam);
           }
 
-          PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
+          PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (_,biz) => {
             //  console.log(_pp);
             switch (_pp.type) {
               case TYPE_ENUM: // enum
@@ -465,7 +468,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                   _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
                 } else {
                   // console.log(biz);
-                  throw new Error('invalid biz:' + d.displayName);
+                   throw new Error('invalid biz:' + d.displayName);
                 }
                 break;
               case TYPE_PLUGIN_SELECTION: // select

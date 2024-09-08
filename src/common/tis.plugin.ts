@@ -275,7 +275,7 @@ export class Descriptor {
 
           storeMeta.descMeta = Descriptor.wrapDescriptor(Object.assign(new Descriptor(), {attrs: []}, storeMeta.descMeta /**没有attrs*/));
 
-         // console.log(storeMeta.descMeta);
+          // console.log(storeMeta.descMeta);
           // let i: Item = Object.assign(new Item(desc), pluginManipulate.stored[i]);
           // i.wrapItemVals();
         }
@@ -311,33 +311,10 @@ export class Descriptor {
     }
     let descMap: Map<string /* impl */, Descriptor> = new Map();
     let d: Descriptor = null;
-    // let attrs: AttrDesc[];
-    // let attr: AttrDesc;
-    // console.log(descriptors);
     for (let impl in descriptors) {
       d = Object.assign(new Descriptor(), descriptors[impl]);
 
       descMap.set(impl, Descriptor.wrapDescriptor(d));
-
-      // console.log(d);
-      // attrs = [];
-      // d.attrs.forEach((a) => {
-      //
-      //   attr = Object.assign(new AttrDesc(), a);
-      //   if (attr.describable) {
-      //     attr.descriptors = Descriptor.wrapDescriptors(attr.descriptors);
-      //   }
-      //   if (attr.options) {
-      //     let opts: ValOption[] = [];
-      //     attr.options.forEach((opt) => {
-      //       opts.push(Object.assign(new ValOption(), opt));
-      //     });
-      //     attr.options = opts;
-      //   }
-      //   attrs.push(attr);
-      // });
-      // d.attrs = attrs;
-      // descMap.set(impl, d);
     }
 
     return descMap;
@@ -345,6 +322,10 @@ export class Descriptor {
 
   public get endtype(): string {
     return this.extractProps['endType'];
+  }
+
+  public get manipulateStorable(): boolean{
+      return !!this.extractProps['manipulateStorable'];
   }
 
   public get supportIcon(): boolean {
@@ -627,6 +608,7 @@ export class Item {
               Item.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
             }
           } else {
+            console.log([fieldErr.name,ip,item.vals])
             throw new Error("illegal type");
           }
         });
@@ -1024,6 +1006,13 @@ export class PluginSaveResponse {
 
   }
 
+  /**
+   * 是否是删除操作流程
+   */
+  public get deleteProcess(): boolean {
+    return this.savePluginEvent.deleteProcess;
+  }
+
   public getPostPayloadPropery(key: string): any {
     return this.savePluginEvent && this.savePluginEvent.postPayload && this.savePluginEvent.postPayload[key];
   }
@@ -1061,7 +1050,10 @@ export interface OptionEnum {
   checked: boolean;
 }
 
+export const FLAG_DELETE_PROCESS = "deleteProcess";
+
 export class SavePluginEvent {
+
   // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
   // 创建notebook
   constructor(public notShowBizMsg = false) {
@@ -1083,6 +1075,11 @@ export class SavePluginEvent {
    */
   public serverForward;
   public postPayload: { [key: string]: any };
+
+  get deleteProcess(): boolean {
+    return this.postPayload && this.postPayload[FLAG_DELETE_PROCESS];
+  }
+
   // public basicModule: BasicFormComponent;
   public overwriteHttpHeader: Map<string, string>;
 }

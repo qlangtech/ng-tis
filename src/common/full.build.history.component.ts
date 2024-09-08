@@ -24,15 +24,14 @@ import {Pager} from "./pagination.component";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
-import {Descriptor, HeteroList, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
+import {Descriptor, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
 import {PluginsComponent} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {TargetPlugin} from "./plugin/type.utils";
-import {PluginSubFormComponent} from "./selectedtab/plugin-sub-form.component";
-import { NzSafeAny } from "ng-zorro-antd/core/types";
+import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {PreviewComponent} from "./preview.component";
 
 class ProcessStrategy {
@@ -245,7 +244,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       , this, pluginDesc
       , {name: 'noStore', require: true}
       , `任务触发`
-      , (biz) => {
+      , (_,biz) => {
         // console.log(taskId);
         let rr: TisResponseResult = {
           success: biz.success,

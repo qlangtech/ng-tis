@@ -48,7 +48,8 @@ export const KEY_APP_ID = 'appid';
 export enum SystemError {
   FLINK_INSTANCE_LOSS_OF_CONTACT = 'FLINK_INSTANCE_LOSS_OF_CONTACT',
   FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT = 'FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT',
-  POWER_JOB_CLUSTER_LOSS_OF_CONTACT = 'POWER_JOB_CLUSTER_LOSS_OF_CONTACT'
+  POWER_JOB_CLUSTER_LOSS_OF_CONTACT = 'POWER_JOB_CLUSTER_LOSS_OF_CONTACT',
+  HTTP_CONNECT_FAILD = 'HTTP_CONNECT_FAILD'
 }
 
 // "errCode":{
@@ -350,6 +351,9 @@ export class TISService {
         let mref: NzModalRef = null;
         let okEventEmitter = new EventEmitter<any>();
         switch (errCode) {
+          case SystemError.HTTP_CONNECT_FAILD: {
+            break;
+          }
           case SystemError.FLINK_INSTANCE_LOSS_OF_CONTACT: {
 
             sysErrorRestoreStrategy = {
@@ -386,8 +390,8 @@ export class TISService {
                 // https://stackoverflow.com/questions/40983055/how-to-reload-the-current-route-with-the-angular-2-router
                 this.router.navigateByUrl('/', {skipLocationChange: true})
                   .then(() => {
-                  this.router.navigate(["/base/datax-worker"]);
-                });
+                    this.router.navigate(["/base/datax-worker"]);
+                  });
               }
             }
             break;
@@ -396,46 +400,42 @@ export class TISService {
             throw new Error("invalid errorCode:" + errCode);
         }
 
-        okEventEmitter.subscribe((ist) => {
-          if (mref) {
-            let cfg = mref.getConfig();
-            cfg.nzOkLoading = true;
-            TISService.restoreExcpetion(this, errorVal)
-              .then((r) => {
-                sysErrorRestoreStrategy.afterSuccessRestore(errorVal);
-                // TODO 页面重定向
-                //  this.router.navigate(["/x", this.currApp.appName], {relativeTo: this.route});
-                mref.close();
-              }).finally(() => {
-              cfg.nzOkLoading = false;
-            });
-          }
+        if (sysErrorRestoreStrategy) {
+          okEventEmitter.subscribe((ist) => {
+            if (mref) {
+              let cfg = mref.getConfig();
+              cfg.nzOkLoading = true;
+              TISService.restoreExcpetion(this, errorVal)
+                .then((r) => {
+                  sysErrorRestoreStrategy.afterSuccessRestore(errorVal);
+                  // TODO 页面重定向
+                  //  this.router.navigate(["/x", this.currApp.appName], {relativeTo: this.route});
+                  mref.close();
+                }).finally(() => {
+                cfg.nzOkLoading = false;
+              });
+            }
+          });
 
-        });
+          mref = this.modalService.error({
+            nzWidth: 500,
+            nzTitle: sysErrorRestoreStrategy.title,
+            nzContent: errContent,
+            nzOkText: sysErrorRestoreStrategy.okText,
+            nzCancelText: sysErrorRestoreStrategy.cancelText,
+            nzOnOk: sysErrorRestoreStrategy.onOKExec
+          });
+        }else{
+          this.defaultSystemErrorHandle(errContent, logFileName);
+        }
 
 
-        mref = this.modalService.error({
-          nzWidth: 500,
-          nzTitle: sysErrorRestoreStrategy.title,
-          nzContent: errContent,
-          nzOkText: sysErrorRestoreStrategy.okText,
-          nzCancelText: sysErrorRestoreStrategy.cancelText,
-          nzOnOk: sysErrorRestoreStrategy.onOKExec
-        });
+
 
 
       } else {
         // console.log(errContent);
-        let nref = this.notification.create('error', '错误', errContent, {nzDuration: 6000, nzStyle: {width: "600px"}})
-        nref.onClick.subscribe((ee) => {
-          let pe = <PointerEvent>ee;
-          let target: any = pe.target;
-          if (target.nodeName === 'A') {
-            // console.log(logFileName);
-            // this.drawerService.create()
-            TISService.openSysErrorDetail(this.drawerService, true, logFileName[0]);
-          }
-        })
+        this.defaultSystemErrorHandle(errContent, logFileName);
       }
 
       if (result.errorfields && result.errorfields.length > 0) {
@@ -443,6 +443,19 @@ export class TISService {
       }
       // return result;
     }
+  }
+
+  private defaultSystemErrorHandle(errContent: string, logFileName: string[]) {
+    let nref = this.notification.create('error', '错误', errContent, {nzDuration: 6000, nzStyle: {width: "600px"}})
+    nref.onClick.subscribe((ee) => {
+      let pe = <PointerEvent>ee;
+      let target: any = pe.target;
+      if (target.nodeName === 'A') {
+        // console.log(logFileName);
+        // this.drawerService.create()
+        TISService.openSysErrorDetail(this.drawerService, true, logFileName[0]);
+      }
+    })
   }
 
   public static channelDelete(tisService: TISService): Promise<TisResponseResult> {
