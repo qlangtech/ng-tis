@@ -44,7 +44,7 @@ import {TisResponseResult} from "./tis.plugin";
           </nz-alert>
           <ng-template #errortpl>
               <ul class="list-ul-msg">
-                  <li *ngFor="let m of result.errormsg">{{m}}</li>
+                  <li *ngFor="let m of result.errormsg">{{m| errormsg}}</li>
               </ul>
           </ng-template>
       </div>

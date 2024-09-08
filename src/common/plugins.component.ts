@@ -35,8 +35,7 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  AttrDesc,
-  Descriptor,
+  Descriptor, FLAG_DELETE_PROCESS,
   HeteroList,
   IFieldError,
   Item,
@@ -47,8 +46,7 @@ import {
   PluginSaveResponse,
   PluginType,
   SavePluginEvent,
-  TisResponseResult,
-  ValOption
+  TisResponseResult
 } from "./tis.plugin";
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -85,11 +83,17 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
             </nz-anchor>
           </ng-container>
           <ng-container *ngSwitchCase="false">
-            <div style="float: right;">
-              <button nz-button nzType="primary" [disabled]="this.formDisabled"
+            <nz-space style="float: right;">
+              <ng-container *ngIf="enableDeleteProcess">
+                <button *nzSpaceItem nz-button nzDanger [disabled]="this.formDisabled"
+                        (click)="_deletePlugin($event)">
+                  <span nz-icon nzType="delete" nzTheme="outline"></span>删除
+                </button>
+              </ng-container>
+              <button *nzSpaceItem nz-button nzType="primary" [disabled]="this.formDisabled"
                       (click)="_savePlugin($event)">{{saveBtnLabel}}
               </button>
-            </div>
+            </nz-space>
           </ng-container>
         </ng-container>
         <div style="clear: both;margin-bottom:3px;"></div>
@@ -123,8 +127,7 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
           </div>
           <div>
             <button *ngIf="!disableVerify && item.dspt.veriflable" nz-button nzSize="small"
-                    (click)="configCheck(h , item,$event)"><i
-              nz-icon nzType="check" nzTheme="outline"></i>校验
+                    (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验
             </button>&nbsp;<button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
                                    nzSize="small"
                                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
@@ -136,8 +139,8 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
                                   [descriptors]="[]" [initDescriptors]="true"
                                   (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
                                   [lazyInitDescriptors]="true">
-                <span nz-icon nzType="setting" nzTheme="outline"></span> <span nz-icon
-                                                                               nzType="down"></span>
+                <span nz-icon nzType="setting" nzTheme="outline"></span>
+                <span nz-icon nzType="down"></span>
               </tis-plugin-add-btn>
               &nbsp;
               <nz-space>
@@ -269,6 +272,10 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   @Input() saveBtnLabel = '保存';
+  /**
+   * 支持删除操作
+   */
+  @Input() enableDeleteProcess = false;
   // notShowBizMsg: 不需要在客户端显示成功信息
   @Input() savePlugin: EventEmitter<SavePluginEvent>;
   // 是否显示保存按钮
@@ -312,18 +319,20 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     return [h];
   }
 
-  public static openPluginInstanceAddDialog(b: BasicFormComponent, pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void) {
+  public static openPluginInstanceAddDialog(b: BasicFormComponent, pluginDesc: Descriptor
+    , pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void) {
     PluginsComponent.openPluginDialog({shallLoadSavedItems: false}, b, pluginDesc, pluginTp, title, onSuccess);
   }
 
   public static openPluginDialog(opts: OpenPluginDialogOptions, b: BasicFormComponent
-    , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (biz) => void): NzModalRef<any> {
+    , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void): NzModalRef<any> {
     //console.log("openPluginDialog  ");
     let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
     let addDb: PluginsComponent = modalRef.getContentComponent();
     if (opts.saveBtnLabel) {
       addDb.saveBtnLabel = opts.saveBtnLabel;
     }
+    addDb.enableDeleteProcess = opts.enableDeleteProcess
     addDb.errorsPageShow = true;
     addDb.getCurrentAppCache = true;
     addDb.formControlSpan = 19;
@@ -370,8 +379,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       if (r && r.saveSuccess && r.hasBiz()) {
         modalRef.close();
         let db = r.biz();
-
-        onSuccess(db);
+        onSuccess(r, db);
       }
     });
     return modalRef;
@@ -527,7 +535,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
-    , savePluginEvent: SavePluginEvent, errorsPageShow: boolean, processCallback: (r: TisResponseResult) => void, errProcessCallback?: (r: TisResponseResult) => void): void {
+    , savePluginEvent: SavePluginEvent, errorsPageShow: boolean //
+    , processCallback: (r: TisResponseResult) => void //
+    , errProcessCallback?: (r: TisResponseResult) => void): void {
 
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
@@ -584,7 +594,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   configCheck(h: HeteroList, item: Item, event: MouseEvent) {
-    let savePlugin = new SavePluginEvent();
+   // let savePlugin = new SavePluginEvent();
+    let savePlugin = this.savePluginEventCreator();
     savePlugin.verifyConfig = true;
     savePlugin.notShowBizMsg = false;
     //  this.savePluginSetting(event, savePlugin);
@@ -719,8 +730,26 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   protected initialize(app: CurrentCollection): void {
   }
 
+  _deletePlugin(event: MouseEvent) {
+    this.modalService.confirm({
+      nzTitle: '<i>请确认是否要删除该实例?</i>',
+      nzContent: '<b>删除之后不可恢复</b>',
+      nzOnOk: () => {
+        let e = this.savePluginEventCreator();// new SavePluginEvent();
+        e.verifyConfig = false;
+        if (!e.postPayload) {
+          e.postPayload = {};
+        }
+        e.postPayload[FLAG_DELETE_PROCESS] = true;
+        this.savePluginSetting(event, e);
+      }
+    });
+
+
+  }
+
   _savePlugin(event: MouseEvent) {
-    let e = this.savePluginEventCreator();// new SavePluginEvent();
+    let e = this.savePluginEventCreator();
     e.verifyConfig = false;
     this.savePluginSetting(event, e);
   }
@@ -859,9 +888,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param hostDspt 宿主Descriptpr
    * @param manipuldateMeta
    */
-  openManipulateStore(pluginMeta: PluginType, hostItem: Item,hostDspt: Descriptor, manipuldateMeta: {  identityName: string }) {
+  openManipulateStore(pluginMeta: PluginType, hostItem: Item, hostDspt: Descriptor, manipuldateMeta: { identityName: string }) {
     //console.log([hostDspt, manipuldateMeta.descMeta]);
-    let opt = this.createPostPayload(hostItem, pluginMeta);
+    let opt = this.createPostPayload(hostItem, pluginMeta, true);
 
     this.httpPost('/coredefine/corenodemanage.ajax'
       , "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + hostDspt.impl + "&identityName=" + manipuldateMeta.identityName)
@@ -871,10 +900,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
         for (let [_, desc] of descMap) {
           let i: Item = Object.assign(new Item(desc), result.bizresult.item);
-           i.wrapItemVals();
+          i.wrapItemVals();
 
           PluginsComponent.openPluginDialog({
-              saveBtnLabel: '更新同步',
+              saveBtnLabel: '更新',
+              enableDeleteProcess: true,
               shallLoadSavedItems: false
               , item: i
               , savePluginEventCreator: () => {
@@ -884,8 +914,20 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
             , this, desc // manipuldateMeta.descMeta
             , {name: 'noStore', require: true}
             , `${desc.displayName}`
-            , (biz) => {
-
+            , (event, biz) => {
+              if (event.deleteProcess) {
+                let stored = hostDspt.manipulate.stored;
+                let idx = stored.findIndex((s) => s.identityName === manipuldateMeta.identityName);
+                // console.log([idx, stored,manipuldateMeta]);
+                if (idx > -1) {
+                  stored.splice(idx, 1);
+                  hostDspt.manipulate.stored = [...stored];
+                }
+                this.cdr.detectChanges();
+                // console.log(["deleteProcess", hostDspt.manipulate.stored]);
+              } else {
+                // console.log("updateProcess");
+              }
             });
           break;
         }
@@ -901,27 +943,32 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param pluginDesc
    */
   public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
-    //console.log(item.dspt.manipulate);
-    //console.log(desc);
-    let opt = this.createPostPayload(item, pluginMeta);
+    console.log(item.dspt.manipulate);
+    let opt = this.createPostPayload(item, pluginMeta, false /**添加操作*/);
     // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
 
 
     PluginsComponent.openPluginDialog({
         saveBtnLabel: '执行',
-        shallLoadSavedItems: false, savePluginEventCreator: () => {
+        shallLoadSavedItems: false //
+        , savePluginEventCreator: () => {
           return opt;
         }
       }
       , this, pluginDesc
       , {name: 'noStore', require: true}
       , `${pluginDesc.displayName}`
-      , (biz) => {
+      , (_, biz) => {
         // console.log(biz);
         // let rr: TisResponseResult = {
         //   success: true,
         //   bizresult: biz
         // }
+       // console.log([biz, pluginDesc.manipulateStorable]);
+        if (pluginDesc.manipulateStorable) {
+          item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
+          this.cdr.detectChanges();
+        }
         this.afterPluginManipulate.emit(new PluginSaveResponse(true, false, null, biz));
         // this.processTriggerResult(this.getProcessStrategy(true), Promise.resolve(rr));
 
@@ -935,11 +982,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param pluginMeta
    * @private
    */
-  private createPostPayload(hostItem: Item, pluginMeta: PluginType) {
+  private createPostPayload(hostItem: Item, pluginMeta: PluginType, updateProcess: boolean) {
     let opt = new SavePluginEvent();
     opt.postPayload = {
       'manipulateTarget': hostItem
       , 'manipulatePluginMeta': PluginsComponent.getPluginMetaParam(pluginMeta)
+      , 'updateProcess': updateProcess
     };
     return opt;
   }

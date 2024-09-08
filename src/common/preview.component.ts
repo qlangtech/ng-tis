@@ -49,6 +49,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           </nz-button-group>
         </div>
       </div>
+      <div style="clear: both"></div>
     </ng-template>
     <nz-table  [nzLoading]="this.formDisabled" #fixedTable [nzData]="listOfData" [nzTitle]="previewHeaderTpl"
               [nzBordered]="true" nzTableLayout="auto"  [nzScroll]="{x:'100vw',y: this.drawerHeight+ 'px'}"

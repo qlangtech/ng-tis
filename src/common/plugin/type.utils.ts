@@ -32,6 +32,7 @@ export interface OpenPluginDialogOptions {
    * 最上头保存按钮的label
    */
   saveBtnLabel?: string;
+  enableDeleteProcess?: boolean
   /**
    * 是否要覆写创建SavePluginEvent的行为
    */

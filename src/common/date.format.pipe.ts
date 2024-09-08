@@ -67,3 +67,17 @@ export class ItemPropValPipe implements PipeTransform {
     });
   }
 }
+
+@Pipe({name: 'errormsg'})
+export class ErrorMsgPipe implements PipeTransform {
+
+  transform(value: any): string {
+    if (typeof value === 'string') {
+      return value
+    }
+
+    if (value && value.message) {
+      return value.message;
+    }
+  }
+}
