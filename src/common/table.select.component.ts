@@ -96,6 +96,10 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
   loadData(node: NzCascaderOption, index: number): PromiseLike<void> {
     // console.log([node, index]);
     if (index === 0) {
+      if(!node.value){
+        console.log(node);
+        throw new Error("node.value can not be empty");
+      }
       let action = `emethod=get_datasource_db_by_id&action=offline_datasource_action&id=${node.value}`;
 
       let cpt: BasicFormComponent = node.basicCpt;

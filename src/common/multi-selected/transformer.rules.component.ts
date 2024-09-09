@@ -131,6 +131,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
           <div [ngClass]="{'ant-form-item-has-error':!!u.udfError}">
             <!--            (primaryBtnClick)="triggerFullBuild()"-->
             <!--            -->
+
             <tis-plugin-add-btn [disabled]="this.readonly" [ngClass]="{'ant-input':!!u.udfError}" [btnSize]="'small'"
                                 (addPlugin)="tarnsformerSet(u,$event)"
                                 (primaryBtnClick)="updateTransformerRule(u)"
@@ -154,7 +155,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
       <tis-col title="描述">
         <ng-template let-u='r'>
           <div class="item-block item-block-absolute" *ngIf="u.udfDescLiteria">
-            <h4>{{u.udf.dspt.displayName}}:</h4>
+            <h4><span nz-icon style="font-weight: bold" [nzType]="u.udf.dspt.endtype" nzTheme="fill"></span>&nbsp;{{u.udf.dspt.displayName}}:</h4>
             <udf-desc-literia [descAry]="u.udfDescLiteria"></udf-desc-literia>
 
             <div *ngIf="!readonly" class="absolute-btn-element">

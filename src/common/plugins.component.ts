@@ -509,8 +509,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     , e?: SavePluginEvent): Promise<TisResponseResult> {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
-
+    console.log([pm,url]);
     return ctx.jsonPost(url, {}, e).then((r) => {
+      console.log([r,pm,url]);
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
@@ -523,14 +524,14 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pt);
           m = (pt as PluginMeta);
           PluginsComponent.addDefaultItem(m, h);
-          //   console.log([bizArray[i], pm[i], h]);
+             console.log([bizArray[i], pm[i], h]);
           _heteroList.push(h);
         }
       }
       // console.log(_heteroList);
       callback(r.success, _heteroList, r.success ? r.bizresult.showExtensionPoint : false);
       return r;
-    })
+    });
   }
 
 
@@ -594,7 +595,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
 
   configCheck(h: HeteroList, item: Item, event: MouseEvent) {
-   // let savePlugin = new SavePluginEvent();
+    // let savePlugin = new SavePluginEvent();
     let savePlugin = this.savePluginEventCreator();
     savePlugin.verifyConfig = true;
     savePlugin.notShowBizMsg = false;
@@ -964,7 +965,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         //   success: true,
         //   bizresult: biz
         // }
-       // console.log([biz, pluginDesc.manipulateStorable]);
+        // console.log([biz, pluginDesc.manipulateStorable]);
         if (pluginDesc.manipulateStorable) {
           item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
           this.cdr.detectChanges();
