@@ -149,14 +149,23 @@ export class AppModule {
         }
         iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
       } else {
-        iconService.addIcon(iconDefs[i]);
+        if (id.icon) {
+          iconService.addIcon(iconDefs[i]);
+        }else{
+          ref = iconMap.get(id.name + "_fill"  );
+          if (!ref) {
+            throw new Error("resource:'" + id.name + "_" + id.theme + "' can not find relevant schema of 'fill' type");
+          }
+          iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+        }
+
       }
     }
   }
 
   constructor(iconService: NzIconService, tisService: TISService, _localStorageService: LocalStorageService) {
     let localEndTypesIcons: LocalEndtypeIcons = _localStorageService.get(local_endtype_icons)
-   // console.log(localEndTypesIcons);
+    // console.log(localEndTypesIcons);
     let requestBody = `action=plugin_action&emethod=get_endtype_icons`;
     if (localEndTypesIcons) {
       requestBody += ("&vertoken=" + localEndTypesIcons.verToken);

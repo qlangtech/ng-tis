@@ -248,7 +248,7 @@ export class TISService {
   protected appendHeaders(headers: HttpHeaders, e: SavePluginEvent): HttpHeaders {
     let result = headers;
     // console.log(this.currApp);
-    if (this.currApp) {
+    if (this.currApp && this.currApp.appName) {
       result = result.set(KEY_APPNAME, this.currApp.appName);
       result = result.set(KEY_APP_ID, '' + this.currApp.appid);
     }
@@ -271,6 +271,7 @@ export class TISService {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
     let opts = {'headers': this.appendHeaders(headers, e)};
+    console.log(opts);
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts).pipe()
       .toPromise()
       // @ts-ignore
@@ -486,7 +487,7 @@ export class TISService {
   }
 
   protected handleError = (error: any): Promise<any> => {
-    // console.log(error);
+     console.log(error);
     if (error instanceof HttpErrorResponse) {
       let err: HttpErrorResponse = error;
       this.notification.create('error', '错误', `系统发生错误，请联系系统管理员<br> ${err.message} <br> ${err.error} `, {
@@ -498,6 +499,7 @@ export class TISService {
     // console.log(this);
 
     NProgress.done();
+   // console.log(error);
     return Promise.reject(error.message || error);
   }
 

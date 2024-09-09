@@ -321,7 +321,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
         if (result.success) {
           // console.log(result.bizresult);
-          let dbs = result.bizresult.dbs;
+          let dbs: Array<DataBaseMeta> = result.bizresult.dbs;
 
           let descList = Descriptor.wrapDescriptors(result.bizresult.pluginDesc);
           this.datasourceDesc = Array.from(descList.values());
@@ -344,7 +344,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     });
   }
 
-  treeInit(dbs: Array<any>): void {
+  treeInit(dbs: Array<DataBaseMeta>): void {
     // console.log(dbs);
     this.nodes = [];
     for (let db of dbs) {
@@ -356,8 +356,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       }
       this.nodes.push(dbNode);
     }
-    // console.log( this.dbtree );
   }
+
 
   public afterDataSourceManipuldate(response: PluginSaveResponse): void {
     // console.log(response);
@@ -373,7 +373,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     PluginsComponent.openPluginInstanceAddDialog(this, pluginDesc
       , {name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}
       , `添加${pluginDesc.displayName}数据库`
-      , (db) => {
+      , (_, db) => {
+        console.log(db);
         // let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};
         // origin[KEY_DB_ID] = `${db.dbId}`;
         // // KEY_DB_ID
@@ -389,8 +390,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       });
   }
 
-  private addDBNode(db) {
-    let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};
+  private addDBNode(db: ProcessedDBRecord) {
+    let desc = this.datasourceDesc.find((desc) => desc.impl === db.detailed.impl);
+    if (!desc) {
+      console.log(this.datasourceDesc);
+      throw new Error("desc impl:" + db.detailed.impl + " can not find relevant Descriptor");
+    }
+    let origin: NzTreeNodeOptions
+      = {'key': `${db.dbId}`, 'title': db.name, icon: desc.endtype, 'children': []};
     origin[KEY_DB_ID] = `${db.dbId}`;
     // KEY_DB_ID
     let newNode: NzTreeNodeOptions[] = [origin];
@@ -553,9 +560,12 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
 
 
   private onEvent(event: { 'type': NodeType, 'dbId': string, 'name'?: string }, targetNode?: NzTreeNode): void {
-
+    if (!event.dbId) {
+      throw new Error("param event.dbId can not be empty");
+    }
     let type = event.type;
     let id = event.dbId;
+
     //  let realId = 0;
     let action = `action=offline_datasource_action&emethod=get_datasource_${type}_by_id&id=${id}&labelName=${event.name}`;
     this.facdeDb = null;
@@ -571,7 +581,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             if (type === NodeType.DB) {
               let detail = biz.detailed;
               let db = DatasourceComponent.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
-
+              // console.log([detail,db,targetNode]);
               let tabs: Array<string> = biz.selectedTabs;
               if (targetNode) {
                 targetNode.origin[key_tabs_fetch] = true;
@@ -629,6 +639,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         } finally {
         }
       }).catch((e) => {
+        console.log(e);
     });
   }
 
@@ -718,8 +729,9 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.httpPost('/offline/datasource.ajax', action)
           .then(result => {
             if (result.success) {
-
-              this.successNotify(`${this.dbType}数据库'${this.selectedDb.dbName}'删除成功`);
+              if (result.msg.length < 1) {
+                this.successNotify(`${this.dbType}数据库'${this.selectedDb.dbName}'删除成功`);
+              }
 
               if (dbModel === db_model_detailed) {
                 this.nodes = this.nodes.filter((n) => n.key !== `${this.selectedDb.dbId}`);
@@ -896,6 +908,19 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.colsMeta = cols;
       });
   }
+}
+
+interface DataBaseMeta {
+  iconEndtype: string;
+  id: number;
+  name: string;
+}
+
+interface ProcessedDBRecord {
+  dbId: number;
+  detailed: Item;
+  name: string;
+  selectedTabs: Array<any>;
 }
 
 // export class Node {

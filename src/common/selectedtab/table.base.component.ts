@@ -13,7 +13,7 @@ const KEY_SKIP_TRANSFORMER = 'skip';
                          [goBackBtnShow]="this.dto.offsetStep>0" (goOn)="createStepNext()">
       <break-next>
         <button nzType="primary" [disabled]="formDisabled" nz-button (click)="saveAndSkipTransformer()">
-          <i nz-icon nzType="save" nzTheme="outline"></i>保存(跳过Transformer设置)
+          <i nz-icon nzType="save" nzTheme="outline"></i>保存&关闭
         </button>
       </break-next>
     </tis-steps-tools-bar>

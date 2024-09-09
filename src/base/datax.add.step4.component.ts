@@ -502,17 +502,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         if (!r.success) {
           return;
         }
-        // console.log(r.bizresult.items);
-        // if(r.bizresult.items){
-        //   r.bizresult.items.forEach((item)=>{
-        //    if(item.vals.rules){
-        //      item.vals.rules.forEach((r)=>{
-        //      console.log(  r.udf);
-        //      });
-        //    }
-        //   });
-        // }
-
         let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
         let hlist: HeteroList[] = [h];
         return hlist;
@@ -623,15 +612,19 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
       // 在新增模式下 currentApp 是为空的
       this.tisService.currentApp = new CurrentCollection(0, this.dto.dataxPipeName);
     }
-    console.log(this.tisService.currentApp);
+  //  console.log(this.tisService.currentApp);
     // console.log(this.dto.readerDescriptor);
-    this.initializeSubFieldForms(true);
+    this.initializeSubFieldForms(true)
+      .catch((e)=>{
+      console.log(e);
+    });
   }
 
   private initializeSubFieldForms(useCache: boolean): Promise<TisResponseResult> {
+   //console.log(useCache);
     return DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
       , useCache, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-        //  console.log([subFieldForms, subFormHetero]);
+          console.log([subFieldForms, subFormHetero]);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         this.transferList.splice(0);

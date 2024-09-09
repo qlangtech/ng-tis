@@ -125,16 +125,14 @@ export class TableAddComponent extends BasicFormComponent implements OnInit {
         this.successNotify("数据源:" + dataXDto.tablePojo.dbName + "已完成表导入设置");
       })
     });
+   // console.log(this.processMode.dbId)
     if (this.processMode.dbId) {
       this.tablePojo.dbId = this.processMode.dbId;
       this.tablePojo.dbName = this.processMode.dbName;
 
       TableAddStep1Component.getReaderDescAndMeta(this, dataXDto).then((r) => {
         if (r.success) {
-          // if (r.bizresult.dataReaderSettedNotSupport) {
-          // this.errNotify("插件:" + r.bizresult.dataReaderSettedNotSupport + " 不支持表导入");
-          // return;
-          // }
+        // console.log(dataXDto);
           this.multiViewDAG.loadComponent(r.bizresult.dataReaderSetted ? DataxAddStep4Component : DataxAddStep3Component, dataXDto);
         }
       });
