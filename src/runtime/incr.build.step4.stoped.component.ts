@@ -19,6 +19,10 @@ import FlinkSavepoint = flink.job.detail.FlinkSavepoint;
 import {TisResponseResult} from "../common/tis.plugin";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
+import {CreateLaunchingTarget} from "../base/datax.worker.add.step3.component";
+import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 /**
  *   Licensed to the Apache Software Foundation (ASF) under one
@@ -134,7 +138,7 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
   @Output() afterRelaunch = new EventEmitter<TisResponseResult>();
 
   constructor(tisService: TISService, private router: Router, route: ActivatedRoute
-    , modalService: NzModalService, notification: NzNotificationService, private fb: FormBuilder) {
+    , modalService: NzModalService, notification: NzNotificationService, private fb: FormBuilder, private drawerService: NzDrawerService) {
     super(tisService, route, modalService, notification);
     this.validateForm = this.fb.group({
       checkpointId: [null, [Validators.required]]
@@ -146,23 +150,71 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
   }
 
   relaunchJob(sp: FlinkSavepoint) {
-    this.modalService.confirm({
-      nzTitle: '恢复任务',
-      nzContent: `是否要恢复增量实例'${this.currentApp.appName}'`,
-      nzOkText: '执行',
-      nzCancelText: '取消',
-      nzOnOk: () => {
-        this.httpPost('/coredefine/corenodemanage.ajax'
-          , "event_submit_do_relaunch_incr_process=y&action=core_action&savepointPath=" + sp.path).then((r) => {
-          if (r.success) {
-            this.successNotify(`已经成功恢复增量实例${this.currentApp.appName}`);
-            //  this.router.navigate(["."], {relativeTo: this.route});
-            // this.nextStep.next(this.dto);
-            this.afterRelaunch.emit(r);
-          }
-        });
+    // this.modalService.confirm({
+    //   nzTitle: '恢复任务',
+    //   nzContent: `是否要恢复增量实例'${this.currentApp.appName}'`,
+    //   nzOkText: '执行',
+    //   nzCancelText: '取消',
+    //   nzOnOk: () => {
+    //     this.httpPost('/coredefine/corenodemanage.ajax'
+    //       , "event_submit_do_relaunch_incr_process=y&action=core_action&savepointPath=" + sp.path).then((r) => {
+    //       if (r.success) {
+    //         this.successNotify(`已经成功恢复增量实例${this.currentApp.appName}`);
+    //         //  this.router.navigate(["."], {relativeTo: this.route});
+    //         // this.nextStep.next(this.dto);
+    //         this.afterRelaunch.emit(r);
+    //       }
+    //     });
+    //   }
+    // });
+
+    //====================================================
+    let sseUrl = '/coredefine/corenodemanage.ajax?event_submit_do_relaunch_incr_process=y&action=core_action&savepointPath=' + sp.path + '&appname=' + this.tisService.currentApp.appName;
+    // 保存MQ消息
+    // this.jsonPost(url, {}).then((r) => {
+    //   if (r.success) {
+    //     this.nextStep.emit(this.dto);
+    //   }
+    // });
+    ///////////////////////
+    let subject = this.tisService.createEventSource(null, sseUrl);
+    const drawerRef = openWaittingProcessComponent(this.drawerService, subject
+      //  , new CreateLaunchingTarget("core_action", "re_deploy_incr_sync_channal",`appname=${this.tisService.currentApp.appName}`)
+    );// this.drawerService.create<LaunchK8SClusterWaittingProcessComponent, {}, {}>({
+    //   nzWidth: "60%",
+    //   nzHeight: "100%",
+    //   nzPlacement: "right",
+    //   nzContent: LaunchK8SClusterWaittingProcessComponent,
+    //   nzContentParams: {"obserable": subject},
+    //   nzClosable: false,
+    //   nzMaskClosable: false
+    // });
+    // let cpt: LaunchK8SClusterWaittingProcessComponent = drawerRef.getContentComponent();
+    // console.log(drawerRef);
+    // cpt.launchTarget =;
+    drawerRef.afterClose.subscribe((status: NzStatusType) => {
+      subject.close();
+      if (status === 'finish') {
+        // this.successNotify("已经成功在K8S集群中启动" + this.dto.processMeta.pageHeader);
+        // this.afterRelaunch.emit(r);
+        //this.nextStep.emit(this.dto);
+        IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
+          let result: TisResponseResult = {success: true, bizresult: incrStatus};
+          this.afterRelaunch.emit(result);
+        }, false);
+
+
+        // let dataXWorkerStatus: DataXJobWorkerStatus
+        //   = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {'processMeta': this.dto.processMeta});
+        //  this.dto.processMeta.successCreateNext(this);
+        // DataxWorkerComponent.getJobWorkerMeta(this, null, this.dto.processMeta)
+        //   .then((dataXWorkerStatus) => {
+        //     this.nextStep.emit(dataXWorkerStatus);
+        //   });
+
+
       }
-    });
+    })
   }
 
   discardSavePoint(sp: FlinkSavepoint) {
