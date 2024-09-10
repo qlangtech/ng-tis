@@ -192,16 +192,6 @@ import {ControlPanelComponent} from "../common/control.panel.component";
             <i nz-icon nzType="setting" nzTheme="outline"></i>操作
           </ng-template>
 
-          <!--                  <nz-page-header class="danger-control-title" nzTitle="一般操作">-->
-          <!--                  </nz-page-header>-->
-
-          <!--                  <nz-list class="ant-advanced-search-form ant-advanced-search-form-normal" nzBordered>-->
-          <!--                      <nz-list-item>-->
-          <!--                          <span nz-typography>停止增量实例 <em class="typography-desc">停止过程中会记录当前任务的savepoint，以便重启之用</em></span>-->
-          <!--                          <button nz-button nzType="primary" [disabled]="dto.state !== 'RUNNING'" (click)="incrChannelStop()"><i nz-icon nzType="stop" nzTheme="outline"></i>停止</button>-->
-          <!--                      </nz-list-item>-->
-          <!--                  </nz-list>-->
-
           <control-prompt panelType="normal-stop-incr"
                           [procDesc]="'停止增量实例 停止过程中会记录当前任务的savepoint，以便重启之用'"
                           [disabled]="dto.state !== 'RUNNING'" (controlClick)="incrChannelStop($event)">
@@ -430,12 +420,8 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   afterRelaunch(result: TisResponseResult) {
     if (result.success) {
-      // this.router.initialNavigation()
-      // this.router.navigate([], {relativeTo: this.route, replaceUrl: true});
-      //  IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
       this.dto = result.bizresult;
       this.tabSelectIndex = 0;
-      // });
     }
   }
 
