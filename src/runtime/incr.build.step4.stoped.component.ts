@@ -288,15 +288,38 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
         if (this.validateForm.valid) {
           // console.log('submit', this.validateForm.value);
 
-          this.httpPost('/coredefine/corenodemanage.ajax'
-            , "event_submit_do_restore_from_checkpoint=y&action=core_action&checkpointId="
-            + this.validateForm.controls["checkpointId"].value).then((r) => {
-            if (r.success) {
-              this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
-              this.initialize(null);
-              this.successNotify(`已经成功为${this.currentApp.appName}创建Savepoint`);
+          // this.httpPost('/coredefine/corenodemanage.ajax'
+          //   , "event_submit_do_restore_from_checkpoint=y&action=core_action&checkpointId="
+          //   + this.validateForm.controls["checkpointId"].value).then((r) => {
+          //   if (r.success) {
+          //     this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
+          //     this.initialize(null);
+          //     this.successNotify(`已经成功为${this.currentApp.appName}创建Savepoint`);
+          //   }
+          // });
+
+          //==========================================================
+          let sseUrl = '/coredefine/corenodemanage.ajax?event_submit_do_restore_from_checkpoint=y&action=core_action&checkpointId='
+            + this.validateForm.controls["checkpointId"].value
+            + '&appname=' + this.tisService.currentApp.appName;
+
+          let subject = this.tisService.createEventSource(null, sseUrl);
+          const drawerRef = openWaittingProcessComponent(this.drawerService, subject);
+          drawerRef.afterClose.subscribe((status: NzStatusType) => {
+            subject.close();
+            if (status === 'finish') {
+              IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
+                let result: TisResponseResult = {success: true, bizresult: incrStatus};
+                this.afterRelaunch.emit(result);
+                // this.dto = incrStatus;
+                // this.initialize(null);
+                // this.successNotify(`已经成功为${this.currentApp.appName}恢复增量任务`);
+
+              }, false);
             }
-          });
+          })
+
+
         } else {
           Object.values(this.validateForm.controls).forEach(control => {
             if (control.invalid) {
