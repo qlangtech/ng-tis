@@ -74,9 +74,10 @@ class ProcessStrategy {
         <ng-container [ngSwitch]="dataXWorkerStatus.k8sReplicationControllerCreated">
           <ng-container *ngSwitchCase="true">
             <nz-tag nzColor="processing">
-              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list"><i nz-icon
-                                                                                           nzType="link"
-                                                                                           nzTheme="outline"></i>分布式执行</a>
+              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list">
+                <i nz-icon
+                   nzType="link"
+                   nzTheme="outline"></i>分布式执行</a>
             </nz-tag>
             <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button
                     nzType="default"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑
@@ -89,7 +90,8 @@ class ProcessStrategy {
           </ng-container>
         </ng-container>&nbsp;
         <button (click)="previewData()" [disabled]="formDisabled" nzSize="small" nz-button
-                nzType="default"> <ng-container *ngTemplateOutlet="previewTpl"></ng-container>
+                nzType="default">
+          <ng-container *ngTemplateOutlet="previewTpl"></ng-container>
         </button>
       </tis-page-header-left>
       <!--          <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nz-dropdown [nzDropdownMenu]="menu4" nzType="primary"><i-->
@@ -244,7 +246,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       , this, pluginDesc
       , {name: 'noStore', require: true}
       , `任务触发`
-      , (_,biz) => {
+      , (_, biz) => {
         // console.log(taskId);
         let rr: TisResponseResult = {
           success: biz.success,
@@ -258,11 +260,6 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
   public triggerFullBuild(): void {
     let processStrategy = this.getProcessStrategy(this.dataxProcess);
-
-    if (this.dataXWorkerStatus) {
-      this.dataXWorkerStatus.installLocal = false;
-    }
-
     if (this.appNotAware) {
       // 单纯数据流触发
       processStrategy = {
@@ -271,7 +268,14 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
         sucMsg: '数据流构建已经触发'
       };
     }
-    this.processTriggerResult(processStrategy, this.httpPost(processStrategy.url, processStrategy.post));
+    if (this.dataXWorkerStatus) {
+      this.dataXWorkerStatus.installLocal = false;
+    }
+    this.confirm("是否要触发数据管道执行？", () => {
+      this.processTriggerResult(processStrategy, this.httpPost(processStrategy.url, processStrategy.post));
+    });
+
+
     //   .then((r) => {
     //   if (!r.success) {
     //     // let p =   <Promise<any>>r;
@@ -424,9 +428,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       nzMaskClosable: false,
       nzContent: PreviewComponent,
       nzPlacement: 'bottom',
-      nzContentParams: {
-
-      }
+      nzContentParams: {}
     });
     drawerRef.afterClose.subscribe(hetero => {
 
