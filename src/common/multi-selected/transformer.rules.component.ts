@@ -14,7 +14,7 @@ import {
   HeteroList,
   Item,
   ItemPropVal,
-  PluginMeta, PluginType,
+  PluginType,
   ReaderColMeta,
   SavePluginEvent,
   TuplesPropertyType
@@ -55,7 +55,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
    * @param _typeMetas 可用的jdbc类型集合
    * @param _sourceTabCols 目标表可选的列
    */
-  constructor(public selectedTab: string, private _mcols: Array<RecordTransformer>, private _typeMetas: Array<DataTypeMeta> //, private _sourceTabCols: Array<CMeta>
+  constructor(public selectedTab: string, private _mcols: Array<RecordTransformer>, private _typeMetas: Array<DataTypeMeta>
   ) {
     this._mcols.forEach((t) => {
       if (!t.ip) {
@@ -63,10 +63,6 @@ export class TransformerRuleTabletView implements TuplesProperty {
       }
     });
   }
-
-  // get sourceTabCols(): Array<CMeta> {
-  //   return this._sourceTabCols;
-  // }
 
   viewType(): TuplesPropertyType {
     return TuplesPropertyType.TransformerRules;
@@ -87,10 +83,8 @@ export class TransformerRuleTabletView implements TuplesProperty {
   selector: "transformer-rules",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-
-    <!--    { "target": "username", "type": { "columnSize": 32, "decimalDigits": -1, "type": 12, "typeDesc": "varchar(32)", "typeName": "VARCHAR" }, "udf": { "from": "name" } }-->
-
-    <tis-page *ngIf="transformerUDFdescriptors.length>0" [rows]="transformerRules" [tabSize]="'small'"
+    <!--*ngIf="transformerUDFdescriptors.length>0"-->
+    <tis-page [rows]="transformerRules" [tabSize]="'small'"
               [bordered]="true"
               [showPagination]="false">
       <page-row-assist>
@@ -129,12 +123,10 @@ export class TransformerRuleTabletView implements TuplesProperty {
       <tis-col title="处理器" width="35">
         <ng-template let-u='r'>
           <div [ngClass]="{'ant-form-item-has-error':!!u.udfError}">
-            <!--            (primaryBtnClick)="triggerFullBuild()"-->
-            <!--            -->
-
             <tis-plugin-add-btn [disabled]="this.readonly" [ngClass]="{'ant-input':!!u.udfError}" [btnSize]="'small'"
                                 (addPlugin)="tarnsformerSet(u,$event)"
                                 (primaryBtnClick)="updateTransformerRule(u)"
+                                (afterPluginAddClose)="afterPluginAddClose()"
                                 [extendPoint]="transformerExtendPoint"
                                 [descriptors]="this.transformerUDFdescriptors" [initDescriptors]="false">
               <span nz-icon nzType="edit" nzTheme="outline"></span>
@@ -155,11 +147,15 @@ export class TransformerRuleTabletView implements TuplesProperty {
       <tis-col title="描述">
         <ng-template let-u='r'>
           <div class="item-block item-block-absolute" *ngIf="u.udfDescLiteria">
-            <h4><span nz-icon style="font-weight: bold" [nzType]="u.udf.dspt.endtype" nzTheme="fill"></span>&nbsp;{{u.udf.dspt.displayName}}:</h4>
+            <h4><span nz-icon style="font-weight: bold" [nzType]="u.udf.dspt.endtype"
+                      nzTheme="fill"></span>&nbsp;{{u.udf.dspt.displayName}}:</h4>
             <udf-desc-literia [descAry]="u.udfDescLiteria"></udf-desc-literia>
 
             <div *ngIf="!readonly" class="absolute-btn-element">
-              <button nz-button nzType="default" (click)="updateTransformerRule(u)" nzSize="small"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑</button>
+              <button nz-button nzType="default" (click)="updateTransformerRule(u)" nzSize="small"><span nz-icon
+                                                                                                         nzType="edit"
+                                                                                                         nzTheme="outline"></span>编辑
+              </button>
             </div>
           </div>
         </ng-template>
@@ -215,7 +211,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 {
 
   @Input()
-  readonly :boolean = false;
+  readonly: boolean = false;
 
   @Output()
   tabletViewChange = new EventEmitter<TransformerRuleTabletView>();
@@ -302,7 +298,11 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   }
 
   ngOnInit(): void {
+    this.initializeTransformersAndDesciptors(true);
 
+  }
+
+  initializeTransformersAndDesciptors(initializeRules: boolean) {
     let m: PluginType = {
       name: "transformerUDF",
       require: true
@@ -314,40 +314,34 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     };
 
     let meta = <ISubDetailTransferMeta>{id: this.transformerRulesView.selectedTab};
-   // console.log([m,meta]);
+
     /**
      * 获取UDF Transformer
      */
     DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null)
       .then((hlist: HeteroList[]) => {
-        // this.openSubDetailForm(meta, pluginMeta, hlist);
-        // console.log(hlist);
 
         hlist.forEach((h) => {
-          // PluginsComponent.addDefaultItem(m, h);
           this.transformerUDFdescriptors = Array.from(h.descriptors.values());
+          if (initializeRules) {
+            this.transformerRules.forEach((rule) => {
+              let desc = h.descriptors.get(rule.udf.impl);
+              if (!desc) {
+                console.log(h.descriptors);
+                throw new Error("desc impl:" + rule.udf.impl + " relevant desc can not be null");
+              }
 
-          this.transformerRules.forEach((rule) => {
-            let desc = h.descriptors.get(rule.udf.impl);
-            if (!desc) {
-              console.log(h.descriptors);
-              throw new Error("desc impl:" + rule.udf.impl + " relevant desc can not be null");
-            }
+              let udf: any = rule.udf;
 
-            let udf: any = rule.udf;
-
-            let newUdf: Item = Object.assign(new Item(desc), {vals: udf.vals});
-            newUdf.wrapItemVals();
-            // rule.udfDescLiteria =
-            rule.udf = newUdf;
-            rule.udfDescLiteria = <Array<UdfDesc>>udf.literia
-          });
-          // console.log(   this.transformerRules);
+              let newUdf: Item = Object.assign(new Item(desc), {vals: udf.vals});
+              newUdf.wrapItemVals();
+              // rule.udfDescLiteria =
+              rule.udf = newUdf;
+              rule.udfDescLiteria = <Array<UdfDesc>>udf.literia
+            });
+          }
         })
         this.cd.detectChanges();
-        //
-        //
-        // this.transformerHetero = hlist;
       });
 
 
@@ -360,7 +354,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     if (!udfItem) {
       return;
     }
-   // console.log(udfItem);
+    // console.log(udfItem);
     //console.log(udfItem);
     TransformerRulesComponent.openTransformerRuleDialog(this, udfItem.dspt, udfItem).then((biz) => {
       rtransformer.udf = biz.item;
@@ -411,8 +405,8 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         , basicCpt, desc
         , {name: 'noStore', require: true}
         , `设置 ${desc.displayName}`
-        , (_,biz) => {
-        //  console.log(biz);
+        , (_, biz) => {
+          //  console.log(biz);
 
           let newUdf: Item = Object.assign(new Item(desc), {vals: biz});
           newUdf.wrapItemVals();
@@ -467,13 +461,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     this.emitNewTransformerRuleTabletView();
   }
 
-  // addVirtualTargetCol(input: HTMLInputElement) {
-  //   const value = input.value;
-  // if (this.listOfItem.indexOf(value) === -1) {
-  //   this.listOfItem = [...this.listOfItem, input.value || `New item ${this.index++}`];
-  // }
-  // this.httpPost();
-  //}
-
-
+  afterPluginAddClose() {
+    this.initializeTransformersAndDesciptors(false);
+  }
 }

@@ -1,6 +1,5 @@
 import {Component, EventEmitter, OnInit} from "@angular/core";
 import {Descriptor, EXTRA_PARAM_DATAX_NAME, HeteroList, PluginMeta, PluginSaveResponse} from "../../common/tis.plugin";
-// import {DataxAddStep4Component} from "../datax.add.step4.component";
 import {PluginsComponent} from "../../common/plugins.component";
 import {TISService} from "../../common/tis.service";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";

@@ -283,22 +283,6 @@ export class TdContentDirective implements OnInit {
         <ng-template #tisPagerHeader>
             <ng-content select="page-header"></ng-content>
         </ng-template>
-        <!--
-        <nav *ngIf="pager && pager.allPage>1" aria-label="翻页导航">
-            <ul class="pagination pagination-sm ">
-                <li class="page-item" style="color:#999999"> 第{{pager.page}}/{{pager.allPage}}页 &nbsp;</li>
-                <li [class.disabled]="pager.page === 1" class="page-item">
-                    <a class="page-link" href="javascript:void(0)"
-                       tabindex="-1" (click)="getPage(pager.page-1)">上一页</a></li>
-                <li *ngIf="pager.page>2" class="page-item more">...</li>
-                <li class="page-item" *ngFor="let p of pager.pageEnum">
-                    <a href="javascript:void(0)" [class.curr-page]="p===pager.page" (click)="getPage(p)"
-                       class="page-link">{{p}}</a></li>
-                <li *ngIf="pager.page<(pager.allPage-2)" class="page-item more">...</li>
-                <li class="page-item" [class.disabled]="pager.page >= pager.allPage">
-                    <a class="page-link" href="javascript:void(0)" (click)="getPage(pager.page+1)">下一页</a></li>
-            </ul>
-        </nav> -->
     `,
     styles: [`.more {
         color: #999;

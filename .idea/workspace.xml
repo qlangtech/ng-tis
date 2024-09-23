@@ -6,8 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/addapp-define-schema.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +222,7 @@
       <workItem from="1721876155908" duration="43182000" />
       <workItem from="1724413056699" duration="33532000" />
       <workItem from="1725432288491" duration="832000" />
-      <workItem from="1725498329842" duration="56369000" />
+      <workItem from="1725498329842" duration="70703000" />
     </task>
     <servers />
   </component>

@@ -509,9 +509,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     , e?: SavePluginEvent): Promise<TisResponseResult> {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
-    console.log([pm,url]);
+   // console.log([pm,url]);
     return ctx.jsonPost(url, {}, e).then((r) => {
-      console.log([r,pm,url]);
+     // console.log([r,pm,url]);
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;

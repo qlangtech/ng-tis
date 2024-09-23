@@ -271,7 +271,7 @@ export class TISService {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
     let opts = {'headers': this.appendHeaders(headers, e)};
-    console.log(opts);
+  //  console.log(opts);
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts).pipe()
       .toPromise()
       // @ts-ignore
