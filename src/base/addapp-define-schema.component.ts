@@ -19,11 +19,14 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TISService} from '../common/tis.service';
 
-import {SchemaExpertAppCreateEditComponent, SchemaVisualizingEditComponent} from '../common/schema.expert.create.edit.component';
+import {
+  SchemaExpertAppCreateEditComponent,
+  SchemaVisualizingEditComponent
+} from '../common/schema.expert.create.edit.component';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ConfirmDTO, EnginType, StupidModal} from './addapp-pojo';
 import {NzModalService} from "ng-zorro-antd/modal";
-import {TisResponseResult} from "../common/tis.plugin";
+import {SavePluginEvent, TisResponseResult} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
 import {StepType} from "../common/steps.component";
 import {NzTabsCanDeactivateFn} from "ng-zorro-antd/tabs";
@@ -37,60 +40,66 @@ import {NzTabsCanDeactivateFn} from "ng-zorro-antd/tabs";
   selector: 'schema-define',
   styles: [`
 
-      [nz-button] {
-          margin-right: 8px;
-      }
+    [nz-button] {
+      margin-right: 8px;
+    }
 
   `
     , `
 
-          .editor-up {
-              border-width: 2px 2px 0 2px;
-              border-color: #666666;
-              border-style: dashed
-          }
+      .editor-up {
+        border-width: 2px 2px 0 2px;
+        border-color: #666666;
+        border-style: dashed
+      }
 
-          .editor-below {
-              border-width: 0 2px 2px 2px;
-              border-color: #666666;
-              border-style: dashed
-          }
+      .editor-below {
+        border-width: 0 2px 2px 2px;
+        border-color: #666666;
+        border-style: dashed
+      }
 
     `
   ],
   template: `
-      <tis-steps [type]="stepInfo.type" [step]="stepInfo.step"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false" [result]="result">
-          <button nz-button nzType="default" (click)="gotoProfileDefineStep()"><i nz-icon nzType="backward" nzTheme="outline"></i>上一步</button>
-          <button nz-button nzType="primary" (click)="createIndexConfirm()"><i nz-icon nzType="forward" nzTheme="outline"></i>下一步</button>
-      </tis-page-header>
-      <nz-spin [nzSpinning]="formDisabled" nzSize="large">
-          <form method="post">
+    <tis-steps [type]="stepInfo.type" [step]="stepInfo.step"></tis-steps>
+    <tis-page-header [showBreadcrumb]="false" [result]="result">
+      <button nz-button nzType="default" (click)="gotoProfileDefineStep()"><i nz-icon nzType="backward"
+                                                                              nzTheme="outline"></i>上一步
+      </button>
+      <button nz-button nzType="primary" (click)="createIndexConfirm()"><i nz-icon nzType="forward"
+                                                                           nzTheme="outline"></i>下一步
+      </button>
+    </tis-page-header>
+    <nz-spin [nzSpinning]="formDisabled" nzSize="large">
+      <form method="post">
 
-              <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate" [nzCanDeactivate]="canDeactivate">
-                  <nz-tab [nzTitle]="foolTitleTemplate">
-                      <visualizing-schema-editor [engineType]="this.engineType" [bizResult]="stupidModal"></visualizing-schema-editor>
-                  </nz-tab>Ω
-                  <nz-tab [nzTitle]="expertTitleTemplate">
-                      <ng-template nz-tab>
-                          <expert-schema-editor [engineType]="this.engineType" [schemaXmlContent]="stupidModal.schemaXmlContent"
-                                                (saveSuccess)="expertSchemaEditorSuccess($event)"
-                                                (initComplete)="expertSchemaEditorInitComplete($event)"></expert-schema-editor>
-                      </ng-template>
-                  </nz-tab>
-              </nz-tabset>
+        <nz-tabset [nzAnimated]="false" [nzTabBarExtraContent]="extraTemplate" [nzCanDeactivate]="canDeactivate">
+          <nz-tab [nzTitle]="foolTitleTemplate">
+            <visualizing-schema-editor [engineType]="this.engineType"
+                                       [bizResult]="stupidModal"></visualizing-schema-editor>
+          </nz-tab>
+          Ω
+          <nz-tab [nzTitle]="expertTitleTemplate">
+            <ng-template nz-tab>
+              <expert-schema-editor [engineType]="this.engineType" [schemaXmlContent]="stupidModal.schemaXmlContent"
+                                    (saveSuccess)="expertSchemaEditorSuccess($event)"
+                                    (initComplete)="expertSchemaEditorInitComplete($event)"></expert-schema-editor>
+            </ng-template>
+          </nz-tab>
+        </nz-tabset>
 
-              <ng-template #extraTemplate>
-              </ng-template>
+        <ng-template #extraTemplate>
+        </ng-template>
 
-              <ng-template #foolTitleTemplate>
-                  <i class="fa fa-meh-o" aria-hidden="true"></i>小白模式
-              </ng-template>
-              <ng-template #expertTitleTemplate>
-                  <i class="fa fa-code" aria-hidden="true"></i>专家模式
-              </ng-template>
-          </form>
-      </nz-spin>
+        <ng-template #foolTitleTemplate>
+          <i class="fa fa-meh-o" aria-hidden="true"></i>小白模式
+        </ng-template>
+        <ng-template #expertTitleTemplate>
+          <i class="fa fa-code" aria-hidden="true"></i>专家模式
+        </ng-template>
+      </form>
+    </nz-spin>
   `
 })
 export class AddAppDefSchemaComponent extends BasicFormComponent implements OnInit, AfterViewInit {
@@ -273,9 +282,10 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
     switch (this.engineType.type) {
       case EnginType.ES:
 
-
+        let saveEvent = new SavePluginEvent();
+        saveEvent.overwriteHttpHeaderOfAppName(this._dataxDto.dataxPipeName);
         this.httpPost('/runtime/schemaManage.ajax'
-          , "stepType=" + this.stepInfo.type + "&event_submit_do_get_es_tpl_fields=y&action=schema_action&dataxName=" + this._dataxDto.dataxPipeName)
+          , "stepType=" + this.stepInfo.type + "&event_submit_do_get_es_tpl_fields=y&action=schema_action&dataxName=" + this._dataxDto.dataxPipeName, saveEvent)
           .then((r) => {
             if (r.success) {
               this.stupidModal = StupidModal.deseriablize(r.bizresult);
@@ -291,9 +301,9 @@ export class AddAppDefSchemaComponent extends BasicFormComponent implements OnIn
           // let tisTpl = f.tisTpl;
           // workflow = 'union';
           this.jsonPost('/runtime/schemaManage.ajax?event_submit_do_get_tpl_fields=y&action=schema_action', f)
-          // this.httpPost('/runtime/schemaManage.ajax'
-          //   , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
-          //   + workflow)
+            // this.httpPost('/runtime/schemaManage.ajax'
+            //   , 'event_submit_do_get_tpl_fields=y&action=schema_action&wfname='
+            //   + workflow)
             .then((r) => {
               if (r.success) {
                 return r;

@@ -1,12 +1,4 @@
-import {
-  Component,
-  ComponentFactoryResolver,
-  EventEmitter,
-  Input,
-  OnInit,
-  ViewChild,
-  ViewContainerRef
-} from "@angular/core";
+import {Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {BasicFormComponent} from "../../common/basic.form.component";
 import {MultiViewDAG} from "../../common/MultiViewDAG";
 import {HeteroList, PluginType} from "../../common/tis.plugin";
@@ -93,7 +85,7 @@ export class PluginSubFormComponent extends BasicFormComponent implements OnInit
     // }
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
     this.multiViewDAG.stepChange$.subscribe((dto: SelectedTabDTO) => {
-      console.log(dto);
+     // console.log(dto);
       this._step = dto.offsetStep;
     });
     this.selectedTabDTO = new SelectedTabDTO(this.meta, this.pluginMeta, this.hetero);
