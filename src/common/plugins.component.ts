@@ -347,10 +347,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       }
       addDb.setPlugins([pluginTp], opts.opt);
     } else {
-      // console.log("shall not LoadSavedItems  ");
+
       try {
         let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
-        // console.log(hlist);
         if (opts.item) {
           for (let i = 0; i < hlist.length; i++) {
             hlist[i].items = [opts.item];
@@ -368,12 +367,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     addDb.showSaveButton = true;
-    // addDb.ajaxOccur.subscribe((r)=>{
-    //   if(!r.saveSuccess){
-    //     console.log(r);
-    //     throw new Error(r.biz());
-    //   }
-    // });
+
     addDb.afterSave.subscribe((r: PluginSaveResponse) => {
       // console.log(r);
       if (r && r.saveSuccess && r.hasBiz()) {
@@ -388,18 +382,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   public static getPluginMetaParams(pluginMeta: PluginType[]): string {
     return pluginMeta.map((p) => {
-      // let param: any = p;
-      // // console.log(param);
-      // if (param.name) {
-      //   let t: PluginMeta = param;
-      //   let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
-      //   if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
-      //     metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
-      //   }
-      //   return metaParam;
-      // } else {
-      //   return p;
-      // }
       return PluginsComponent.getPluginMetaParam(p);
     }).join("&plugin=");
   }

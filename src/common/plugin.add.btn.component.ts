@@ -33,6 +33,8 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button/button.component";
 import {PluginsComponent} from "./plugins.component";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 @Component({
   selector: 'tis-plugin-add-btn',
@@ -113,8 +115,8 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
 
   constructor(tisService: TISService
-    , private drawerService: NzDrawerService, private cd: ChangeDetectorRef) {
-    super(tisService);
+    , private drawerService: NzDrawerService, notification: NzNotificationService, private cd: ChangeDetectorRef) {
+    super(tisService, null, notification);
     this.formDisabled = true;
   }
 
@@ -131,24 +133,35 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
     this.startInitDescriptors(!this.lazyInitDescriptors);
   }
 
-  private startInitDescriptors(shallExec: boolean) {
-    if (this.descriptors.length < 1 && this.initDescriptors) {
-      if (shallExec) {
-        PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
-          .then((descs) => {
+  /**
+   *
+   * @param shallExec
+   * @param forceInit 是否要强制重新刷新一下可选插件列表，例如，从仓库中新添加了一个插件就要刷新一下
+   * @private
+   */
+  private startInitDescriptors(shallExec: boolean, forceInit: boolean = false): Promise<Array<Descriptor>> {
 
-            this.descriptors = Array.from(descs.values());
-            this.cd.detectChanges();
-            //   console.log([this.descriptors,this.initDescriptors,this.extendPoint,this.descriptors]);
-          }).finally(() => {
+    return new Promise<Array<Descriptor>>((resolve, reject) => {
+      if (forceInit || (this.descriptors.length < 1 && this.initDescriptors)) {
+        if (shallExec) {
+          PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
+            .then((descs) => {
+
+              this.descriptors = Array.from(descs.values());
+              resolve(this.descriptors);
+              this.cd.detectChanges();
+
+            }).finally(() => {
+            this.formDisabled = false;
+          });
+        } else {
           this.formDisabled = false;
-        });
+        }
       } else {
         this.formDisabled = false;
       }
-    } else {
-      this.formDisabled = false;
-    }
+    });
+
   }
 
   lazyInitialize() {
@@ -160,6 +173,11 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
     const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, this.extendPoint, this.endType, this.filterTags);
 
     drawerRef.afterClose.subscribe(() => {
+      if (this.lazyInitDescriptors) {
+        this.startInitDescriptors(true, true).then((_) => {
+          this.successNotify("已经成功更新可选功能列表，请继续使用");
+        });
+      }
       this.afterPluginAddClose.emit();
     })
   }
