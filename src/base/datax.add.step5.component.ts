@@ -50,7 +50,7 @@ import {StepType} from "../common/steps.component";
       <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()"
                            [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
       </tis-steps-tools-bar>
-      <tis-plugins (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
+      <tis-plugins [savePluginEventCreator]="_savePluginEventCreator" (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
                    [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false"
                    [_heteroList]="hlist" #pluginComponent></tis-plugins>
     </nz-spin>
@@ -71,7 +71,8 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   // 可选的数据源
   readerDesc: Array<Descriptor> = [];
   writerDesc: Array<Descriptor> = [];
-
+  // () => new SavePluginEvent();
+  _savePluginEventCreator: () => SavePluginEvent;
   hlist: HeteroList[] = [];
   pluginCategory: PluginType;
 
@@ -80,6 +81,11 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
+    this._savePluginEventCreator = ()=> {
+      let evt = new SavePluginEvent();
+      evt.overwriteHttpHeaderOfAppName(this.dto.dataxPipeName);
+      return evt;
+    };
     let extraParam = 'dataxName_' + this.dto.dataxPipeName;
     extraParam += (',' + DataxDTO.KEY_PROCESS_MODEL + '_' + this.dto.processModel);
     this.pluginCategory = {name: 'dataxWriter', require: true, extraParam: extraParam};
@@ -106,6 +112,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   public createStepNext(): void {
     let savePluginEvent = new SavePluginEvent();
     savePluginEvent.notShowBizMsg = true;
+    savePluginEvent.overwriteHttpHeaderOfAppName(this.dto.dataxPipeName);
     this.savePlugin.emit(savePluginEvent);
   }
 
