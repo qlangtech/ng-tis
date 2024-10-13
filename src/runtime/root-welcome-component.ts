@@ -123,9 +123,11 @@ import {BasicFormComponent} from "../common/basic.form.component";
                   <i class="fa fa-plus" aria-hidden="true"></i>添加<i nz-icon nzType="down"></i></button>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
+                    <!--
                     <li nz-menu-item>
                       <a routerLink="/base/appadd">Solr实例</a>
                     </li>
+                    -->
                     <li nz-menu-item>
                       <a routerLink="/base/dataxadd">数据管道</a>
                     </li>
@@ -142,7 +144,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
     </nz-layout>
     <!--https://market.aliyun.com/qidian/company/1180716023102499578-->
     <nz-drawer [nzClosable]="true" [nzHeight]="500" [nzVisible]="companyIntrShow" [nzPlacement]="'bottom'"
-               nzTitle="杭州晴朗网络科技有限公司版权所有" (nzOnClose)="companyIntrShow=false">
+               nzTitle="杭州晴朗网络科技有限公司技术支持" (nzOnClose)="companyIntrShow=false">
       <ng-container *nzDrawerContent>
         <div nz-row [nzGutter]="8">
           <div nz-col nzSpan="8">
