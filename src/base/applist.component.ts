@@ -39,9 +39,9 @@ import {LocalStorageService} from "angular-2-local-storage";
                                     nz-icon nzType="down"></i></button>
                             <nz-dropdown-menu #menu="nzDropdownMenu">
                                 <ul nz-menu>
-                                    <li nz-menu-item>
+                                 <!--   <li nz-menu-item>
                                         <a routerLink="/base/appadd">Solr实例</a>
-                                    </li>
+                                    </li> -->
                                     <li nz-menu-item>
                                         <a routerLink="/base/dataxadd">数据管道</a>
                                     </li>
