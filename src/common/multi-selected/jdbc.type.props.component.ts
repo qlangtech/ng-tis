@@ -19,7 +19,6 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {TuplesProperty} from "../plugin/type.utils";
 import {DataxAddStep4Component, ISubDetailTransferMeta} from "../../base/datax.add.step4.component";
 import {TransformerRulesComponent} from "./transformer.rules.component";
-import {isBooleanLiteralLike} from "codelyzer/util/utils";
 
 
 export interface JdbcTypeProp extends ReaderColMeta {
@@ -345,10 +344,10 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
         } else {
           prop.type = this._jdbcTypeProps.dftType;
         }
-        console.log([existCol,prop.type,this._jdbcTypeProps,prop.name,prop.name.pk.primary])
+        console.log([existCol, prop.type, this._jdbcTypeProps, prop.name, prop.name.pk.primary])
       }).finally(() => {
 
-     // console.log("finally");
+      // console.log("finally");
       // basicCpt.transformerRules = [...basicCpt.transformerRules];
       // basicCpt.transformerUDFdescriptors = [...basicCpt.transformerUDFdescriptors];
       basicCpt.targetColumnDescriptors = [...basicCpt.targetColumnDescriptors];
@@ -392,7 +391,7 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
             localDescFilter: (desc: Descriptor) => true
           }
       }
-     // console.log([meta,targetColumnPluginMeta]);
+    // console.log([meta,targetColumnPluginMeta]);
     /**
      * 获取Target Cols
      */
@@ -448,7 +447,8 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
     //console.log(this.targetColumnDescriptors);
 
     let nameItem = Descriptor.createNewItem(this._jdbcTypeProps.dftListElementDesc, false);
-    let rule = <JdbcTypeProp>{name: nameItem, ip: new ItemPropVal(), type: this._jdbcTypeProps.dftType};
+    let type: DataTypeDesc = Object.assign({}, this._jdbcTypeProps.dftType)
+    let rule = <JdbcTypeProp>{name: nameItem, ip: new ItemPropVal(), type: type};
 
     this._jdbcTypeProps.mcols.push(rule);
     this._jdbcTypeProps.mcols = [...this._jdbcTypeProps.mcols];
