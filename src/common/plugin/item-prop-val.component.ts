@@ -432,7 +432,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
-    //console.log(this.pluginMeta);
+    console.log(this.pluginMeta);
     ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, this.pluginMeta, targetPlugin)
       .then((desc) => {
         if (!desc) {
@@ -451,29 +451,18 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           }
 
           PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (_,biz) => {
-            //  console.log(_pp);
             switch (_pp.type) {
-              case TYPE_ENUM: // enum
-                              // enum
-                              // db detail
-                              // let item: Item = Object.assign(new Item(d), );
-                              // let nn = new ValOption();
-                              // n.name = biz.detailed.identityName;
-                              // n.impl = d.impl;
-
+              case TYPE_ENUM:
                 if (biz.detailed) {
                   let db = biz.detailed;
                   let enums = _pp.getEProp('enum');
-                  // console.log(enums);
                   _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
                 } else {
-                  // console.log(biz);
                    throw new Error('invalid biz:' + d.displayName);
                 }
                 break;
               case TYPE_PLUGIN_SELECTION: // select
                 if (Array.isArray(biz)) {
-                  // select
                   let ids: Array<string> = biz;
                   ids.forEach((id) => {
                     let n = new ValOption();
@@ -489,89 +478,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
           });
         });
       }, (rejectReason) => {
-        // console.log(rejectReason);
+        console.log(rejectReason);
       });
-
-
-    // let descName = targetPlugin.descName;
-    // let url = "/coredefine/corenodemanage.ajax";
-    // //console.log(this.pluginMeta);
-    // this.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
-    //   .then((r) => {
-    //     if (!r.success) {
-    //       if (r.bizresult.notFoundExtension) {
-    //         this.modalService.confirm({
-    //           nzTitle: '确认',
-    //           nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
-    //           nzOkText: '开始安装',
-    //           nzCancelText: '取消',
-    //           nzOnOk: () => {
-    //             let endType = null;
-    //
-    //             if (HeteroList.isDescFilterDefined(this.pluginMeta)) {
-    //               endType = this.pluginMeta.descFilter.endType();
-    //             }
-    //             const drawerRef = PluginManageComponent.openPluginManage(this.drawerService, r.bizresult.notFoundExtension, endType, []);
-    //             drawerRef.afterClose.subscribe(() => {
-    //               // this.afterPluginAddClose.emit();
-    //             })
-    //           }
-    //         });
-    //       }
-    //       return;
-    //     }
-    //     // 需要的plugin已经安装上了
-    //     let desc = PluginsComponent.wrapDescriptors(r.bizresult);
-    //     desc.forEach((d) => {
-    //       // console.log(targetPlugin);
-    //       let pluginTp: PluginType = {
-    //         name: targetPlugin.hetero,
-    //         require: true,
-    //         extraParam: "append_true,targetItemDesc_" + d.displayName
-    //       };
-    //       if (targetPlugin.extraParam) {
-    //         pluginTp.extraParam += (',' + targetPlugin.extraParam);
-    //       }
-    //
-    //       PluginsComponent.openPluginInstanceAddDialog(this, d, pluginTp, "添加" + d.displayName, (biz) => {
-    //         //  console.log(_pp);
-    //         switch (_pp.type) {
-    //           case TYPE_ENUM: // enum
-    //             // enum
-    //             // db detail
-    //             // let item: Item = Object.assign(new Item(d), );
-    //             // let nn = new ValOption();
-    //             // n.name = biz.detailed.identityName;
-    //             // n.impl = d.impl;
-    //
-    //             if (biz.detailed) {
-    //               let db = biz.detailed;
-    //               let enums = _pp.getEProp('enum');
-    //               // console.log(enums);
-    //               _pp.setEProp('enum', [{val: db.identityName, label: db.identityName}, ...enums]);
-    //             } else {
-    //               // console.log(biz);
-    //               throw new Error('invalid biz:' + d.displayName);
-    //             }
-    //             break;
-    //           case TYPE_PLUGIN_SELECTION: // select
-    //             if (Array.isArray(biz)) {
-    //               // select
-    //               let ids: Array<string> = biz;
-    //               ids.forEach((id) => {
-    //                 let n = new ValOption();
-    //                 n.name = id;
-    //                 n.impl = d.impl;
-    //                 _pp.options = [n, ..._pp.options]
-    //               });
-    //             }
-    //             break;
-    //           default:
-    //             throw new Error(`error type:${_pp.type}`);
-    //         }
-    //       });
-    //     });
-    //   });
   }
 
   toggleDescContentShow() {

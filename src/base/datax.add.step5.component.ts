@@ -33,6 +33,7 @@ import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 import {StepType} from "../common/steps.component";
+import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -50,7 +51,8 @@ import {StepType} from "../common/steps.component";
       <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()"
                            [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
       </tis-steps-tools-bar>
-      <tis-plugins [savePluginEventCreator]="_savePluginEventCreator" (afterSave)="afterSaveReader($event)" [pluginMeta]="[pluginCategory]"
+      <tis-plugins [savePluginEventCreator]="_savePluginEventCreator" (afterSave)="afterSaveReader($event)"
+                   [pluginMeta]="[pluginCategory]"
                    [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false"
                    [_heteroList]="hlist" #pluginComponent></tis-plugins>
     </nz-spin>
@@ -81,14 +83,21 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
   }
 
   ngOnInit(): void {
-    this._savePluginEventCreator = ()=> {
+    this._savePluginEventCreator = () => {
       let evt = new SavePluginEvent();
       evt.overwriteHttpHeaderOfAppName(this.dto.dataxPipeName);
       return evt;
     };
+    let eprops: PluginExtraProps = this.dto.writerDescriptor.eprops;
     let extraParam = 'dataxName_' + this.dto.dataxPipeName;
     extraParam += (',' + DataxDTO.KEY_PROCESS_MODEL + '_' + this.dto.processModel);
-    this.pluginCategory = {name: 'dataxWriter', require: true, extraParam: extraParam};
+    this.pluginCategory = {
+      name: 'dataxWriter', require: true, extraParam: extraParam
+      , descFilter: {
+        endType: () => eprops.endType,
+        localDescFilter: (_) => true
+      }
+    };
     super.ngOnInit();
   }
 
@@ -121,7 +130,6 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
     let p: Promise<DataXCreateProcessMeta> = new Promise<DataXCreateProcessMeta>((resolve) => {
       resolve(dto.processMeta);
     });
-    // console.log(processMeta);
     if (dto.processMeta.readerRDBMSChangeableInLifetime) {
       p = module.httpPost("/coredefine/corenodemanage.ajax"
         , "action=datax_action&emethod=get_reader_writer_meta&dataxName=" + dto.dataxPipeName)
@@ -163,22 +171,6 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
       return;
     }
 
-
-    // let p: Promise<DataXCreateProcessMeta> = new Promise<DataXCreateProcessMeta>((resolve) => {
-    //   resolve(processMeta);
-    // });
-    // // console.log(processMeta);
-    // if (processMeta.readerRDBMSChangeableInLifetime) {
-    //   p = this.httpPost("/coredefine/corenodemanage.ajax"
-    //     , "action=datax_action&emethod=get_reader_writer_meta&dataxName=" + this.dto.dataxPipeName)
-    //     .then((result) => {
-    //       if (result.success) {
-    //         this.dto.processMeta = result.bizresult;
-    //         return processMeta = this.dto.processMeta;
-    //       }
-    //     });
-    // }
-
     DataxAddStep5Component.rewriteProcessMeta(this, this.dto)
       .then((pmeta) => {
         // console.log(pmeta);
@@ -192,26 +184,9 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
           }
         } else {
           n = {'dto': this.dto, 'cpt': DataxAddStep6ColsMetaSetterComponent};
-          // if (this.dto.writerDescriptor.displayName === 'Elasticsearch') {
-          //   // ES的Schema编辑是特别定制的
-          //   n = {'dto': this.dto, 'cpt': AddAppDefSchemaComponent};
-          // } else {
-          //
-          // }
         }
         this.nextStep.emit(n);
       })
 
   }
-
-
-  // goback() {
-  //   if (this.dto.processMeta.readerRDBMS) {
-  //     super.goback();
-  //     return;
-  //   } else {
-  //     let next: IntendDirect = {"dto": this.dto, cpt: DataxAddStep3Component};
-  //     this.preStep.emit(next);
-  //   }
-  // }
 }
