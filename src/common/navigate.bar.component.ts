@@ -35,6 +35,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
+import {openParamsCfg} from "./plugins.component";
 
 
 @Component({
@@ -86,6 +87,7 @@ import {Application} from "./application";
               <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
               <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
               <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
+              <li nz-menu-item> <a href="javascript:void()" (click)="openLicense()">License</a></li>
             </ul>
           </nz-dropdown-menu>
         </li>
@@ -129,7 +131,6 @@ import {Application} from "./application";
       </ng-container>
 
       <li class="user-profile" nz-menu-item nzMatchRouter>
-
         <button nz-button nzType="link" (click)="openTisAbout()">关于</button>
         <button nz-button nz-dropdown [nzDropdownMenu]="user">
           <i nz-icon nzType="user" style="margin: 0px" nzTheme="outline"></i>{{userProfile?.name}}
@@ -144,7 +145,8 @@ import {Application} from "./application";
         <ng-template #tisAbout>
           <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
             <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="发版时间"><img src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="发版时间"><img
+              src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
             <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
           </nz-descriptions>
           <svg version="1.1"
@@ -159,9 +161,9 @@ import {Application} from "./application";
       <li class="user-profile" nz-menu-item nzMatchRouter>
 
         <span nz-tooltip [nzTooltipTitle]="tisStarsTpl" nzTooltipTrigger="click">
-          <img  src="https://img.shields.io/github/stars/datavane/tis.svg" />
-        </span >
-          <ng-template #tisStarsTpl>
+          <img src="https://img.shields.io/github/stars/datavane/tis.svg"/>
+        </span>
+        <ng-template #tisStarsTpl>
           <div>
             <div>如果觉得TIS对您有帮助，请加一个小星星吧</div>
             <div><a href="https://github.com/datavane/tis" target="_blank">https://github.com/datavane/tis</a></div>
@@ -410,6 +412,10 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       }
     });
   }
+
+  openLicense(): void {
+    openParamsCfg("License", null, this);
+  }
 }
 
 
@@ -425,10 +431,24 @@ export interface TISMeta {
   createTime?: string;
 }
 
+export interface LicenseValidateResult {
+  // public final boolean hasNotExpire;
+  // public final String expireDate;
+  /**
+   * 证书没有实效
+   */
+  hasNotExpire: boolean;
+  /**
+   * 证书到期时间
+   */
+  expireDate: string;
+}
+
 export interface TISBaseProfile {
   sysInitialized: boolean;
   usr: UserProfile;
   tisMeta: TISMeta;
+  license: LicenseValidateResult;
 
   latestSelectedAppsIndex(): LatestSelectedIndex;
 }

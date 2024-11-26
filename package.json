@@ -23,11 +23,7 @@
     "test": "concurrently \"npm run build:watch\" \"karma start karma.conf.js\"",
     "pretest:once": "npm run build",
     "test:once": "karma start karma.conf.js --single-run",
-    "lint": "tslint ./src/**/*.ts -t verbose",
-    "build-project:sdk": " ng build --project zeppelin-sdk",
-    "build-project:vis": " ng build --project zeppelin-visualization",
-    "build:elements": "ng build --prod --project elements --output-hashing none && npm run pack:elements && cp projects/elements/package.json dist/elements",
-    "pack:elements": "cat ./dist/elements/{runtime,polyfills,main}-es5.js > dist/elements/elements.js && ls -lah dist/elements/elements.js"
+    "lint": "tslint ./src/**/*.ts -t verbose"
   },
   "keywords": [],
   "author": "",
@@ -64,18 +60,7 @@
     "rxjs-compat": "^6.5.3",
     "tinycolor2": "^1.4.1",
     "tslib": "^2.1.0",
-    "zone.js": "~0.11.4",
-
-    "systemjs": "^5.0.0",
-    "mathjax": "2.7.5",
-    "highlight.js": "^9.15.8",
-    "github-markdown-css": "^3.0.1",
-    "@antv/data-set": "^0.10.2",
-    "xlsx": "^0.14.3",
-    "monaco-editor": "^0.34.1",
-    "ansi_up": "^4.0.4",
-    "diff-match-patch": "^1.0.4",
-    "@antv/g2": "^3.5.4"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.0",

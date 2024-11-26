@@ -30,9 +30,9 @@ import {RootWelcomeComponent} from "./root-welcome-component";
 import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
 import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
 import {NzMessageService} from "ng-zorro-antd/message";
-import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
-import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
-import {loadMonaco} from "@zeppelin/app.module";
+// import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
+// import {NZ_CODE_EDITOR_CONFIG} from "@zeppelin/share/code-editor";
+// import {loadMonaco} from "@zeppelin/app.module";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {IconDefinition} from "@ant-design/icons-angular";
 import {LocalStorageService} from "angular-2-local-storage";
@@ -90,15 +90,15 @@ export function markedOptionsFactory(): MarkedOptions {
         path: 'x/:name',
         loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
       },
-      {
-        path: 'z/zeppelin',
-        loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
-        outlet: "zeppelin"
-      },
-      {
-        path: 'z/zpl',
-        loadChildren: () => import('../zeppelin_app/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
-      },
+      // {
+      //   path: 'z/zeppelin',
+      //   loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+      //   outlet: "zeppelin"
+      // }
+      // ,{
+      //   path: 'z/zpl',
+      //   loadChildren: () => import('../zeppelin_app/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+      // },
     ])
   ],
   declarations: [AppComponent, RootWelcomeComponent
@@ -110,20 +110,20 @@ export function markedOptionsFactory(): MarkedOptions {
   // bootstrap: [CodemirrorComponent],
   providers: [TISService, NzIconService, NzMessageService
     , {provide: NZ_I18N, useValue: zh_CN},
-    {
-      provide: TRASH_FOLDER_ID_TOKEN,
-      useValue: '~Trash'
-    },
-    {
-      provide: NZ_CODE_EDITOR_CONFIG,
-      useValue: {
-        defaultEditorOption: {
-          scrollBeyondLastLine: false,
-          lineHeight: 20
-        },
-        onLoad: loadMonaco
-      }
-    }
+    // {
+    //   provide: TRASH_FOLDER_ID_TOKEN,
+    //   useValue: '~Trash'
+    // },
+    // {
+    //   provide: NZ_CODE_EDITOR_CONFIG,
+    //   useValue: {
+    //     defaultEditorOption: {
+    //       scrollBeyondLastLine: false,
+    //       lineHeight: 20
+    //     },
+    //     onLoad: loadMonaco
+    //   }
+    // }
   ]
 
 })

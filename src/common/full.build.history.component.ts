@@ -25,7 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 import {Descriptor, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
-import {PluginsComponent} from "./plugins.component";
+import {openParamsCfg, PluginsComponent} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
@@ -342,39 +342,43 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     Pager.go(this.router, this.route, p);
   }
 
+
   editLocalJob() {
 
     let targetDesc = 'DataXSubmitParams';
-    let pluginMeta: PluginType = {
-      "name": 'params-cfg',
-      "require": true,
-      "extraParam": "targetItemDesc_" + targetDesc,
-      "descFilter": {
-        "localDescFilter": (desc: Descriptor) => {
-          //  console.log(desc);
-          return targetDesc === desc.displayName;
-        }
-      }
-    };
-    let targetPlugin: TargetPlugin = {
-      hetero: 'params-cfg',
-      descName: targetDesc
-    };
-    ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, pluginMeta, targetPlugin)
-      .then((desc) => {
-        if (!desc) {
-          throw new Error("desc can not be null");
-        }
-        desc.forEach((d) => {
 
+    openParamsCfg(targetDesc, this.drawerService, this, "设置任务触发参数");
 
-          PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
-            , this, d, pluginMeta, "设置任务触发参数", (biz) => {
-            });
-        });
-      }, (rejectReason) => {
-        // console.log(rejectReason);
-      });
+    // let pluginMeta: PluginType = {
+    //   "name": 'params-cfg',
+    //   "require": true,
+    //   "extraParam": "targetItemDesc_" + targetDesc,
+    //   "descFilter": {
+    //     "localDescFilter": (desc: Descriptor) => {
+    //       //  console.log(desc);
+    //       return targetDesc === desc.displayName;
+    //     }
+    //   }
+    // };
+    // let targetPlugin: TargetPlugin = {
+    //   hetero: 'params-cfg',
+    //   descName: targetDesc
+    // };
+    // ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, pluginMeta, targetPlugin)
+    //   .then((desc) => {
+    //     if (!desc) {
+    //       throw new Error("desc can not be null");
+    //     }
+    //     desc.forEach((d) => {
+    //
+    //
+    //       PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
+    //         , this, d, pluginMeta, "设置任务触发参数", (biz) => {
+    //         });
+    //     });
+    //   }, (rejectReason) => {
+    //     // console.log(rejectReason);
+    //   });
   }
 
   editDistributeJob() {

@@ -40,7 +40,7 @@ import {MonitorComponent} from "../runtime/monitor.component";
 import {DataxConfigComponent} from "./datax.config.component";
 import {DataxAddComponent} from "../base/datax.add.component";
 import {IncrBuildComponent} from "../runtime/incr.build.component";
-import {NotebookEntryComponent} from "./notebook.entry.component";
+//import {NotebookEntryComponent} from "./notebook.entry.component";
 import {PipelineControllerComponent} from "./pipeline.controller.component";
 
 @Injectable()
@@ -119,11 +119,11 @@ const dataxNodeRoutes: Routes = [
           {
             path: 'monitor',
             component: MonitorComponent
-          },
-          {
-            path: 'notebook',
-            component: NotebookEntryComponent
           }
+          // , {
+          //   path: 'notebook',
+          //   component: NotebookEntryComponent
+          // }
           , {
             path: '',
             component: DataxMainComponent

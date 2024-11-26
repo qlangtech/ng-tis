@@ -24,7 +24,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {BuildProgressComponent} from "../common/core.build.progress.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
-import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
+// import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
 import {WFControllerComponent} from "./workflow.controller.component";
 import {DataxConfigComponent} from "../datax/datax.config.component";
 import {StepType} from "../common/steps.component";
@@ -39,7 +39,7 @@ const coreNodeRoutes: Routes = [
           {
             path: 'ds',
             component: DatasourceComponent,
-            canActivate: [WorkspaceGuard],
+            //canActivate: [WorkspaceGuard],
           },
           {
             path: 'wf',

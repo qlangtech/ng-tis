@@ -35,10 +35,10 @@ import {NzModalService} from "ng-zorro-antd/modal";
                       <a [routerLink]="['./']">
                         <span class="icon-large" nz-icon nzType="dashboard" nzTheme="outline"></span>主控台</a>
                   </li>
-                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>
-                      <a routerLink="./notebook">
-                        <span class="icon-large" nz-icon nzType="book" nzTheme="outline"></span>Notebook</a>
-                  </li>
+<!--                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>-->
+<!--                      <a routerLink="./notebook">-->
+<!--                        <span class="icon-large" nz-icon nzType="book" nzTheme="outline"></span>Notebook</a>-->
+<!--                  </li>-->
                   <!--                  <li nz-menu-item nzMatchRouter>-->
                   <!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
                   <!--                  </li>-->

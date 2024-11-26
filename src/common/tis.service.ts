@@ -31,11 +31,13 @@ import {ErrorDetailComponent} from "../base/error.detail.component";
 import {TISBaseProfile} from "./navigate.bar.component";
 import {LocalStorageService} from "angular-2-local-storage";
 import {LatestSelectedIndex} from "./LatestSelectedIndex";
-import {NzModalService} from "ng-zorro-antd/modal";
+import {ModalOptions, NzModalService} from "ng-zorro-antd/modal";
 import {NzModalRef} from "ng-zorro-antd/modal/modal-ref";
-import {OnClickCallback} from "ng-zorro-antd/modal/modal-types";
+import {ConfirmType, OnClickCallback} from "ng-zorro-antd/modal/modal-types";
 import {IncrBuildStep4RunningComponent} from "../runtime/incr.build.step4.running.component";
 import {ActivatedRoute, Router} from "@angular/router";
+import {comment} from "postcss";
+import {openParamsCfg} from "./plugins.component";
 
 declare var TIS: any;
 
@@ -43,13 +45,15 @@ export const WS_CLOSE_MSG = 'event_close_ws';
 //result = result.set('appname', this.currApp.appName);
 //       result = result.set('appid', '' + this.currApp.appid);
 export const KEY_APPNAME = 'appname';
+
 export const KEY_APP_ID = 'appid';
 
 export enum SystemError {
   FLINK_INSTANCE_LOSS_OF_CONTACT = 'FLINK_INSTANCE_LOSS_OF_CONTACT',
   FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT = 'FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT',
   POWER_JOB_CLUSTER_LOSS_OF_CONTACT = 'POWER_JOB_CLUSTER_LOSS_OF_CONTACT',
-  HTTP_CONNECT_FAILD = 'HTTP_CONNECT_FAILD'
+  HTTP_CONNECT_FAILD = 'HTTP_CONNECT_FAILD',
+  LICENSE_INVALID = 'LICENSE_INVALID'
 }
 
 // "errCode":{
@@ -64,10 +68,17 @@ interface ErrorVal {
   payload: [string: any]
 }
 
+export interface TISCoreService {
+  httpPost(url: string, body: string, e?: SavePluginEvent): Promise<TisResponseResult>;
+
+  openDialog(component: any, options: ModalOptions<any>): NzModalRef<any>
+
+  openConfirmDialog<T>(options?: ModalOptions<T>, confirmType?: ConfirmType): NzModalRef<T>;
+}
 
 // @ts-ignore
 @Injectable()
-export class TISService {
+export class TISService implements TISCoreService {
   // 导航栏头部的应用是否可以选择？
   // private appSelectable: boolean = false;
   // https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_client_applications
@@ -91,6 +102,22 @@ export class TISService {
   constructor(protected http: HttpClient, private router: Router, private route: ActivatedRoute
     , private modalService: NzModalService
     , public notification: NzNotificationService, private drawerService: NzDrawerService, public _zone: NgZone, private _localStorageService: LocalStorageService) {
+  }
+
+  public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
+
+    let option: ModalOptions = {
+      // nzTitle: title,
+      nzWidth: "800px",
+      nzContent: component,
+      nzFooter: null,
+      nzMaskClosable: false
+    };
+    return this.modalService.create(Object.assign(option, options));
+  }
+
+  public openConfirmDialog<T>(options?: ModalOptions<T>, confirmType?: ConfirmType): NzModalRef<T> {
+    return this.modalService.confirm(options, confirmType);
   }
 
   // public set tisMeta(meta: TISBaseProfile) {
@@ -271,7 +298,7 @@ export class TISService {
     let headers = new HttpHeaders();
     headers = headers.set('content-type', 'text/json; charset=UTF-8');
     let opts = {'headers': this.appendHeaders(headers, e)};
-  //  console.log(opts);
+    //  console.log(opts);
     return this.http.post<TisResponseResult>('/tjs' + url, body, opts).pipe()
       .toPromise()
       // @ts-ignore
@@ -304,8 +331,7 @@ export class TISService {
     if (result.success) {
       // console.log([result.msg, e, (result.msg && result.msg.length > 0) , ( e === undefined || !e.notShowBizMsg) , ( (e === undefined) || !e.createOrGetNotebook)]);
       if ((result.msg && result.msg.length > 0)
-        && (e === undefined || !e.notShowBizMsg)
-        && ((e === undefined) || !e.createOrGetNotebook)) {
+        && (e === undefined || !e.notShowBizMsg)) {
         //   console.log([result.msg, this.notification]);
         let msgContent = '<ul class="list-ul-msg">' + result.msg.map((r) => `<li>${r}</li>`).join('') + '</ul>';
         this.notification.create('success', '成功', msgContent, {nzDuration: 6000});
@@ -353,6 +379,27 @@ export class TISService {
         let okEventEmitter = new EventEmitter<any>();
         switch (errCode) {
           case SystemError.HTTP_CONNECT_FAILD: {
+            break;
+          }
+          case SystemError.LICENSE_INVALID: {
+            let licenseOKEventEmitter = new EventEmitter<any>();
+            licenseOKEventEmitter.subscribe(() => {
+             // console.log("licenseOKEventEmitter");
+              openParamsCfg("License", null, this);
+              if (mref) {
+                mref.close();
+              }
+            });
+            sysErrorRestoreStrategy = {
+              title: "License实效",
+              okText: "配置",
+              cancelText: "等等再说",
+              onOKExec: licenseOKEventEmitter,
+              afterSuccessRestore: (errVal) => {
+                console.log(errVal);
+                // this.router.navigate(["/x", errVal.payload[KEY_APPNAME]], {relativeTo: this.route});
+              }
+            }
             break;
           }
           case SystemError.FLINK_INSTANCE_LOSS_OF_CONTACT: {
@@ -426,12 +473,9 @@ export class TISService {
             nzCancelText: sysErrorRestoreStrategy.cancelText,
             nzOnOk: sysErrorRestoreStrategy.onOKExec
           });
-        }else{
+        } else {
           this.defaultSystemErrorHandle(errContent, logFileName);
         }
-
-
-
 
 
       } else {
@@ -487,7 +531,7 @@ export class TISService {
   }
 
   protected handleError = (error: any): Promise<any> => {
-     console.log(error);
+    console.log(error);
     if (error instanceof HttpErrorResponse) {
       let err: HttpErrorResponse = error;
       this.notification.create('error', '错误', `系统发生错误，请联系系统管理员<br> ${err.message} <br> ${err.error} `, {
@@ -499,7 +543,7 @@ export class TISService {
     // console.log(this);
 
     NProgress.done();
-   // console.log(error);
+    // console.log(error);
     return Promise.reject(error.message || error);
   }
 

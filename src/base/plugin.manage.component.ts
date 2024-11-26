@@ -28,7 +28,8 @@ import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {Descriptor, IFieldError, PARAM_END_TYPE, PluginType} from "../common/tis.plugin";
 import {TargetPlugin} from "../common/plugin/type.utils";
 import {ItemPropValComponent} from "../common/plugin/item-prop-val.component";
-import {PluginsComponent} from "../common/plugins.component";
+import {openParamsCfg, PluginsComponent} from "../common/plugins.component";
+import {LicenseValidateResult, TISBaseProfile} from "../common/navigate.bar.component";
 
 enum PluginTab {
   avail = 'avaliable',
@@ -108,7 +109,14 @@ enum PluginTab {
                     <nz-tag>TIS官方</nz-tag>
                     <br/>
                     <span>费用:</span>
-                    <nz-tag [nzColor]="'green'">免费</nz-tag>
+                    <ng-container [ngSwitch]="item.communityVIP">
+                      <nz-tag *ngSwitchCase="false" [nzColor]="'green'">免费</nz-tag>
+                      <nz-tag *ngSwitchCase="true" [nzColor]="'orange'"><span nz-icon nzType="dollar"
+                                                                              nzTheme="outline"></span>社区协作
+                      </nz-tag>
+                    </ng-container>
+
+
                     <br/>
                     <span>版本:</span>{{ item.version }} <br/>
                     <span>打包时间:</span>
@@ -179,7 +187,12 @@ enum PluginTab {
                     <nz-tag>TIS官方</nz-tag>
                     <br/>
                     <span>费用:</span>
-                    <nz-tag [nzColor]="'green'">免费</nz-tag>
+                    <ng-container [ngSwitch]="item.communityVIP">
+                      <nz-tag *ngSwitchCase="false" [nzColor]="'green'">免费</nz-tag>
+                      <nz-tag *ngSwitchCase="true" [nzColor]="'orange'"><span nz-icon nzType="dollar"
+                                                                              nzTheme="outline"></span>社区协作
+                      </nz-tag>
+                    </ng-container>
                     <br/>
                     <span>版本:</span>{{ item.version }} <br/>
                     <span>打包时间:</span>
@@ -288,6 +301,9 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
    */
   public static openPluginManage(drawerService: NzDrawerService
     , extendPoint: string | Array<string>, endType: string, filterTags: Array<string>, checkedAllAvailable?: boolean): NzDrawerRef<PluginManageComponent, any> {
+    if (!drawerService) {
+      throw new Error("param drawerService can not be null");
+    }
     const drawerRef = drawerService.create<PluginManageComponent, {}, {}>({
       nzWidth: "70%",
       nzPlacement: "right",
@@ -305,7 +321,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
     return drawerRef;
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute,private drawerService: NzDrawerService) {
+  constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute, private drawerService: NzDrawerService) {
     super(tisService, modalService);
   }
 
@@ -439,9 +455,20 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
 
   }
 
+  private installLicense(userProfile: TISBaseProfile) {
+    openParamsCfg("License", null, this)
+      .then((resp) => {
+        let vresult: Array<LicenseValidateResult> = resp.biz();
+        for (let v of vresult) {
+          userProfile.license = v;
+        }
+      //  console.log(userProfile);
+      });
+  }
+
   installPlugin() {
     this.pluginErrs = new Map();
-    let willInstall: Array<any> = this.avaliablePlugs.filter((p) => p.checked);
+    let willInstall: Array<AvaliablePlugin> = this.avaliablePlugs.filter((p) => p.checked);
     if (willInstall.length < 1) {
       this.modalService.error({
         nzTitle: "错误",
@@ -449,24 +476,62 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
       });
       return;
     }
-
-    this.jsonPost('/coredefine/corenodemanage.ajax?action=plugin_action&emethod=install_plugins'
-      , willInstall)
-      .then((r) => {
-        if (r.success) {
-          this.goto(PluginTab.updateCenter)
-        } else {
-          r.errorfields.forEach((i) => {
-            i.forEach((e) => {
-              e.forEach((fieldErr) => {
-                this.pluginErrs.set(fieldErr.name, fieldErr);
-              })
+    // new Promise<Array<Descriptor>>((resolve, reject) => {
+    let licenseProcess = new Promise<boolean>((resolve, reject) => {
+      // 包含社区协作版插件
+      if (willInstall.findIndex((i) => i.communityVIP) > -1) {
+        this.tisService.tisMeta.then((userProfile) => {
+          if (!userProfile.license) {
+            // 用户还没有安装license，打开licene输入框页面
+            this.confirm("安装列表中包含社区协作版插件，您还尚未安装License，现在安装吗？", () => {
+              this.installLicense(userProfile);
+            })
+            reject("license has not been defined");
+            return;
+          }
+         // console.log(userProfile);
+          if (!userProfile.license.hasNotExpire) {
+            // 用户安装了证书，但是已经实效了
+            this.confirm("安装列表中包含社区协作版插件，License已经过期，有效日期至："
+              + userProfile.license.expireDate + "，现在重新安装吗？", () => {
+              this.installLicense(userProfile);
             });
-          });
-        }
-      });
+
+            reject(userProfile.license);
+            return;
+          }
+
+          resolve(true);
+
+        });
+      } else {
+        resolve(true);
+      }
+    });
+
+
+    licenseProcess.then((_) => {
+      // 开始安装插件
+      this.jsonPost('/coredefine/corenodemanage.ajax?action=plugin_action&emethod=install_plugins'
+        , willInstall)
+        .then((r) => {
+          if (r.success) {
+            this.goto(PluginTab.updateCenter)
+          } else {
+            r.errorfields.forEach((i) => {
+              i.forEach((e) => {
+                e.forEach((fieldErr) => {
+                  this.pluginErrs.set(fieldErr.name, fieldErr);
+                })
+              });
+            });
+          }
+        });
+    })
+
 
   }
+
 
   openInstalledPlugins() {
     this.goto(PluginTab.installed);
@@ -545,6 +610,10 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
 }
 
 interface AvaliablePlugin {
+  /**
+   * 是否是VIP插件
+   */
+  "communityVIP": boolean;
   "popularity": string;
   "releaseTimestamp": number;
   "requiredCore": string;

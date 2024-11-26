@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {TISService} from './tis.service';
+import {TISCoreService, TISService} from './tis.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {Component, EventEmitter, Injectable, Input, OnInit, Output, Type} from '@angular/core';
 // import JQuery from 'jquery';
@@ -33,6 +33,7 @@ import {LogType} from "../runtime/misc/RCDeployment";
 
 import {AppType} from "./application";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
 
 /**
  * Created by baisui on 2017/4/12 0012.
@@ -41,7 +42,7 @@ declare var jQuery: any;
 const KEY_show_Bread_crumb = "showBreadcrumb";
 
 // declare var NProgress: any;
-export class BasicFormComponent {
+export class BasicFormComponent implements TISCoreService {
   result: TisResponseResult;
   // 表单是否禁用
 
@@ -58,6 +59,11 @@ export class BasicFormComponent {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
   }
+
+  openConfirmDialog<T>(options?: ModalOptions<T>, confirmType?: ConfirmType): NzModalRef<T> {
+    return this.modalService.confirm(options, confirmType);
+  }
+
 
   // // 当前上下文中使用的索引
   // currIndex: CurrentCollection;
@@ -147,14 +153,14 @@ export class BasicFormComponent {
 
   public openDialog(component: any, options: ModalOptions<any>): NzModalRef<any> {
 
-    let option: ModalOptions = {
-      // nzTitle: title,
-      nzWidth: "800px",
-      nzContent: component,
-      nzFooter: null,
-      nzMaskClosable: false
-    };
-    return this.modalService.create(Object.assign(option, options));
+    // let option: ModalOptions = {
+    //   // nzTitle: title,
+    //   nzWidth: "800px",
+    //   nzContent: component,
+    //   nzFooter: null,
+    //   nzMaskClosable: false
+    // };
+    return this.tisService.openDialog(component, options); //this.modalService.create(Object.assign(option, options));
   }
 
   get currentApp(): CurrentCollection {
