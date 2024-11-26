@@ -30,7 +30,7 @@ import {
   TemplateRef,
   ViewChild
 } from "@angular/core";
-import {TISService} from "./tis.service";
+import {TISCoreService, TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
@@ -55,7 +55,53 @@ import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/type.utils";
+import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 
+
+/**
+ * 打开ParamCfg类型的对话框
+ * @param targetDesc
+ * @param drawerService
+ * @param cpt
+ */
+export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService, cpt: TISCoreService, dialogTitle?: string): Promise<PluginSaveResponse> {
+
+  let pluginMeta: PluginType = {
+    "name": 'params-cfg',
+    "require": true,
+    "extraParam": "targetItemDesc_" + targetDesc,
+    "descFilter": {
+      "localDescFilter": (desc: Descriptor) => {
+        //  console.log(desc);
+        return targetDesc === desc.displayName;
+      }
+    }
+  };
+  let targetPlugin: TargetPlugin = {
+    hetero: 'params-cfg',
+    descName: targetDesc
+  };
+  return new Promise<PluginSaveResponse>((resolve, reject) => {
+    ItemPropValComponent.checkAndInstallPlugin(drawerService, cpt, pluginMeta, targetPlugin)
+      .then((desc) => {
+        if (!desc) {
+          throw new Error("desc can not be null");
+        }
+        desc.forEach((d) => {
+
+
+          PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
+            , cpt, d, pluginMeta, dialogTitle ? dialogTitle : targetDesc, (biz) => {
+              resolve(biz);
+            });
+        });
+      }, (rejectReason) => {
+        // console.log(rejectReason);
+        reject(rejectReason);
+      });
+  });
+
+}
 
 @Component({
   selector: 'tis-plugins',
@@ -128,11 +174,14 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
           <div>
             <button *ngIf="!disableVerify && item.dspt.veriflable" nz-button nzSize="small"
                     (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验
-            </button>&nbsp;<button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
+            </button>&nbsp;
+<!--
+            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
                                    nzSize="small"
                                    (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
                                                                               nzTheme="outline"></i>Notebook
           </button>&nbsp;
+   -->
             <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
               <tis-plugin-add-btn [btnSize]="'small'"
                                   [extendPoint]="item.dspt.manipulate.extendPoint"
@@ -196,9 +245,9 @@ import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/typ
         </ng-container>
       </form>
     </nz-spin>
-    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a
-      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>
-    </ng-template>
+<!--    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a-->
+<!--      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>-->
+<!--    </ng-template>-->
     <!--
           {{this._heteroList | json}}
     -->
@@ -294,8 +343,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
   @Output()
   afterPluginManipulate = new EventEmitter<PluginSaveResponse>();
-  @ViewChild('notebookNotActivate', {read: TemplateRef, static: true}) notebookNotActivate: TemplateRef<NzSafeAny>;
-  @Input() disableNotebook = false;
+  // @ViewChild('notebookNotActivate', {read: TemplateRef, static: true}) notebookNotActivate: TemplateRef<NzSafeAny>;
+  //@Input() disableNotebook = false;
 
 
   /**
@@ -324,7 +373,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     PluginsComponent.openPluginDialog({shallLoadSavedItems: false}, b, pluginDesc, pluginTp, title, onSuccess);
   }
 
-  public static openPluginDialog(opts: OpenPluginDialogOptions, b: BasicFormComponent
+  public static openPluginDialog(opts: OpenPluginDialogOptions, b: TISCoreService
     , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void): NzModalRef<any> {
     //console.log("openPluginDialog  ");
     let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
@@ -338,7 +387,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.formControlSpan = 19;
     addDb.disableManipulate = true;
     addDb.shallInitializePluginItems = false;
-    addDb.disableNotebook = true;
+   // addDb.disableNotebook = true;
     // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
     if (opts.shallLoadSavedItems) {
       //console.log("shallLoadSavedItems  ");
@@ -491,9 +540,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     , e?: SavePluginEvent): Promise<TisResponseResult> {
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
-   // console.log([pm,url]);
+    // console.log([pm,url]);
     return ctx.jsonPost(url, {}, e).then((r) => {
-     // console.log([r,pm,url]);
+      // console.log([r,pm,url]);
       let _heteroList: HeteroList[] = [];
       if (r.success) {
         let bizArray: HeteroList[] = r.bizresult.plugins;
@@ -506,7 +555,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pt);
           m = (pt as PluginMeta);
           PluginsComponent.addDefaultItem(m, h);
-             console.log([bizArray[i], pm[i], h]);
+          console.log([bizArray[i], pm[i], h]);
           _heteroList.push(h);
         }
       }
@@ -524,7 +573,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     let pluginMeta = PluginsComponent.getPluginMetaParams(pluginMetas);
 
-    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}&getNotebook=${savePluginEvent.createOrGetNotebook}`;
+    let url = `/coredefine/corenodemanage.ajax?event_submit_do_save_plugin_config=y&action=plugin_action&plugin=${pluginMeta}&errors_page_show=${errorsPageShow}&verify=${savePluginEvent.verifyConfig}`;
 
     let items: Array<Item[]> = [];
     heteroList.forEach((h) => {
@@ -591,26 +640,26 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
   }
 
-  openNotebook(h: HeteroList, item: Item, event: MouseEvent) {
-
-    if (!item.dspt.notebook.activate) {
-      this.modalService.warning({
-        nzTitle: "错误",
-        nzContent: this.notebookNotActivate,
-        nzOkText: "知道啦"
-      });
-      return;
-    }
-
-    let savePlugin = new SavePluginEvent();
-    savePlugin.createOrGetNotebook = true;
-    if (!h.pluginCategory) {
-      throw new Error("pluginCategory can not be null");
-    }
-    let nh = Object.assign(new HeteroList(), h);
-    nh.items = [item];
-    this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
-  }
+  // openNotebook(h: HeteroList, item: Item, event: MouseEvent) {
+  //
+  //   // if (!item.dspt.notebook.activate) {
+  //   //   this.modalService.warning({
+  //   //     nzTitle: "错误",
+  //   //     nzContent: this.notebookNotActivate,
+  //   //     nzOkText: "知道啦"
+  //   //   });
+  //   //   return;
+  //   // }
+  //
+  //   let savePlugin = new SavePluginEvent();
+  //   savePlugin.createOrGetNotebook = true;
+  //   if (!h.pluginCategory) {
+  //     throw new Error("pluginCategory can not be null");
+  //   }
+  //   let nh = Object.assign(new HeteroList(), h);
+  //   nh.items = [item];
+  //   this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
+  // }
 
   @Input()
   set plugins(metas: PluginType[]) {
@@ -757,7 +806,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       , (r) => {
         // 成功了
         this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
-        if (!savePluginEvent.verifyConfig && !savePluginEvent.createOrGetNotebook) {
+        if (!savePluginEvent.verifyConfig
+        //  && !savePluginEvent.createOrGetNotebook
+        ) {
           this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
         } else {
           if (savePluginEvent.verifyConfig && r.success) {
@@ -766,22 +817,22 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
             }
           }
           this.afterVerifyConfig.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult))
-          if (savePluginEvent.createOrGetNotebook && r.success) {
-            if (this.startNotebook.observers.length > 0) {
-              this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
-            } else {
-              const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
-                nzWidth: "80%",
-                nzPlacement: "right",
-                nzContent: NotebookwrapperComponent,
-                nzContentParams: {},
-                nzClosable: false
-              });
-              // this.router.navigate()
-
-              this.router.navigate(["/", {outlets: {"zeppelin": `z/zeppelin/notebook/${r.bizresult}`}}], {relativeTo: this.route})
-            }
-          }
+          // if (savePluginEvent.createOrGetNotebook && r.success) {
+          //   if (this.startNotebook.observers.length > 0) {
+          //     this.startNotebook.emit(new PluginSaveResponse(r.success, false, r.bizresult));
+          //   } else {
+          //     const drawerRef = this.drawerService.create<NotebookwrapperComponent, {}, {}>({
+          //       nzWidth: "80%",
+          //       nzPlacement: "right",
+          //       nzContent: NotebookwrapperComponent,
+          //       nzContentParams: {},
+          //       nzClosable: false
+          //     });
+          //     // this.router.navigate()
+          //
+          //     this.router.navigate(["/", {outlets: {"zeppelin": `z/zeppelin/notebook/${r.bizresult}`}}], {relativeTo: this.route})
+          //   }
+          // }
         }
 
         if (!this.errorsPageShow && r.success) {
@@ -926,7 +977,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
    * @param pluginDesc
    */
   public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
-    console.log(item.dspt.manipulate);
+    //console.log(item.dspt.manipulate);
     let opt = this.createPostPayload(item, pluginMeta, false /**添加操作*/);
     // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
 

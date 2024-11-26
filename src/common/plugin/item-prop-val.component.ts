@@ -12,7 +12,7 @@ import {
   TYPE_PLUGIN_SELECTION,
   ValOption
 } from "../tis.plugin";
-import {TISService} from "../tis.service";
+import {TISCoreService, TISService} from "../tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
@@ -358,7 +358,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   get disabled(): boolean {
-    return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled;
+    return  (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled || this._pp.readonly;
   }
 
 
@@ -383,9 +383,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
 
-  static openPluginInstall(drawerService: NzDrawerService, cpt: BasicFormComponent
+  static openPluginInstall(drawerService: NzDrawerService, cpt: TISCoreService
     , descName: string, notFoundExtension: string | Array<string>, pluginMeta: PluginType, checkedAllAvailable: boolean, afterClosePluginInstall?: (value: any) => void) {
-    cpt.modalService.confirm({
+    cpt.openConfirmDialog({
       nzTitle: '确认',
       nzContent: `系统还没有安装名称为'${descName}'的插件，是否需要安装？`,
       nzOkText: '开始安装',
@@ -408,7 +408,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   public static checkAndInstallPlugin(drawerService: NzDrawerService
-    , cpt: BasicFormComponent
+    , cpt: TISCoreService
     , pluginMeta: PluginType
     , targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
     let descName = targetPlugin.descName;
@@ -421,6 +421,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             if (!pluginMeta) {
               //  throw new Error("pluginMeta can not be null");
             }
+
             ItemPropValComponent.openPluginInstall(drawerService, cpt, descName, r.bizresult.notFoundExtension, pluginMeta, false);
 
           }

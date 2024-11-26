@@ -202,6 +202,10 @@ export class ItemPropVal extends ErrorFeedback {
     return label ? label : this.key;
   }
 
+  get readonly(): boolean {
+    return !!this._eprops['readonly'];
+  }
+
   /**
    * 当
    */
@@ -324,8 +328,8 @@ export class Descriptor {
     return this.extractProps['endType'];
   }
 
-  public get manipulateStorable(): boolean{
-      return !!this.extractProps['manipulateStorable'];
+  public get manipulateStorable(): boolean {
+    return !!this.extractProps['manipulateStorable'];
   }
 
   public get supportIcon(): boolean {
@@ -396,10 +400,10 @@ export class Descriptor {
     return extraProps;
   }
 
-  public get notebook(): NotebookMeta {
-    let note: NotebookMeta = this.extractProps["notebook"];
-    return note;
-  }
+  // public get notebook(): NotebookMeta {
+  //   let note: NotebookMeta = this.extractProps["notebook"];
+  //   return note;
+  // }
 
   public get manipulate(): PluginManipulate {
     let manipulate: PluginManipulate = this.extractProps["manipulate"];
@@ -411,12 +415,12 @@ export class Descriptor {
   }
 }
 
-export interface NotebookMeta {
-  // 是否可用
-  ability: boolean;
-  // 服务端是否激活
-  activate: boolean;
-}
+// export interface NotebookMeta {
+//   // 是否可用
+//   ability: boolean;
+//   // 服务端是否激活
+//   activate: boolean;
+// }
 
 /**
  * 插件操作扩展点
@@ -608,7 +612,7 @@ export class Item {
               Item.processErrorField(fieldErr.errorfields, [itemProp.descVal]);
             }
           } else {
-            console.log([fieldErr.name,ip,item.vals])
+            console.log([fieldErr.name, ip, item.vals])
             throw new Error("illegal type");
           }
         });
@@ -1065,7 +1069,7 @@ export class SavePluginEvent {
     this.overwriteHttpHeader = headerOverwrite;
   }
 
-  public createOrGetNotebook = false;
+ // public createOrGetNotebook = false;
   public verifyConfig = false;
   // public notShowBizMsg = false;
   // 顺带要在服务端执行一段脚本
