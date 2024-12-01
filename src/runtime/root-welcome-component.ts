@@ -157,8 +157,8 @@ import {BasicFormComponent} from "../common/basic.form.component";
             </nz-card>
           </div>
           <div nz-col nzSpan="8">
-            <nz-card nzTitle="微信讨论群">
-              <img width="260" src="/images/weixin_talk.png"/>
+            <nz-card nzTitle="添加小秘书" nzExtra="添加后会邀请您进入微信群参与讨论">
+              <img width="260" src="/images/weixin-xms.jpeg"/>
             </nz-card>
           </div>
           <div nz-col nzSpan="8">
