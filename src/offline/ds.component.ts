@@ -320,9 +320,9 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.processResult(result);
 
         if (result.success) {
-          // console.log(result.bizresult);
+          //
           let dbs: Array<DataBaseMeta> = result.bizresult.dbs;
-
+         // console.log([dbs,updateTreeInit]);
           let descList = Descriptor.wrapDescriptors(result.bizresult.pluginDesc);
           this.datasourceDesc = Array.from(descList.values());
           this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
@@ -340,12 +340,13 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         }
         this.treeLoad = false;
       }).catch((e) => {
+        console.log(e);
       this.treeLoad = false;
     });
   }
 
   treeInit(dbs: Array<DataBaseMeta>): void {
-    // console.log(dbs);
+     console.log(dbs);
     this.nodes = [];
     for (let db of dbs) {
       let children = [];

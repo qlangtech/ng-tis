@@ -230,6 +230,10 @@ export enum ExecModel {
       display: inline-block;
       width: 20%;
       padding-right: 8px;
+      margin-right: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .editable-cell {
