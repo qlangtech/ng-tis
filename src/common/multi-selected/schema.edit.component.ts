@@ -92,7 +92,7 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
     let syncResult: SynchronizeMcolsResult;
 
     if (this._dbLatestMcols) {
-     // console.log(this._dbLatestMcols);
+      // console.log(this._dbLatestMcols);
       let result = [];
       syncResult = new SynchronizeMcolsResult(result);
       let lastestCol: ReaderColMeta;
@@ -122,7 +122,7 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
             // 需要遍历需要的所有
           }
           continue outter;
-        }else {
+        } else {
           lastestCol.index = i + 1;
           syncResult.newAddCols.push(<string>lastestCol.name);
           result.push(lastestCol);
@@ -324,7 +324,12 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
   _colsMeta: Array<ReaderColMeta> = [];
   @Input()
   set colsMeta(colsMeta: Array<ReaderColMeta>) {
+    // console.log(colsMeta);
     this._colsMeta = colsMeta;
+  }
+
+  get colsMeta(): Array<ReaderColMeta> {
+    return this._colsMeta;
   }
 
   @Input()
@@ -346,6 +351,7 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
 
     for (let idx = 0; idx < errors.length; idx++) {
       let colMeta: ReaderColMeta = this.colsMeta[idx];
+      // let colMeta: ReaderColMeta = this.colsMeta[idx];
       if (!colMeta) {
         continue;
       }
@@ -360,6 +366,8 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
             colMeta.type[key + KEY_FEEDBAKC] = new ErrorFeedback(err[key]);
             break;
           case KEY_DOC_FIELD_SPLIT_METAS:
+
+            colMeta.openAssist = true;
             let splitMetasErrors: Array<any> = err[key];
             //        console.log(splitMetasErrors);
             let metaErr = null;

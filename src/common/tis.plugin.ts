@@ -484,6 +484,7 @@ export class SynchronizeMcolsResult {
 }
 
 export interface ReaderColMeta {
+  openAssist: boolean;
   index: number;
   name: Item | string;
   type: string | DataTypeDesc;
