@@ -133,13 +133,6 @@ export enum ExecModel {
 
         <nz-page-header [nzGhost]="true">
           <nz-page-header-title>Table DDL Script</nz-page-header-title>
-
-          <!--          <nz-page-header-extra>-->
-          <!--            <nz-space>-->
-
-          <!--            </nz-space>-->
-          <!--          </nz-page-header-extra>-->
-
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of createDDLFileList">
@@ -161,7 +154,7 @@ export enum ExecModel {
         <nz-page-header-title>Transformer</nz-page-header-title>
         <nz-page-header-content class="item-block child-block script-block">
           <ul>
-            <li *ngFor="let f of transformerRules">
+            <li style="overflow: inherit" *ngFor="let f of transformerRules">
               <nz-badge nzSize="small" [nzCount]="f.ruleCount">
                 <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
                   <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
