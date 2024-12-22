@@ -131,7 +131,7 @@ export class TransformerRuleTabletView implements TuplesProperty {
                                 [descriptors]="this.transformerUDFdescriptors" [initDescriptors]="false">
               <span nz-icon nzType="edit" nzTheme="outline"></span>
 
-              <ng-container [ngSwitch]="!!u.udf">
+              <ng-container [ngSwitch]="!!u.udf && !!u.udf.dspt">
                 <span *ngSwitchCase="true">{{u.udf.dspt.displayName}}</span>
                 <span *ngSwitchDefault>设置</span>
               </ng-container>

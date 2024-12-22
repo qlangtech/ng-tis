@@ -144,35 +144,17 @@ export class TISService implements TISCoreService {
       let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
       return this.httpPost(getUserUrl, '').then(webExecuteCallback).then((r) => {
         if (r.success) {
-          // this.userProfile = r.bizresult.usr;
-          // this.tisMeta = r.bizresult.tisMeta;
+
           let biz: TISBaseProfile = r.bizresult;
+          let selectedApps: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(biz, this._localStorageService);
           this._tisMeta = Object.assign(biz, {
             latestSelectedAppsIndex: () => {
-              return LatestSelectedIndex.popularSelectedIndex(biz, this._localStorageService);
+              return selectedApps;
             }
-          });// this.tisMeta;
-          // console.log(['get_user_info', r.bizresult, this._tisMeta]);
-          // let popularSelected: LatestSelectedIndex = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-          // this._latestSelected = popularSelected.popularLatestSelected;
-          // console.log(this._latestSelected);
-
-          // let popularSelected = LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
-          //
-          // if (this.app) {
-          //   popularSelected.addIfNotContain(this.app);
-          // }
-          //
-          // this.collectionOptionList = popularSelected.popularLatestSelected;
-          //
-          //
-          // if (!r.bizresult.sysInitialized) {
-          //   this.openInitSystemDialog();
-          // }
+          });
           return this._tisMeta;
         }
       });
-      // });
     }
     return new Promise((resolve) => {
       resolve(this._tisMeta);
@@ -384,7 +366,7 @@ export class TISService implements TISCoreService {
           case SystemError.LICENSE_INVALID: {
             let licenseOKEventEmitter = new EventEmitter<any>();
             licenseOKEventEmitter.subscribe(() => {
-             // console.log("licenseOKEventEmitter");
+              // console.log("licenseOKEventEmitter");
               openParamsCfg("License", null, this);
               if (mref) {
                 mref.close();
