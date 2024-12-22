@@ -705,7 +705,7 @@ export class Item {
 
           let selectedTab: string = enumVal[KEY_subform_DetailIdValue];
           let transformerRule: Array<RecordTransformer> = [...val];
-          console.log(transformerRule);
+         // console.log(transformerRule);
           newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas, selectedTab);
           break;
         }

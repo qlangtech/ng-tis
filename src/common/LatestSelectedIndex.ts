@@ -77,18 +77,24 @@ export class LatestSelectedIndex {
     if (_localStorageService) {
 
       return tisService.tisMeta.then((meta) => {
-        let popularSelected = meta.latestSelectedAppsIndex();
+        let popularSelected: LatestSelectedIndex = meta.latestSelectedAppsIndex();
         popularSelected.add(new SelectedIndex(app.projectName, app.appType));
         _localStorageService.set(popularSelected.localLatestIndexKey, popularSelected);
         return popularSelected.popularLatestSelected;
       })
 
-      // return LatestSelectedIndex.popularSelectedIndex(tisService.tisMeta, _localStorageService).then((popularSelected: LatestSelectedIndex) => {
-      //
-      // });
-
-
     }
+  }
+
+  public remove(_localStorageService: LocalStorageService,app: CurrentCollection) {
+    let findIndex = this._queue.findIndex((r) => {
+      return (r.name === app.name && r.appType === app.appTyp);
+    });
+    if (findIndex > -1) {
+      this._queue.splice(findIndex,1)
+    }
+
+    _localStorageService.set(this.localLatestIndexKey, this);
   }
 
   public add(i: SelectedIndex): void {

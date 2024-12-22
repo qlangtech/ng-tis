@@ -26,6 +26,8 @@ import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
 import {ControlPanelComponent} from "../common/control.panel.component";
+import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
+import {LocalStorageService} from "angular-2-local-storage";
 
 
 @Component({
@@ -75,7 +77,7 @@ export class PipelineControllerComponent extends AppFormComponent implements OnI
 
   // public stepType: StepType = StepType.CreateDatax;
 
-  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
+  constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private _localStorageService: LocalStorageService, private router: Router) {
     super(tisService, route, modalService);
     this.stepType = this.route.snapshot.data["stepType"];
     if (!this.stepType) {
@@ -127,7 +129,11 @@ export class PipelineControllerComponent extends AppFormComponent implements OnI
         setTimeout(() => {
           if (r.success) {
             // 直接跳转
-
+            this.tisService.tisMeta.then((meta) => {
+              // 删除缓存中的app
+              let selectedApps = meta.latestSelectedAppsIndex();
+              selectedApps.remove(this._localStorageService, this.currentApp);
+            });
             this.router.navigate(["base", "applist"]);
           } else {
             event.restoreInitialState();
