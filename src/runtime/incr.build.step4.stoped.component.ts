@@ -95,7 +95,7 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
               <ul nz-menu>
                 <li nz-menu-item>
                   <button nz-button nzType="link"
-                          [disabled]="dto.state !== 'STOPED' && dto.state !== 'DISAPPEAR' "
+                          [disabled]="dto.state !== 'STOPED' && dto.state !== 'DISAPPEAR' && dto.state !== 'FAILED' "
                           (click)="relaunchJob(rr)"><i nz-icon nzType="rollback" nzTheme="outline"></i>恢复任务
                   </button>
                 </li>

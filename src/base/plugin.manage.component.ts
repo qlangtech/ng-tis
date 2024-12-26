@@ -40,196 +40,208 @@ enum PluginTab {
 // 查看操作日志
 @Component({
   template: `
-    <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
-    </tis-page-header>
-    <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl"
-              nzShowIcon></nz-alert>
-    <ng-template #updateSiteLoadErrTpl>
-      加载远端仓库元数据异常: {{updateSiteLoadErr.action_error_msg}}
-      <button nz-button nzType="primary" (click)="reloadUpdateSite()" [disabled]="this.formDisabled" nzSize="small">
-        <i
-          nz-icon nzType="redo" nzTheme="outline"></i>重试
-      </button>
-    </ng-template>
-    <!-- 过滤条件 -->
-    <div nz-row nzJustify="start" nzAlign="middle" class="filter-container">
-      <div nz-col nzSpan="18" *ngIf="_extendPoint && _extendPoint.length>0">
-        <label><i nz-icon nzType="filter" nzTheme="outline"></i>扩展点：</label>
-        <nz-select [disabled]="checkedAllAvailable" class="filter-extendpoint" [(ngModel)]="filterExtendPoint"
-                   [nzSize]="'small'"
-                   nzMode="multiple">
-          <nz-option *ngFor="let option of _extendPoint" [nzLabel]="option" [nzValue]="option"></nz-option>
-        </nz-select>
+      <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
+      </tis-page-header>
+      <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl"
+                nzShowIcon></nz-alert>
+      <ng-template #updateSiteLoadErrTpl>
+          加载远端仓库元数据异常: {{updateSiteLoadErr.action_error_msg}}
+          <button nz-button nzType="primary" (click)="reloadUpdateSite()" [disabled]="this.formDisabled" nzSize="small">
+              <i nz-icon nzType="redo" nzTheme="outline"></i>重试
+          </button>
+      </ng-template>
+      <!-- 过滤条件 -->
+      <div nz-row nzJustify="start" nzAlign="middle" class="filter-container">
+          <div nz-col nzSpan="18" *ngIf="_extendPoint && _extendPoint.length>0">
+              <label><i nz-icon nzType="filter" nzTheme="outline"></i>扩展点：</label>
+              <nz-select [disabled]="checkedAllAvailable" class="filter-extendpoint" [(ngModel)]="filterExtendPoint"
+                         [nzSize]="'small'"
+                         nzMode="multiple">
+                  <nz-option *ngFor="let option of _extendPoint" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+          </div>
+          <div nz-col nzSpan="6" *ngIf="this.endType">
+              <label><i nz-icon nzType="filter" nzTheme="outline"></i>端类型：</label>
+              <nz-switch [disabled]="checkedAllAvailable" [(ngModel)]="filterEndType"
+                         (ngModelChange)="refreshPluginList()"
+                         [nzCheckedChildren]="this.endType"></nz-switch>
+          </div>
       </div>
-      <div nz-col nzSpan="6" *ngIf="this.endType">
-        <label><i nz-icon nzType="filter" nzTheme="outline"></i>端类型：</label>
-        <nz-switch [disabled]="checkedAllAvailable" [(ngModel)]="filterEndType"
-                   (ngModelChange)="refreshPluginList()"
-                   [nzCheckedChildren]="this.endType"></nz-switch>
-      </div>
-    </div>
 
-    <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
-      <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
-        <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
-          <ng-template nz-tab>
-            <nz-affix class="tool-bar" [nzOffsetTop]="20">
-              <nz-space>
-                <button *nzSpaceItem [nzSize]="'small'" [disabled]="!canInstall" nz-button nzType="primary"
-                        (click)="installPlugin()">
-                  <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
-                </button>
+      <nz-spin [nzSpinning]="this.formDisabled" [nzSize]="'large'">
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" [nzSelectedIndex]="selectedIndex">
+              <nz-tab nzTitle="可安装" (nzClick)="openAvailable()">
+                  <ng-template nz-tab>
+                      <nz-affix class="tool-bar" [nzOffsetTop]="20">
+                          <nz-space>
+                              <button *nzSpaceItem [nzSize]="'small'" [disabled]="!canInstall" nz-button
+                                      nzType="primary"
+                                      (click)="installPlugin()">
+                                  <i nz-icon nzType="cloud-download" nzTheme="outline"></i>安装
+                              </button>
 
-                <button *nzSpaceItem [nzSize]="'small'" nz-button nzType="default"
-                        (click)="uploadPlugin()">
-                  <i nz-icon nzType="cloud-upload" nzTheme="outline"></i>上传
-                </button>
-              </nz-space>
-            </nz-affix>
-            <tis-page [rows]="avaliablePlugs">
-              <tis-col title="安装" width="5">
-                <ng-template let-item="r">
-                  <label nz-checkbox [disabled]="checkedAllAvailable"
-                         [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
-                </ng-template>
-              </tis-col>
-              <tis-col width="5">
-                <ng-template let-item="r">
-                  <div>
+                              <button *nzSpaceItem [nzSize]="'small'" nz-button nzType="default"
+                                      (click)="uploadPlugin()">
+                                  <i nz-icon nzType="cloud-upload" nzTheme="outline"></i>上传
+                              </button>
+                          </nz-space>
+                      </nz-affix>
+                      <tis-page [rows]="avaliablePlugs">
+                          <tis-col title="安装" width="5">
+                              <ng-template let-item="r">
+                                  <label nz-checkbox [disabled]="checkedAllAvailable"
+                                         [(ngModel)]="item.checked" [ngModelOptions]="{standalone: true}"></label>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col width="5">
+                              <ng-template let-item="r">
+                                  <div>
                                       <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon
                                             [nzType]="icon" nzTheme="fill"></span>
-                  </div>
-                </ng-template>
-              </tis-col>
-              <tis-col title="插件" (search)="queryAvailablePlugin($event)" width="20">
-                <ng-template let-item="r">
-                  <a href="javascript:void(0)">{{item.name}}</a>
-                  <div class="tis-tags">
-                    <span>作者:</span>
-                    <nz-tag>TIS官方</nz-tag>
-                    <br/>
-                    <span>费用:</span>
-                    <ng-container [ngSwitch]="item.communityVIP">
-                      <nz-tag *ngSwitchCase="false" [nzColor]="'green'">免费</nz-tag>
-                      <nz-tag *ngSwitchCase="true" [nzColor]="'orange'"><span nz-icon nzType="dollar"
-                                                                              nzTheme="outline"></span>社区协作
-                      </nz-tag>
-                    </ng-container>
-
-
-                    <br/>
-                    <span>版本:</span>{{ item.version }} <br/>
-                    <span>打包时间:</span>
-                    <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
-                  </div>
-                </ng-template>
-              </tis-col>
-              <tis-col title="详细">
-                <ng-template let-item="r">
-                  <div class="item-block" *ngIf="item.multiClassifier">
-                    <form nz-form>
-                      <nz-form-item>
-                        <nz-form-control
-                          [nzValidateStatus]="pluginErrs.get(item.name) ? 'error' :''"
-                          [nzErrorTip]="pluginErrs.get(item.name)?pluginErrs.get(item.name).content:''"
-                          nzHasFeedback>
-                          <nz-select [(ngModel)]="item.selectedClassifier"
-                                     [ngModelOptions]="{standalone: true}"
-                                     nzAllowClear nzPlaceHolder="有这些版本的包可选择"
-                                     nzShowSearch>
-                            <ng-container *ngFor="let c of item.arts">
-                              <ng-template #t>
-                                <div class="tis-tags">
-                                  <span>包大小:</span>
-                                  <nz-tag>{{c.sizeLiteral}}</nz-tag>
-                                  <br/>
-                                </div>
+                                  </div>
                               </ng-template>
-                              <nz-option-group [nzLabel]="t">
-                                <nz-option [nzValue]="c.classifierName"
-                                           [nzLabel]="c.classifierName"></nz-option>
-                              </nz-option-group>
-                            </ng-container>
-                          </nz-select>
-                        </nz-form-control>
-                      </nz-form-item>
-                    </form>
-                  </div>
-                  <div class="item-block">
-                    <markdown [data]="item.excerpt" class="excerpt"></markdown>
-                    <div class="tis-tags" *ngIf="item.dependencies.length >0">
-                      <span>依赖:</span>
-                      <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
-                        :{{d.value}}</nz-tag>
-                    </div>
-                  </div>
-                </ng-template>
-              </tis-col>
-            </tis-page>
-          </ng-template>
-        </nz-tab>
-        <nz-tab [nzTitle]="installedTpl" (nzClick)="openInstalledPlugins()">
-          <ng-template nz-tab>
-            <tis-page [rows]="installedPlugs">
-              <tis-col width="10">
-                <ng-template let-item="r">
+                          </tis-col>
+                          <tis-col title="插件" (search)="queryAvailablePlugin($event)" width="20">
+                              <ng-template let-item="r">
+                                  <a href="javascript:void(0)">{{item.name}}</a>
+                                  <div class="tis-tags">
+                                      <span>作者:</span>
+                                      <nz-tag>TIS官方</nz-tag>
+                                      <br/>
+                                      <span>类别:</span>
+                                      <ng-container [ngSwitch]="item.communityVIP">
+                                          <nz-tag *ngSwitchCase="false" [nzColor]="'green'">社区共享</nz-tag>
+                                          <ng-container *ngSwitchCase="true">
+                                              <nz-tag [nzColor]="'orange'">
+                                            <span nz-icon
+                                                  nzType="dollar"
+                                                  nzTheme="outline"></span>社区协作
+                                              </nz-tag>
+                                            <a href="https://tis.pub/commerical" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
+                                          </ng-container>
+
+                                      </ng-container>
+
+
+                                      <br/>
+                                      <span>版本:</span>{{ item.version }} <br/>
+                                      <span>打包时间:</span>
+                                      <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="详细">
+                              <ng-template let-item="r">
+                                  <div class="item-block" *ngIf="item.multiClassifier">
+                                      <form nz-form>
+                                          <nz-form-item>
+                                              <nz-form-control
+                                                      [nzValidateStatus]="pluginErrs.get(item.name) ? 'error' :''"
+                                                      [nzErrorTip]="pluginErrs.get(item.name)?pluginErrs.get(item.name).content:''"
+                                                      nzHasFeedback>
+                                                  <nz-select [(ngModel)]="item.selectedClassifier"
+                                                             [ngModelOptions]="{standalone: true}"
+                                                             nzAllowClear nzPlaceHolder="有这些版本的包可选择"
+                                                             nzShowSearch>
+                                                      <ng-container *ngFor="let c of item.arts">
+                                                          <ng-template #t>
+                                                              <div class="tis-tags">
+                                                                  <span>包大小:</span>
+                                                                  <nz-tag>{{c.sizeLiteral}}</nz-tag>
+                                                                  <br/>
+                                                              </div>
+                                                          </ng-template>
+                                                          <nz-option-group [nzLabel]="t">
+                                                              <nz-option [nzValue]="c.classifierName"
+                                                                         [nzLabel]="c.classifierName"></nz-option>
+                                                          </nz-option-group>
+                                                      </ng-container>
+                                                  </nz-select>
+                                              </nz-form-control>
+                                          </nz-form-item>
+                                      </form>
+                                  </div>
+                                  <div class="item-block">
+                                      <markdown [data]="item.excerpt" class="excerpt"></markdown>
+                                      <div class="tis-tags" *ngIf="item.dependencies.length >0">
+                                          <span>依赖:</span>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
+                                              :{{d.value}}</nz-tag>
+                                      </div>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
+                  </ng-template>
+              </nz-tab>
+              <nz-tab [nzTitle]="installedTpl" (nzClick)="openInstalledPlugins()">
+                  <ng-template nz-tab>
+                      <tis-page [rows]="installedPlugs">
+                          <tis-col width="10">
+                              <ng-template let-item="r">
                                   <span *ngFor="let icon of item.endTypeIcons" style="font-size: 60px" nz-icon
                                         [nzType]="icon" nzTheme="fill"></span>
-                </ng-template>
-              </tis-col>
+                              </ng-template>
+                          </tis-col>
 
-              <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="20">
-                <ng-template let-item="r">
-                  <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc"
-                                                                   *ngIf="item.classifier">{{item.classifier}}</i>
-                  <div class="tis-tags">
-                    <span>作者:</span>
-                    <nz-tag>TIS官方</nz-tag>
-                    <br/>
-                    <span>费用:</span>
-                    <ng-container [ngSwitch]="item.communityVIP">
-                      <nz-tag *ngSwitchCase="false" [nzColor]="'green'">免费</nz-tag>
-                      <nz-tag *ngSwitchCase="true" [nzColor]="'orange'"><span nz-icon nzType="dollar"
-                                                                              nzTheme="outline"></span>社区协作
-                      </nz-tag>
-                    </ng-container>
-                    <br/>
-                    <span>版本:</span>{{ item.version }} <br/>
-                    <span>打包时间:</span>
-                    <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
-                  </div>
+                          <tis-col title="插件" (search)="queryIntalledPlugin($event)" width="20">
+                              <ng-template let-item="r">
+                                  <a href="javascript:void(0)">{{item.name}}</a><i class="classifier-desc"
+                                                                                   *ngIf="item.classifier">{{item.classifier}}</i>
+                                  <div class="tis-tags">
+                                      <span>作者:</span>
+                                      <nz-tag>TIS官方</nz-tag>
+                                      <br/>
+                                      <span>类别:</span>
+                                      <ng-container [ngSwitch]="item.communityVIP">
+                                          <nz-tag *ngSwitchCase="false" [nzColor]="'green'">社区共享</nz-tag>
+                                          <ng-container *ngSwitchCase="true">
+                                              <nz-tag [nzColor]="'orange'">
+                                              <span nz-icon
+                                                    nzType="dollar"
+                                                    nzTheme="outline"></span>社区协作
+                                              </nz-tag>
+                                            <a href="https://tis.pub/commerical" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
+                                          </ng-container>
 
-                </ng-template>
-              </tis-col>
-              <tis-col title="详细">
-                <ng-template let-item="r">
-                  <div class="item-block">
-                    <markdown [data]="item.excerpt" class="excerpt"></markdown>
-                    <div class="tis-tags" *ngIf="item.dependencies.length >0">
-                      <span>依赖:</span>
-                      <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
-                        :{{d.value}}</nz-tag>
-                    </div>
-                    <div class="tis-tags">
-                    </div>
-                  </div>
-                </ng-template>
-              </tis-col>
-            </tis-page>
+                                      </ng-container>
+                                      <br/>
+                                      <span>版本:</span>{{ item.version }} <br/>
+                                      <span>打包时间:</span>
+                                      <nz-tag>{{item.releaseTimestamp| date : "yyyy/MM/dd HH:mm"}}</nz-tag>
+                                  </div>
+
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="详细">
+                              <ng-template let-item="r">
+                                  <div class="item-block">
+                                      <markdown [data]="item.excerpt" class="excerpt"></markdown>
+                                      <div class="tis-tags" *ngIf="item.dependencies.length >0">
+                                          <span>依赖:</span>
+                                          <nz-tag [nzColor]="'blue'" *ngFor="let d of item.dependencies">{{d.name}}
+                                              :{{d.value}}</nz-tag>
+                                      </div>
+                                      <div class="tis-tags">
+                                      </div>
+                                  </div>
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
+                  </ng-template>
+              </nz-tab>
+              <nz-tab nzTitle="安装状态" (nzClick)="openUpdateCenter()">
+                  <ng-template nz-tab>
+                      <update-center (loading)="updateCenterLoading($event)"></update-center>
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
+          <ng-template #installedTpl>
+              <span nz-icon nzType="check-circle" nzTheme="outline"></span>已安装
           </ng-template>
-        </nz-tab>
-        <nz-tab nzTitle="安装状态" (nzClick)="openUpdateCenter()">
-          <ng-template nz-tab>
-            <update-center (loading)="updateCenterLoading($event)"></update-center>
+          <ng-template #extraTemplate>
           </ng-template>
-        </nz-tab>
-      </nz-tabset>
-      <ng-template #installedTpl>
-        <span nz-icon nzType="check-circle" nzTheme="outline"></span>已安装
-      </ng-template>
-      <ng-template #extraTemplate>
-      </ng-template>
-    </nz-spin>
+      </nz-spin>
   `, styles: [
     `
       .classifier-desc {
