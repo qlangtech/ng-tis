@@ -55,7 +55,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                         [nzDescription]="alterNotice"
                         nzShowIcon
               ></nz-alert>
-              <ng-template #alterNotice>服务端获取不到该Job状态信息，可能是因为Flink-Cluster重启导致，请手动
+              <ng-template #alterNotice>服务端获取不到该Job（状态为：{{this.dto.state}}），可能是因为Flink-Cluster重启导致，请手动
                 <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i
                   nz-icon
                   nzType="rollback"
