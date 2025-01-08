@@ -69,9 +69,9 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                 <nz-descriptions-item
                   nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
                 <nz-descriptions-item
-                  nzTitle="Start Time">{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
-                <nz-descriptions-item
-                  nzTitle="End Time">{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                  nzTitle="Start Time"><i nz-icon nzType="field-time" nzTheme="outline"></i>{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                <nz-descriptions-item *ngIf="dto.state !== 'RUNNING'"
+                  nzTitle="End Time"><i nz-icon nzType="field-time" nzTheme="outline"></i>{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
                 <nz-descriptions-item
                   nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
               </nz-descriptions>
@@ -160,15 +160,15 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                     {{rr.duration | timeconsume}}
                   </ng-template>
                 </tis-col>
-                <tis-col title="End Time" width="10">
-                  <ng-template let-rr="r">
-                    <ng-container [ngSwitch]="rr.endTime > 0">
-                                      <span *ngSwitchCase="true">
-                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                                      </span>
-                    </ng-container>
-                  </ng-template>
-                </tis-col>
+<!--                <tis-col title="End Time" width="10">-->
+<!--                  <ng-template let-rr="r">-->
+<!--                    <ng-container [ngSwitch]="rr.endTime > 0">-->
+<!--                                      <span *ngSwitchCase="true">-->
+<!--                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}-->
+<!--                                      </span>-->
+<!--                    </ng-container>-->
+<!--                  </ng-template>-->
+<!--                </tis-col>-->
               </tis-page>
             </ng-container>
           </ng-template>

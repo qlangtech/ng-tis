@@ -247,7 +247,9 @@ export class DataxDTO {
       return this.writerDescriptor.supportBatch;
     }
 
-    return this.writerDescriptor.supportBatch && this.readerDescriptor && this.readerDescriptor.supportBatch;
+    return this.writerDescriptor.supportBatch
+      && this.readerDescriptor
+      && this.readerDescriptor.supportBatch;
   }
 
 

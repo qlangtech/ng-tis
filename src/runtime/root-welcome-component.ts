@@ -38,7 +38,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
               <nz-card id="pipeline" [nzHoverable]="true" (click)="gotoIndexList()">
                 <div class="tis-card-content">
                   <div class="compose">
-                    <h1>实例</h1>
+                    <h1>管道</h1>
                     Pipeline
                   </div>
                 </div>

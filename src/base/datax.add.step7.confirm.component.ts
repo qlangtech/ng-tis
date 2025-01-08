@@ -293,14 +293,15 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   private generate_datax_cfgs(getExist: boolean): Promise<GenerateCfgs> {
-    //console.log([this.dto.readerDescriptor, this.dto.writerDescriptor]);
-    if (!this.dto.supportBatch) {
+   // console.log([this.dto.readerDescriptor, this.dto.writerDescriptor]);
+    if (!this.dto.supportBatch && !this.dto.writerDescriptor.extractProps["createDDL"]) {
       return;
     }
 
     let url = '/coredefine/corenodemanage.ajax';
     return this.httpPost(url, 'action=datax_action&emethod=generate_datax_cfgs&dataxName='
-      + this.dto.dataxPipeName + '&' + KEY_APPNAME + "=" + this.dto.dataxPipeName + "&getExist=" + (getExist) + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel)
+      + this.dto.dataxPipeName + '&' + KEY_APPNAME + "=" + this.dto.dataxPipeName
+      + "&getExist=" + (getExist) + "&" + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel)
       .then((r) => {
         if (r.success) {
           let cfgs: GenerateCfgs = r.bizresult;
