@@ -404,12 +404,12 @@ export class SelectedTabsComponent extends BasicFormComponent {
   // templateUrl: '/runtime/addapp.htm'
   selector: "datax-reader-table-select",
   template: `
-    <tis-steps *ngIf="createModel && this.dto.headerStepShow" [type]="stepType" [step]="offsetStep(1)"></tis-steps>
+    <tis-steps *ngIf="createModel && this.dto.headerStepShow" [type]="stepType" [step]="0"></tis-steps>
 
     <nz-spin [nzSpinning]="this.formDisabled">
       <ng-container [ngSwitch]="createModel">
         <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="true" [title]="'Reader 选择导入表'"
-                             (cancel)="cancel()" [goBackBtnShow]="_offsetStep>0" (goBack)="goback()"
+                             (cancel)="cancel()" [goBackBtnShow]="true" (goBack)="goback()"
                              (goOn)="createStepNext()"></tis-steps-tools-bar>
         <tis-steps-tools-bar [result]="this.result" *ngSwitchCase="false">
           <final-exec-controller *ngIf="!inReadonly">
@@ -549,9 +549,10 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           // console.log(subFormHetero.descriptors.keys());
           throw new Error("readerDescriptorImpl:" + readerDescriptorImpl);
         }
-        // console.log(subFormHetero);
+
         for (let itemIdx = 0; itemIdx < subFormHetero.items.length; itemIdx++) {
           item = subFormHetero.items[itemIdx];
+          console.log([subFormHetero.items, itemIdx ,item]);
           for (let tabKey in item.vals) {
             /**==========================
              *START: 删除历史脏数据保护措施
@@ -559,7 +560,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
             if (desc.subForm) {
               if (desc.subFormMeta.idList.findIndex((existKey) => tabKey === existKey) < 0) {
                 delete item.vals[tabKey];
-                // console.log("continue");
+                 console.log("continue");
                 continue;
               }
             }
@@ -571,7 +572,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
             subForm = item.vals[tabKey];
             // console.log([tabKey, subForm]);
             // Item.wrapItemPropVal(v, at);
-            // console.log(subForm);
+             console.log([tabKey,subForm]);
             subFieldForms.set(tabKey, subForm);
           }
           break;
@@ -602,6 +603,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   ngOnInit(): void {
     this.formLayout = this.createModel ? "vertical" : "horizontal";
+ // console.log(  this.offsetStep(1) );
     super.ngOnInit();
 
 
@@ -624,10 +626,11 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
    //console.log(useCache);
     return DataxAddStep4Component.initializeSubFieldForms(this, this.getPluginMetas()[0], undefined // this.dto.readerDescriptor.impl
       , useCache, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-          console.log([subFieldForms, subFormHetero]);
+        //  console.log([subFieldForms, subFormHetero]);
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         this.transferList.splice(0);
+        console.log([this.subFieldForms,readerDesc.subFormMeta.idList,useCache]);
         readerDesc.subFormMeta.idList.forEach((subformId) => {
           let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
           this.transferList.push({

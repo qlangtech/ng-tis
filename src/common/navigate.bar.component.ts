@@ -62,7 +62,7 @@ import {openParamsCfg} from "./plugins.component";
       <ng-container *ngSwitchCase="true">
         <li nz-menu-item>
           <a nz-dropdown [nzDropdownMenu]="myIndex">
-            我的实例
+            我的管道
             <i nz-icon nzType="down"></i>
           </a>
           <nz-dropdown-menu #myIndex="nzDropdownMenu">

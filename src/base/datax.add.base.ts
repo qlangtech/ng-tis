@@ -52,6 +52,7 @@ export abstract class BasicDataXAddComponent extends AppFormComponent {
   }
 
   public offsetStep(step: number): number {
+    //console.log(step);
     return this.tisService._zone.run(() => {
       if (this._offsetStep > -1) {
         return this._offsetStep;

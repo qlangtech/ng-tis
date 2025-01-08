@@ -32,7 +32,7 @@ import {LocalStorageService} from "angular-2-local-storage";
 @Component({
     template: `
 
-        <tis-page-header title="实例">
+        <tis-page-header title="管道">
                         <tis-header-tool>
                             <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus"
                                                                                                       aria-hidden="true"></i>添加<i
@@ -69,12 +69,12 @@ import {LocalStorageService} from "angular-2-local-storage";
 <!--                </div>-->
 <!--            </page-header>-->
 
-            <tis-col title="实例名称" width="14" (search)="filterByAppName($event)">
+            <tis-col title="管道名称" width="14" (search)="filterByAppName($event)">
                 <ng-template let-app='r'>
                     <button nz-button nzType="link" (click)="gotoApp(app)">{{app.projectName}}</button>
                 </ng-template>
             </tis-col>
-            <tis-col title="实例类型">
+            <tis-col title="类型">
                 <ng-template let-app="r">
                     <ng-container [ngSwitch]="app.appType">
                         <nz-tag *ngSwitchCase="1" [nzColor]="'processing'">Solr</nz-tag>

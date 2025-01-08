@@ -87,14 +87,22 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
   /**
    * 数据库中可能添加了新的字段，或者已经删除了某列
    */
-  public synchronizeMcols(): SynchronizeMcolsResult {
+  public synchronizeMcols(overwriteByDBLatestMcols: boolean): SynchronizeMcolsResult {
     // return this._mcols;
     let syncResult: SynchronizeMcolsResult;
 
     if (this._dbLatestMcols) {
-      // console.log(this._dbLatestMcols);
       let result = [];
       syncResult = new SynchronizeMcolsResult(result);
+      if (overwriteByDBLatestMcols) {
+        this._mcols = [...this._dbLatestMcols];
+        syncResult = new SynchronizeMcolsResult(this._mcols);
+        delete this._dbLatestMcols;
+        return syncResult;
+      }
+
+      // console.log(this._dbLatestMcols);
+
       let lastestCol: ReaderColMeta;
       let col: ReaderColMeta;
       let idxCol = 0;
@@ -223,6 +231,12 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
                 nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
                 (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
                                                                  nzTheme="outline"></span>sync
+        </button>
+        &nbsp;
+        <button [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可回复，请小心使用"
+                (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
+                                                                     nzTheme="outline"></span>恢复初始化
         </button>
 
       </page-header>
@@ -406,7 +420,7 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
   }
 
   syncTabSchema() {
-    let syncResult = this.view.synchronizeMcols();
+    let syncResult = this.view.synchronizeMcols(false);
     this.colsMeta = syncResult.syncCols;
 
     if (syncResult.hasAnyDiff) {
@@ -414,6 +428,12 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
     } else {
       this.warnNotify("与数据库最新表结构没有区别");
     }
+  }
+
+  restore2InitState() {
+    let syncResult = this.view.synchronizeMcols(true);
+    this.colsMeta = syncResult.syncCols;
+    this.successNotify("已经恢复到初始化状态");
   }
 
   ngAfterContentInit() {
