@@ -552,7 +552,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
         for (let itemIdx = 0; itemIdx < subFormHetero.items.length; itemIdx++) {
           item = subFormHetero.items[itemIdx];
-          console.log([subFormHetero.items, itemIdx ,item]);
+         // console.log([subFormHetero.items, itemIdx ,item]);
           for (let tabKey in item.vals) {
             /**==========================
              *START: 删除历史脏数据保护措施
