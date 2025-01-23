@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,7 +236,10 @@
       <workItem from="1734758642124" duration="12431000" />
       <workItem from="1735196703637" duration="2116000" />
       <workItem from="1735372805802" duration="12992000" />
-      <workItem from="1736212159468" duration="7155000" />
+      <workItem from="1736212159468" duration="8982000" />
+      <workItem from="1736492068138" duration="3700000" />
+      <workItem from="1737249907192" duration="1219000" />
+      <workItem from="1737509557932" duration="891000" />
     </task>
     <servers />
   </component>
@@ -257,7 +263,6 @@
         <option value="$PROJECT_DIR$/src/common/steps.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/compare.eachother.component.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.module.js" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/basic.service.js.map" />
         <option value="$PROJECT_DIR$/src/common/safe.pipe.js.map" />
         <option value="$PROJECT_DIR$/src/user/user.add.component.js.map" />
@@ -312,7 +317,6 @@
         <option value="$PROJECT_DIR$/src/common/snapshot.link.js" />
         <option value="$PROJECT_DIR$/src/runtime/misc/RCDeployment.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/monitor.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/mvn.dependency.list.component.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.main.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/corenodemanage.component.js" />
         <option value="$PROJECT_DIR$/src/service/script.store.js.map" />

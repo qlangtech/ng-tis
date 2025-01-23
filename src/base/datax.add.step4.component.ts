@@ -560,7 +560,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
             if (desc.subForm) {
               if (desc.subFormMeta.idList.findIndex((existKey) => tabKey === existKey) < 0) {
                 delete item.vals[tabKey];
-                 console.log("continue");
+               //  console.log("continue");
                 continue;
               }
             }
