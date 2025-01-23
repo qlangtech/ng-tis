@@ -114,7 +114,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                   <ng-template let-rr="r">
                     <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName"
                        nzOverlayClassName="tooltip-pree"
-                       [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url +'/#/job/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                       [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url +'/#/job/running/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
                   </ng-template>
                 </tis-col>
                 <tis-col title="Status" width="10">
