@@ -57,9 +57,9 @@ export interface ITableAlias {
   error: string;
 }
 
-export function getTableMapper(module: BasicFormComponent, dataxPipeName: string): Promise<Array<ITableAlias>> {
+export function getTableMapper(module: BasicFormComponent, dataxPipeName: string, forceInit?: boolean): Promise<Array<ITableAlias>> {
   let url = '/coredefine/corenodemanage.ajax';
-  return module.httpPost(url, 'action=datax_action&emethod=get_table_mapper&dataxName=' + dataxPipeName)
+  return module.httpPost(url, 'action=datax_action&emethod=get_table_mapper&dataxName=' + dataxPipeName + "&forceInit=" + forceInit)
     .then((r) => {
       if (r.success) {
         return <Array<ITableAlias>>r.bizresult;

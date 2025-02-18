@@ -29,60 +29,65 @@ import {getTableMapper, ITableAlias} from "../common/plugin/type.utils";
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-      <tis-steps [type]="stepType" [step]="offsetStep(3)"></tis-steps>
-      <!--      <tis-form [fieldsErr]="errorItem">-->
-      <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-      <!--              <tis-header-tool>-->
-      <!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-      <!--              </tis-header-tool>-->
-      <!--          </tis-page-header>-->
-      <!--      </tis-form>-->
-      <nz-spin [nzSpinning]="this.formDisabled">
-          <tis-steps-tools-bar [title]="'Reader-Writer表映射关系'" (cancel)="cancel()" (goBack)="goback()" [goBackBtnShow]="_offsetStep>0"  (goOn)="createStepNext()"></tis-steps-tools-bar>
-          <nz-table #basicTable [nzData]="tabAliasList" [nzShowPagination]="true" [nzPaginationPosition]="'top'">
-              <thead>
-              <tr>
-                  <th width="40%">Reader源表</th>
-                  <th width="10%"></th>
-                  <th>Writer目标表<i nz-icon nzType="edit" nzTheme="outline"></i></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let data of basicTable.data" class="editable-row">
-                  <td>{{ data.from }}</td>
-                  <td align="right"><i nz-icon nzType="swap-right" nzTheme="outline"></i></td>
-                  <td>
-                      <nz-form-item>
-                          <nz-form-control [ngSwitch]="editId === data.from || data.error !== undefined" [nzValidateStatus]="data.error !== undefined ? 'error' : ''" [nzHasFeedback]="data.error !== undefined" [nzErrorTip]="data.error">
-                              <div class="editable-cell" *ngSwitchCase="false" (click)="startEdit(data)">
-                                  {{ data.to }}
-                              </div>
-                              <input *ngSwitchCase="true" type="text" nz-input [(ngModel)]="data.to" (blur)="stopEdit()"/>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </td>
-              </tr>
-              </tbody>
-          </nz-table>
-      </nz-spin>
+    <tis-steps [type]="stepType" [step]="offsetStep(3)"></tis-steps>
+    <!--      <tis-form [fieldsErr]="errorItem">-->
+    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
+    <!--              <tis-header-tool>-->
+    <!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
+    <!--              </tis-header-tool>-->
+    <!--          </tis-page-header>-->
+    <!--      </tis-form>-->
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <tis-steps-tools-bar [title]="'Reader-Writer表映射关系'" (cancel)="cancel()" (goBack)="goback()"
+                           [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
+      <nz-table #basicTable [nzData]="tabAliasList" [nzShowPagination]="true" [nzPaginationPosition]="'top'">
+        <thead>
+        <tr>
+          <th width="40%">Reader源表</th>
+          <th width="10%"></th>
+          <th><i nz-icon nzType="edit" nzTheme="outline"></i>Writer目标表
+            <button nz-button nzSize="small" nzType="default" (click)="reset()">重置</button>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of basicTable.data" class="editable-row">
+          <td>{{ data.from }}</td>
+          <td align="right"><i nz-icon nzType="swap-right" nzTheme="outline"></i></td>
+          <td>
+            <nz-form-item>
+              <nz-form-control [ngSwitch]="editId === data.from || data.error !== undefined"
+                               [nzValidateStatus]="data.error !== undefined ? 'error' : ''"
+                               [nzHasFeedback]="data.error !== undefined" [nzErrorTip]="data.error">
+                <div class="editable-cell" *ngSwitchCase="false" (click)="startEdit(data)">
+                  {{ data.to }}
+                </div>
+                <input *ngSwitchCase="true" type="text" nz-input [(ngModel)]="data.to" (blur)="stopEdit()"/>
+              </nz-form-control>
+            </nz-form-item>
+          </td>
+        </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
   `
   , styles: [
-      `
-            .editable-cell {
-                position: relative;
-                padding: 5px 12px;
-                cursor: pointer;
-            }
+    `
+      .editable-cell {
+        position: relative;
+        padding: 5px 12px;
+        cursor: pointer;
+      }
 
-            .editable-row:hover .editable-cell {
-                border: 1px solid #d9d9d9;
-                border-radius: 4px;
-                padding: 4px 11px;
-            }
+      .editable-row:hover .editable-cell {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        padding: 4px 11px;
+      }
 
-            nz-form-item {
-                margin: 0px;
-            }
+      nz-form-item {
+        margin: 0px;
+      }
     `
   ]
 })
@@ -112,13 +117,23 @@ export class DataxAddStep6Component extends BasicDataXAddComponent implements On
     //   this.tabAliasList = r.bizresult;
     // });
 
-    getTableMapper(this,this.dto.dataxPipeName)
-      .then((result)=>{
-      this.tabAliasList = result;
-    })
+    getTableMapper(this, this.dto.dataxPipeName)
+      .then((result) => {
+        this.tabAliasList = result;
+      })
   }
 
   ngAfterViewInit(): void {
+  }
+
+  public reset() {
+    this.confirm("是否要重置目标表名称",()=>{
+      getTableMapper(this, this.dto.dataxPipeName, true)
+        .then((result) => {
+          this.tabAliasList = result;
+          this.successNotify("目标表名称已经成功重置");
+        });
+    })
   }
 
   // 执行下一步
