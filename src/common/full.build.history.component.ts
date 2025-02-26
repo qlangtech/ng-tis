@@ -57,8 +57,11 @@ class ProcessStrategy {
       <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知"
                 [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
       <ng-template #unableToUseK8SController>
-        当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用建议开启
-        <a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a>
+        当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用可启用以下方案：
+      <ul style="padding-left: 1em;">
+        <li><a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a></li>
+        <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank" href="https://tis.pub/docs/guide/integer-dolphinscheduler/">详细</a> <nz-tag [nzColor]="'pink'">推荐</nz-tag></li>
+      </ul>
       </ng-template>
       <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告"
                 [nzDescription]="installLocal" nzShowIcon></nz-alert>
