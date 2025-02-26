@@ -117,7 +117,7 @@ enum PluginTab {
                                                   nzType="dollar"
                                                   nzTheme="outline"></span>社区协作
                                               </nz-tag>
-                                            <a href="https://tis.pub/commerical" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
+                                            <a href="https://tis.pub/community-collaboration" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
                                           </ng-container>
 
                                       </ng-container>
@@ -201,7 +201,7 @@ enum PluginTab {
                                                     nzType="dollar"
                                                     nzTheme="outline"></span>社区协作
                                               </nz-tag>
-                                            <a href="https://tis.pub/commerical" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
+                                            <a href="https://tis.pub/community-collaboration" target="_blank"><span nz-icon nzType="question-circle" nzTheme="outline" ></span>说明</a>
                                           </ng-container>
 
                                       </ng-container>
