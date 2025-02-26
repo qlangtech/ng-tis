@@ -606,7 +606,8 @@ export class Item {
             if (itemProp.advance) {
               containAdvanceField = true;
             }
-            if (!itemProp.primaryVal) {
+            if (!itemProp.primaryVal && fieldErr.errorfields) {
+             // console.log(fieldErr);
               if (fieldErr.errorfields.length !== 1) {
                 throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
               }

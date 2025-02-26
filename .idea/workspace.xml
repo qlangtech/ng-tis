@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.maptable.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -239,7 +240,8 @@
       <workItem from="1737249907192" duration="1219000" />
       <workItem from="1737509557932" duration="6755000" />
       <workItem from="1738822026722" duration="3223000" />
-      <workItem from="1739168999860" duration="697000" />
+      <workItem from="1739168999860" duration="4135000" />
+      <workItem from="1740452138714" duration="4750000" />
     </task>
     <servers />
   </component>
