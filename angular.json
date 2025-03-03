@@ -65,8 +65,7 @@
               "src/theme.less",
               "node_modules/codemirror/lib/codemirror.css",
               "node_modules/nprogress/nprogress.css",
-              "node_modules/prismjs/themes/prism.css",
-              "node_modules/monaco-editor/dev/vs/editor/editor.main.css"
+              "node_modules/prismjs/themes/prism.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -76,20 +75,7 @@
               "node_modules/prismjs/components/prism-yaml.js",
               "node_modules/prismjs/components/prism-json.js",
               "node_modules/prismjs/components/prism-java.js"
-              // for zeppelin
-//       ,       "node_modules/mathjax/MathJax.js",
-//              "node_modules/systemjs/dist/s.js",
-//              "node_modules/systemjs/dist/extras/amd.js",
-//              "node_modules/systemjs/dist/extras/named-register.js",
-//              "node_modules/systemjs/dist/extras/use-default.js"
             ]
-//      ,      "stylePreprocessorOptions": {
-//              "includePaths": [
-//                "src/zeppelin_styles/theme",
-//                "src/zeppelin_styles/theme/dark",
-//                "src/zeppelin_styles/theme/light"
-//              ]
-//            }
           },
           "configurations": {
             "production": {
@@ -192,80 +178,6 @@
         }
       }
     }
-//  , "zeppelin-sdk": {
-//      "projectType": "library",
-//      "root": "projects/zeppelin-sdk",
-//      "sourceRoot": "projects/zeppelin-sdk/src",
-//      "prefix": "lib",
-//      "architect": {
-//        "build": {
-//          "builder": "@angular-devkit/build-angular:ng-packagr",
-//          "options": {
-//            "project": "projects/zeppelin-sdk/ng-package.json"
-//          },
-//          "configurations": {
-//            "production": {
-//              "tsConfig": "projects/zeppelin-sdk/tsconfig.lib.prod.json"
-//            },
-//            "development": {
-//              "tsConfig": "projects/zeppelin-sdk/tsconfig.lib.json"
-//            }
-//          },
-//          "defaultConfiguration": "production"
-//        },
-//        "test": {
-//          "builder": "@angular-devkit/build-angular:karma",
-//          "options": {
-//            "main": "projects/zeppelin-sdk/src/test.ts",
-//            "tsConfig": "projects/zeppelin-sdk/tsconfig.spec.json",
-//            "karmaConfig": "projects/zeppelin-sdk/karma.conf.js"
-//          }
-//        },
-//        "lint": {
-//          "builder": "@angular-devkit/build-angular:tslint",
-//          "options": {
-//            "tsConfig": [
-//              "projects/zeppelin-sdk/tsconfig.lib.json",
-//              "projects/zeppelin-sdk/tsconfig.spec.json"
-//            ],
-//            "exclude": [
-//              "**/node_modules/**"
-//            ]
-//          }
-//        }
-//      }
-//    }
-// ,   "zeppelin-visualization": {
-//      "projectType": "library",
-//      "root": "projects/zeppelin-visualization",
-//      "sourceRoot": "projects/zeppelin-visualization/src",
-//      "prefix": "lib",
-//      "architect": {
-//        "build": {
-//          "builder": "@angular-devkit/build-angular:ng-packagr",
-//          "options": {
-//            "project": "projects/zeppelin-visualization/ng-package.json"
-//          },
-//          "configurations": {
-//            "production": {
-//              "tsConfig": "projects/zeppelin-visualization/tsconfig.lib.prod.json"
-//            },
-//            "development": {
-//              "tsConfig": "projects/zeppelin-visualization/tsconfig.lib.json"
-//            }
-//          },
-//          "defaultConfiguration": "production"
-//        },
-//        "test": {
-//          "builder": "@angular-devkit/build-angular:karma",
-//          "options": {
-//            "main": "projects/zeppelin-visualization/src/test.ts",
-//            "tsConfig": "projects/zeppelin-visualization/tsconfig.spec.json",
-//            "karmaConfig": "projects/zeppelin-visualization/karma.conf.js"
-//          }
-//        }
-//      }
-//    }
   },
   "defaultProject": "ng-tis"
 }
