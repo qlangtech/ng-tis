@@ -142,26 +142,6 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
 
 
   ngAfterViewInit(): void {
-    // this.pluginComponent.errorsPageShow = true;
-    // this.pluginComponent.formControlSpan = 20;
-    // // this.pluginComponent.shallInitializePluginItems = false;
-    // this.hlist = DatasourceComponent.pluginDesc(this.dto.readerDescriptor);
-    //  this.pluginComponent.setPluginMeta([{name: 'dataxReader', require: true, extraParam: 'dataxName_' + this.dto.dataxPipeName}])
-    // this.pluginComponent.showSaveButton = false;
-    // this.pluginComponent.afterSave.subscribe((r: PluginSaveResponse) => {
-    //   if (r && r.saveSuccess && r.hasBiz()) {
-    //     // modalRef.close();
-    //     // let db = r.biz();
-    //     // let newNode: NzTreeNodeOptions[] = [{'key': `${db.dbId}`, 'title': db.name, 'children': []}];
-    //     // this.nodes = newNode.concat(this.nodes);
-    //     //
-    //     // let e = {'type': 'db', 'id': `${db.dbId}`};
-    //     // this.treeNodeClicked = true;
-    //     // this.onEvent(e);
-    //     //
-    //     // this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
-    //   }
-    // });
   }
 
 

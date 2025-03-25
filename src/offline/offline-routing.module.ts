@@ -83,7 +83,7 @@ const coreNodeRoutes: Routes = [
           {
             path: 'wf_update/:name/build_history/:wfid',
             component: FullBuildHistoryComponent,
-            data: {showBreadcrumb: true}
+            data: {showBreadcrumb: true,showTriggerBtn:false}
           },
           {
             path: '',

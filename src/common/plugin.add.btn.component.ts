@@ -18,13 +18,14 @@
 
 
 import {
+  AfterContentInit, AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, ContentChild, ContentChildren, Directive,
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output, QueryList, TemplateRef, ViewContainerRef
 } from "@angular/core";
 import {Descriptor} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
@@ -35,47 +36,133 @@ import {NzButtonSize} from "ng-zorro-antd/button/button.component";
 import {PluginsComponent} from "./plugins.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {TisColumn} from "./pagination.component";
+
+
+@Directive({
+  selector: 'tis-plugin-add-btn-extract-item',
+})
+export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterViewInit {
+
+  @Output()
+ public click = new EventEmitter<void>();
+
+  @Input("nz-icon")
+  nzIcon: string;
+  @Input("li-name")
+  liName: string;
+
+  ngAfterContentInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
+
+  }
+}
+
 
 @Component({
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+      <!--
+      <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 ">
+        <ng-container *ngSwitchCase="true">
 
-    <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 ">
-      <ng-container *ngSwitchCase="true">
+          <button [style]="btnStyle" nz-button nz-dropdown
+                  [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
+                  (mouseenter)="lazyInitialize()"
+                  (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
+                  [nzDropdownMenu]="this.disabled?null:menu"
+                  [disabled]="this.disabled || this.formDisabled">
+            <ng-content></ng-content>
+          </button>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
+                <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
+                                                   nzTheme="outline"></span> {{d.displayName}}</a>
+              </li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="addNewPlugin()">
+                <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+          <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
+                  [disabled]="this.disabled || this.formDisabled">
+            <i nz-icon nzType="api" nzTheme="outline"></i>添加
+          </button>
+        </ng-container>
+      </ng-container>
+  -->
 
-        <button [style]="btnStyle" nz-button nz-dropdown
-                [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
-                (mouseenter)="lazyInitialize()"
-                (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
-                [nzDropdownMenu]="this.disabled?null:menu"
-                [disabled]="this.disabled || this.formDisabled">
-          <ng-content></ng-content>
-        </button>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-              <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
-                                                 nzTheme="outline"></span> {{d.displayName}}</a>
-            </li>
-            <li nz-menu-divider></li>
-            <li nz-menu-item (click)="addNewPlugin()">
-              <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
-            </li>
-          </ul>
-        </nz-dropdown-menu>
+      <ng-container
+              [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 || extractLiItems.length> 0  ">
+          <ng-container *ngSwitchCase="true">
+
+              <nz-button-group>
+                  <button nz-button [style]="btnStyle"
+                          [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
+                          (mouseenter)="lazyInitialize()"
+                          (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
+                          [disabled]="this.disabled || this.formDisabled">
+                      <ng-content></ng-content>
+                  </button>
+                  <button nz-button nz-dropdown (mouseenter)="lazyInitialize()"
+                          [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'" [nzSize]="btnSize"
+                          [nzDropdownMenu]="menu1" nzPlacement="bottomRight">
+                      <span nz-icon nzType="down"></span>
+                  </button>
+              </nz-button-group>
+
+              <nz-dropdown-menu #menu1="nzDropdownMenu">
+                  <ul nz-menu>
+                      <ng-container *ngIf="extractLiItems.length> 0 ">
+                          <li nz-menu-item *ngFor="let li of extractLiItems" (click)="li.click.emit()">
+                              <i nz-icon
+                                 [nzType]="li.nzIcon"
+                                 nzTheme="outline"></i>{{li.liName}}
+                          </li>
+                          <li nz-menu-divider></li>
+                      </ng-container>
+
+
+                      <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
+                          <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
+                                                             nzTheme="outline"></span> {{d.displayName}}</a>
+                      </li>
+                    <ng-container *ngIf="initDescriptors">
+                      <li nz-menu-divider></li>
+                      <li nz-menu-item (click)="addNewPlugin()">
+                          <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
+                      </li>
+                    </ng-container>
+                  </ul>
+              </nz-dropdown-menu>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="false">
+              <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
+                      [disabled]="this.disabled || this.formDisabled">
+                  <i nz-icon nzType="api" nzTheme="outline"></i>添加
+              </button>
+          </ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="false">
-        <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
-                [disabled]="this.disabled || this.formDisabled">
-          <i nz-icon nzType="api" nzTheme="outline"></i>添加
-        </button>
-      </ng-container>
-    </ng-container>
+
 
   `
 })
 export class PluginAddBtnComponent extends BasicFormComponent implements OnInit {
+
+  /**
+   * 额外的下拉列表item
+   */
+  @ContentChildren(TisPluginAddBtnExtractLiItem) extractLiItems: QueryList<TisPluginAddBtnExtractLiItem>;
+
   @Input()
   descriptors: Array<Descriptor> = [];
 
@@ -184,3 +271,6 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
 
 }
+
+
+

@@ -435,7 +435,7 @@ export interface LicenseValidateResult {
   // public final boolean hasNotExpire;
   // public final String expireDate;
   /**
-   * 证书没有实效
+   * 证书没有失效
    */
   hasNotExpire: boolean;
   /**

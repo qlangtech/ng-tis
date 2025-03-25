@@ -39,6 +39,7 @@ import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
+import {EndCptListComponent} from "./end.cpt.list.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
 
@@ -53,7 +54,7 @@ export enum PowerjobCptType {
   FlinkKubernetesApplicationCfg = ("flink-kubernetes-application-cfg")
 }
 
-const flinkClusterCfgTargetName = ()=> PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
+const flinkClusterCfgTargetName = () => PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
 const dataXWorkerCfgTargetName = "datax-worker";
 
 const KEY_TARGET_NAME = 'targetName';
@@ -375,6 +376,10 @@ const basemanageRoutes: Routes = [
           {
             path: 'applist',
             component: ApplistComponent
+          },
+          {
+            path: "cpt-list",
+            component: EndCptListComponent
           },
           {
             path: 'basecfg',

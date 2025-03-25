@@ -118,7 +118,6 @@ export class JdbcTypePropsProperty implements TuplesProperty {
                 <span *ngSwitchCase="true">{{u.name.dspt.displayName}}</span>
                 <span *ngSwitchDefault>设置</span>
               </ng-container>
-              <span nz-icon nzType="down"></span>
             </tis-plugin-add-btn>
             <span *ngIf="u.nameError" style="color: red;">{{u.nameError}}</span>
             <!--            <nz-tag nzColor="default" *ngIf="u.nameDescLiteria">-->
@@ -384,9 +383,9 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
     let targetColumnPluginMeta: PluginMeta =
       {
         name: "target-column",
-        require: true
-        , extraParam: EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name
-        , descFilter:
+        require: true,
+        extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : (EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name),
+        descFilter:
           {
             localDescFilter: (desc: Descriptor) => true
           }

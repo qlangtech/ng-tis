@@ -17,7 +17,15 @@ export class SelectedTabDTO {
   // meta: meta
   offsetStep: number = 0;
 
-  constructor(public meta: ISubDetailTransferMeta, public basePluginMeta: PluginType[], public baseHetero: HeteroList[]) {
+  /**
+   *
+   * @param meta
+   * @param basePluginMeta
+   * @param dataXReaderTargetName example: "dataxDB_order"
+   * @param baseHetero
+   */
+  constructor(public meta: ISubDetailTransferMeta, public basePluginMeta: PluginType[], public dataXReaderTargetName: string, public baseHetero: HeteroList[]) {
+  //  console.log(dataXReaderTargetName);
   }
 }
 
@@ -52,7 +60,8 @@ export class PluginSubFormComponent extends BasicFormComponent implements OnInit
   // _stepType = StepType.ManageSelectedTable;
   @Input() hetero: HeteroList[] = [];
   @Input() pluginMeta: PluginType[] = [];
-
+  @Input()
+  dataXReaderTargetName: string;
   @Input()
   meta: ISubDetailTransferMeta;
 
@@ -85,10 +94,10 @@ export class PluginSubFormComponent extends BasicFormComponent implements OnInit
     // }
     this.multiViewDAG = new MultiViewDAG(configFST, this._componentFactoryResolver, this.containerRef);
     this.multiViewDAG.stepChange$.subscribe((dto: SelectedTabDTO) => {
-     // console.log(dto);
+      // console.log(dto);
       this._step = dto.offsetStep;
     });
-    this.selectedTabDTO = new SelectedTabDTO(this.meta, this.pluginMeta, this.hetero);
+    this.selectedTabDTO = new SelectedTabDTO(this.meta, this.pluginMeta, this.dataXReaderTargetName ,this.hetero);
     this.multiViewDAG.loadComponent(TableBaseComponent, this.selectedTabDTO);
 
     // let currApp = this.tisService.currentApp;

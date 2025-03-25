@@ -38,6 +38,7 @@ import {IncrBuildStep4RunningComponent} from "../runtime/incr.build.step4.runnin
 import {ActivatedRoute, Router} from "@angular/router";
 import {comment} from "postcss";
 import {openParamsCfg} from "./plugins.component";
+import {SelectedTabDTO} from "./selectedtab/plugin-sub-form.component";
 
 declare var TIS: any;
 
@@ -87,6 +88,7 @@ export class TISService implements TISCoreService {
   private currApp: CurrentCollection;
   public execId: string;
   private _tisMeta: TISBaseProfile;
+  private _selectedTab: SelectedTabDTO;
 
   public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
     const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
@@ -168,6 +170,14 @@ export class TISService implements TISCoreService {
     let socket = this.wscreate(url);
     // }
     return socket;
+  }
+
+  get selectedTab(): SelectedTabDTO {
+    return this._selectedTab;
+  }
+
+  set selectedTab(value: SelectedTabDTO) {
+    this._selectedTab = value;
   }
 
   private wscreate(url: string): Subject<MessageEvent> {

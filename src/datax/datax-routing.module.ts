@@ -87,7 +87,7 @@ const dataxNodeRoutes: Routes = [
           {   // Schema 配置文件一览
             path: 'app_build_history',
             component: FullBuildHistoryComponent,
-            data: {datax: true}
+            data: {datax: true, showTriggerBtn: true}
           },
           {
             path: 'update',

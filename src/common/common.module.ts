@@ -123,7 +123,7 @@ import {DataxAddStep6ColsMetaSetterComponent} from "../base/datax.add.step6.cols
 import {IncrPodLogsStatusComponent} from "../runtime/incr.pod.logs.status.component";
 import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
 import {MarkdownModule} from "ngx-markdown";
-import {PluginAddBtnComponent} from "./plugin.add.btn.component";
+import {PluginAddBtnComponent, TisPluginAddBtnExtractLiItem} from "./plugin.add.btn.component";
 import {PluginUpdateCenterComponent} from "../base/plugin.update.center.component";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {TerminalComponent} from "./terminal.component";
@@ -139,9 +139,9 @@ import {JdbcTypePropsComponent} from "./multi-selected/jdbc.type.props.component
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {UdfDescLiteria} from "./multi-selected/basic.tuples.view.component";
 
-import { TableTransformerComponent } from './selectedtab/table.transformer.component';
-import { TableBaseComponent } from './selectedtab/table.base.component';
-import { PluginSubFormComponent } from './selectedtab/plugin-sub-form.component';
+import {TableTransformerComponent} from './selectedtab/table.transformer.component';
+import {TableBaseComponent} from './selectedtab/table.base.component';
+import {PluginSubFormComponent} from './selectedtab/plugin-sub-form.component';
 import {PreviewComponent} from "./preview.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 
@@ -152,9 +152,7 @@ import {PreviewComponent} from "./preview.component";
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   id: 'tiscommonModule',
-  providers: [
-
-  ],
+  providers: [],
   imports: [
     MarkdownModule.forChild(),
     // NzIconModule.forChild([MySQLOutline]),
@@ -164,26 +162,26 @@ import {PreviewComponent} from "./preview.component";
       storageType: 'localStorage'
     }), NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule,
     // NgxTisCommonLibModule ,
-    NzUploadModule,NzDatePickerModule,
+    NzUploadModule, NzDatePickerModule,
     NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
     NgTerminalModule, NzPageHeaderModule,
-    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule,NzBadgeModule,
+    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule, NzBadgeModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
-  declarations: [PreviewComponent,JdbcTypePropsComponent,UdfDescLiteria,BliBliComponent,LaunchK8SClusterWaittingProcessComponent,TransformerRulesComponent,JdbcTypeComponent,
+  declarations: [PreviewComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, SafePipe, ItemPropValPipe,ErrorMsgPipe ,PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
-    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent,TableTransformerComponent,TableBaseComponent,
+    TimeConsumePipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent, TableTransformerComponent, TableBaseComponent,
     CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
+    CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent,
     TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
     , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
   ],
-  exports: [BliBliComponent,LaunchK8SClusterWaittingProcessComponent,SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
+  exports: [BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
     , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent
     , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
@@ -195,7 +193,7 @@ import {PreviewComponent} from "./preview.component";
     , PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
     , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
     , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent
-    , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent],
+    , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem],
   entryComponents: [CompareEachOtherComponent],
 })
 export class TisCommonModule {

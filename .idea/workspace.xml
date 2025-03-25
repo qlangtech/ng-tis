@@ -5,9 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base-config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base-config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/base.manage.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/base.manage.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step2.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/root-welcome-component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +74,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/src/runtime&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/src/base&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -64,8 +86,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/runtime" />
       <recent name="$PROJECT_DIR$/src/base" />
+      <recent name="$PROJECT_DIR$/src/runtime" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/images" />
@@ -243,7 +265,23 @@
       <workItem from="1740452138714" duration="5464000" />
       <workItem from="1740543133190" duration="2325000" />
       <workItem from="1740550895829" duration="1114000" />
-      <workItem from="1740979414464" duration="1102000" />
+      <workItem from="1740979414464" duration="4895000" />
+      <workItem from="1741253755429" duration="2084000" />
+      <workItem from="1741320323066" duration="20120000" />
+      <workItem from="1741505071702" duration="1927000" />
+      <workItem from="1741576139497" duration="1205000" />
+      <workItem from="1741587348161" duration="265000" />
+      <workItem from="1741588245348" duration="161000" />
+      <workItem from="1741590373594" duration="1851000" />
+      <workItem from="1741593620279" duration="265000" />
+      <workItem from="1741596190532" duration="311000" />
+      <workItem from="1741600587555" duration="605000" />
+      <workItem from="1741603766359" duration="143000" />
+      <workItem from="1741662936341" duration="623000" />
+      <workItem from="1742360121867" duration="18000" />
+      <workItem from="1742362442395" duration="16270000" />
+      <workItem from="1742694045481" duration="3042000" />
+      <workItem from="1742786194909" duration="16429000" />
     </task>
     <servers />
   </component>
@@ -371,14 +409,6 @@
         <option value="$PROJECT_DIR$/src/datax/datax.config.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/MultiViewDAG.js.map" />
         <option value="$PROJECT_DIR$/src/user/user-routing.module.js" />
-      </list>
-    </option>
-    <option name="additionalRoots">
-      <list>
-        <option value="$PROJECT_DIR$/dist/zeppelin-sdk/zeppelin-sdk.d.ts" />
-        <option value="$PROJECT_DIR$/dist/zeppelin-sdk" />
-        <option value="$PROJECT_DIR$/dist/zeppelin-visualization" />
-        <option value="$PROJECT_DIR$/dist/zeppelin-visualization/zeppelin-visualization.d.ts" />
       </list>
     </option>
   </component>

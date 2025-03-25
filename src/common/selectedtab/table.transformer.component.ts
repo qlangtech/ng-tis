@@ -5,6 +5,7 @@ import {TISService} from "../../common/tis.service";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
 import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-component";
+import {DATAX_PREFIX_DB} from "../../base/datax.add.base";
 
 
 @Component({
@@ -42,13 +43,16 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
 
   ngOnInit(): void {
    // this.dto.offsetStep = 1;
-   // console.log(this.tisService);
-    let currApp = this.tisService.currentApp;
+   // console.log(this.dto.);
+
+   // let currApp = this.tisService.currentApp;
+    this.tisService.selectedTab = this.dto;
     this.transformerPluginMeta = [
       {
         name: "transformer",
         require: true
-        , extraParam: EXTRA_PARAM_DATAX_NAME + currApp.appName + ",id_" + this.dto.meta.id
+       // , extraParam: EXTRA_PARAM_DATAX_NAME + currApp.appName + ",id_" + this.dto.meta.id
+        , extraParam: this.dto.dataXReaderTargetName + ",id_" + this.dto.meta.id
         , descFilter:
           {
             localDescFilter: (desc: Descriptor) => true
@@ -57,6 +61,12 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
     ];
     this.initTransformerHetero();
   }
+
+  get getDataXReaderTargetName() {
+   // return this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : (EXTRA_PARAM_DATAX_NAME + this.dto.dataxPipeName);
+    return null;
+  }
+
   verifyPluginConfig(e: PluginSaveResponse) {
     //console.log([e.saveSuccess,e.verify]);
     if (e.saveSuccess) {
