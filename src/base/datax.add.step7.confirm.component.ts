@@ -30,7 +30,14 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {HeteroList, Item, PluginSaveResponse, PluginType} from "../common/tis.plugin";
+import {
+  EXTRA_PARAM_DATAX_NAME,
+  HeteroList,
+  Item,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent
+} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
@@ -45,6 +52,7 @@ export enum ExecModel {
   Create, Reader
 }
 
+const UPDATE_ROUT_PATH = '../update';
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
@@ -107,7 +115,6 @@ export enum ExecModel {
       </ng-container>
 
 
-
       <ng-container *ngIf=" dto.supportBatch">
         <nz-page-header [nzGhost]="true">
           <nz-page-header-title>DataX脚本</nz-page-header-title>
@@ -144,7 +151,17 @@ export enum ExecModel {
               <li>
                 <i
                   style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
-                <button nz-button nzSize="small" (click)="reGenerateSqlDDL()">重新生成</button>
+                <nz-button-group>
+                  <button nz-button nzSize="small" (click)="reGenerateSqlDDL()">重新生成</button>
+                  <button nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="menu1" nzPlacement="bottomRight">
+                    <i nz-icon nzType="down" nzTheme="outline"></i>
+                  </button>
+                </nz-button-group>
+                <nz-dropdown-menu #menu1="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item><i nz-icon nzType="sync" nzTheme="outline"></i>同步到目标库</li>
+                  </ul>
+                </nz-dropdown-menu>
               </li>
             </ul>
           </nz-page-header-content>
@@ -159,6 +176,7 @@ export enum ExecModel {
                 <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
                   <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
                 </button>
+
               </nz-badge>
             </li>
           </ul>
@@ -255,7 +273,9 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   lastestGenFileTime: number;
 
   // readModel = ExecModel.Reader;
-
+  public static  createPluginExtraParam(createModel:boolean,dto: DataxDTO) {
+    return `update_${!createModel},justGetItemRelevant_true,dataxName_${dto.dataxPipeName},${DataxDTO.KEY_PROCESS_MODEL}_${dto.processModel}`;
+  }
   @Input()
   set dtoooo(dto: DataxDTO) {
     this.dto = dto;
@@ -278,10 +298,12 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     if (!this.dto) {
       throw new Error("dto can not be null");
     }
-    this.pluginExtraParam = `update_${!this.createModel},justGetItemRelevant_true,dataxName_${this.dto.dataxPipeName},${DataxDTO.KEY_PROCESS_MODEL}_${this.dto.processModel}`;
+    this.pluginExtraParam = DataxAddStep7Component.createPluginExtraParam(this.createModel,this.dto);
 
     super.ngOnInit();
   }
+
+
 
   protected initialize(app: CurrentCollection): void {
 
@@ -293,7 +315,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   private generate_datax_cfgs(getExist: boolean): Promise<GenerateCfgs> {
-   // console.log([this.dto.readerDescriptor, this.dto.writerDescriptor]);
+    // console.log([this.dto.readerDescriptor, this.dto.writerDescriptor]);
     if (!this.dto.supportBatch && !this.dto.writerDescriptor.extractProps["createDDL"]) {
       return;
     }
@@ -378,11 +400,11 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
 
   showTransformer(tableName: string) {
 
-    let meta = <ISubDetailTransferMeta> {id:tableName};
+    let meta = <ISubDetailTransferMeta>{id: tableName};
     let basePluginMeta: PluginType[] = []
     let baseHetero: HeteroList[] = [];
 
-    let dto = new SelectedTabDTO(meta, basePluginMeta, baseHetero);
+    let dto = new SelectedTabDTO(meta, basePluginMeta, (EXTRA_PARAM_DATAX_NAME + this.dto.dataxPipeName), baseHetero);
     const drawerRef = this.drawerService.create<TableTransformerComponent, {}, {}>({
       // 此处宽度不能用百分比，不然内部的codemirror显示会有问题
       nzWidth: "900px",
@@ -472,21 +494,21 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   }
 
   startEditReader() {
-    this.startDataXEdit("reader");
+    DataxAddStep7Component.startDataXEdit(this, this.dto.processModel, this.r, this.route, UPDATE_ROUT_PATH, "reader");
   }
 
-  private startDataXEdit(execType: "reader" | "writer") {
+  public static startDataXEdit(cpt: BasicFormComponent, processModel: StepType, router: Router, route: ActivatedRoute, routPath: string, execType: "reader" | "writer", e?: SavePluginEvent) {
     let execId = BasicFormComponent.getUUID();
     if (!execId) {
       throw new Error("in valid execId");
     }
-    this.httpPost("/coredefine/corenodemanage.ajax"
+    cpt.httpPost("/coredefine/corenodemanage.ajax"
       , "action=datax_action&emethod=create_update_process&execId=" + execId + "&"
-      + DataxDTO.KEY_PROCESS_MODEL + "=" + this.dto.processModel)
+      + DataxDTO.KEY_PROCESS_MODEL + "=" + processModel,e)
       .then((r) => {
         if (r.success) {
-          this.r.navigate(['../update'], {
-            relativeTo: this.route,
+          router.navigate([routPath], {
+            relativeTo: route,
             fragment: execType,
             queryParams: {"execId": r.bizresult}
           });
@@ -496,7 +518,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
 
   startEditWriter() {
 
-    this.startDataXEdit("writer");
+    DataxAddStep7Component.startDataXEdit(this, this.dto.processModel, this.r, this.route, UPDATE_ROUT_PATH, "writer");
   }
 
 

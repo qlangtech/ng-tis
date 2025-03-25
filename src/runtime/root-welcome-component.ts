@@ -139,7 +139,7 @@ import {BasicFormComponent} from "../common/basic.form.component";
         </nz-sider>
       </nz-layout>
       <nz-footer>
-        <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2020</button>
+        <button nz-button nzType="link" (click)="companyIntrShow=true">杭州晴朗网络科技有限公司©2025</button>
       </nz-footer>
     </nz-layout>
     <!--https://market.aliyun.com/qidian/company/1180716023102499578-->

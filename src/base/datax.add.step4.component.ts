@@ -191,7 +191,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       throw new Error("descriptor can not be null");
     }
     // ,targetItemDesc_batch_source_process_extend
-    //  console.log([meta, this.dataXReaderTargetName,this.descriptor]);
+      console.log([meta, this.dataXReaderTargetName,this.descriptor]);
     let detailId = meta.id;
     let pluginMeta: PluginType[]
       = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
@@ -202,6 +202,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
     if (ip instanceof ItemPropVal) {
       throw new Error("illegal type");
     }
+
     // console.log(ip);
     let cachedVals: Array<Item> = <Array<Item>>ip;
     // console.log([this.subFormHetero.items[0],cachedVals,this.subFormItemSetterFlag.get(meta.id),Array.isArray(null)]);
@@ -360,7 +361,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
     if (!this.tisService.currentApp) {
 
     }
-
+ //this.dto;
     const drawerRef = this.drawerService.create<
       PluginSubFormComponent
       , { hetero: HeteroList[] }
@@ -371,7 +372,8 @@ export class SelectedTabsComponent extends BasicFormComponent {
       nzContentParams: {
         pluginMeta: pluginMeta,
         hetero: hlist,
-        meta: meta
+        meta: meta,
+        dataXReaderTargetName: this.dataXReaderTargetName
       }
     });
     drawerRef.afterClose.subscribe(hetero => {

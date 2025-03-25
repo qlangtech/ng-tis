@@ -52,13 +52,14 @@ import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.componen
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {NgTerminalModule} from "ng-terminal";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
+import {EndCptListComponent} from "./end.cpt.list.component";
 
 
 @NgModule({
   id: 'basemanage',
   imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule
     , NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
-  declarations: [FlinkClusterListComponent,
+  declarations: [EndCptListComponent,FlinkClusterListComponent,
     ApplistComponent, ErrorListComponent, DepartmentAddComponent, BaseMangeIndexComponent //
     , BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent

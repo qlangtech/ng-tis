@@ -72,7 +72,7 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
           <tis-plugin-add-btn (afterPluginAddClose)="ngOnInit()"
                               [filterTags]="this.descFilterTags"
                               [extendPoint]="this.dto.addStep2ComponentCfg.installableExtension"
-                              [descriptors]="[]">添加<i nz-icon nzType="down"></i></tis-plugin-add-btn>
+                              [descriptors]="[]">添加</tis-plugin-add-btn>
         </tis-ipt>
       </tis-form>
     </nz-spin>

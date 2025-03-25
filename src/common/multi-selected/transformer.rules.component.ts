@@ -135,7 +135,6 @@ export class TransformerRuleTabletView implements TuplesProperty {
                 <span *ngSwitchCase="true">{{u.udf.dspt.displayName}}</span>
                 <span *ngSwitchDefault>设置</span>
               </ng-container>
-              <span nz-icon nzType="down"></span>
             </tis-plugin-add-btn>
             <span *ngIf="u.udfError" style="color: red;">{{u.udfError}}</span>
 
@@ -305,9 +304,9 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
   initializeTransformersAndDesciptors(initializeRules: boolean) {
     let m: PluginType = {
       name: "transformerUDF",
-      require: true
-      , extraParam: EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name
-      , descFilter:
+      require: true,
+      extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : (EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name),
+      descFilter:
         {
           localDescFilter: (desc: Descriptor) => true
         }

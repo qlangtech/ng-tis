@@ -204,7 +204,7 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
                             [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
                             *ngIf=" _pp.descVal.propVals.length >0">
                           <div *ngIf="_pp.descVal.containAdvanceField" style="padding-left: 20px">
-                              <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                              <nz-switch class="advance-opts" nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
                                          [(ngModel)]="_pp.descVal.showAllField"
                                          [ngModelOptions]="{standalone: true}"></nz-switch>
                           </div>
@@ -509,6 +509,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   ngAfterContentInit(): void {
+    //  console.log(this.pluginMeta);
   }
 
   changePlugin(_pp: ItemPropVal, impl: string) {

@@ -54,9 +54,6 @@ enum PluginCategory {
           </ng-template>
         </nz-tab>
       </nz-tabset>
-      <!--          <ng-template #extraTemplate>-->
-      <!--              <span>扩展点显示<nz-switch [nzLoading]="formDisabled" (ngModelChange)="showExtendsPointChange($event)" [ngModel]="this.showExtensionPoint.open" nzCheckedChildren="开" nzUnCheckedChildren="关"></nz-switch></span>-->
-      <!--          </ng-template>-->
     </nz-spin>
   `
   ,

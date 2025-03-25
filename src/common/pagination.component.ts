@@ -136,10 +136,10 @@ export class TisPageHeader implements AfterContentInit, AfterViewInit {
 })
 export class TisPageRowAssist implements AfterContentInit, AfterViewInit {
     @ContentChild(TemplateRef, {static: false}) rowAssistTempate: TemplateRef<any>;
+  constructor(private viewContainerRef: ViewContainerRef) {
+  }
 
-
-
-    ngAfterContentInit(): void {
+  ngAfterContentInit(): void {
     }
 
     ngAfterViewInit(): void {
@@ -272,7 +272,7 @@ export class TdContentDirective implements OnInit {
                         </td>
                     </ng-template>
                 </tr>
-                <tr *ngIf="this.containTpl" [nzExpand]="  r.openAssist">
+                <tr *ngIf="this.containTpl && r.openAssist" [nzExpand]="  r.openAssist">
 
                     <ng-container *ngTemplateOutlet="this._rowAssist.rowAssistTempate;context:{r:r}"></ng-container>
 

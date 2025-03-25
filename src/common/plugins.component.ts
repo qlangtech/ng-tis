@@ -175,13 +175,13 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
             <button *ngIf="!disableVerify && item.dspt.veriflable" nz-button nzSize="small"
                     (click)="configCheck(h , item,$event)"><i nz-icon nzType="check" nzTheme="outline"></i>校验
             </button>&nbsp;
-<!--
-            <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
-                                   nzSize="small"
-                                   (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
-                                                                              nzTheme="outline"></i>Notebook
-          </button>&nbsp;
-   -->
+            <!--
+                        <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
+                                               nzSize="small"
+                                               (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
+                                                                                          nzTheme="outline"></i>Notebook
+                      </button>&nbsp;
+               -->
             <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
               <tis-plugin-add-btn [btnSize]="'small'"
                                   [extendPoint]="item.dspt.manipulate.extendPoint"
@@ -189,7 +189,6 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                                   (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
                                   [lazyInitDescriptors]="true">
                 <span nz-icon nzType="setting" nzTheme="outline"></span>
-                <span nz-icon nzType="down"></span>
               </tis-plugin-add-btn>
               &nbsp;
               <nz-space>
@@ -208,7 +207,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
           </div>
           <div style="clear: both"></div>
           <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
-            <nz-switch nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+            <nz-switch class="advance-opts" nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
                        [(ngModel)]="item.showAllField"
                        [ngModelOptions]="{standalone: true}"></nz-switch>
           </div>
@@ -231,7 +230,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                                   [endType]="h.endType"
                                   [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
                                   (afterPluginAddClose)="updateHeteroListDesc(h)"
-                                  (addPlugin)="addNewPluginItem(h,$event)">添加<i nz-icon nzType="down"></i>
+                                  (addPlugin)="addNewPluginItem(h,$event)">添加
               </tis-plugin-add-btn>
 
             </ng-container>
@@ -245,9 +244,9 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
         </ng-container>
       </form>
     </nz-spin>
-<!--    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a-->
-<!--      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>-->
-<!--    </ng-template>-->
+    <!--    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a-->
+    <!--      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>-->
+    <!--    </ng-template>-->
     <!--
           {{this._heteroList | json}}
     -->
@@ -387,7 +386,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     addDb.formControlSpan = 19;
     addDb.disableManipulate = true;
     addDb.shallInitializePluginItems = false;
-   // addDb.disableNotebook = true;
+    // addDb.disableNotebook = true;
     // console.log("shallLoadSavedItems  " + opts.shallLoadSavedItems);
     if (opts.shallLoadSavedItems) {
       //console.log("shallLoadSavedItems  ");
@@ -744,7 +743,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     PluginsComponent.initializePluginItems(this, this.plugins, true //
       , (success: boolean, hList: HeteroList[], showExtensionPoint: boolean) => {
         if (success) {
-          //console.log(hList);
+          // console.log(hList);
           this.showExtensionPoint.open = showExtensionPoint;
           this._heteroList = hList;
           this.afterInit.emit(this._heteroList);
@@ -807,7 +806,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // 成功了
         this.ajaxOccur.emit(new PluginSaveResponse(r.success, false, savePluginEvent));
         if (!savePluginEvent.verifyConfig
-        //  && !savePluginEvent.createOrGetNotebook
+          //  && !savePluginEvent.createOrGetNotebook
         ) {
           this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
         } else {
@@ -899,7 +898,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
 
-  static getAllDesc(form: BasicFormComponent, extensionPoint: string, entype: string): Promise<Map<string /* impl */, Descriptor>> {
+  static getAllDesc(form: BasicFormComponent, extensionPoint: string, entype: string, e?: SavePluginEvent): Promise<Map<string /* impl */, Descriptor>> {
     let params = "action=plugin_action&emethod=get_descs_by_extendpoint&extendpoint=" + extensionPoint;
 
     if (entype) {
@@ -907,7 +906,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 
     let url = "/coredefine/corenodemanage.ajax";
-    return form.httpPost(url, params)
+    return form.httpPost(url, params, e)
       .then((r) => {
         if (r.success) {
           let descMap = Descriptor.wrapDescriptors(r.bizresult)

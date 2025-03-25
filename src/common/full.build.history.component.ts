@@ -108,11 +108,11 @@ class ProcessStrategy {
       <!--          </nz-dropdown-menu>-->
 
 
-      <tis-plugin-add-btn [btnSize]="'default'"
+      <tis-plugin-add-btn *ngIf="showTriggerBtn" [btnSize]="'default'"
                           [extendPoint]="jobTriggerExend"
                           [descriptors]="[]" [initDescriptors]="true" (primaryBtnClick)="triggerFullBuild()"
                           (addPlugin)="triggerPartialBuild($event)">
-        <i class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建 <span nz-icon nzType="down"></span>
+        <i class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建
       </tis-plugin-add-btn>
 
     </tis-page-header>
@@ -169,6 +169,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
   breadcrumb: string[];
 
   showBreadcrumb = false;
+  showTriggerBtn = true;
   @Input()
   dataxProcess = false;
   dataXWorkerStatus: DataXJobWorkerStatus;
@@ -194,6 +195,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       this.dataxProcess = !!datax;
     }
     this.showBreadcrumb = !!b;
+    this.showTriggerBtn = !!data['showTriggerBtn'];
 
 
     this.route.params
