@@ -23,7 +23,7 @@ import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DataXCreateProcessMeta, DataxDTO} from "./datax.add.component";
+import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
@@ -34,6 +34,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 import {StepType} from "../common/steps.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
+import {DataXCreateProcessMeta} from "./common/datax.common";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html

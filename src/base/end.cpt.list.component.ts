@@ -16,15 +16,18 @@
  *   limitations under the License.
  */
 
-import {BasicFormComponent} from "../common/basic.form.component";
+import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {Component, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataxDTO} from "./datax.add.component";
-import {PluginType} from "../common/tis.plugin";
+import {Descriptor, HeteroList, PluginType} from "../common/tis.plugin";
+import {PluginsComponent} from "../common/plugins.component";
+import {DATAX_PREFIX_DB} from "./datax.add.base";
 
+const KEY_END_TYPE = 'desc'
 const DATAX_READER = 'dataxReader'
 const DATAX_WRITER = 'dataxWriter'
 
@@ -38,54 +41,67 @@ const PARAMS_CFG = 'params-cfg';
 @Component({
   template: `
 
-      <div id="dataxReader" *ngIf="dataXReaderMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="dataXReaderMeta"></tis-plugins>
-      </div>
+    <div id="dataxReader" *ngIf="dataXReaderMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="dataXReaderMeta"></tis-plugins>
+    </div>
 
-      <div id="dataxWriter" *ngIf="dataXWriterMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="dataXWriterMeta"></tis-plugins>
-      </div>
+    <div id="dataxWriter" *ngIf="dataXWriterMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="dataXWriterMeta"></tis-plugins>
+    </div>
 
-      <div [id]="'mq'" *ngIf="incrSourceMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="incrSourceMeta"></tis-plugins>
-      </div>
+    <div [id]="'mq'" *ngIf="incrSourceMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="incrSourceMeta"></tis-plugins>
+    </div>
 
-      <div id="sinkFactory" *ngIf="incrSinkMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="incrSinkMeta"></tis-plugins>
-      </div>
+    <div id="sinkFactory" *ngIf="incrSinkMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="incrSinkMeta"></tis-plugins>
+    </div>
 
-      <div [id]="dsFactory" *ngIf="_dataSourceMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="_dataSourceMeta"></tis-plugins>
-      </div>
+    <div [id]="dsFactory" *ngIf="_dataSourceMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="_dataSourceMeta"></tis-plugins>
+    </div>
 
-      <div [id]="param" *ngIf="_paramCfgMeta" class="plugin-block">
-          <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
-                       [forceInitializePluginItems]="false"
-                       [shallInitializePluginItems]="true"
-                       [itemChangeable]="false"
-                       [plugins]="_paramCfgMeta"></tis-plugins>
-      </div>
+    <div [id]="param" *ngIf="_paramCfgMeta" class="plugin-block">
+      <tis-plugins [showExtensionPoint]="{'open':true}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="true"
+                   [itemChangeable]="false"
+                   [plugins]="_paramCfgMeta"></tis-plugins>
+    </div>
 
+
+    <div id="assist" *ngIf="assistHeteroList" class="plugin-block">
+
+      <tis-plugins [showExtensionPoint]="{'open':false}" [showSaveButton]="false"
+                   [forceInitializePluginItems]="false"
+                   [shallInitializePluginItems]="false"
+                   [useCollapsePanel]="true"
+                   [itemChangeable]="false"
+                   [pluginMeta]="assistMetas"
+                   [_heteroList]="assistHeteroList"></tis-plugins>
+
+
+    </div>
 
   `
   ,
@@ -108,6 +124,12 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
 
   dsFactory = DATASOURCE_FACTORY;
   param = PARAMS_CFG;
+
+  /**
+   * assist type 对应的component 会使用endtype将与之对应的所有所有插件类型都取得
+   */
+  assistHeteroList: HeteroList[];
+  assistMetas: PluginType[] = [];
 
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
@@ -143,7 +165,49 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     let queryParams = this.route.snapshot.queryParamMap;
+    this.tisService.currentApp = new CurrentCollection(0, "mysql_mysql");
+    let assistEndType: string[] = queryParams.getAll(KEY_END_TYPE);
+    if (assistEndType && assistEndType.length > 0) {
+      //console.log(assistEndType);
+      // this.httpPost('/coredefine/corenodemanage.ajax'
+      //   , 'action=plugin_action&emethod=get_descs&'
+      //   + assistEndType.map((desc) => KEY_END_TYPE + "=" + desc).join("&"))
+      //   .then((r) => {
+      //     if (!r.success) {
+      //       return;
+      //     }
+      //
+      //     let descMap = Descriptor.wrapDescriptors(r.bizresult)
+      //     return descMap;
+      //
+      //   });
+
+      let pluginMeta: PluginType[] = new Array();
+      for (let i of assistEndType) {
+        pluginMeta.push({
+          name: 'dataxReader',
+          require: true,
+          "extraParam": ('dataxName_xx'),
+          descFilter: {
+            localDescFilter: (_) => true
+          }
+        });
+      }
+      // let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
+      let url = '/coredefine/corenodemanage.ajax?action=plugin_action&emethod=get_descs&'
+        + assistEndType.map((desc) => KEY_END_TYPE + "=" + desc).join("&")
+      // console.log([pm,url]);
+      PluginsComponent.process_response_of_get_plugin_config_info(this, url, null, pluginMeta
+        , (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => {
+          this.assistHeteroList = _heteroList;
+          this.assistMetas = pluginMeta;
+        });
+
+      return;
+    }
+
     let descName = queryParams.get(DATAX_READER);
     if (descName) {
       this._dataXReaderMeta = [{
@@ -199,7 +263,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
         });
       }
 
-     // this._dataSourceMeta = [];
+      // this._dataSourceMeta = [];
     }
 
 

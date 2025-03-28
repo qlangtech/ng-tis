@@ -605,10 +605,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
 
   ngOnInit(): void {
     this.formLayout = this.createModel ? "vertical" : "horizontal";
- // console.log(  this.offsetStep(1) );
     super.ngOnInit();
-
-
   }
 
   protected initialize(_: CurrentCollection): void {
@@ -632,7 +629,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         this.subFieldForms = subFieldForms;
         this.subFormHetero = subFormHetero;
         this.transferList.splice(0);
-        console.log([this.subFieldForms,readerDesc.subFormMeta.idList,useCache]);
+       // console.log([this.subFieldForms,readerDesc.subFormMeta.idList,useCache]);
         readerDesc.subFormMeta.idList.forEach((subformId) => {
           let direction: TransferDirection = (this.subFieldForms.get(subformId) === undefined ? 'left' : 'right');
           this.transferList.push({

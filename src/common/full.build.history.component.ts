@@ -33,6 +33,7 @@ import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {TargetPlugin} from "./plugin/type.utils";
 import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {PreviewComponent} from "./preview.component";
+import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 class ProcessStrategy {
 // {
@@ -58,10 +59,13 @@ class ProcessStrategy {
                 [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
       <ng-template #unableToUseK8SController>
         当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用可启用以下方案：
-      <ul style="padding-left: 1em;">
-        <li><a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a></li>
-        <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank" href="https://tis.pub/docs/guide/integer-dolphinscheduler/">详细</a> <nz-tag [nzColor]="'pink'">推荐</nz-tag></li>
-      </ul>
+        <ul style="padding-left: 1em;">
+          <li><a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a></li>
+          <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank"
+                                                      href="https://tis.pub/docs/guide/integer-dolphinscheduler/">详细</a>
+            <nz-tag [nzColor]="'pink'">推荐</nz-tag>
+          </li>
+        </ul>
       </ng-template>
       <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告"
                 [nzDescription]="installLocal" nzShowIcon></nz-alert>
@@ -97,18 +101,8 @@ class ProcessStrategy {
           <ng-container *ngTemplateOutlet="previewTpl"></ng-container>
         </button>
       </tis-page-header-left>
-      <!--          <button (click)="triggerFullBuild()" [disabled]="formDisabled" nz-button nz-dropdown [nzDropdownMenu]="menu4" nzType="primary"><i-->
-      <!--                  class="fa fa-rocket" aria-hidden="true"></i> &nbsp;触发构建 <span nz-icon nzType="down"></span>-->
-      <!--          </button> &nbsp;-->
 
-      <!--          <nz-dropdown-menu #menu4="nzDropdownMenu">-->
-      <!--              <ul nz-menu>-->
-      <!--                  <li nz-menu-item (click)="triggerPartialBuild()">部份构建</li>-->
-      <!--              </ul>-->
-      <!--          </nz-dropdown-menu>-->
-
-
-      <tis-plugin-add-btn *ngIf="showTriggerBtn" [btnSize]="'default'"
+      <tis-plugin-add-btn [disabled]="formDisabled" *ngIf="showTriggerBtn" [btnSize]="'default'"
                           [extendPoint]="jobTriggerExend"
                           [descriptors]="[]" [initDescriptors]="true" (primaryBtnClick)="triggerFullBuild()"
                           (addPlugin)="triggerPartialBuild($event)">
@@ -207,7 +201,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
             , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
             if (!this.breadcrumb) {
               let wfname = r.bizresult.payload[0];
-              this.breadcrumb = ['数据流', '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
+              this.breadcrumb = [KEY_DATAFLOW_PARSER, '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
             }
             this.pager = Pager.create(r);
             this.buildHistory = r.bizresult.rows;
@@ -264,6 +258,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
 
   public triggerFullBuild(): void {
+    this.formDisabled = true;
     let processStrategy = this.getProcessStrategy(this.dataxProcess);
     if (this.appNotAware) {
       // 单纯数据流触发
@@ -278,6 +273,9 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     }
     this.confirm("是否要触发数据管道执行？", () => {
       this.processTriggerResult(processStrategy, this.httpPost(processStrategy.url, processStrategy.post));
+    }).then((_) => {
+    }, (reject) => {
+      this.formDisabled = false;
     });
 
 
@@ -340,7 +338,9 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       if (!r.success && r.bizresult && this.dataXWorkerStatus) {
         this.dataXWorkerStatus.installLocal = r.bizresult.installLocal;
       }
-    })
+    }).finally(() => {
+      this.formDisabled = false;
+    });
   }
 
   public gotoPage(p: number) {

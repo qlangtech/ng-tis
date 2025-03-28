@@ -23,13 +23,12 @@ import {BasicFormComponent, CurrentCollection} from '../common/basic.form.compon
 
 import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Application, AppType} from "../common/application";
+import {Application} from "../common/application";
 import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 import {LocalStorageService} from "angular-2-local-storage";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor, SavePluginEvent} from "../common/tis.plugin";
-import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 
 
@@ -84,7 +83,7 @@ import {DataxDTO} from "./datax.add.component";
       <!--            </page-header>-->
 
 
-      <tis-col title="管道" width="14">
+      <tis-col title="实例" width="14" (search)="filterByAppName($event)">
         <ng-template let-app='r'>
 
           <button nz-button nzType="link" style="cursor: pointer" nzSize="small"
@@ -140,12 +139,14 @@ import {DataxDTO} from "./datax.add.component";
           <!--              </li>-->
           <!--            </ul>-->
           <!--          </nz-dropdown-menu>-->
-          <tis-plugin-add-btn btnSize="small"
+          <tis-plugin-add-btn [enableAddplugin]="false" btnSize="small"
                               [extendPoint]="processorExend"
                               [descriptors]="processorDescriptors" [initDescriptors]="false">
             <tis-plugin-add-btn-extract-item (click)="startEditReader(app)" nz-icon="edit" li-name="Reader">
             </tis-plugin-add-btn-extract-item>
             <tis-plugin-add-btn-extract-item (click)="startEditWriter(app)" nz-icon="edit" li-name="Writer">
+            </tis-plugin-add-btn-extract-item>
+            <tis-plugin-add-btn-extract-item (click)="startDeletePipeline(app)" nz-icon="delete" li-name="删除">
             </tis-plugin-add-btn-extract-item>
             <i nz-icon nzType="setting" nzTheme="outline"></i>
           </tis-plugin-add-btn>
@@ -185,6 +186,18 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     let saveEvent = new SavePluginEvent();
     saveEvent.overwriteHttpHeaderOfAppName(app.projectName);
     DataxAddStep7Component.startDataXEdit(this, StepType.UpdateDataxWriter, this.router, this.route, `/x/${app.projectName}/update`, "writer", saveEvent);
+  }
+
+  startDeletePipeline(app: Application) {
+    // let saveEvent = new SavePluginEvent();
+    // saveEvent.overwriteHttpHeaderOfAppName(app.projectName);
+    // DataxAddStep7Component.startDataXEdit(this, StepType.UpdateDataxWriter, this.router, this.route, `/x/${app.projectName}/manage#control`, "writer", saveEvent);
+
+
+    this.router.navigate(["/", "x", app.projectName, "manage"], {
+      relativeTo: this.route,
+      fragment: "control"
+    });
   }
 
   ngOnInit(): void {
@@ -259,13 +272,13 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
   }
 
   toggleOpenAssist(app: Application) {
-    let a:any = app;
-    if(!a.openAssist){
-      this.pageList.forEach((app)=>{
-        (app as any).openAssist= false;
+    let a: any = app;
+    if (!a.openAssist) {
+      this.pageList.forEach((app) => {
+        (app as any).openAssist = false;
       });
       this.tisService.currentApp = new CurrentCollection(0, app.projectName);
-    }else{
+    } else {
       this.tisService.currentApp = null;
     }
     a.openAssist = !a.openAssist;

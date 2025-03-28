@@ -36,6 +36,7 @@ import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
 import {openParamsCfg} from "./plugins.component";
+import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 
 @Component({
@@ -84,7 +85,7 @@ import {openParamsCfg} from "./plugins.component";
               <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
               <li nz-menu-item><a routerLink="/base/flink-cluster-list">Flink Cluster</a></li>
               <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
-              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>
+<!--              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>-->
               <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
               <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
               <li nz-menu-item> <a href="javascript:void()" (click)="openLicense()">License</a></li>
@@ -100,7 +101,7 @@ import {openParamsCfg} from "./plugins.component";
           <nz-dropdown-menu #offlineManage="nzDropdownMenu">
             <ul nz-menu nzSelectable>
               <li nz-menu-item><a routerLink="/offline/ds">数据源管理</a></li>
-              <li nz-menu-item><a routerLink="/offline/wf">DF管理</a></li>
+              <li nz-menu-item><a routerLink="/offline/wf">数据流分析（EMR）</a></li>
             </ul>
           </nz-dropdown-menu>
         </li>
