@@ -48,7 +48,9 @@ import {BasicFormComponent} from "../common/basic.form.component";
               <nz-card id="dataflow" [nzHoverable]="true" (click)="routerTo('/offline/wf')">
                 <div class="tis-card-content">
                   <div class="compose">
-                    <h1><i nz-icon nzType="import" nzTheme="outline"></i>数据流</h1>
+                    <h1>
+<!--                      <i nz-icon nzType="import" nzTheme="outline"></i>-->
+                      数据流分析（EMR）</h1>
                     轻松构建基于TIS的物化视图
                   </div>
                 </div>

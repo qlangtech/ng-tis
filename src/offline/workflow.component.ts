@@ -70,7 +70,7 @@ export class BasicWFComponent extends BasicFormComponent {
 @Component({
   // templateUrl: '/offline/workflowList.htm'
   template: `
-    <tis-page-header title="数据流" [result]="result">
+    <tis-page-header title="数据流分析（EMR）" [result]="result">
       <tis-header-tool>
         <button nz-button nzType="primary" (click)="addWorkflowBtnClick()">
           <i nz-icon nzType="plus" nzTheme="outline"></i>创建
@@ -102,7 +102,7 @@ export class BasicWFComponent extends BasicFormComponent {
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu>
               <li nz-menu-item (click)="editProfile(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>基本信息</li>
-              <li nz-menu-item (click)="editTopology(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>编辑</li>
+              <li nz-menu-item (click)="editTopology(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>执行逻辑</li>
               <li nz-menu-item (click)="executeWorkflow(df)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建
               </li>
               <li nz-menu-item (click)="buildHistory(df)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史

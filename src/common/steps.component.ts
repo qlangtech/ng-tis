@@ -30,6 +30,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {PageHeaderLeftComponent} from "./pager.header.component";
 import {TisResponseResult} from "./tis.plugin";
 import {NzDirectionType} from "ng-zorro-antd/steps/steps.component";
+import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 
 
@@ -86,7 +87,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
   constructor() {
     // let createIndexPhase: Array<string> = ;
     this.processMap.set(StepType.CreateIndex, new CaptionSteps("索引实例添加", ["基本信息", "元数据信息", "服务器节点", "确认"]));
-    this.processMap.set(StepType.CreateWorkflow, new CaptionSteps("离线分析实例添加", ["基本信息", "类型选择", "离线引擎设置", "确认"]));
+    this.processMap.set(StepType.CreateWorkflow, new CaptionSteps(KEY_DATAFLOW_PARSER+"实例添加", ["基本信息", "类型选择", "离线引擎设置", "确认"]));
     this.processMap.set(StepType.CreateIncr, new CaptionSteps("增量同步添加", ["引擎配置", "Source/Sink配置", "Stream脚本确认", "状态确认"]));
     this.processMap.set(StepType.CreateDatax, new CaptionSteps("数据管道添加", ["基本信息", "Reader设置", "Writer设置", "表映射", "确认"]));
     this.processMap.set(StepType.UpdateDataxReader, new CaptionSteps("数据管道 Reader 更 新", ["Reader设置", "Writer设置", "表映射", "确认"]));

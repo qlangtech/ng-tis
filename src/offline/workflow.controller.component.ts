@@ -5,13 +5,14 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {DataxAddStep2Component} from "../base/datax.add.step2.component";
-import {AddStep2ComponentCfg, DataxAddComponent, DataxDTO} from "../base/datax.add.component";
+import {DataxAddComponent, DataxDTO} from "../base/datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
 import {DataxAddStep5Component} from "../base/datax.add.step5.component";
 import {DataxAddStep1Component} from "../base/datax.add.step1.component";
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {DataxAddStep7Component, ExecModel} from "../base/datax.add.step7.confirm.component";
+import {AddStep2ComponentCfg} from "../base/common/datax.common";
 
 
 @Component({

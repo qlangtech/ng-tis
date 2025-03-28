@@ -27,6 +27,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
 import {TerminalComponent} from "./terminal.component";
+import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 
 @Component({
@@ -348,7 +349,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
         let wf = r.bizresult.workflow;
         this.buildTask = Object.assign(new BuildTask(), r.bizresult.task);
         if (this.appNotAware) {
-          this.breadcrumb = ['数据流', '/offline/wf', wf.name, `/offline/wf_update/${wf.name}`, '构建历史', `../`];
+          this.breadcrumb = [KEY_DATAFLOW_PARSER, '/offline/wf', wf.name, `/offline/wf_update/${wf.name}`, '构建历史', `../`];
         } else {
           this.breadcrumb = ['构建历史', `../`];
         }

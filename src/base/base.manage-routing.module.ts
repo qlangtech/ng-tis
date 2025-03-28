@@ -26,7 +26,7 @@ import {ApplistComponent} from './applist.component';
 import {OperationLogComponent} from '../common/operation.log.component';
 import {AddAppStepFlowComponent} from './addapp.step.flow.component';
 import {BaseConfigComponent} from "./base-config.component";
-import {SnapshotsetComponent} from "../common/snapshotset.component";
+// import {SnapshotsetComponent} from "../common/snapshotset.component";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from "../corecfg/schema-xml-edit.component";
 import {DataxAddComponent} from "./datax.add.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
@@ -412,14 +412,14 @@ const basemanageRoutes: Routes = [
             path: 'appadd',
             component: AddAppStepFlowComponent
           },
-          {   // 配置模版一览
-            path: 'tpl/snapshotset',
-            component: SnapshotsetComponent,
-            data: {
-              showBreadcrumb: true,
-              template: true
-            }
-          },
+          // {   // 配置模版一览
+          //   path: 'tpl/snapshotset',
+          //   component: SnapshotsetComponent,
+          //   data: {
+          //     showBreadcrumb: true,
+          //     template: true
+          //   }
+          // },
           {
             path: 'tpl/xml_conf/:restype/:snapshotid',
             component: SchemaXmlEditComponent

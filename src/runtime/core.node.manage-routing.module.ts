@@ -29,7 +29,7 @@ import {
   Routes,
   UrlTree
 } from '@angular/router';
-import {SnapshotsetComponent} from '../common/snapshotset.component';
+// import {SnapshotsetComponent} from '../common/snapshotset.component';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {IndexQueryComponent} from './index.query.component';
 import {OperationLogComponent} from "../common/operation.log.component";
@@ -84,10 +84,10 @@ const coreNodeRoutes: Routes = [
         path: '',
         canActivateChild: [CanActivateCollectionManage],
         children: [
-          {   // Schema 配置文件一览
-            path: 'snapshotset',
-            component: SnapshotsetComponent,
-          },
+          // {   // Schema 配置文件一览
+          //   path: 'snapshotset',
+          //   component: SnapshotsetComponent,
+          // },
           { // restype: xml | config
             path: 'xml_conf/:restype/:snapshotid',
             component: SchemaXmlEditComponent

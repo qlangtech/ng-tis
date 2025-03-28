@@ -41,12 +41,13 @@ import {
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
-import {DataXCfgFile, DataxDTO, TransformerInfo} from "./datax.add.component";
+import {DataxDTO} from "./datax.add.component";
 import {CodemirrorComponent} from "../common/codemirror.component";
 import {KEY_APPNAME} from "../common/plugin/type.utils";
 import {TableTransformerComponent} from "src/common/selectedtab/table.transformer.component";
 import {SelectedTabDTO} from "../common/selectedtab/plugin-sub-form.component";
 import {ISubDetailTransferMeta} from "./datax.add.step4.component";
+import {DataXCfgFile, TransformerInfo} from "./common/datax.common";
 
 export enum ExecModel {
   Create, Reader
@@ -151,11 +152,13 @@ const UPDATE_ROUT_PATH = '../update';
               <li>
                 <i
                   style="color:#777777;font-size: 10px">生成时间：{{lastestGenFileTime | date : "yyyy/MM/dd HH:mm:ss"}}</i>
+
+
                 <nz-button-group>
                   <button nz-button nzSize="small" (click)="reGenerateSqlDDL()">重新生成</button>
-                  <button nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="menu1" nzPlacement="bottomRight">
-                    <i nz-icon nzType="down" nzTheme="outline"></i>
-                  </button>
+<!--                  <button nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="menu1" nzPlacement="bottomRight">-->
+<!--                    <i nz-icon nzType="down" nzTheme="outline"></i>-->
+<!--                  </button>-->
                 </nz-button-group>
                 <nz-dropdown-menu #menu1="nzDropdownMenu">
                   <ul nz-menu>

@@ -20,7 +20,7 @@ import {Component, ElementRef, ViewChild} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {TriggerDumpComponent} from "./trigger_dump.component";
 import {PojoComponent} from "./pojo.component";
-import {SnapshotChangeLogComponent} from "./snapshot.change.log";
+// import {SnapshotChangeLogComponent} from "./snapshot.change.log";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import * as dagreD3 from 'dagre-d3';
@@ -314,7 +314,7 @@ export class CorenodemanageComponent extends AppFormComponent {
   // 变更历史
   public openSnapshotVerChangeLog(): void {
     // this.modalService.open(SnapshotChangeLogComponent, {windowClass: 'schema-edit-modal'});
-    this.openDialog(SnapshotChangeLogComponent, {nzTitle: "版本切换历史"});
+    //this.openDialog(SnapshotChangeLogComponent, {nzTitle: "版本切换历史"});
   }
 
   // // 从其他索引拷贝索引配置

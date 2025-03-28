@@ -25,7 +25,8 @@ import {CreatorRouter, TargetPlugin} from "./type.utils";
   selector: 'item-prop-val',
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <nz-form-item [hidden]="hide">
+    <!--[formControlName]="_pp.key" 需要添加到 nz-form-item 元素上用于playweright截图-->
+      <nz-form-item   [hidden]="hide">
           <nz-form-label [ngClass]="{'form-label-verical':!horizontal,'tis-form-item-label':true}"
                          [nzSpan]="horizontal? 5: null"
                          [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"

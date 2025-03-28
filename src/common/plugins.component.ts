@@ -26,20 +26,18 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
-  TemplateRef,
-  ViewChild
+  Output
 } from "@angular/core";
 import {TISCoreService, TISService} from "./tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
-
 import {ActivatedRoute, Router} from "@angular/router";
 import {
-  Descriptor, FLAG_DELETE_PROCESS,
+  Descriptor,
+  FLAG_DELETE_PROCESS,
   HeteroList,
   IFieldError,
   Item,
-  ItemPropVal,
+  ItemPropVal, ItemValType,
   PARAM_END_TYPE,
   PluginMeta,
   PluginName,
@@ -53,10 +51,9 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/type.utils";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
-
+import * as ls from 'lodash';
 
 /**
  * 打开ParamCfg类型的对话框
@@ -152,7 +149,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
           </nz-tag>
         </div>
         <div *ngFor=" let item of h.items " style="position: relative"
-             [ngClass]="{'item-block':shallInitializePluginItems}">
+             [ngClass]="{'item-block':shallInitializePluginItems || useCollapsePanel}">
           <div *ngIf="item.dspt.supportIcon" style="position: absolute;bottom:0px ;left:0px;opacity:0.9">
             <i style="font-size: 120px" nz-icon [nzType]="item.dspt.endtype"
                nzTheme="fill"></i>
@@ -218,11 +215,13 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                          *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
         </div>
       </ng-template>
-      <form nz-form [ngSwitch]="shallInitializePluginItems">
+      <form nz-form [ngSwitch]="shallInitializePluginItems || useCollapsePanel">
         <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
-          <nz-collapse-panel *ngFor="let h of _heteroList;let i = index" [nzHeader]="h.caption"
+          <nz-collapse-panel [id]="h.captionId" *ngFor="let h of _heteroList;let i = index"
+                             [nzHeader]="h.caption"
                              [nzActive]="true"
-                             [nzDisabled]="!shallInitializePluginItems">
+                             [nzDisabled]="!shallInitializePluginItems && !useCollapsePanel">
+
             <ng-container
               *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
             <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
@@ -234,6 +233,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
               </tis-plugin-add-btn>
 
             </ng-container>
+
           </nz-collapse-panel>
         </nz-collapse>
         <ng-container *ngSwitchCase="false">
@@ -282,14 +282,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
   ]
 })
 export class PluginsComponent extends AppFormComponent implements AfterContentInit, AfterViewInit, OnDestroy {
-  // private _incrScript: string;
-  // @Output() nextStep = new EventEmitter<any>();
-  // @Output() preStep = new EventEmitter<any>();
-  // @Input() dto: IndexIncrStatus;
-  // _validateForm: FormGroup;
-  // 是否显示扩展点详细
-  // @Input()
-  // disabled = false;
+
 
   @Input()
   disableManipulate = false;
@@ -305,6 +298,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   // 如果该插件用在DbAddComponent中作为添加组件用
   @Input() shallInitializePluginItems = true;
 
+  @Input() useCollapsePanel = false;
   /**
    * 强制初始化
    */
@@ -540,6 +534,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let pluginMeta = PluginsComponent.getPluginMetaParams(pm);
     let url = '/coredefine/corenodemanage.ajax?event_submit_do_get_plugin_config_info=y&action=plugin_action&plugin=' + pluginMeta + '&use_cache=' + useCache;
     // console.log([pm,url]);
+    return this.process_response_of_get_plugin_config_info(ctx, url, e, pm, callback);
+  }
+
+
+  public static process_response_of_get_plugin_config_info(
+    ctx: BasicFormComponent, url: string, e: SavePluginEvent, pm: PluginType[]
+    , callback: (success: boolean, _heteroList: HeteroList[], showExtensionPoint: boolean) => void) {
     return ctx.jsonPost(url, {}, e).then((r) => {
       // console.log([r,pm,url]);
       let _heteroList: HeteroList[] = [];
@@ -554,7 +555,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
           let h: HeteroList = PluginsComponent.wrapperHeteroList(bizArray[i], pt);
           m = (pt as PluginMeta);
           PluginsComponent.addDefaultItem(m, h);
-         // console.log([bizArray[i], pm[i], h]);
+          // console.log([bizArray[i], pm[i], h]);
           _heteroList.push(h);
         }
       }
@@ -563,7 +564,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       return r;
     });
   }
-
 
   public static postHeteroList(basicModule: BasicFormComponent, pluginMetas: PluginType[], heteroList: HeteroList[]
     , savePluginEvent: SavePluginEvent, errorsPageShow: boolean //
@@ -576,7 +576,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     let items: Array<Item[]> = [];
     heteroList.forEach((h) => {
-      items.push(h.items);
+      //
+      let its: Item[] = [];
+      console.log(h.items);
+      for (let item of h.items) {
+        its.push(item.project());
+      }
+      items.push(its);
     });
     let postData: any = {"items": items};
 
@@ -591,7 +597,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       postData = Object.assign(postData, savePluginEvent.postPayload);
     }
 
-    // console.log([postData,savePluginEvent.postPayload]);
+
     // console.log([savePluginEvent]);
 
     basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {

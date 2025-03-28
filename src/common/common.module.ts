@@ -91,9 +91,9 @@ import {NzSwitchModule} from 'ng-zorro-antd/switch';
 import {NzAffixModule} from 'ng-zorro-antd/affix';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzStatisticModule} from 'ng-zorro-antd/statistic';
-import {SnapshotsetComponent} from "./snapshotset.component";
+// import {SnapshotsetComponent} from "./snapshotset.component";
 import {SnapshotLinkComponent} from "./snapshot.link";
-import {SnapshotChangeLogComponent} from "../runtime/snapshot.change.log";
+// import {SnapshotChangeLogComponent} from "../runtime/snapshot.change.log";
 import {SchemaEditVisualizingModelComponent, SchemaXmlEditComponent} from '../corecfg/schema-xml-edit.component';
 import {CompareEachOtherComponent, CompareResultComponent} from '../corecfg/compare.eachother.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
@@ -171,8 +171,7 @@ import {PreviewComponent} from "./preview.component";
   declarations: [PreviewComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
-    PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent, SnapshotChangeLogComponent
-    , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe,  SnapshotLinkComponent,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     TimeConsumePipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent, TableTransformerComponent, TableBaseComponent,
     CompareEachOtherComponent, CompareResultComponent,
@@ -183,8 +182,8 @@ import {PreviewComponent} from "./preview.component";
   ],
   exports: [BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
-    , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotsetComponent, SnapshotLinkComponent
-    , SnapshotChangeLogComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+    , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe,  SnapshotLinkComponent
+    ,  SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule, ViewGenerateCfgComponent,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule, TisStepsToolbarComponent,
     NzIconModule, NzSpinModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe, TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent

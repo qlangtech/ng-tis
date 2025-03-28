@@ -26,7 +26,8 @@ import {RecordTransformer, TransformerRuleTabletView} from "./multi-selected/tra
 import {KEY_subform_DetailIdValue, TuplesProperty} from "./plugin/type.utils";
 import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
 import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
-
+import * as ls from 'lodash';
+import {isBooleanLiteralLike} from "codelyzer/util/utils";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
@@ -131,6 +132,38 @@ export class ItemPropVal extends ErrorFeedback {
   constructor(public updateModel = false) {
     //  console.log("create");
     super();
+  }
+
+
+  /**
+   * 当页面提交的时候作投影，只投影需要提交的内容
+   */
+  public project(): ItemPropVal {
+    let pickProps: string[] = [];
+    let containEprops = false;
+    let descValProject: DescribleVal = null;
+    if (this.descVal) {
+      descValProject = this.descVal.project() as DescribleVal;
+    } else if (typeof this._primaryVal === 'undefined') {
+      pickProps.push('_eprops');
+      containEprops = true;
+    } else {
+      pickProps.push('_primaryVal');
+    }
+
+    let ip: ItemPropVal = ls.pick(this, pickProps);
+    if(descValProject){
+      ip.descVal = descValProject;
+    }
+    //let cols = ip.mcolsEnums;
+    if (containEprops) {
+      let ep: { string?: any } = {};
+      ep[KEY_OPTIONS_ENUM] = this.getEProp(KEY_OPTIONS_ENUM);
+      ip._eprops = ep as { string: any };
+    }
+    // ip.mcolsEnums
+    //console.log(ip);
+    return ip;
   }
 
 
@@ -527,6 +560,9 @@ export interface DataTypeDesc {
   // "unsignedToken": ""
 }
 
+export type ItemValType
+  = ItemPropVal | { [key: string]: ItemPropVal } | Array<Item>
+
 /**
  * 对应一个plugin的输入项
  */
@@ -551,11 +587,38 @@ export class Item {
    *
    * </pre>
    */
-  public vals: { [key: string]: ItemPropVal }
-    | { [key: string]: { [key: string]: ItemPropVal } }
-    | { [key: string]: Array<Item> } = {};
+  public vals: { [key: string]: ItemValType } = {}
+  // | { [key: string]: { [key: string]: ItemPropVal } }
+  // | { [key: string]: Array<Item> } = {};
   displayName = '';
   private _propVals: ItemPropVal[];
+
+  /**
+   * 提交到服务端时，为了服务端执行日志只打印必要的信息，需要在客户端对提交的json内容作投影，只提交必要的信息
+   */
+  public project(): Item {
+    let it: Item = ls.pick(this, ['impl', 'vals']);
+    let itPropVal: ItemValType = null;
+    it.vals = Object.assign({}, it.vals);
+    for (let key in it.vals) {
+      itPropVal = it.vals[key];
+      if (typeof itPropVal === 'string') {
+        continue;
+      } else if (Array.isArray(itPropVal)) {
+        // 保存整体表单的操作
+        let its = new Array<Item>();
+        for (let i of itPropVal) {
+          its.push(i.project());
+        }
+        it.vals[key] = its;
+      } else if (itPropVal instanceof ItemPropVal) {
+        it.vals[key] = itPropVal.project();
+      } else {
+        throw new Error("illegal type of item prop val:" + typeof itPropVal);
+      }
+    }
+    return it;
+  }
 
   /**
    * 表单中有高级字段，是否显示全部？
@@ -607,7 +670,7 @@ export class Item {
               containAdvanceField = true;
             }
             if (!itemProp.primaryVal && fieldErr.errorfields) {
-             // console.log(fieldErr);
+              // console.log(fieldErr);
               if (fieldErr.errorfields.length !== 1) {
                 throw new Error(`errorfields length ${fieldErr.errorfields.length} shall be 1`);
               }
@@ -706,7 +769,7 @@ export class Item {
 
           let selectedTab: string = enumVal[KEY_subform_DetailIdValue];
           let transformerRule: Array<RecordTransformer> = [...val];
-         // console.log(transformerRule);
+          // console.log(transformerRule);
           newVal.setTransformerRules(elementKeys || [], transformerRule, typeMetas, selectedTab);
           break;
         }
@@ -977,6 +1040,15 @@ export class HeteroList {
     return !!filter && !!filter.endType;
   }
 
+  private _captionId: string;
+  public get captionId(): string {
+    if (!this._captionId) {
+      let t: string = this.caption || '';
+      this._captionId = t.replace(/ /g, '_');
+    }
+    return this._captionId;
+  }
+
   public get descriptorList(): Array<Descriptor> {
     if (!this._descriptorList) {
       this._descriptorList = Array.from(this.descriptors.values());
@@ -1071,7 +1143,7 @@ export class SavePluginEvent {
     this.overwriteHttpHeader = headerOverwrite;
   }
 
- // public createOrGetNotebook = false;
+  // public createOrGetNotebook = false;
   public verifyConfig = false;
   // public notShowBizMsg = false;
   // 顺带要在服务端执行一段脚本

@@ -112,7 +112,7 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
                           [disabled]="this.disabled || this.formDisabled">
                       <ng-content></ng-content>
                   </button>
-                  <button nz-button nz-dropdown (mouseenter)="lazyInitialize()"
+                  <button [disabled]="this.disabled || this.formDisabled" nz-button nz-dropdown (mouseenter)="lazyInitialize()"
                           [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'" [nzSize]="btnSize"
                           [nzDropdownMenu]="menu1" nzPlacement="bottomRight">
                       <span nz-icon nzType="down"></span>
@@ -135,7 +135,7 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
                           <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
                                                              nzTheme="outline"></span> {{d.displayName}}</a>
                       </li>
-                    <ng-container *ngIf="initDescriptors">
+                    <ng-container *ngIf="enableAddplugin">
                       <li nz-menu-divider></li>
                       <li nz-menu-item (click)="addNewPlugin()">
                           <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
@@ -146,7 +146,7 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
 
           </ng-container>
           <ng-container *ngSwitchCase="false">
-              <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
+              <button *ngIf="enableAddplugin" [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
                       [disabled]="this.disabled || this.formDisabled">
                   <i nz-icon nzType="api" nzTheme="outline"></i>添加
               </button>
@@ -165,6 +165,10 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
   @Input()
   descriptors: Array<Descriptor> = [];
+
+
+  @Input()
+  enableAddplugin = true;
 
   @Input()
   initDescriptors = false;

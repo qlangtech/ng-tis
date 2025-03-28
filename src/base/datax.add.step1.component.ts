@@ -38,7 +38,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
       <ng-template #InformationalNotes>
         <ng-container [ngSwitch]="dto.inWorkflowProcess">
           <ng-container *ngSwitchCase="true">
-            <blibli videoId="BV1du411W7Ns">T+1离线分析示例</blibli> &nbsp;
+            <blibli videoId="BV1du411W7Ns">数据流分析（EMR）示例</blibli> &nbsp;
             <a href="https://tis.pub/docs/example/dataflow/" target="_blank"><span nz-icon nzType="book" nzTheme="outline"></span>示例说明</a>
           </ng-container>
           <ng-container *ngSwitchCase="false">
@@ -53,7 +53,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
 
         <tis-plugins [disableManipulate]="true" [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
                      (afterSave)="afterSaveReader($event)" [savePlugin]="savePlugin" [showSaveButton]="false"
-                     [shallInitializePluginItems]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
+                     [shallInitializePluginItems]="false" [useCollapsePanel]="false" [_heteroList]="hlist" #pluginComponent></tis-plugins>
 
 
       </div>

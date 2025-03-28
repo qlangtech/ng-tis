@@ -32,13 +32,10 @@ import {Descriptor, PluginType} from "../common/tis.plugin";
   selector: "datax-cfg" ,
   changeDetection: ChangeDetectionStrategy.Default,
   template: `
-      <tis-page-header *ngIf="this.dto?.inWorkflowProcess" [breadcrumb]="['数据流','/offline/wf']"
+      <tis-page-header *ngIf="this.dto?.inWorkflowProcess" [breadcrumb]="['数据流分析（EMR）','/offline/wf']"
                        [title]="this.dto.dataxPipeName">
       </tis-page-header>
- <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
-
-
-
+      <datax-config *ngIf="dto" [dtoooo]="dto" [execModel]="execModel"></datax-config>
   `,
   styles: [`
   `]

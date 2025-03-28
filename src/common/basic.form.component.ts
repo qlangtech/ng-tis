@@ -75,17 +75,27 @@ export class BasicFormComponent implements TISCoreService {
     , public modalService?: NzModalService, protected notification?: NzNotificationService) {
   }
 
-  protected confirm(content: string, onOK: () => void): void {
+  protected confirm(content: string, onOK?: () => void): Promise<void> {
     if (!this.modalService) {
       throw new Error(" have not inject prop 'modalService' ");
     }
-    this.modalService.confirm({
-      nzTitle: '确认',
-      nzContent: content,
-      nzOkText: '执行',
-      nzCancelText: '取消',
-      nzOnOk: onOK
+    return new Promise((resolve, reject) => {
+
+      this.modalService.confirm({
+        nzTitle: '确认',
+        nzContent: content,
+        nzOkText: '执行',
+        nzCancelText: '取消',
+        nzOnOk: () => {
+          resolve();
+          if (onOK) {
+            onOK();
+          }
+        },
+        nzOnCancel: reject
+      });
     });
+
   }
 
   public successNotify(msg: string, duration?: number): NzNotificationRef {

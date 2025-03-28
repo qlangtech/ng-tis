@@ -23,8 +23,9 @@ import {
   ChangeDetectorRef,
   Component,
   ComponentFactoryResolver,
-  ComponentRef,
-  ElementRef, EventEmitter, Input,
+  ElementRef,
+  EventEmitter,
+  Input,
   OnInit,
   Output,
   Type,
@@ -57,7 +58,7 @@ import * as G6 from '@antv/g6';
 // import {Grid} from '@antv/plugins';
 import {Grid} from '@antv/g6/build/plugins.js';
 // @ts-ignore
-import * as dagre from 'dagre';
+//import * as dagre from 'dagre';
 // import * as graphlib from 'graphlib';
 // @ts-ignore
 import * as $ from 'jquery';
@@ -67,7 +68,7 @@ import {WorkflowAddJoinComponent} from "./workflow.add.join.component";
 import {WorkflowAddNestComponent} from "./workflow.add.nest.component";
 import {WorkflowAddUnionComponent} from "./workflow.add.union.component";
 import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder} from "@angular/forms";
 
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
@@ -75,13 +76,8 @@ import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
-import {TerminalComponent} from "../common/terminal.component";
 import {DataxDTO} from "../base/datax.add.component";
 import {TisResponseResult} from "../common/tis.plugin";
-// import {} from 'ng-sidebar';
-// import {Droppable} from '@shopify/draggable';
-// @ts-ignore
-// import { Graph } from '@antv/g6';
 
 
 export const TYPE_DUMP_TABLE = 'table';
@@ -106,7 +102,8 @@ export const TYPE_DUMP_TABLE = 'table';
     <!--          </ng-container>-->
     <!--      </nz-drawer>-->
 
-    <tis-page-header [breadcrumb]="['数据流','/offline/wf']" [title]="pageTitle" [result]="result"></tis-page-header>
+    <tis-page-header [breadcrumb]="['数据流分析（EMR）','/offline/wf']" [title]="pageTitle"
+                     [result]="result"></tis-page-header>
     <div>
       <div id="processon_designer" class="processon-designer">
         <nz-spin [nzSpinning]="formDisabled" nzSize="large">
@@ -230,6 +227,8 @@ export const TYPE_DUMP_TABLE = 'table';
 export class WorkflowAddComponent extends BasicWFComponent
   implements IDataFlowMainComponent, OnInit, AfterContentInit, AfterViewInit {
 
+ // captionOfparserDataflow = DataxDTO.captionOfparserDataflow()
+
   _nodeTypes: Map<string /*type*/, NodeMeta> = new Map();
   public _nodeTypesAry: NodeMeta[] = [
     new NodeMeta(TYPE_DUMP_TABLE, 'table.svg', [40, 40], '数据表', WorkflowAddDbtableSetterComponent)
@@ -277,6 +276,8 @@ export class WorkflowAddComponent extends BasicWFComponent
   get topologyName(): string {
     return this.dto.dataxPipeName;
   }
+
+
 
   /**
    *
@@ -388,10 +389,10 @@ export class WorkflowAddComponent extends BasicWFComponent
 
   executeWorkflow(dataflow: Dataflow, dryRun?: boolean) {
     this._saveTopology().then((biz) => {
-      if(!biz.er){
+      if (!biz.er) {
         dataflow.id = biz.biz.bizresult.id;
         super.executeWorkflow(dataflow, dryRun);
-      }else{
+      } else {
 
       }
     })
@@ -616,49 +617,49 @@ export class WorkflowAddComponent extends BasicWFComponent
 
 
 // 自动排列
-  autoArrangement(): void {
-    const data = this.graph.save();
-    // https://github.com/dagrejs/dagre/wiki
-    const g = new dagre.graphlib.Graph();
-    // 设置边上的标签
-    g.setDefaultEdgeLabel(function () {
-      return {};
-    });
-    // 设置布局方式
-    g.setGraph({'rankdir': 'BT', 'align': 'UR'});
-    // 设置节点id与尺寸
-    data.nodes.forEach((node: any) => {
-      // console.log(node);
-      g.setNode(node.id, {width: node.size[0], height: node.size[1]});
-    });
-    // 设置边的起始节点和终止节点
-    data.edges.forEach((edge: any) => {
-      g.setEdge(edge.source, edge.target);
-    });
-    // 执行布局
-    dagre.layout(g);
-
-    // 然后再设置
-    let coord;
-    g.nodes().forEach((node: any, i: number) => {
-      coord = g.node(node);
-      // 设置节点的位置信息
-      data.nodes[i].x = coord.x;
-      data.nodes[i].y = coord.y;
-    });
-    g.edges().forEach((edge: any, i: number) => {
-      //   coord = g.edge(edge);
-      // 设置边的起点
-      //   data.edges[i].startPoint = coord.points[0];
-      // 设置边的终点
-      //   data.edges[i].endPoint = coord.points[coord.points.length - 1];
-      // 设置边的控制点
-      //   data.edges[i].controlPoints = coord.points.slice(1, coord.points.length - 1);
-    });
-    this.graph.data(data);
-    this.graph.render();
-
-  }
+//   autoArrangement(): void {
+//     const data = this.graph.save();
+//     // https://github.com/dagrejs/dagre/wiki
+//     const g = new dagre.graphlib.Graph();
+//     // 设置边上的标签
+//     g.setDefaultEdgeLabel(function () {
+//       return {};
+//     });
+//     // 设置布局方式
+//     g.setGraph({'rankdir': 'BT', 'align': 'UR'});
+//     // 设置节点id与尺寸
+//     data.nodes.forEach((node: any) => {
+//       // console.log(node);
+//       g.setNode(node.id, {width: node.size[0], height: node.size[1]});
+//     });
+//     // 设置边的起始节点和终止节点
+//     data.edges.forEach((edge: any) => {
+//       g.setEdge(edge.source, edge.target);
+//     });
+//     // 执行布局
+//     dagre.layout(g);
+//
+//     // 然后再设置
+//     let coord;
+//     g.nodes().forEach((node: any, i: number) => {
+//       coord = g.node(node);
+//       // 设置节点的位置信息
+//       data.nodes[i].x = coord.x;
+//       data.nodes[i].y = coord.y;
+//     });
+//     g.edges().forEach((edge: any, i: number) => {
+//       //   coord = g.edge(edge);
+//       // 设置边的起点
+//       //   data.edges[i].startPoint = coord.points[0];
+//       // 设置边的终点
+//       //   data.edges[i].endPoint = coord.points[coord.points.length - 1];
+//       // 设置边的控制点
+//       //   data.edges[i].controlPoints = coord.points.slice(1, coord.points.length - 1);
+//     });
+//     this.graph.data(data);
+//     this.graph.render();
+//
+//   }
 
   /**
    * [getRelativePos 鼠标位置相对于一个dom的相对坐标，以dom的左上点为坐标原点]
