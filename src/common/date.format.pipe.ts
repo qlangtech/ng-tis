@@ -81,3 +81,17 @@ export class ErrorMsgPipe implements PipeTransform {
     }
   }
 }
+
+
+@Pipe({
+  name: 'maxLength'
+})
+export class MaxLengthPipe implements PipeTransform {
+
+  transform(value: string, maxLength: number): string {
+    if (value && maxLength > 0) {
+      return value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+    }
+    return value;
+  }
+}
