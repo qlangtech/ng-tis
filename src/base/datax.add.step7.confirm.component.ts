@@ -122,7 +122,7 @@ const UPDATE_ROUT_PATH = '../update';
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of genCfgFileList">
-                <button (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
+                <button nz-tooltip [nzTooltipTitle]="f.fileName" nzTooltipPlacement="top" (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
                   <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
                 </button>
               </li>
@@ -144,7 +144,7 @@ const UPDATE_ROUT_PATH = '../update';
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of createDDLFileList">
-                <button (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
+                <button nz-tooltip [nzTooltipTitle]="f" nzTooltipPlacement="top" (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
                                                                                                  nzType="console-sql"
                                                                                                  nzTheme="outline"></i>{{f}}
                 </button>
