@@ -443,6 +443,10 @@ export class Descriptor {
     return manipulate;
   }
 
+  public get helpPath() :string {
+    return this.extractProps["helpPath"];
+  }
+
   public get supportBatch(): boolean {
     return !!this.extractProps["supportBatch"];
   }
@@ -524,6 +528,12 @@ export interface ReaderColMeta {
   disable: boolean;
   ip: ItemPropVal;
   // extraProps?: { string?: any };
+
+  /**
+   * 是否是新添加的列，有别与其他的从数据源带过来的字段，例如在csv导入到mysql流程中，由于csv文件的字段中没有可以作为主键的字段
+   * ，所以需要在DataxAddStep6ColsMetaSetterComponent页面需要添加一个虚拟列作为主键的占位符，在后一个流程transformer中为其赋值
+   */
+  virtual?: boolean;
 }
 
 export interface DataTypeMeta {
