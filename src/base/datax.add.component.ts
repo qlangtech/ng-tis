@@ -33,13 +33,16 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component} from "./datax.add.step2.component";
+import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component, ExecModel} from "./datax.add.step7.confirm.component";
-import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
+import {
+  DataxAddStep6ColsMetaSetterComponent,
+  DataxAddStep6TransformerSetterComponent
+} from "./datax.add.step6.cols-meta-setter.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor} from "../common/tis.plugin";
 import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
@@ -47,6 +50,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {TablePojo} from "../offline/table.add.component";
 import {Subject} from "rxjs";
 import {AddStep2ComponentCfg, DataXCreateProcessMeta, DataxProfile, ISelectedTabMeta} from "./common/datax.common";
+import {TableTransformerComponent} from "../common/selectedtab/table.transformer.component";
 
 
 @Component({
@@ -158,7 +162,8 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
     configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
 
-    configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+    configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep6TransformerSetterComponent, pre: DataxAddStep5Component});
+    configFST.set(DataxAddStep6TransformerSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep6ColsMetaSetterComponent});
     // use for elasticsearch writer cols set
     configFST.set(AddAppDefSchemaComponent, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
 
@@ -169,13 +174,13 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
      =======================================================*/
     // DataxAddStep2Component.getDataXReaderWriterEnum(this,new AddStep2ComponentCfg()).then((rwEnum: DataXReaderWriterEnum) => {
     //   let dto = new DataxDTO();
-    //   dto.dataxPipeName = "mysql_mysql4";
-    //   dto.processMeta = {readerRDBMS: true, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
+    //   dto.dataxPipeName = "csv2_mysql";
+    //   dto.processMeta = {readerRDBMS: false, explicitTable: true, writerRDBMS: true, writerSupportMultiTab: false};
     //   // dto.readerDescriptor = rwEnum.readerDescs.find((r) => "OSS" === r.displayName);
     //   // dto.writerDescriptor = rwEnum.writerDescs.find((r) => "Elasticsearch" === r.displayName);
     //   dto.readerDescriptor = rwEnum.readerDescs.find((r) => "MySQL" === r.displayName);
     //   dto.writerDescriptor = rwEnum.writerDescs.find((r) => "MySQL" === r.displayName);
-    //   this.multiViewDAG.loadComponent(DataxAddStep4Component, dto);
+    //   this.multiViewDAG.loadComponent(DataxAddStep6ColsMetaSetterComponent, dto);
     // });
     /**=====================================================
      * for test end>>>>>>>>

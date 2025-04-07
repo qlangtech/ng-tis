@@ -38,7 +38,7 @@ import {DataxDTO} from "./datax.add.component";
 
     <tis-page-header title="管道">
       <tis-header-tool>
-        <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus"
+        <button data-testid="start-add" nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus"
                                                                                   aria-hidden="true"></i>添加<i
           nz-icon nzType="down"></i></button>
         <nz-dropdown-menu #menu="nzDropdownMenu">
@@ -47,7 +47,7 @@ import {DataxDTO} from "./datax.add.component";
                    <a routerLink="/base/appadd">Solr实例</a>
                </li> -->
             <li nz-menu-item>
-              <a routerLink="/base/dataxadd">数据管道</a>
+              <a data-testid="add-new-pipeline" routerLink="/base/dataxadd">数据管道</a>
             </li>
           </ul>
         </nz-dropdown-menu>
@@ -64,24 +64,6 @@ import {DataxDTO} from "./datax.add.component";
         </ng-template>
 
       </page-row-assist>
-      <!--            <page-header>-->
-      <!--                <div style="flo">-->
-      <!--                    <button nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus"-->
-      <!--                                                                                              aria-hidden="true"></i>添加<i-->
-      <!--                            nz-icon nzType="down"></i></button>-->
-      <!--                    <nz-dropdown-menu #menu="nzDropdownMenu">-->
-      <!--                        <ul nz-menu>-->
-      <!--                            <li nz-menu-item>-->
-      <!--                                <a routerLink="/base/appadd">Solr实例</a>-->
-      <!--                            </li>-->
-      <!--                            <li nz-menu-item>-->
-      <!--                                <a routerLink="/base/dataxadd">数据管道</a>-->
-      <!--                            </li>-->
-      <!--                        </ul>-->
-      <!--                    </nz-dropdown-menu>-->
-      <!--                </div>-->
-      <!--            </page-header>-->
-
 
       <tis-col title="实例" width="14" (search)="filterByAppName($event)">
         <ng-template let-app='r'>

@@ -51,7 +51,7 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
 
           <nz-radio-group [ngModel]="dto.readerImpl" nzSize="large" (ngModelChange)="changeReaderDesc($event)"
                           nzButtonStyle="solid">
-            <label class="source-lab" *ngFor="let pp of readerDesc" nz-radio-button
+            <label [id]="'source_'+pp.endtype" class="source-lab" *ngFor="let pp of readerDesc" nz-radio-button
                    [nzValue]="pp.impl">
               <i nz-icon class="icon"  *ngIf="pp.supportIcon" [nzType]="pp.endtype"  nzTheme="outline"></i>
               <i class="txt">{{pp.displayName}}</i>
@@ -62,7 +62,7 @@ const ngZorroIconSqlserver = '<svg class="icon" width="200px" height="200.00px" 
 
           <nz-radio-group [ngModel]="dto.writerImpl" nzSize="large" (ngModelChange)="changeWriterDesc($event)"
                           nzButtonStyle="solid">
-            <label class="source-lab" *ngFor="let pp of writerDesc" nz-radio-button
+            <label [id]="'sink_'+pp.endtype" class="source-lab" *ngFor="let pp of writerDesc" nz-radio-button
                    [nzValue]="pp.impl">
               <i nz-icon class="icon" *ngIf="pp.supportIcon" [nzType]="pp.endtype"  nzTheme="outline"></i>
               <i class="txt">{{pp.displayName}}</i></label>

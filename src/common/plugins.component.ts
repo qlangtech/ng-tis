@@ -37,7 +37,7 @@ import {
   HeteroList,
   IFieldError,
   Item,
-  ItemPropVal, ItemValType,
+  ItemPropVal,
   PARAM_END_TYPE,
   PluginMeta,
   PluginName,
@@ -53,7 +53,6 @@ import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/type.utils";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
-import * as ls from 'lodash';
 
 /**
  * 打开ParamCfg类型的对话框
@@ -179,14 +178,6 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                               </button>&nbsp;
                           </ng-container>
 
-
-                          <!--
-                                      <button *ngIf="!this.disableNotebook && item.dspt.notebook.ability" nz-button
-                                                             nzSize="small"
-                                                             (click)="openNotebook(h , item,$event)"><i nz-icon nzType="book"
-                                                                                                        nzTheme="outline"></i>Notebook
-                                    </button>&nbsp;
-                             -->
                           <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
                               <tis-plugin-add-btn *nzSpaceItem [btnSize]="'small'"
                                                   [extendPoint]="item.dspt.manipulate.extendPoint"
@@ -196,11 +187,6 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                                   <span nz-icon nzType="setting" nzTheme="outline"></span>
                               </tis-plugin-add-btn>
                               &nbsp;
-                            <button *nzSpaceItem nz-button nzSize="small" nzType="link">
-                              <i nz-icon nzType="book"
-                                 nzTheme="outline"></i>使用说明
-                            </button>
-
                               <!--PluginManipulate { descMeta: Descriptor, identityName: string }-->
                               <ng-container *ngFor="let m of item.dspt.manipulate.stored let i = index">
                                   <button style="background-color: #fae8ae" *nzSpaceItem nz-tooltip
@@ -216,7 +202,10 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
 
                           </ng-container>
 
-
+                          <ng-container *ngIf="item.dspt.helpPath">
+                            <a *nzSpaceItem target="_blank" [href]="'https://www.tis.pub/'+item.dspt.helpPath"> <i nz-icon nzType="book"
+                                                                                      nzTheme="outline"></i> 使用说明</a>
+                          </ng-container>
                       </nz-space>
                   </div>
                   <div style="clear: both"></div>

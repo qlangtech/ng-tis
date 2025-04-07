@@ -1,6 +1,7 @@
 import {AfterContentInit, Component, Input, OnDestroy} from "@angular/core";
 import {BasicTuplesViewComponent} from "./basic.tuples.view.component";
 import {
+  DataTypeDesc,
   DataTypeMeta,
   ErrorFeedback,
   ItemPropVal,
@@ -210,13 +211,14 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
               <tis-col title="Jdbc类型">
                 <ng-template let-uu='r'>
                   <!--                  <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:uu}"></ng-container>-->
-                  <jdbc-type [type]="uu.type" [typeMetas]="this.typeMetas" [disable]="uu.disable"></jdbc-type>
+                  <jdbc-type [type]="uu.type" [typeMetas]="this.typeMetas"
+                             [disable]="uu.disable"></jdbc-type>
                 </ng-template>
               </tis-col>
 
               <tis-col title="操作">
                 <ng-template let-uu='r'>
-                  <button nz-button nzSize="small" nzType="link"
+                  <button nz-button nzDanger nzSize="small" nzType="link"
                           (click)="deleteDocFieldSplitRow(uu,u)">删除
                   </button>
                 </ng-template>
@@ -227,31 +229,43 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
         </ng-template>
       </page-row-assist>
       <page-header>
-        <button [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
-                nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
-                (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
-                                                                 nzTheme="outline"></span>sync
-        </button>
-        &nbsp;
-        <button [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
-                nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可回复，请小心使用"
-                (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
-                                                                     nzTheme="outline"></span>恢复初始化
-        </button>
-
+        <nz-space>
+          <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                  nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
+                  (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
+                                                                   nzTheme="outline"></span>sync
+          </button>
+          <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                  nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可回复，请小心使用"
+                  (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
+                                                                       nzTheme="outline"></span>恢复初始化
+          </button>
+          <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
+                  nzTooltipTitle="添加一个新的虚拟列，可以在Transformer算子中为其设置值"
+                  (click)="addNewColumn()" nzType="primary">
+            <span nz-icon nzType="plus" nzTheme="outline"></span>添加列
+          </button>
+        </nz-space>
       </page-header>
-      <tis-col title="Index" width="15">
+      <tis-col title="Index" width="15">k
         <ng-template let-u='r'>
           <nz-form-control>
             {{u.index}}
-            <nz-switch nzSize="small"
-                       [(ngModel)]="u.disable"
-                       [nzCheckedChildren]="checkedTemplate"
-                       [nzUnCheckedChildren]="unCheckedTemplate"
-            ></nz-switch>
-            <ng-template #checkedTemplate><span nz-icon nzType="close"></span></ng-template>
-            <ng-template #unCheckedTemplate><span nz-icon nzType="check"></span></ng-template>
+            <ng-container [ngSwitch]="!!u.virtual">
 
+              <nz-switch *ngSwitchCase="false" nzSize="small"
+                         [(ngModel)]="u.disable"
+                         [nzCheckedChildren]="checkedTemplate"
+                         [nzUnCheckedChildren]="unCheckedTemplate"
+              ></nz-switch>
+              <ng-template #checkedTemplate><span nz-icon nzType="close"></span></ng-template>
+              <ng-template #unCheckedTemplate><span nz-icon nzType="check"></span></ng-template>
+
+              <button nz-button nzType="default" nzShape="round"
+                      nzSize="small" *ngSwitchCase="true" (click)="deleteColMeta(u)" nzDanger><i nz-icon
+                                                                                                 nzType="delete"></i>删除
+              </button>
+            </ng-container>
           </nz-form-control>
         </ng-template>
       </tis-col>
@@ -268,7 +282,7 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
                                           [ngClass]="{'text-delete':u.disable,'ant-input':true}"> {{u.name}}</span>
                 </ng-container>
                 <ng-container *ngSwitchCase="false">
-                  <input nz-input [(ngModel)]="u.name" [disabled]="u.disable"/>
+                  <input nz-input [(ngModel)]="u.name" (ngModelChange)="nameChange(u)" [disabled]="u.disable"/>
                 </ng-container>
               </ng-container>
             </nz-form-control>
@@ -290,7 +304,8 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
       </tis-col>
       <tis-col title="主键" *ngIf="!pkSetDisable">
         <ng-template let-u='r'>
-          <nz-switch [disabled]="u.type.disabled"
+
+          <nz-switch [disabled]="u.disable || u.type.disabled" nzSize="small"
                      [(ngModel)]="u.pk"
                      [nzCheckedChildren]="checkedTemplate"
                      [nzUnCheckedChildren]="unCheckedTemplate"
@@ -471,5 +486,70 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
       //   (<any>colMeta).docFieldSplitMetas = [...rowAssist];
       RowAssist.setDocFieldSplitMetas(colMeta, rowAssist)
     }
+  }
+
+  /**
+   * 添加一个新的虚拟占位列
+   * https://github.com/datavane/tis/issues/433
+   */
+  addNewColumn() {
+
+    let col = new AddedCol();
+    col.index = this._colsMeta.length + 1;
+    col.name = null;
+    col.type = new VarChar32();
+    // { "updateModel": false, "has_set_primaryVal": false, "disabled": false }
+    col.ip = new ItemPropVal();
+    this._colsMeta.push(col);
+    this._colsMeta = [...this._colsMeta];
+  }
+
+  deleteColMeta(u: ReaderColMeta) {
+    if (!u.virtual) {
+      throw new Error("virtual must be true");
+    }
+    let idxOf = this._colsMeta.findIndex((rcm) => u.index === rcm.index);
+    this._colsMeta.splice(idxOf, 1)
+
+    this._colsMeta = [...this._colsMeta];
+  }
+
+  nameChange(colMeta: ReaderColMeta) {
+    delete colMeta.ip._error;
+  }
+}
+
+/**
+ * add for issue：https://github.com/datavane/tis/issues/433
+ */
+class AddedCol implements ReaderColMeta {
+  disable: boolean;
+  index: number;
+  ip: ItemPropVal;
+  name: string;
+  openAssist = false;
+  type: DataTypeDesc;
+
+  /**
+   * 是否是新添加的列，有别与其他的从数据源带过来的字段，例如在csv导入到mysql流程中，由于csv文件的字段中没有可以作为主键的字段
+   * ，所以需要在DataxAddStep6ColsMetaSetterComponent页面需要添加一个虚拟列作为主键的占位符，在后一个流程transformer中为其赋值
+   */
+  virtual = true;
+}
+
+class VarChar32 implements DataTypeDesc {
+  columnSize: number;
+  decimalDigits: number;
+  type: number;
+  typeName: string;
+
+  constructor() {
+    // { "columnSize": 32, "decimalDigits": -1, "type": 12, "typeDesc": "varchar(32)", "typeName": "VARCHAR" }
+    this.columnSize = 32;
+    this.decimalDigits = -1;
+    this.type = 12;
+    this.typeName = "VARCHAR";
+    // this.type = type;
+    // this.typeName = typeName;
   }
 }

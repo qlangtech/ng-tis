@@ -41,6 +41,10 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
     super(tisService, drawer);
   }
 
+  // constructor(tisService: TISService) {
+  //   super(tisService, null);
+  // }
+
   ngOnInit(): void {
    // this.dto.offsetStep = 1;
    // console.log(this.dto.);
