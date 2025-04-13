@@ -24,6 +24,7 @@ import {Item, ItemPropVal} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {getTableMapper, ITableAlias} from "../common/plugin/type.utils";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -97,8 +98,8 @@ export class DataxAddStep6Component extends BasicDataXAddComponent implements On
   editId: string | null = null;
   tabAliasList: Array<ITableAlias> = [];
 
-  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
-    super(tisService, modalService, r, route);
+  constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute, notification: NzNotificationService) {
+    super(tisService, modalService, r, route, notification);
   }
 
   startEdit(mapper: ITableAlias): void {
@@ -127,7 +128,7 @@ export class DataxAddStep6Component extends BasicDataXAddComponent implements On
   }
 
   public reset() {
-    this.confirm("是否要重置目标表名称",()=>{
+    this.confirm("是否要重置目标表名称", () => {
       getTableMapper(this, this.dto.dataxPipeName, true)
         .then((result) => {
           this.tabAliasList = result;

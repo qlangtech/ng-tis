@@ -154,18 +154,28 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
                          nzTheme="fill"></i>
                   </div>
                   <div style="float:right">
-
-                      <nz-tag *ngIf="true || showExtensionPoint.open">
-                          <a [href]="item.implUrl" class="plugin-link"
-                             target="_blank"><i nz-icon nzType="link"
-                                                nzTheme="outline"></i>
-                              {{item.impl}}
-                          </a></nz-tag>
-                      <button *ngIf="shallInitializePluginItems && itemChangeable" (click)="removeItem(h,item)"
-                              nz-button
-                              nzType="link">
-                          <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
-                      </button>
+                      <nz-space>
+                          <ng-container *ngIf="item.dspt.helpPath">
+                              <a *nzSpaceItem target="_blank" [href]="'https://www.tis.pub/'+item.dspt.helpPath"> <i
+                                      nz-icon nzType="book"
+                                      nzTheme="outline"></i> 使用说明</a>
+                          </ng-container>
+                          <ng-container *ngIf="true || showExtensionPoint.open">
+                              <nz-tag *nzSpaceItem>
+                                  <a [href]="item.implUrl" class="plugin-link"
+                                     target="_blank"><i nz-icon nzType="link"
+                                                        nzTheme="outline"></i>
+                                      {{item.impl}}
+                                  </a></nz-tag>
+                          </ng-container>
+                          <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
+                              <button *nzSpaceItem (click)="removeItem(h,item)"
+                                      nz-button
+                                      nzType="link">
+                                  <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
+                              </button>
+                          </ng-container>
+                      </nz-space>
                   </div>
                   <div>
                       <nz-space nzSize="middle">
@@ -202,10 +212,7 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
 
                           </ng-container>
 
-                          <ng-container *ngIf="item.dspt.helpPath">
-                            <a *nzSpaceItem target="_blank" [href]="'https://www.tis.pub/'+item.dspt.helpPath"> <i nz-icon nzType="book"
-                                                                                      nzTheme="outline"></i> 使用说明</a>
-                          </ng-container>
+
                       </nz-space>
                   </div>
                   <div style="clear: both"></div>
