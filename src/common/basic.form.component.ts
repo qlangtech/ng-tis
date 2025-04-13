@@ -99,18 +99,28 @@ export class BasicFormComponent implements TISCoreService {
   }
 
   public successNotify(msg: string, duration?: number): NzNotificationRef {
+    this.checkNotificationInstance();
     return this.notification.success('成功', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
+  private checkNotificationInstance() {
+    if (!this.notification) {
+      throw new Error("notification have not be inject on constructor method-");
+    }
+  }
+
   protected errNotify(msg: string, duration?: number) {
+    this.checkNotificationInstance();
     this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
   protected warnNotify(msg: string, duration?: number) {
+    this.checkNotificationInstance();
     this.notification.warning('注意', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
   protected infoNotify(msg: string, duration?: number) {
+    this.checkNotificationInstance();
     this.notification.info('信息', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
 
@@ -272,10 +282,10 @@ export abstract class BasicSidebarDTO {
   ],
   template: `
     <div [ngClass]="{'sidebar': !tabBarExtraContent}">
-      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()">删除</button>
+      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()"><span nz-icon nzType="delete" nzTheme="outline"></span>删除</button>
       <div [ngClass]="{'float-right': !tabBarExtraContent}">
-        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()">保存</button>&nbsp;
-        <button nz-button nzType="default" (click)="_closeSidebar($event)">关闭</button>
+        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()"><span nz-icon nzType="save" nzTheme="outline"></span>保存</button>&nbsp;
+        <button nz-button nzType="default" (click)="_closeSidebar($event)"><span nz-icon nzType="close" nzTheme="outline"></span>关闭</button>
       </div>
     </div>
     <div style="clear: both"></div>

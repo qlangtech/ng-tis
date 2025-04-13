@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, Input, OnDestroy} from "@angular/core";
+import {AfterContentInit, Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
 import {BasicTuplesViewComponent} from "./basic.tuples.view.component";
 import {
   DataTypeDesc,
@@ -83,6 +83,10 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
 
   public get mcols(): Array<ReaderColMeta> {
     return this._mcols;
+  }
+
+  public set mcols(cols: Array<ReaderColMeta>) {
+    this._mcols = cols;
   }
 
   /**
@@ -236,18 +240,21 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
                                                                    nzTheme="outline"></span>sync
           </button>
           <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
-                  nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可回复，请小心使用"
+                  nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可恢复，请小心使用"
                   (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
                                                                        nzTheme="outline"></span>恢复初始化
           </button>
-          <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
-                  nzTooltipTitle="添加一个新的虚拟列，可以在Transformer算子中为其设置值"
-                  (click)="addNewColumn()" nzType="primary">
-            <span nz-icon nzType="plus" nzTheme="outline"></span>添加列
-          </button>
+          <ng-container *ngIf="enableVirtualColAdd">
+            <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
+                    nzTooltipTitle="添加一个新的虚拟列，可以在Transformer算子中为其设置值"
+                    (click)="addNewColumn()" nzType="primary">
+              <span nz-icon nzType="plus" nzTheme="outline"></span>添加列
+            </button>
+          </ng-container>
+
         </nz-space>
       </page-header>
-      <tis-col title="Index" width="15">k
+      <tis-col title="Index" width="15">
         <ng-template let-u='r'>
           <nz-form-control>
             {{u.index}}
@@ -342,6 +349,11 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
   @Input()
   dbLatestColsMeta: Array<ReaderColMeta> = [];
 
+  /**
+   * 支持虚拟列添加吗？
+   */
+  @Input()
+  enableVirtualColAdd: boolean = false;
   // @Input()
   // colsMeta: Array<ReaderColMeta> = [];
   // @Input()
@@ -356,6 +368,9 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
     // console.log(colsMeta);
     this._colsMeta = colsMeta;
   }
+
+  @Output()
+  colsMetaChange: EventEmitter<Array<ReaderColMeta>> = new EventEmitter<Array<ReaderColMeta>>();
 
   get colsMeta(): Array<ReaderColMeta> {
     return this._colsMeta;
@@ -502,6 +517,7 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
     col.ip = new ItemPropVal();
     this._colsMeta.push(col);
     this._colsMeta = [...this._colsMeta];
+    this.colsMetaChange.emit(this._colsMeta);
   }
 
   deleteColMeta(u: ReaderColMeta) {
@@ -512,6 +528,7 @@ export class SchemaEditComponent extends BasicTuplesViewComponent implements Aft
     this._colsMeta.splice(idxOf, 1)
 
     this._colsMeta = [...this._colsMeta];
+    this.colsMetaChange.emit(this._colsMeta);
   }
 
   nameChange(colMeta: ReaderColMeta) {

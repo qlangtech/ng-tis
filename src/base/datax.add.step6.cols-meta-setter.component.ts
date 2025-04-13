@@ -56,8 +56,8 @@ import {ISelectedCol, ISelectedTabMeta} from "./common/datax.common";
           <input nz-input [(ngModel)]="writerTargetTabName"/>
         </tis-ipt>
         <tis-ipt #targetColsEnum title="Writer列描述" name="targetColsEnum">
-          <db-schema-editor *ngIf="this.tabView.typeMetas.length>1"
-                            [tabletView]="this.tabView"></db-schema-editor>
+          <db-schema-editor *ngIf="this.tabView.typeMetas.length>1" [enableVirtualColAdd]="true"
+                            [tabletView]="this.tabView" (colsMetaChange)="this.tabView.mcols = $event" ></db-schema-editor>
         </tis-ipt>
       </tis-form>
     </nz-spin>
@@ -133,7 +133,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
     this.jsonPost('/coredefine/corenodemanage.ajax?action=datax_action&emethod=save_writer_cols_meta&dataxName=' + this.dto.dataxPipeName
       , {
         "writerTargetTabName": this.writerTargetTabName,
-        "writerFromTabName": this.writerFromTabName,
+        "writerFromTabName": this.writerTargetTabName,// this.writerFromTabName,
         "colsMeta": this.tabView.mcols
       })
       .then((r) => {
@@ -255,7 +255,7 @@ export class DataxAddStep6TransformerSetterComponent extends BasicDataXAddCompon
   }
 
   protected initialize(app: CurrentCollection): void {
-    // console.log(this.dto);
+     console.log(this.dto);
     // this.tisService.selectedTab = this.dto;
 
     for (const [key, val] of this.dto.selectableTabs) {
@@ -272,6 +272,10 @@ export class DataxAddStep6TransformerSetterComponent extends BasicDataXAddCompon
             }
         }
       ];
+
+      if(!this.tisService.currentApp){
+        this.tisService.currentApp = new CurrentCollection(0, this.dto.dataxPipeName);
+      }
 
       this.initTransformerHetero(key);
       break;
