@@ -23,11 +23,13 @@ import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataxDTO} from "./datax.add.component";
-import {Descriptor, HeteroList, PluginType} from "../common/tis.plugin";
+import {Descriptor, HeteroList, PluginMeta, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DATAX_PREFIX_DB} from "./datax.add.base";
+import {DataxAddStep4Component, ISubDetailTransferMeta} from "./datax.add.step4.component";
 
 const KEY_END_TYPE = 'desc'
+const KEY_TRANSFORMER_END_TYPE = 'transformer_desc'
 const DATAX_READER = 'dataxReader'
 const DATAX_WRITER = 'dataxWriter'
 
@@ -167,22 +169,45 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
   ngOnInit(): void {
 
     let queryParams = this.route.snapshot.queryParamMap;
-    this.tisService.currentApp = new CurrentCollection(0, "mysql_mysql");
+    let pipeName = "mysql_mysql";
+    this.tisService.currentApp = new CurrentCollection(0, pipeName);
+
+    let transformerEndType: string[] = queryParams.getAll(KEY_TRANSFORMER_END_TYPE);
+    if (transformerEndType && transformerEndType.length > 0) {
+
+      let pluginMeta: PluginType = {
+        name: 'transformerUDF',
+        require: true,
+        "extraParam": ('dataxName_' + pipeName),
+        descFilter: {
+          localDescFilter: (d) => {
+            return transformerEndType[0] === d.impl;
+          }
+        }
+      }
+      let meta: ISubDetailTransferMeta = {
+        id: 'orderdetail',
+        // behaviorMeta: ISubDetailClickBehaviorMeta;
+        fieldName: null,
+        idList: [],
+        // 是否已经设置子表单
+        setted: false
+      };
+      DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta, meta, [])
+        .then((hlist: HeteroList[]) => {
+          console.log(hlist);
+          for(let hetero of hlist){
+            PluginsComponent.addDefaultItem(pluginMeta as PluginMeta, hetero);
+          }
+
+          this.assistHeteroList = hlist;
+          this.assistMetas = [pluginMeta];
+        });
+      return;
+    }
+
     let assistEndType: string[] = queryParams.getAll(KEY_END_TYPE);
     if (assistEndType && assistEndType.length > 0) {
-      //console.log(assistEndType);
-      // this.httpPost('/coredefine/corenodemanage.ajax'
-      //   , 'action=plugin_action&emethod=get_descs&'
-      //   + assistEndType.map((desc) => KEY_END_TYPE + "=" + desc).join("&"))
-      //   .then((r) => {
-      //     if (!r.success) {
-      //       return;
-      //     }
-      //
-      //     let descMap = Descriptor.wrapDescriptors(r.bizresult)
-      //     return descMap;
-      //
-      //   });
 
       let pluginMeta: PluginType[] = new Array();
       for (let i of assistEndType) {
