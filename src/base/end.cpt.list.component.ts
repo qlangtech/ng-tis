@@ -26,7 +26,8 @@ import {DataxDTO} from "./datax.add.component";
 import {Descriptor, HeteroList, PluginMeta, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DATAX_PREFIX_DB} from "./datax.add.base";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "./datax.add.step4.component";
+import {DataxAddStep4Component} from "./datax.add.step4.component";
+import {ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.utils";
 
 const KEY_END_TYPE = 'desc'
 const KEY_TRANSFORMER_END_TYPE = 'transformer_desc'
@@ -193,9 +194,9 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
         // 是否已经设置子表单
         setted: false
       };
-      DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta, meta, [])
+      processSubFormHeteroList(this, pluginMeta, meta, [])
         .then((hlist: HeteroList[]) => {
-          console.log(hlist);
+         // console.log(hlist);
           for(let hetero of hlist){
             PluginsComponent.addDefaultItem(pluginMeta as PluginMeta, hetero);
           }

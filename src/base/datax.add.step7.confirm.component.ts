@@ -46,8 +46,8 @@ import {CodemirrorComponent} from "../common/codemirror.component";
 import {KEY_APPNAME} from "../common/plugin/type.utils";
 import {TableTransformerComponent} from "src/common/selectedtab/table.transformer.component";
 import {SelectedTabDTO} from "../common/selectedtab/plugin-sub-form.component";
-import {ISubDetailTransferMeta} from "./datax.add.step4.component";
 import {DataXCfgFile, TransformerInfo} from "./common/datax.common";
+import {ISubDetailTransferMeta} from "../common/ds.utils";
 
 export enum ExecModel {
   Create, Reader

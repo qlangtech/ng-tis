@@ -22,11 +22,12 @@ import {
 import {TISService} from "../tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "../../base/datax.add.step4.component";
+import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {PluginsComponent} from "../plugins.component";
 import {BasicTuplesViewComponent, UdfDesc} from "./basic.tuples.view.component";
 import {TuplesProperty} from "../plugin/type.utils";
 import {BasicFormComponent} from "../basic.form.component";
+import {ISubDetailTransferMeta, processSubFormHeteroList} from "../ds.utils";
 
 /**
  * serverSide mapper: com.qlangtech.tis.plugin.datax.transformer.RecordTransformer
@@ -317,7 +318,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
     /**
      * 获取UDF Transformer
      */
-    DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null)
+    processSubFormHeteroList(this, m, meta, null)
       .then((hlist: HeteroList[]) => {
 
         hlist.forEach((h) => {

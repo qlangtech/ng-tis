@@ -17,8 +17,9 @@ import {TISService} from "../tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {TuplesProperty} from "../plugin/type.utils";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "../../base/datax.add.step4.component";
+import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {TransformerRulesComponent} from "./transformer.rules.component";
+import {ISubDetailTransferMeta, processSubFormHeteroList} from "../ds.utils";
 
 
 export interface JdbcTypeProp extends ReaderColMeta {
@@ -394,7 +395,7 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
     /**
      * 获取Target Cols
      */
-    DataxAddStep4Component.processSubFormHeteroList(this, targetColumnPluginMeta, meta, null)
+    processSubFormHeteroList(this, targetColumnPluginMeta, meta, null)
       .then((hlist: HeteroList[]) => {
         hlist.forEach((h) => {
 

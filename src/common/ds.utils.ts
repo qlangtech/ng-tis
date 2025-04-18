@@ -1,10 +1,10 @@
 import {Descriptor, HeteroList, Item, PluginType} from "../common/tis.plugin";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NzTreeNode} from "ng-zorro-antd/tree";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
 import {DATAX_PREFIX_DB} from "../base/datax.add.base";
 
-import {CreatorRouter} from "../common/plugin/type.utils";
+import {CreatorRouter, router2PluginTypes} from "../common/plugin/type.utils";
+import {PluginsComponent} from "./plugins.component";
 
 export const db_model_detailed = "detailed";
 
@@ -47,6 +47,15 @@ export interface TableClickResponse {
 export enum NodeType {
   DB = 'db',
   TAB = 'table'
+}
+
+export interface ISubDetailTransferMeta {
+  id: string;
+  // behaviorMeta: ISubDetailClickBehaviorMeta;
+  fieldName: string;
+  idList: Array<string>;
+  // 是否已经设置子表单
+  setted: boolean;
 }
 
 export function clickDBNode(
@@ -94,14 +103,14 @@ export function clickDBNode(
               throw new Error("targetNode must be present");
             }
             // this.selectedDb = new DbPojo();
-            let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
+            let m = dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
             let selectedTablePluginMeta = [m];
             let meta = <ISubDetailTransferMeta>{id: event.name};
 
             // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
             //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
 
-            return DataxAddStep4Component.processSubFormHeteroList(basicCpt, m, meta, null // , subFormHetero.descriptorList[0]
+            return processSubFormHeteroList(basicCpt, m, meta, null // , subFormHetero.descriptorList[0]
             )
               .then((hlist: HeteroList[]) => {
                 // this.openSubDetailForm(meta, pluginMeta, hlist);
@@ -144,9 +153,8 @@ export function loadDSWithDesc(
   let action = 'emethod=get_datasource_info&action=offline_datasource_action&filterSupportReader=' + filterSupportReader;
   if (creatorRouter) {
 
-    for (let targetPlugin of creatorRouter.plugin) {
-
-    }
+    let ptypes: PluginType[] = router2PluginTypes(creatorRouter);
+    action += ("&plugin=" + PluginsComponent.getPluginMetaParams(ptypes));
   }
   return basicCpt.httpPost('/offline/datasource.ajax', action)
     .then(result => {
@@ -178,4 +186,44 @@ export function createDB(id: string, detail: any, dataReaderSetted?: boolean, su
   db.dataReaderSetted = dataReaderSetted;
   db.supportDataXReader = supportDataXReader;
   return db;
+}
+
+/**
+ *
+ * @param readerDescName
+ * @param readerDescImpl
+ * @param subformFieldName
+ * @param dataXReaderTargetName
+ * @param skipSubformDescNullError
+ */
+export function dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string //
+  , subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
+  return {
+    skipSubformDescNullError: skipSubformDescNullError,
+    name: "dataxReader",
+    require: true,
+    extraParam: `targetDescriptorImpl_${readerDescImpl},targetDescriptorName_${readerDescName},subFormFieldName_${subformFieldName},${dataXReaderTargetName}`
+  };
+}
+
+/**
+ *
+ * @param baseCpt
+ * @param pluginMeta
+ * @param meta
+ * @param subForm
+ */
+export function processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
+  , meta: ISubDetailTransferMeta, subForm: Array<Item>): Promise<HeteroList[]> {
+  let metaParam = PluginsComponent.getPluginMetaParams([pluginMeta]);
+  return baseCpt.httpPost('/coredefine/corenodemanage.ajax'
+    , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
+    .then((r) => {
+      if (!r.success) {
+        return;
+      }
+      let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
+      let hlist: HeteroList[] = [h];
+      return hlist;
+    });
 }

@@ -606,7 +606,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     let drawerRef = null;
     switch (createRouter.assistType) {
       case RouterAssistType.dbQuickManager: {
-        drawerRef = createDrawer(this.drawerService);
+        drawerRef = createDrawer(this.drawerService, createRouter, false);
         break;
       }
       case RouterAssistType.paramCfg: {

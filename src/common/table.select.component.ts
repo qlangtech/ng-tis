@@ -31,7 +31,6 @@ import {createDrawer} from "./ds.quick.manager.component";
 import {createDB, loadDSWithDesc} from "./ds.utils";
 
 
-
 @Component({
   selector: 'tis-table-select',
   providers: [
@@ -220,7 +219,7 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
             "basicCpt": this,
             "endType": db.iconEndtype
           };
-         // this.cascaderOptions.push(dbNode);
+           this.cascaderOptions.push(dbNode);
         }
       })
 
@@ -264,7 +263,7 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
    * 系统初始化时，还没有数据源，需要添加数据源
    */
   addDataSource() {
-    const drawerRef = createDrawer(this.drawerService);
+    const drawerRef = createDrawer(this.drawerService, null, true);
     // this.drawerService.create<
     //   DatasourceQuickManagerComponent
     //   , { hetero: HeteroList[] }
