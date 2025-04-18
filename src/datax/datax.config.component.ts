@@ -49,12 +49,14 @@ export class DataxConfigComponent extends AppFormComponent implements OnInit {
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
     super(tisService, route, modalService);
     this.stepType = this.route.snapshot.data["stepType"];
+    this.getCurrentAppCache = false
     if (!this.stepType) {
       this.stepType = StepType.CreateDatax
     }
   }
 
   protected initialize(app: CurrentCollection): void {
+   // console.log(app);
     DataxAddComponent.getDataXMeta(this, this.stepType, app).then((dto) => {
        //console.log(dto);
       this.dto = dto;

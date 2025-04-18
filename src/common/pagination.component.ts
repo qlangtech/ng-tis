@@ -346,7 +346,7 @@ export class PaginationComponent implements AfterContentInit, OnInit {
     }
 
     ngOnInit(): void {
-
+ console.log("xxxxx");
     }
 
     get pager(): Pager {

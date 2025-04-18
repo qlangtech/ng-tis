@@ -1,7 +1,7 @@
 import {
   DataTypeMeta,
   Item,
-  PluginName,
+  PluginName, PluginType,
   ReaderColMeta,
   SavePluginEvent,
   TisResponseResult,
@@ -11,10 +11,85 @@ import {BasicFormComponent} from "../basic.form.component";
 
 export const KEY_subform_DetailIdValue = "subformDetailIdValue";
 
+export enum RouterAssistType {
+  hyperlink = 'hyperlink',
+  dbQuickManager = 'dbQuickManager',
+  paramCfg = 'paramCfg'
+}
+
 export interface CreatorRouter {
+
+  assistType: RouterAssistType;
+
   routerLink: string;
   label: string;
   plugin: Array<TargetPlugin>;
+}
+
+export function router2PluginTypes(createCfg: CreatorRouter): PluginType[] {
+  let pluginTyps: PluginType[] = [];
+  for (let p of createCfg.plugin) {
+    for (let pt of convertReducePluginType2PluginTypes(reducePluginType2Map({
+      plugin: [p],
+      assistType: createCfg.assistType,
+      routerLink: null,
+      label: null
+    }))) {
+      pluginTyps.push(pt);
+    }
+  }
+  return pluginTyps;
+}
+
+
+export function reducePluginType2Map(createCfg: CreatorRouter): Map<PluginName, Array<TargetPlugin>> {
+  let tp: TargetPlugin;
+  let reducePluginType: Map<PluginName, Array<TargetPlugin>> = new Map<PluginName, Array<TargetPlugin>>();
+  let tplugins: Array<TargetPlugin>;
+  for (let i = 0; i < createCfg.plugin.length; i++) {
+    tp = createCfg.plugin[i];
+    tplugins = reducePluginType.get(tp.hetero);
+    if (!tplugins) {
+      tplugins = new Array<TargetPlugin>();
+      reducePluginType.set(tp.hetero, tplugins);
+    }
+    tplugins.push(tp);
+  }
+  return reducePluginType;
+}
+
+export function convertReducePluginType2PluginTypes(reducePluginType: Map<PluginName, Array<TargetPlugin>>): PluginType[] {
+
+  let pluginTyps: PluginType[] = [];
+
+  for (const [key, val] of reducePluginType.entries()) {
+    // console.log(key);
+    // console.log(val);
+    let extraParam = null;
+    let descFilter = {
+      localDescFilter: (desc) => true
+    };
+    let tp: TargetPlugin = {hetero: key};
+    if (val.length === 1) {
+      tp = val[0];
+      extraParam = "targetItemDesc_" + tp.descName;
+      if (tp.extraParam) {
+        extraParam += (',' + tp.extraParam);
+      }
+      descFilter = {
+        localDescFilter: (desc) => {
+          return desc.displayName === tp.descName;
+        }
+      };
+    }
+    pluginTyps.push({
+      name: tp.hetero
+      , require: true
+      , extraParam: extraParam
+      , descFilter: descFilter
+    });
+  }
+  return pluginTyps;
 }
 
 export interface TargetPlugin {

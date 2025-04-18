@@ -5,8 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/ds.quick.manager.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/common/ds.utils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin.add.btn.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/type.utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.config.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.config.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datax/datax.index.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/datax/datax.index.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/db.add.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/db.add.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline.module.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,16 +81,16 @@
       <recent name="$PROJECT_DIR$/src/runtime" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/images" />
       <recent name="$PROJECT_DIR$/src/common" />
+      <recent name="$PROJECT_DIR$/src/images" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/common/ds.utils.ts" />
+      <recent name="$PROJECT_DIR$/src/offline/ds.utils.ts" />
       <recent name="$PROJECT_DIR$/src/base/common/datax.common.ts" />
       <recent name="$PROJECT_DIR$/src/common/plugin/type.utils.ts" />
       <recent name="$PROJECT_DIR$/src/common/selectedtab/basic-selected-tab-manager-component.ts" />
-      <recent name="$PROJECT_DIR$/src/base/selectedtab/plugin-sub-form.component.ts" />
-      <recent name="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" />
     </key>
   </component>
   <component name="RunManager" selected="npm.ng:serve-jit-amd64">
@@ -267,6 +281,7 @@
       <workItem from="1743051981707" duration="27058000" />
       <workItem from="1743253446351" duration="1051000" />
       <workItem from="1743254817347" duration="55558000" />
+      <workItem from="1744692094032" duration="44488000" />
     </task>
     <servers />
   </component>

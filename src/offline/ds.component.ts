@@ -24,7 +24,6 @@ import {TISService} from '../common/tis.service';
 import {BasicFormComponent} from '../common/basic.form.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {DbPojo} from "./db.add.component";
 import {TableAddComponent} from "./table.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {
@@ -41,21 +40,27 @@ import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {DATAX_PREFIX_DB} from "../base/datax.add.base";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "../base/datax.add.step4.component";
 
 import {TableSelectComponent} from "../common/table.select.component";
+import {
+  clickDBNode,
+  createDataSourceDetailedPluginsMetas,
+  DataBaseMeta,
+  db_model_detailed,
+  DBClickResponse,
+  DbPojo,
+  loadDSWithDesc,
+  NodeType,
+  ProcessedDBRecord,
+  TableClickResponse
+} from "../common/ds.utils";
 
 
-const db_model_detailed = "detailed";
 const db_model_facade = "facade";
 
 const key_tabs_fetch = "tabsFetch";
 export const KEY_DB_ID = "dbId";
 
-enum NodeType {
-  DB = 'db',
-  TAB = 'table'
-}
 
 @Component({
   template: `
@@ -273,14 +278,8 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   formControlSpan = 20;
   colsMeta: Array<IColumnMeta>;
 
-  public static createDB(id: string, detail: any, dataReaderSetted?: boolean, supportDataXReader?: boolean): DbPojo {
-    let db = new DbPojo(id);
-    db.dbName = detail.identityName;
-    db.pluginImpl = detail.impl;
-    db.dataReaderSetted = dataReaderSetted;
-    db.supportDataXReader = supportDataXReader;
-    return db;
-  }
+
+
 
   constructor(protected tisService: TISService //
     , private router: Router //
@@ -314,39 +313,61 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
   initComponents(updateTreeInit: boolean) {
     //console.log("initComponents");
     this.treeLoad = true;
-    let action = 'emethod=get_datasource_info&action=offline_datasource_action';
-    this.httpPost('/offline/datasource.ajax', action)
-      .then(result => {
-        this.processResult(result);
 
-        if (result.success) {
-          //
-          let dbs: Array<DataBaseMeta> = result.bizresult.dbs;
-         // console.log([dbs,updateTreeInit]);
-          let descList = Descriptor.wrapDescriptors(result.bizresult.pluginDesc);
-          this.datasourceDesc = Array.from(descList.values());
-          this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
-          if (updateTreeInit) {
-            this.treeInit(dbs);
-            setTimeout(() => {
-              let queryParams = this.activateRoute.snapshot.queryParams;
-              if (queryParams[KEY_DB_ID]) {
-                this.activateDb(Number(queryParams[KEY_DB_ID]));
-              } else if (queryParams['tableId']) {
-                this.activateTable(Number(queryParams['tableId']));
-              }
-            }, 100);
-          }
+    loadDSWithDesc(this)
+      .then(({dbs, desc}) => {
+        this.datasourceDesc = desc;
+        if (updateTreeInit) {
+          this.treeInit(dbs);
+          setTimeout(() => {
+            let queryParams = this.activateRoute.snapshot.queryParams;
+            if (queryParams[KEY_DB_ID]) {
+              this.activateDb(Number(queryParams[KEY_DB_ID]));
+            } else if (queryParams['tableId']) {
+              this.activateTable(Number(queryParams['tableId']));
+            }
+          }, 100);
         }
+
         this.treeLoad = false;
       }).catch((e) => {
-        console.log(e);
+      console.log(e);
       this.treeLoad = false;
     });
+    // action = 'emethod=get_datasource_info&action=offline_datasource_action';
+    // this.httpPost('/offline/datasource.ajax', action)
+    //   .then(result => {
+    //     this.processResult(result);
+    //
+    //     if (result.success) {
+    //       //
+    //       let dbs: Array<DataBaseMeta> = result.bizresult.dbs;
+    //       // console.log([dbs,updateTreeInit]);
+    //       let descList = Descriptor.wrapDescriptors(result.bizresult.pluginDesc);
+    //       this.datasourceDesc = Array.from(descList.values());
+    //       this.datasourceDesc.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
+    //       if (updateTreeInit) {
+    //         this.treeInit(dbs);
+    //         setTimeout(() => {
+    //           let queryParams = this.activateRoute.snapshot.queryParams;
+    //           if (queryParams[KEY_DB_ID]) {
+    //             this.activateDb(Number(queryParams[KEY_DB_ID]));
+    //           } else if (queryParams['tableId']) {
+    //             this.activateTable(Number(queryParams['tableId']));
+    //           }
+    //         }, 100);
+    //       }
+    //     }
+    //     this.treeLoad = false;
+    //   }).catch((e) => {
+    //   console.log(e);
+    //   this.treeLoad = false;
+    // });
   }
 
+
   treeInit(dbs: Array<DataBaseMeta>): void {
-     console.log(dbs);
+    // console.log(dbs);
     this.nodes = [];
     for (let db of dbs) {
       let children = [];
@@ -567,82 +588,144 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     let type = event.type;
     let id = event.dbId;
 
-    //  let realId = 0;
-    let action = `action=offline_datasource_action&emethod=get_datasource_${type}_by_id&id=${id}&labelName=${event.name}`;
-    this.facdeDb = null;
-    this.selectedDb = null;
-    this.selectedTable = null;
-    this.httpPost('/offline/datasource.ajax', action)
-      .then(result => {
-        try {
-          if (result.success) {
+    clickDBNode(this, event, targetNode)
+      .then((response) => {
 
-            let biz = result.bizresult;
-            // console.log([biz, type])
-            if (type === NodeType.DB) {
-              let detail = biz.detailed;
-              let db = DatasourceComponent.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
-              // console.log([detail,db,targetNode]);
-              let tabs: Array<string> = biz.selectedTabs;
-              if (targetNode) {
-                targetNode.origin[key_tabs_fetch] = true;
-                targetNode.clearChildren();
-                let n: NzTreeNodeOptions[] = [];
-                tabs.forEach((tab) => {
+        switch (event.type) {
+          case NodeType.DB: {
+            let dbResp = response as DBClickResponse;
+            if (targetNode) {
+              targetNode.origin[key_tabs_fetch] = true;
+              targetNode.clearChildren();
+              let n: NzTreeNodeOptions[] = [];
+              dbResp.tabs.forEach((tab) => {
 
-                  n.push(this.createTreeNodeOptions(tab, event.dbId));
-                });
-                if (n.length > 0) {
-                  targetNode.addChildren(n);
-                }
+                n.push(this.createTreeNodeOptions(tab, event.dbId));
+              });
+              if (n.length > 0) {
+                targetNode.addChildren(n);
               }
-
-              this.createDetailedPluginsMetas(db.dbName);
-              this.selectedDb = db;
-              this.dataReaderPluginCfg(this.selectedDb);
-              if (biz.facade) {
-                this.facdeDb = DatasourceComponent.createDB(id, biz.facade);
-                this.facdeDb.facade = true;
-                this.createFacadePluginsMetas(db.dbName);
-              }
-            } else if (type === NodeType.TAB) {
-              let descs: Map<string /* impl */, Descriptor> = Descriptor.wrapDescriptors(biz);
-              let desc: Descriptor = descs.values().next().value;
-              //  console.log([biz, descs, desc]);
-              let dbName = targetNode.parentNode.title;
-              this.selectedTable = {
-                tableName: event.name,
-                dbName: dbName,
-                dbId: parseInt(targetNode.parentNode.key, 10)
-              };
-              if (!targetNode) {
-                throw new Error("targetNode must be present");
-              }
-              this.selectedDb = new DbPojo();
-              let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
-              this.selectedTablePluginMeta = [m];
-              let meta = <ISubDetailTransferMeta>{id: event.name};
-
-              // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
-              //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
-
-              DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null // , subFormHetero.descriptorList[0]
-              )
-                .then((hlist: HeteroList[]) => {
-                  // this.openSubDetailForm(meta, pluginMeta, hlist);
-                  this.selectedTableHeteroList = hlist;
-                });
-              //  });
             }
-          } else {
-            this.processResult(result);
+
+            this.createDetailedPluginsMetas(dbResp.db.dbName);
+            this.selectedDb = dbResp.db;
+            this.dataReaderPluginCfg(this.selectedDb);
+            if (dbResp.facadeDb) {
+              this.facdeDb = dbResp.facadeDb;// DatasourceComponent.createDB(id, biz.facade);
+              this.createFacadePluginsMetas(dbResp.db.dbName);
+            }
+            return;
           }
-        } finally {
+          case NodeType.TAB:
+            let tabResp = response as TableClickResponse;
+
+
+            //tabResp.selectedTableHeteroList;
+
+            this.selectedTable = tabResp.selectedTable;
+            if (!targetNode) {
+              throw new Error("targetNode must be present");
+            }
+            this.selectedDb = new DbPojo();
+            // let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
+            this.selectedTablePluginMeta = tabResp.selectedTablePluginMeta;
+            //let meta = <ISubDetailTransferMeta>{id: event.name};
+            this.selectedTableHeteroList = tabResp.selectedTableHeteroList;
+            // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
+            //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+
+            // DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null // , subFormHetero.descriptorList[0]
+            // )
+            //   .then((hlist: HeteroList[]) => {
+            //     // this.openSubDetailForm(meta, pluginMeta, hlist);
+            //
+            //   });
+            return;
+          default:
+            throw new Error("invalid event type:" + event.type);
         }
+
       }).catch((e) => {
-        console.log(e);
-    });
+      console.log(e);
+    })
+
+    //  let realId = 0;
+    // let action = `action=offline_datasource_action&emethod=get_datasource_${type}_by_id&id=${id}&labelName=${event.name}`;
+    // this.facdeDb = null;
+    // this.selectedDb = null;
+    // this.selectedTable = null;
+    // this.httpPost('/offline/datasource.ajax', action)
+    //   .then(result => {
+    //     try {
+    //       if (result.success) {
+    //
+    //         let biz = result.bizresult;
+    //         // console.log([biz, type])
+    //         if (type === NodeType.DB) {
+    //           let detail = biz.detailed;
+    //           let db = DatasourceComponent.createDB(id, detail, biz.dataReaderSetted, biz.supportDataXReader);
+    //           // console.log([detail,db,targetNode]);
+    //           let tabs: Array<string> = biz.selectedTabs;
+    //           if (targetNode) {
+    //             targetNode.origin[key_tabs_fetch] = true;
+    //             targetNode.clearChildren();
+    //             let n: NzTreeNodeOptions[] = [];
+    //             tabs.forEach((tab) => {
+    //
+    //               n.push(this.createTreeNodeOptions(tab, event.dbId));
+    //             });
+    //             if (n.length > 0) {
+    //               targetNode.addChildren(n);
+    //             }
+    //           }
+    //
+    //           this.createDetailedPluginsMetas(db.dbName);
+    //           this.selectedDb = db;
+    //           this.dataReaderPluginCfg(this.selectedDb);
+    //           if (biz.facade) {
+    //             this.facdeDb = DatasourceComponent.createDB(id, biz.facade);
+    //             this.facdeDb.facade = true;
+    //             this.createFacadePluginsMetas(db.dbName);
+    //           }
+    //         } else if (type === NodeType.TAB) {
+    //           let descs: Map<string /* impl */, Descriptor> = Descriptor.wrapDescriptors(biz);
+    //           let desc: Descriptor = descs.values().next().value;
+    //           //  console.log([biz, descs, desc]);
+    //           let dbName = targetNode.parentNode.title;
+    //           this.selectedTable = {
+    //             tableName: event.name,
+    //             dbName: dbName,
+    //             dbId: parseInt(targetNode.parentNode.key, 10)
+    //           };
+    //           if (!targetNode) {
+    //             throw new Error("targetNode must be present");
+    //           }
+    //           this.selectedDb = new DbPojo();
+    //           let m = DataxAddStep4Component.dataXReaderSubFormPluginMeta(desc.displayName, desc.impl, "selectedTabs", (DATAX_PREFIX_DB + dbName));
+    //           this.selectedTablePluginMeta = [m];
+    //           let meta = <ISubDetailTransferMeta>{id: event.name};
+    //
+    //           // DataxAddStep4Component.initializeSubFieldForms(this, m, desc.impl
+    //           //   , true, (subFieldForms: Map<string /*tableName*/, Array<Item>>, subFormHetero: HeteroList, readerDesc: Descriptor) => {
+    //
+    //           DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null // , subFormHetero.descriptorList[0]
+    //           )
+    //             .then((hlist: HeteroList[]) => {
+    //               // this.openSubDetailForm(meta, pluginMeta, hlist);
+    //               this.selectedTableHeteroList = hlist;
+    //             });
+    //           //  });
+    //         }
+    //       } else {
+    //         this.processResult(result);
+    //       }
+    //     } finally {
+    //     }
+    //   }).catch((e) => {
+    //   console.log(e);
+    // });
   }
+
 
   /**
    * 创建Tab的叶子节点
@@ -656,12 +739,14 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
     return t;
   }
 
+
   private createDetailedPluginsMetas(dbName: string) {
-    this.pluginsMetas = [{
-      name: 'datasource',
-      'require': true,
-      'extraParam': `dsname_${dbName},type_${db_model_detailed},update_true`
-    }];
+    this.pluginsMetas = createDataSourceDetailedPluginsMetas(dbName);
+    // [{
+    //   name: 'datasource',
+    //   'require': true,
+    //   'extraParam': `dsname_${dbName},type_${db_model_detailed},update_true`
+    // }];
   }
 
   private createFacadePluginsMetas(dbName: string) {
@@ -865,23 +950,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
       }
       break;
     }
-    // evne.forEach((hlist) => {
-    //   let it = hlist.descriptorList;
-    // it.forEach((des) => {
-    //   let ep = des.extractProps;
-    //   this.facadeSourceDesc = [];
-    //   if (ep["supportFacade"]) {
-    //     let facadeSourceTypes: string[] = ep["facadeSourceTypes"];
-    //     facadeSourceTypes.filter((r) => {
-    //       let findDes = this.datasourceDesc.find((dd) => (dd.displayName === r));
-    //       if (findDes) {
-    //         this.facadeSourceDesc.push(findDes);
-    //         this.supportFacade = true;
-    //       }
-    //     });
-    //   }
-    // });
-    // });
+
   }
 
   afterSave(event: PluginSaveResponse) {
@@ -909,19 +978,6 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
         this.colsMeta = cols;
       });
   }
-}
-
-interface DataBaseMeta {
-  iconEndtype: string;
-  id: number;
-  name: string;
-}
-
-interface ProcessedDBRecord {
-  dbId: number;
-  detailed: Item;
-  name: string;
-  selectedTabs: Array<any>;
 }
 
 // export class Node {

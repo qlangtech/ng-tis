@@ -422,15 +422,16 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
         // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
         // if (this.tisService instanceof AppTISService) {
         let appTisService: TISService = this.tisService;
+       // console.log([params['name'],this._getCurrentAppCache]);
         if (!this._getCurrentAppCache) {
           let collectionName = params['name'];
-          // console.log(collectionName);
-          if (!collectionName) {
+
+          if (collectionName) {
             appTisService.currentApp = null;
           }
           if (!appTisService.currentApp && collectionName) {
             appTisService.currentApp = new CurrentCollection(0, collectionName);
-            // console.log(this.currentApp);
+         //   console.log(appTisService.currentApp);
           } else {
             // appTisService.currentApp = null;
           }
