@@ -51,7 +51,13 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {NzAnchorLinkComponent} from "ng-zorro-antd/anchor";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {CreatorRouter, OpenPluginDialogOptions, TargetPlugin} from "./plugin/type.utils";
+import {
+  convertReducePluginType2PluginTypes,
+  CreatorRouter,
+  OpenPluginDialogOptions,
+  reducePluginType2Map,
+  TargetPlugin
+} from "./plugin/type.utils";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 
 /**
@@ -103,166 +109,166 @@ export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService
   selector: 'tis-plugins',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
-          <ng-template #headerController>
-          </ng-template>
-          <ng-container *ngIf="this.showSaveButton">
-              <!--编辑-->
-              <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
-              </tis-page-header>
-              <ng-container [ngSwitch]="shallInitializePluginItems">
-                  <ng-container *ngSwitchCase="true">
-                      <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
-                          <div style="float: right;">
-                              <button nz-button nzType="primary" [disabled]="this.formDisabled"
-                                      (click)="_savePlugin($event)">{{saveBtnLabel}}
-                              </button>
-                          </div>
-                          <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
-                              <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity"
-                                       [nzTitle]="h.caption"></nz-link>
-                          </div>
-                      </nz-anchor>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="false">
-                      <nz-space style="float: right;">
-                          <ng-container *ngIf="enableDeleteProcess">
-                              <button *nzSpaceItem nz-button nzDanger [disabled]="this.formDisabled"
-                                      (click)="_deletePlugin($event)">
-                                  <span nz-icon nzType="delete" nzTheme="outline"></span>删除
-                              </button>
-                          </ng-container>
-                          <button *nzSpaceItem nz-button nzType="primary" [disabled]="this.formDisabled"
-                                  (click)="_savePlugin($event)">{{saveBtnLabel}}
-                          </button>
-                      </nz-space>
-                  </ng-container>
-              </ng-container>
-              <div style="clear: both;margin-bottom:3px;"></div>
-
+    <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
+      <ng-template #headerController>
+      </ng-template>
+      <ng-container *ngIf="this.showSaveButton">
+        <!--编辑-->
+        <tis-page-header *ngIf="this.errorsPageShow" [showBreadcrumb]="false" [result]="result">
+        </tis-page-header>
+        <ng-container [ngSwitch]="shallInitializePluginItems">
+          <ng-container *ngSwitchCase="true">
+            <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
+              <div style="float: right;">
+                <button nz-button nzType="primary" [disabled]="this.formDisabled"
+                        (click)="_savePlugin($event)">{{saveBtnLabel}}
+                </button>
+              </div>
+              <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
+                <nz-link *ngFor="let h of _heteroList" [nzHref]="'#'+h.identity"
+                         [nzTitle]="h.caption"></nz-link>
+              </div>
+            </nz-anchor>
           </ng-container>
-          <ng-template #pluginForm let-h="h" let-index="index" let-pluginMeta="pluginMeta">
-              <div class="extension-point" [id]="h.identity">
-                  <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
-                      <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a>
-                  </nz-tag>
-              </div>
-              <div *ngFor=" let item of h.items " style="position: relative"
-                   [ngClass]="{'item-block':shallInitializePluginItems || useCollapsePanel}">
-                  <div *ngIf="item.dspt.supportIcon" style="position: absolute;bottom:0px ;left:0px;opacity:0.9">
-                      <i style="font-size: 120px" nz-icon [nzType]="item.dspt.endtype"
-                         nzTheme="fill"></i>
-                  </div>
-                  <div style="float:right">
-                      <nz-space>
-                          <ng-container *ngIf="item.dspt.helpPath">
-                              <a *nzSpaceItem target="_blank" [href]="'https://www.tis.pub/'+item.dspt.helpPath"> <i
-                                      nz-icon nzType="book"
-                                      nzTheme="outline"></i> 使用说明</a>
-                          </ng-container>
-                          <ng-container *ngIf="true || showExtensionPoint.open">
-                              <nz-tag *nzSpaceItem>
-                                  <a [href]="item.implUrl" class="plugin-link"
-                                     target="_blank"><i nz-icon nzType="link"
-                                                        nzTheme="outline"></i>
-                                      {{item.impl}}
-                                  </a></nz-tag>
-                          </ng-container>
-                          <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                              <button *nzSpaceItem (click)="removeItem(h,item)"
-                                      nz-button
-                                      nzType="link">
-                                  <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
-                              </button>
-                          </ng-container>
-                      </nz-space>
-                  </div>
-                  <div>
-                      <nz-space nzSize="middle">
-
-
-                          <ng-container *ngIf="!disableVerify && item.dspt.veriflable">
-                              <button *nzSpaceItem nz-button nzSize="small"
-                                      (click)="configCheck(h , item,$event)"><i nz-icon nzType="check"
-                                                                                nzTheme="outline"></i>校验
-                              </button>&nbsp;
-                          </ng-container>
-
-                          <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
-                              <tis-plugin-add-btn *nzSpaceItem [btnSize]="'small'"
-                                                  [extendPoint]="item.dspt.manipulate.extendPoint"
-                                                  [descriptors]="[]" [initDescriptors]="true"
-                                                  (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
-                                                  [lazyInitDescriptors]="true">
-                                  <span nz-icon nzType="setting" nzTheme="outline"></span>
-                              </tis-plugin-add-btn>
-                              &nbsp;
-                              <!--PluginManipulate { descMeta: Descriptor, identityName: string }-->
-                              <ng-container *ngFor="let m of item.dspt.manipulate.stored let i = index">
-                                  <button style="background-color: #fae8ae" *nzSpaceItem nz-tooltip
-                                          [nzTooltipTitle]="m.identityName" nzTooltipPlacement="top" nz-button
-                                          nzSize="small"
-                                          nzShape="round" (click)="openManipulateStore(pluginMeta,item,item.dspt,m)">
-                                      <ng-container [ngSwitch]="m.descMeta.supportIcon">
-                                          <span *ngSwitchCase="true" nz-icon [nzType]="m.descMeta.endtype"></span>
-                                          <span *ngSwitchDefault nz-icon nzType="tags"></span>
-                                      </ng-container>
-                                      {{m.identityName | maxLength:15}}</button>
-                              </ng-container>
-
-                          </ng-container>
-
-
-                      </nz-space>
-                  </div>
-                  <div style="clear: both"></div>
-                  <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
-                      <nz-switch class="advance-opts" nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
-                                 [(ngModel)]="item.showAllField"
-                                 [ngModelOptions]="{standalone: true}"></nz-switch>
-                  </div>
-                  <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1"
-                                 [pluginMeta]="plugins[index]"
-                                 [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
-                                 [formControlSpan]="formControlSpan" [pp]="pp"
-                                 *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
-              </div>
-          </ng-template>
-          <form nz-form [ngSwitch]="shallInitializePluginItems || useCollapsePanel">
-              <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
-                  <nz-collapse-panel [id]="h.captionId" *ngFor="let h of _heteroList;let i = index"
-                                     [nzHeader]="h.caption"
-                                     [nzActive]="true"
-                                     [nzDisabled]="!shallInitializePluginItems && !useCollapsePanel">
-
-                      <ng-container
-                              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
-                      <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
-                          <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
-                                              [endType]="h.endType"
-                                              [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
-                                              (afterPluginAddClose)="updateHeteroListDesc(h)"
-                                              (addPlugin)="addNewPluginItem(h,$event)">添加
-                          </tis-plugin-add-btn>
-
-                      </ng-container>
-
-                  </nz-collapse-panel>
-              </nz-collapse>
-              <ng-container *ngSwitchCase="false">
-                  <ng-container *ngFor="let h of _heteroList;let i = index">
-                      <ng-container
-                              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
-                  </ng-container>
+          <ng-container *ngSwitchCase="false">
+            <nz-space style="float: right;">
+              <ng-container *ngIf="enableDeleteProcess">
+                <button *nzSpaceItem nz-button nzDanger [disabled]="this.formDisabled"
+                        (click)="_deletePlugin($event)">
+                  <span nz-icon nzType="delete" nzTheme="outline"></span>删除
+                </button>
               </ng-container>
-          </form>
-      </nz-spin>
-      <!--    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a-->
-      <!--      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>-->
-      <!--    </ng-template>-->
-      <!--
-            {{this._heteroList | json}}
-      -->
+              <button *nzSpaceItem nz-button nzType="primary" [disabled]="this.formDisabled"
+                      (click)="_savePlugin($event)">{{saveBtnLabel}}
+              </button>
+            </nz-space>
+          </ng-container>
+        </ng-container>
+        <div style="clear: both;margin-bottom:3px;"></div>
+
+      </ng-container>
+      <ng-template #pluginForm let-h="h" let-index="index" let-pluginMeta="pluginMeta">
+        <div class="extension-point" [id]="h.identity">
+          <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
+            <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a>
+          </nz-tag>
+        </div>
+        <div *ngFor=" let item of h.items " style="position: relative"
+             [ngClass]="{'item-block':shallInitializePluginItems || useCollapsePanel}">
+          <div *ngIf="item.dspt.supportIcon" style="position: absolute;bottom:0px ;left:0px;opacity:0.9">
+            <i style="font-size: 120px" nz-icon [nzType]="item.dspt.endtype"
+               nzTheme="fill"></i>
+          </div>
+          <div style="float:right">
+            <nz-space>
+              <ng-container *ngIf="item.dspt.helpPath">
+                <a *nzSpaceItem target="_blank" [href]="'https://www.tis.pub/'+item.dspt.helpPath"> <i
+                  nz-icon nzType="book"
+                  nzTheme="outline"></i> 使用说明</a>
+              </ng-container>
+              <ng-container *ngIf="true || showExtensionPoint.open">
+                <nz-tag *nzSpaceItem>
+                  <a [href]="item.implUrl" class="plugin-link"
+                     target="_blank"><i nz-icon nzType="link"
+                                        nzTheme="outline"></i>
+                    {{item.impl}}
+                  </a></nz-tag>
+              </ng-container>
+              <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
+                <button *nzSpaceItem (click)="removeItem(h,item)"
+                        nz-button
+                        nzType="link">
+                  <i nz-icon nzType="close-square" nzTheme="fill" style="color:red;"></i>
+                </button>
+              </ng-container>
+            </nz-space>
+          </div>
+          <div>
+            <nz-space nzSize="middle">
+
+
+              <ng-container *ngIf="!disableVerify && item.dspt.veriflable">
+                <button *nzSpaceItem nz-button nzSize="small"
+                        (click)="configCheck(h , item,$event)"><i nz-icon nzType="check"
+                                                                  nzTheme="outline"></i>校验
+                </button>&nbsp;
+              </ng-container>
+
+              <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
+                <tis-plugin-add-btn *nzSpaceItem [btnSize]="'small'"
+                                    [extendPoint]="item.dspt.manipulate.extendPoint"
+                                    [descriptors]="[]" [initDescriptors]="true"
+                                    (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
+                                    [lazyInitDescriptors]="true">
+                  <span nz-icon nzType="setting" nzTheme="outline"></span>
+                </tis-plugin-add-btn>
+                &nbsp;
+                <!--PluginManipulate { descMeta: Descriptor, identityName: string }-->
+                <ng-container *ngFor="let m of item.dspt.manipulate.stored let i = index">
+                  <button style="background-color: #fae8ae" *nzSpaceItem nz-tooltip
+                          [nzTooltipTitle]="m.identityName" nzTooltipPlacement="top" nz-button
+                          nzSize="small"
+                          nzShape="round" (click)="openManipulateStore(pluginMeta,item,item.dspt,m)">
+                    <ng-container [ngSwitch]="m.descMeta.supportIcon">
+                      <span *ngSwitchCase="true" nz-icon [nzType]="m.descMeta.endtype"></span>
+                      <span *ngSwitchDefault nz-icon nzType="tags"></span>
+                    </ng-container>
+                    {{m.identityName | maxLength:15}}</button>
+                </ng-container>
+
+              </ng-container>
+
+
+            </nz-space>
+          </div>
+          <div style="clear: both"></div>
+          <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
+            <nz-switch class="advance-opts" nzSize="small" nzCheckedChildren="高级" nzUnCheckedChildren="精简"
+                       [(ngModel)]="item.showAllField"
+                       [ngModelOptions]="{standalone: true}"></nz-switch>
+          </div>
+          <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1"
+                         [pluginMeta]="plugins[index]"
+                         [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
+                         [formControlSpan]="formControlSpan" [pp]="pp"
+                         *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
+        </div>
+      </ng-template>
+      <form nz-form [ngSwitch]="shallInitializePluginItems || useCollapsePanel">
+        <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
+          <nz-collapse-panel [id]="h.captionId" *ngFor="let h of _heteroList;let i = index"
+                             [nzHeader]="h.caption"
+                             [nzActive]="true"
+                             [nzDisabled]="!shallInitializePluginItems && !useCollapsePanel">
+
+            <ng-container
+              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
+            <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
+              <tis-plugin-add-btn [extendPoint]="h.extensionPoint"
+                                  [endType]="h.endType"
+                                  [descriptors]="h.descriptorList | pluginDescCallback: h: this.plugins : filterDescriptor"
+                                  (afterPluginAddClose)="updateHeteroListDesc(h)"
+                                  (addPlugin)="addNewPluginItem(h,$event)">添加
+              </tis-plugin-add-btn>
+
+            </ng-container>
+
+          </nz-collapse-panel>
+        </nz-collapse>
+        <ng-container *ngSwitchCase="false">
+          <ng-container *ngFor="let h of _heteroList;let i = index">
+            <ng-container
+              *ngTemplateOutlet="pluginForm;context:{h:h,index:i,pluginMeta:this.plugins[i]}"></ng-container>
+          </ng-container>
+        </ng-container>
+      </form>
+    </nz-spin>
+    <!--    <ng-template #notebookNotActivate>Notbook功能还未激活，如何在TIS中启用Zeppelin Notebook功能，详细请查看 <a-->
+    <!--      target="_blank" [href]="'https://tis.pub/docs/install/zeppelin/'">文档</a>-->
+    <!--    </ng-template>-->
+    <!--
+          {{this._heteroList | json}}
+    -->
   `,
   styles: [
     `
@@ -1085,55 +1091,59 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
   }
 
   private reducePluginType(): Map<PluginName, Array<TargetPlugin>> {
-    let tp: TargetPlugin;
-    let reducePluginType: Map<PluginName, Array<TargetPlugin>> = new Map<PluginName, Array<TargetPlugin>>();
-    let tplugins: Array<TargetPlugin>;
-    for (let i = 0; i < this.createCfg.plugin.length; i++) {
-      tp = this.createCfg.plugin[i];
-      tplugins = reducePluginType.get(tp.hetero);
-      if (!tplugins) {
-        tplugins = new Array<TargetPlugin>();
-        reducePluginType.set(tp.hetero, tplugins);
-      }
-      tplugins.push(tp);
-    }
-    return reducePluginType;
+    return reducePluginType2Map(this.createCfg);
+    // let tp: TargetPlugin;
+    // let reducePluginType: Map<PluginName, Array<TargetPlugin>> = new Map<PluginName, Array<TargetPlugin>>();
+    // let tplugins: Array<TargetPlugin>;
+    // for (let i = 0; i < this.createCfg.plugin.length; i++) {
+    //   tp = this.createCfg.plugin[i];
+    //   tplugins = reducePluginType.get(tp.hetero);
+    //   if (!tplugins) {
+    //     tplugins = new Array<TargetPlugin>();
+    //     reducePluginType.set(tp.hetero, tplugins);
+    //   }
+    //   tplugins.push(tp);
+    // }
+    // return reducePluginType;
   }
 
   ngOnInit(): void {
     // let tp: TargetPlugin;
-    this.pluginTyps = [];
+   // this.pluginTyps = [];
 
     let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
 
-    for (const [key, val] of reducePluginType.entries()) {
-      // console.log(key);
-      // console.log(val);
-      let extraParam = null;
-      let descFilter = {
-        localDescFilter: (desc) => true
-      };
-      let tp: TargetPlugin = {hetero: key};
-      if (val.length === 1) {
-        tp = val[0];
-        extraParam = "targetItemDesc_" + tp.descName;
-        if (tp.extraParam) {
-          extraParam += (',' + tp.extraParam);
-        }
-        descFilter = {
-          localDescFilter: (desc) => {
-            return desc.displayName === tp.descName;
-          }
-        };
-      }
+    this.pluginTyps =  convertReducePluginType2PluginTypes(reducePluginType);
 
-      this.pluginTyps.push({
-        name: tp.hetero
-        , require: true
-        , extraParam: extraParam
-        , descFilter: descFilter
-      });
-    }
+    // for (const [key, val] of reducePluginType.entries()) {
+    //   // console.log(key);
+    //   // console.log(val);
+    //   let extraParam = null;
+    //   let descFilter = {
+    //     localDescFilter: (desc) => true
+    //   };
+    //   let tp: TargetPlugin = {hetero: key};
+    //   if (val.length === 1) {
+    //     tp = val[0];
+    //     extraParam = "targetItemDesc_" + tp.descName;
+    //     if (tp.extraParam) {
+    //       extraParam += (',' + tp.extraParam);
+    //     }
+    //     descFilter = {
+    //       localDescFilter: (desc) => {
+    //         return desc.displayName === tp.descName;
+    //       }
+    //     };
+    //
+    //   }
+    //
+    //   this.pluginTyps.push({
+    //     name: tp.hetero
+    //     , require: true
+    //     , extraParam: extraParam
+    //     , descFilter: descFilter
+    //   });
+    // }
 
 
     // for (let i = 0; i < this.createCfg.plugin.length; i++) {

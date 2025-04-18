@@ -27,48 +27,49 @@ import {NzModalService} from "ng-zorro-antd/modal";
 
 @Component({
   template: `
-      <my-navigate [core]="this.currentApp"></my-navigate>
-      <nz-layout class="main-layout">
-          <nz-sider [nzWidth]="150" [nzTheme]="'light'">
-              <ul nz-menu nzMode="inline">
-                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>
-                      <a [routerLink]="['./']">
-                        <span class="icon-large" nz-icon nzType="dashboard" nzTheme="outline"></span>主控台</a>
-                  </li>
-<!--                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>-->
-<!--                      <a routerLink="./notebook">-->
-<!--                        <span class="icon-large" nz-icon nzType="book" nzTheme="outline"></span>Notebook</a>-->
-<!--                  </li>-->
-                  <!--                  <li nz-menu-item nzMatchRouter>-->
-                  <!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
-                  <!--                  </li>-->
+    <my-navigate [core]="this._app"></my-navigate>
+    <nz-layout class="main-layout">
+      <nz-sider [nzWidth]="150" [nzTheme]="'light'">
+        <ul nz-menu nzMode="inline">
+          <li nz-menu-item nzMatchRouter nzMatchRouterExact>
+            <a [routerLink]="['./']">
+              <span class="icon-large" nz-icon nzType="dashboard" nzTheme="outline"></span>主控台</a>
+          </li>
+          <!--                  <li nz-menu-item nzMatchRouter nzMatchRouterExact>-->
+          <!--                      <a routerLink="./notebook">-->
+          <!--                        <span class="icon-large" nz-icon nzType="book" nzTheme="outline"></span>Notebook</a>-->
+          <!--                  </li>-->
+          <!--                  <li nz-menu-item nzMatchRouter>-->
+          <!--                      <a routerLink="./config"><i class="fa fa-plug fa-2x" aria-hidden="true"></i>配置</a>-->
+          <!--                  </li>-->
 
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./manage"><span class="icon-large" nz-icon nzType="control" nzTheme="outline"></span>管理</a>
-                  </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="./manage"><span class="icon-large" nz-icon nzType="control" nzTheme="outline"></span>管理</a>
+          </li>
 
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./app_build_history"> <span class="icon-large" nz-icon nzType="batch-computing" nzTheme="fill"></span>批量构建</a>
-                  </li>
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./incr_build">
-                          <span class="icon-large" nz-icon nzType="stream-computing" nzTheme="outline"> </span> 实时同步</a>
-                  </li>
-                  <!--                  <li nz-menu-item nzMatchRouter>-->
-                  <!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->
-                  <!--                  </li>-->
-                  <li nz-menu-item nzMatchRouter>
-                      <a routerLink="./operationlog"><span class="icon-large" nz-icon nzType="history" nzTheme="outline"></span>操作历史</a>
-                  </li>
-              </ul>
-          </nz-sider>
-          <nz-content>
-              <router-outlet></router-outlet>
-          </nz-content>
-      </nz-layout>
-      <ng-template #zeroTrigger>
-          <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
-      </ng-template>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="./app_build_history"> <span class="icon-large" nz-icon nzType="batch-computing"
+                                                       nzTheme="fill"></span>批量构建</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="./incr_build">
+              <span class="icon-large" nz-icon nzType="stream-computing" nzTheme="outline"> </span> 实时同步</a>
+          </li>
+          <!--                  <li nz-menu-item nzMatchRouter>-->
+          <!--                      <a routerLink="./monitor"><i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>指标</a>-->
+          <!--                  </li>-->
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="./operationlog"><span class="icon-large" nz-icon nzType="history" nzTheme="outline"></span>操作历史</a>
+          </li>
+        </ul>
+      </nz-sider>
+      <nz-content>
+        <router-outlet></router-outlet>
+      </nz-content>
+    </nz-layout>
+    <ng-template #zeroTrigger>
+      <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
+    </ng-template>
 
   `,
   styles: [`
@@ -76,35 +77,39 @@ import {NzModalService} from "ng-zorro-antd/modal";
       font-size: 1.5em;
       margin-right: 4px;
     }
-      a:link {
-          color: black;
-      }
 
-      a:visited {
-          color: black;
-      }
+    a:link {
+      color: black;
+    }
 
-      a:hover {
-          color: #0275d8;
-      }
+    a:visited {
+      color: black;
+    }
 
-      .main-layout {
-          height: 92vh;
-          clear: both;
-      }
+    a:hover {
+      color: #0275d8;
+    }
 
-      nz-content {
-          margin: 0 20px 0 10px;
-      }
+    .main-layout {
+      height: 92vh;
+      clear: both;
+    }
+
+    nz-content {
+      margin: 0 20px 0 10px;
+    }
   `]
 })
 export class DataxIndexComponent extends AppFormComponent implements OnInit {
+
+  _app: CurrentCollection;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService, private router: Router) {
     super(tisService, route, modalService);
   }
 
   protected initialize(app: CurrentCollection): void {
+    this._app = app;
   }
 
   // isSelected(url: string): boolean {

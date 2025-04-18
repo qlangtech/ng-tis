@@ -147,7 +147,7 @@ import {TableBaseComponent} from './selectedtab/table.base.component';
 import {PluginSubFormComponent} from './selectedtab/plugin-sub-form.component';
 import {PreviewComponent} from "./preview.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
-
+import {DatasourceQuickManagerComponent} from "./ds.quick.manager.component";
 // angular libraries: https://angular.io/guide/creating-libraries
 // https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004216480-Angular-Library-Module-Import-Error
 // import {HttpModule, JsonpModule} from "@angular/http";
@@ -171,7 +171,7 @@ import {PreviewComponent} from "./preview.component";
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule, NzBadgeModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
-  declarations: [PreviewComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
+  declarations: [PreviewComponent, DatasourceQuickManagerComponent ,JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
     NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

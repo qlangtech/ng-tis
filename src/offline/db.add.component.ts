@@ -28,6 +28,7 @@ import {Location} from '@angular/common';
 import * as $ from 'jquery';
 import {NzModalRef} from "ng-zorro-antd/modal";
 import {HeteroList, Item, PluginSaveResponse} from "../common/tis.plugin";
+import {DbPojo} from "../common/ds.utils";
 
 
 @Component({
@@ -74,85 +75,13 @@ export class DbAddComponent extends BasicFormComponent implements OnInit {
     }
   }
 
-  // /**
-  //  * 校验db配置
-  //  */
-  // verifyDbConfig() {
-  //   this.jsonPost('/offline/datasource.ajax?action=offline_datasource_action&event_submit_do_verify_db_config_' + (this.isAdd ? 'add' : 'update') + '=y', this.dbPojo)
-  //     .then(result => {
-  //       this.processResult(result);
-  //       if (!result.success) {
-  //         this.errorItem = Item.processFieldsErr(result);
-  //       }
-  //     });
-  // }
 
-  // public saveDbConfig(form: any): void {
-  //   //  console.log($(form).serialize());
-  //   // let action = $(form).serialize();
-  //
-  //   this.jsonPost('/offline/datasource.ajax?action=offline_datasource_action&event_submit_do_'
-  //     + this.actionMethod + '=y', this.dbPojo)
-  //     .then(result => {
-  //       this.processResult(result);
-  //       if (result.success) {
-  //         let dbid = result.bizresult;
-  //         this.dbPojo.dbId = dbid;
-  //         this.successSubmit.emit(this.dbPojo);
-  //         this.activeModal.close(this.dbPojo);
-  //       } else {
-  //         // 多个插件组
-  //         this.errorItem = Item.processFieldsErr(result);
-  //       }
-  //     });
-  // }
 
   onResponse(resp: PluginSaveResponse) {
     if (resp.saveSuccess) {
       //  this.activeModal.close(this.dbPojo);
     }
   }
-
-
-  // private get actionMethod(): string {
-  //   return ((this.isAdd) ? 'add' : 'edit') + '_' + (this.dbPojo.facade ? 'facade' : 'datasource') + '_db';
-  // }
-
-
-  // changeType(value: string): void {
-  //   // console.log(value);
-  //   this.switchType = value;
-  // }
-
-
-  // shardingEnumChange(shardingEnum: string, form: any): void {
-  //   // console.log(shardingEnum);
-  //   this.httpPost('/offline/datasource.ajax',
-  //     $(form).serialize().replace('event_submit_do_add_datasource_db', 'event_submit_do_get_sharding_enum'))
-  //     .then(
-  //       result => {
-  //         // console.log(result);
-  //         // this.testDbBtnDisable = false;
-  //         this.processResult(result);
-  //         this.dbEnums = [];
-  //         if (result.bizresult) {
-  //           for (let dbEnum of result.bizresult) {
-  //             this.dbEnums.push(new DbEnum(dbEnum.dbName, dbEnum.host));
-  //           }
-  //         }
-  //       });
-  // }
-
-  // goBack(): void {
-  //   // this.router.navigate(['/t/offline']);
-  //   // this.location.back();
-  // }
-
-
-  // getValue(value: any): any {
-  //   return value;
-  // }
-
 
 }
 
@@ -166,18 +95,3 @@ export class DbEnum {
   }
 }
 
-export class DbPojo {
-  dbName = '';
-  // 插件实现
-  pluginImpl: string;
-  readerPluginImpl: string;
-  // 是否是Cobar配置
-  facade = false;
-  // 对应的DataSource是否已经设置DataX配置？
-  dataReaderSetted = false;
-  supportDataXReader = false;
-
-  constructor(public dbId?: string) {
-
-  }
-}

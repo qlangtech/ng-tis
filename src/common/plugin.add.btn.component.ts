@@ -66,39 +66,6 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <!--
-      <ng-container [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 ">
-        <ng-container *ngSwitchCase="true">
-
-          <button [style]="btnStyle" nz-button nz-dropdown
-                  [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
-                  (mouseenter)="lazyInitialize()"
-                  (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
-                  [nzDropdownMenu]="this.disabled?null:menu"
-                  [disabled]="this.disabled || this.formDisabled">
-            <ng-content></ng-content>
-          </button>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu>
-              <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-                <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
-                                                   nzTheme="outline"></span> {{d.displayName}}</a>
-              </li>
-              <li nz-menu-divider></li>
-              <li nz-menu-item (click)="addNewPlugin()">
-                <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
-              </li>
-            </ul>
-          </nz-dropdown-menu>
-        </ng-container>
-        <ng-container *ngSwitchCase="false">
-          <button [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'" (click)="addNewPlugin()"
-                  [disabled]="this.disabled || this.formDisabled">
-            <i nz-icon nzType="api" nzTheme="outline"></i>添加
-          </button>
-        </ng-container>
-      </ng-container>
-  -->
 
       <ng-container
               [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 || extractLiItems.length> 0  ">

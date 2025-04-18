@@ -59,6 +59,7 @@ import {WorkflowOfflineEngineSelectComponent} from "./workflow.offline.engine.se
 import {TableColsMetaComponent} from "./table.cols.meta.component";
 
 
+
 @NgModule({
   id: 'offline',
   imports: [ // CommonModule,
@@ -74,7 +75,7 @@ import {TableColsMetaComponent} from "./table.cols.meta.component";
   providers: [
   ],
   declarations: [
-    WorkflowComponent, WorkflowOfflineEngineSelectComponent, WFControllerComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
+    WorkflowComponent, WorkflowOfflineEngineSelectComponent, WFControllerComponent, DatasourceComponent ,OffileIndexComponent, DbAddComponent, WorkflowAddErMetaComponent
     , TableColsMetaComponent, TableAddComponent, TableAddStep1Component, // TableAddStep2Component,
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
