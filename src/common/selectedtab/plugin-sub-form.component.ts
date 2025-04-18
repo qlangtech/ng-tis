@@ -7,8 +7,8 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 
 import {TableBaseComponent} from "./table.base.component";
 import {TableTransformerComponent} from "./table.transformer.component";
-import {ISubDetailTransferMeta} from "../../base/datax.add.step4.component";
 import {StepType} from "../steps.component";
+import {ISubDetailTransferMeta} from "../ds.utils";
 
 export class SelectedTabDTO {
 

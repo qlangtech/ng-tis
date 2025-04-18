@@ -43,6 +43,7 @@ import {ExecModel} from "./datax.add.step7.confirm.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {KEY_subform_DetailIdValue} from "../common/plugin/type.utils";
 import {PluginSubFormComponent} from "../common/selectedtab/plugin-sub-form.component";
+import {dataXReaderSubFormPluginMeta, ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.utils";
 
 // import {PluginSubFormComponent} from "./selectedtab/plugin-sub-form.component";
 
@@ -194,7 +195,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       console.log([meta, this.dataXReaderTargetName,this.descriptor]);
     let detailId = meta.id;
     let pluginMeta: PluginType[]
-      = [DataxAddStep4Component.dataXReaderSubFormPluginMeta(
+      = [dataXReaderSubFormPluginMeta(
       this.descriptor.displayName, this.descriptor.impl, meta.fieldName
       , this.dataXReaderTargetName + "," + KEY_subform_DetailIdValue + "_" + detailId, this.skipSubformDescNullError)];
     // console.log(pluginMeta);
@@ -218,7 +219,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
         return;
       }
     }
-    DataxAddStep4Component.processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id))
+    processSubFormHeteroList(this, pluginMeta[0], meta, this.subFieldForms.get(meta.id))
       .then((hlist: HeteroList[]) => {
         let h = hlist[0];
 
@@ -485,30 +486,9 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   // savePlugin = new EventEmitter<any>();
 
 
-  public static dataXReaderSubFormPluginMeta(readerDescName: string, readerDescImpl: string //
-    , subformFieldName: string, dataXReaderTargetName: string, skipSubformDescNullError?: boolean): PluginType {
-    return {
-      skipSubformDescNullError: skipSubformDescNullError,
-      name: "dataxReader",
-      require: true,
-      extraParam: `targetDescriptorImpl_${readerDescImpl},targetDescriptorName_${readerDescName},subFormFieldName_${subformFieldName},${dataXReaderTargetName}`
-    };
-  }
 
-  static processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
-    , meta: ISubDetailTransferMeta, subForm: Array<Item>): Promise<HeteroList[]> {
-    let metaParam = PluginsComponent.getPluginMetaParams([pluginMeta]);
-    return baseCpt.httpPost('/coredefine/corenodemanage.ajax'
-      , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
-      .then((r) => {
-        if (!r.success) {
-          return;
-        }
-        let h: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginMeta);
-        let hlist: HeteroList[] = [h];
-        return hlist;
-      });
-  }
+
+
 
   /**
    *
@@ -784,15 +764,6 @@ interface ISubDetailClickBehaviorMeta {
 }
 
 // meta: { id: string, behaviorMeta: ISubDetailClickBehaviorMeta, fieldName: string, idList: Array<string> }
-
-export interface ISubDetailTransferMeta {
-  id: string;
-  // behaviorMeta: ISubDetailClickBehaviorMeta;
-  fieldName: string;
-  idList: Array<string>;
-  // 是否已经设置子表单
-  setted: boolean;
-}
 
 interface GetDateMethodMeta {
   method: string;

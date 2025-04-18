@@ -32,9 +32,10 @@ import {
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MongoColsTabletView} from "../common/multi-selected/schema.edit.component";
-import {DataxAddStep4Component, ISubDetailTransferMeta} from "./datax.add.step4.component";
+import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {ISelectedCol, ISelectedTabMeta} from "./common/datax.common";
+import {ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.utils";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -297,7 +298,7 @@ export class DataxAddStep6TransformerSetterComponent extends BasicDataXAddCompon
       // 是否已经设置子表单
       setted: false
     };
-    DataxAddStep4Component.processSubFormHeteroList(this, m, meta, null
+    processSubFormHeteroList(this, m, meta, null
     ).then((hlist: HeteroList[]) => {
 
       hlist.forEach((h) => {

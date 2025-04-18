@@ -6,6 +6,7 @@ import {NzDrawerRef} from "ng-zorro-antd/drawer";
 import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-component";
 import {DATAX_PREFIX_DB} from "../../base/datax.add.base";
+import {processSubFormHeteroList} from "../ds.utils";
 
 
 @Component({
@@ -81,7 +82,7 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
     // console.log(this.pluginMeta);
 
     let m = this.transformerPluginMeta[0];
-    DataxAddStep4Component.processSubFormHeteroList(this, m, this.dto.meta, null
+    processSubFormHeteroList(this, m, this.dto.meta, null
     ).then((hlist: HeteroList[]) => {
 
       hlist.forEach((h) => {

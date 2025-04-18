@@ -5,16 +5,7 @@ import {TISService} from "../common/tis.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-// import {
-//   clickDBNode,
-//   createDataSourceDetailedPluginsMetas,
-//   DataBaseMeta,
-//   db_model_detailed,
-//   DBClickResponse,
-//   loadDSWithDesc,
-//   NodeType,
-//   ProcessedDBRecord
-// } from "./ds.component";
+
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginsComponent} from "../common/plugins.component";
 import {CreatorRouter} from "../common/plugin/type.utils";
@@ -28,7 +19,7 @@ import {
   ProcessedDBRecord
 } from "./ds.utils";
 
-export function createDrawer(drawerService: NzDrawerService): NzDrawerRef {
+export function createDrawer(drawerService: NzDrawerService, creatorRouter: CreatorRouter, filterDbsShallSupportReader = true): NzDrawerRef {
   const drawerRef = drawerService.create<
     DatasourceQuickManagerComponent
     , { hetero: HeteroList[] }
@@ -37,7 +28,7 @@ export function createDrawer(drawerService: NzDrawerService): NzDrawerRef {
     nzTitle: `数据源列表`,
     nzContent: DatasourceQuickManagerComponent,
     nzPlacement: "left",
-    nzContentParams: {}
+    nzContentParams: {"creatorRouter": creatorRouter, "filterDbsShallSupportReader": filterDbsShallSupportReader}
   });
   return drawerRef;
 }
@@ -62,7 +53,7 @@ export function createDrawer(drawerService: NzDrawerService): NzDrawerRef {
         </nz-space>
       </tis-page-header-left>
     </tis-page-header>
-{{dsList.length}}
+
     <tis-page [rows]="dsList">
       <!--      <page-row-assist>-->
       <!--        <ng-template let-u='r'>-->
@@ -103,6 +94,8 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
   @Input()
   creatorRouter: CreatorRouter;
 
+  @Input()
+  filterDbsShallSupportReader = true;
 
 
   constructor(protected tisService: TISService //
@@ -129,9 +122,9 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
     //     }
     //   });
 
-    loadDSWithDesc(this, true, this.creatorRouter)
+    loadDSWithDesc(this, this.filterDbsShallSupportReader, this.creatorRouter)
       .then(({dbsWhichSupportDataXReader, desc}) => {
-        console.log([desc, dbsWhichSupportDataXReader]);
+        // console.log([desc, dbsWhichSupportDataXReader]);
         this.datasourceDesc = desc;
         this.dsList = dbsWhichSupportDataXReader;
 
