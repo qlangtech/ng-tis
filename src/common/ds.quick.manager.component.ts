@@ -54,7 +54,7 @@ export function createDrawer(drawerService: NzDrawerService, creatorRouter: Crea
       </tis-page-header-left>
     </tis-page-header>
 
-    <tis-page [rows]="dsList">
+    <tis-page [rows]="dsList" [tabSize]="'middle'">
       <!--      <page-row-assist>-->
       <!--        <ng-template let-u='r'>-->
       <!--          <tis-plugins (afterSave)="afterSave($event)"-->
@@ -97,6 +97,7 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
   @Input()
   filterDbsShallSupportReader = true;
 
+  hasSaved = false;
 
   constructor(protected tisService: TISService //
     , private router: Router //
@@ -146,7 +147,7 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
       , `添加${pluginDesc.displayName}数据库`
       , (_, db: ProcessedDBRecord) => {
         // console.log(db);
-
+        this.hasSaved = true;
         let newDb: DataBaseMeta = {id: db.dbId, name: db.name, iconEndtype: pluginDesc.endtype};
         this.dsList = [newDb, ...this.dsList];
         // let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};

@@ -16,11 +16,19 @@
  *   limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 import {OffileIndexComponent} from './offline.index.component';
 import {DatasourceComponent} from './ds.component';
 import {WorkflowComponent} from './workflow.component';
-import {RouterModule, Routes} from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  CanActivateChild,
+  Router,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes, UrlTree
+} from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
 import {BuildProgressComponent} from "../common/core.build.progress.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
@@ -28,6 +36,43 @@ import {FullBuildHistoryComponent} from "../common/full.build.history.component"
 import {WFControllerComponent} from "./workflow.controller.component";
 import {DataxConfigComponent} from "../datax/datax.config.component";
 import {StepType} from "../common/steps.component";
+import {DataxCanActivateCollectionManage} from "../datax/datax-routing.module";
+import {TISService} from "../common/tis.service";
+import {CurrentCollection} from "../common/basic.form.component";
+
+
+@Injectable()
+export class WorkflowCanActivateCollectionManage implements CanActivateChild {
+  constructor(private tisService: TISService, private route: ActivatedRoute, private router: Router) {
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    // this.route.snapshot;
+    let collectionName = route.params["name"];
+    // console.log(`collection:${collectionName}`);
+    if (!collectionName) {
+      throw new Error("route param collectionName can not be null");
+    }
+    // console.log("======================");
+    this.tisService.currentApp = new CurrentCollection(0, collectionName);
+    // return this.permissions.canActivate(this.currentUser, route.params.id);
+    return this.tisService.httpPost('/coredefine/coredefine.ajax'
+      , 'action=core_action&emethod=get_index_exist')
+      .then((r) => {
+        let result: { indexExist: boolean, app: any } = r.bizresult;
+        let canActive: boolean = result.indexExist;
+        if (!canActive) {
+          // this.router.navigate(["/base/appadd"], {queryParams: {step: 2}, relativeTo: this.route});
+          return this.router.parseUrl(`/base/appadd?name=${collectionName}`);
+        }
+        this.tisService.currentApp.appTyp = result.app.appType;
+        return true;
+      });
+  }
+}
 
 const coreNodeRoutes: Routes = [
   {
@@ -35,6 +80,7 @@ const coreNodeRoutes: Routes = [
     children: [
       {
         path: '',
+        // canActivateChild: [DataxCanActivateCollectionManage],
         children: [
           {
             path: 'ds',
@@ -60,30 +106,36 @@ const coreNodeRoutes: Routes = [
             component: WFControllerComponent
           },
           {
-            path: 'wf_profile/:name/update',
-            component: WFControllerComponent,
-            data: {updateProfile: true}
-          },
-          {
-            path: 'wf_update/:name',
-            component: WorkflowAddComponent
-          },
-          {
-            path: 'wf_profile/:name/config',
-            component: DataxConfigComponent,
-            data: {stepType: StepType.CreateWorkflow}
-            // component: WFControllerComponent,
-            // data: {updateProfile: true}
-          },
-          {
-            path: 'wf_update/:name/build_history/:wfid/:taskid',
-            component: BuildProgressComponent,
-            data: {showBreadcrumb: true}
-          },
-          {
-            path: 'wf_update/:name/build_history/:wfid',
-            component: FullBuildHistoryComponent,
-            data: {showBreadcrumb: true,showTriggerBtn:false}
+            path: '',
+          //  canActivateChild: [WorkflowCanActivateCollectionManage],
+            children: [
+              {
+                path: 'wf_profile/:name/update',
+                component: WFControllerComponent,
+                data: {updateProfile: true}
+              },
+              {
+                path: 'wf_update/:name',
+                component: WorkflowAddComponent
+              },
+              {
+                path: 'wf_profile/:name/config',
+                component: DataxConfigComponent,
+                data: {stepType: StepType.CreateWorkflow}
+                // component: WFControllerComponent,
+                // data: {updateProfile: true}
+              },
+              {
+                path: 'wf_update/:name/build_history/:wfid/:taskid',
+                component: BuildProgressComponent,
+                data: {showBreadcrumb: true}
+              },
+              {
+                path: 'wf_update/:name/build_history/:wfid',
+                component: FullBuildHistoryComponent,
+                data: {showBreadcrumb: true, showTriggerBtn: false}
+              },
+            ]
           },
           {
             path: '',
