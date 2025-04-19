@@ -29,6 +29,7 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 import {createDrawer} from "./ds.quick.manager.component";
 import {createDB, loadDSWithDesc} from "./ds.utils";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 @Component({
@@ -73,7 +74,8 @@ import {createDB, loadDSWithDesc} from "./ds.utils";
 
   `
 })
-export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit, ControlValueAccessor {
+export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit , ControlValueAccessor
+{
   cascaderOptions: NzCascaderOption[] = [];
   // 应该是这样的结构 [dumpTab.dbid, dumpTab.cascaderTabId];
   cascadervalues: any = {};
@@ -87,8 +89,8 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
   };
 
-  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService) {
-    super(tisService, modalService);
+  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, notification: NzNotificationService) {
+    super(tisService, modalService, notification);
   }
 
   manageDbTable(opt: NzCascaderOption, e: MouseEvent): void {
@@ -111,14 +113,22 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
   @Input() set value(v) {
     if (v !== this.cascadervalues) {
+      console.log(v);
       this.cascadervalues = v;
       this.onChangeCallback(v);
     }
   }
 
+  writeValue(obj: any): void {
+    this.cascadervalues = obj;
+    if (obj && Array.isArray(obj)) {
+      this.onCascaderChanges(obj);
+    }
+  }
+
   /** load data async execute by `nzLoadData` method */
   loadData(node: NzCascaderOption, index: number): PromiseLike<void> {
-    // console.log([node, index]);
+
     if (index === 0) {
       if (!node.value) {
         console.log(node);
@@ -130,7 +140,7 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
       if (!cpt) {
         throw new Error("cpt can not be null");
       }
-
+      console.log(node);
       return cpt.httpPost('/offline/datasource.ajax', action)
         .then((result) => {
           let biz = result.bizresult;
@@ -138,9 +148,16 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
           let detail = biz.detailed;
           let db = createDB(node.value, detail, biz.dataReaderSetted, biz.supportDataXReader);
           let tabs: Array<string> = biz.selectedTabs;
+
           node.children = tabs.map((tab) => {
             return {value: tab, label: tab, isLeaf: true}
           });
+          // console.log([tabs, tabs.length, tabs.length < 1, this.notification]);
+          if (tabs.length < 1) {
+
+            // this.notification.error('错误', "xxxxx", {nzDuration: 6000, nzPlacement: "topLeft"});
+            cpt.errNotify("'" + node.label + "'下还没有选中的表，请点击编辑，选择您所需要的表", 12000);
+          }
           return Promise.resolve();
         });
     } else {
@@ -158,14 +175,9 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
   setDisabledState(isDisabled: boolean): void {
   }
 
-  writeValue(obj: any): void {
-    this.cascadervalues = obj;
-    if (obj && Array.isArray(obj)) {
-      this.onCascaderChanges(obj);
-    }
-  }
 
   onCascaderChanges(evt: any[]) {
+    // console.log(evt);
     if (evt.length < 1) {
       this.onCascaderSQLChanges.emit([]);
     } else {
@@ -178,6 +190,9 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
   }
 
   public static reflectTabCols(cpt: BasicFormComponent, dbId: string, tabName: string): Promise<Array<IColumnMeta>> {
+    if (!tabName) {
+      return Promise.resolve([]);
+    }
     let action = `emethod=get_datasource_table_cols&action=offline_datasource_action&id=${dbId}&tabName=${tabName}`;
     return cpt.httpPost('/offline/datasource.ajax', action)
       .then((result) => {
@@ -219,7 +234,7 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
             "basicCpt": this,
             "endType": db.iconEndtype
           };
-           this.cascaderOptions.push(dbNode);
+          this.cascaderOptions.push(dbNode);
         }
       })
 
@@ -274,10 +289,16 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
     //   nzPlacement: "left",
     //   nzContentParams: {}
     // });
+
+
     drawerRef.afterClose.subscribe(hetero => {
-      if (!hetero) {
-        return;
+      let cpt = drawerRef.getContentComponent();
+      if (cpt.hasSaved) {
+        this.ngOnInit();
       }
+      // if (!hetero) {
+      //   return;
+      // }
     });
   }
 }
