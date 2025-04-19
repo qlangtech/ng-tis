@@ -6,18 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step6.cols-meta-setter.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/ds.quick.manager.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/ds.quick.manager.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/ds.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/ds.utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/jdbc.type.props.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/multi-selected/transformer.rules.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugin/item-prop-val.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/plugin-sub-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/pagination.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/pagination.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/offline-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -278,7 +272,7 @@
       <workItem from="1743051981707" duration="27058000" />
       <workItem from="1743253446351" duration="1051000" />
       <workItem from="1743254817347" duration="55558000" />
-      <workItem from="1744692094032" duration="47344000" />
+      <workItem from="1744692094032" duration="51229000" />
     </task>
     <servers />
   </component>

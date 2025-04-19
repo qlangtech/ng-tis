@@ -41,7 +41,7 @@ import {createDB, loadDSWithDesc} from "./ds.utils";
     }
   ],
   template: `
-    <nz-cascader [nzLoadData]="cascaderOptions.length>0?loadData: null" nzShowSearch [style]="nzStyle"
+    <nz-cascader [nzLoadData]="cascaderOptions.length>0?loadData: null" [nzShowSearch]="true" [style]="nzStyle"
                  [nzSize]="this.nzSize" name="dbTable"
                  class="clear"
                  [nzOptionRender]="renderTpl"

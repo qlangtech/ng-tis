@@ -17,7 +17,7 @@ import {AddStep2ComponentCfg} from "../base/common/datax.common";
 
 @Component({
   template: `
-    <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流','/offline/wf']" [title]="this.currentApp.appName">
+    <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流','/offline/wf']" [title]="this._currWorkFlow.appName">
     </tis-page-header>
     <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
       <ng-template #container></ng-template>
@@ -29,6 +29,7 @@ export class WFControllerComponent extends BasicFormComponent implements OnInit 
   multiViewDAG: MultiViewDAG;
   @ViewChild('container', {read: ViewContainerRef, static: true}) containerRef: ViewContainerRef;
   updateProfile: boolean = false;
+  _currWorkFlow: CurrentCollection = new CurrentCollection(0, '');
 
   constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService,
               private router: Router, private route: ActivatedRoute, private _componentFactoryResolver: ComponentFactoryResolver) {
@@ -41,7 +42,6 @@ export class WFControllerComponent extends BasicFormComponent implements OnInit 
     // 更新基本信息
 
     // console.log(["updateProfile", updateProfile]);
-
 
     // 配置步骤前后跳转状态机
     let configFST: Map<any, { next: any, pre: any }> = new Map();
@@ -69,6 +69,8 @@ export class WFControllerComponent extends BasicFormComponent implements OnInit 
     if (this.updateProfile) {
       let wname = this.route.snapshot.params["name"];
       let app = new CurrentCollection(-1, wname);
+      this.tisService.currentApp = app;
+      this._currWorkFlow = app;
       let fragment = this.route.snapshot.fragment;
       let queryParams = this.route.snapshot.queryParams;
       let execId = queryParams['execId'];

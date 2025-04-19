@@ -1092,77 +1092,11 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
 
   private reducePluginType(): Map<PluginName, Array<TargetPlugin>> {
     return reducePluginType2Map(this.createCfg);
-    // let tp: TargetPlugin;
-    // let reducePluginType: Map<PluginName, Array<TargetPlugin>> = new Map<PluginName, Array<TargetPlugin>>();
-    // let tplugins: Array<TargetPlugin>;
-    // for (let i = 0; i < this.createCfg.plugin.length; i++) {
-    //   tp = this.createCfg.plugin[i];
-    //   tplugins = reducePluginType.get(tp.hetero);
-    //   if (!tplugins) {
-    //     tplugins = new Array<TargetPlugin>();
-    //     reducePluginType.set(tp.hetero, tplugins);
-    //   }
-    //   tplugins.push(tp);
-    // }
-    // return reducePluginType;
   }
 
   ngOnInit(): void {
-    // let tp: TargetPlugin;
-   // this.pluginTyps = [];
-
     let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
-
     this.pluginTyps =  convertReducePluginType2PluginTypes(reducePluginType);
-
-    // for (const [key, val] of reducePluginType.entries()) {
-    //   // console.log(key);
-    //   // console.log(val);
-    //   let extraParam = null;
-    //   let descFilter = {
-    //     localDescFilter: (desc) => true
-    //   };
-    //   let tp: TargetPlugin = {hetero: key};
-    //   if (val.length === 1) {
-    //     tp = val[0];
-    //     extraParam = "targetItemDesc_" + tp.descName;
-    //     if (tp.extraParam) {
-    //       extraParam += (',' + tp.extraParam);
-    //     }
-    //     descFilter = {
-    //       localDescFilter: (desc) => {
-    //         return desc.displayName === tp.descName;
-    //       }
-    //     };
-    //
-    //   }
-    //
-    //   this.pluginTyps.push({
-    //     name: tp.hetero
-    //     , require: true
-    //     , extraParam: extraParam
-    //     , descFilter: descFilter
-    //   });
-    // }
-
-
-    // for (let i = 0; i < this.createCfg.plugin.length; i++) {
-    //   tp = this.createCfg.plugin[i];
-    //   let extraParam = "targetItemDesc_" + tp.descName;
-    //   if (tp.extraParam) {
-    //     extraParam += (',' + tp.extraParam);
-    //   }
-    //   this.pluginTyps.push({
-    //     name: tp.hetero
-    //     , require: true
-    //     , extraParam: extraParam
-    //     , descFilter: {
-    //       localDescFilter: (desc) => {
-    //         return desc.displayName === tp.descName;
-    //       }
-    //     }
-    //   });
-    // }
   }
 
   whenAjaxOccur(e: PluginSaveResponse) {
