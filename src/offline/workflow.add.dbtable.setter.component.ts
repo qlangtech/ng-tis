@@ -42,6 +42,7 @@ import {WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
 import {IColumnMeta} from "../common/tis.plugin";
+import {NzNotificationService} from "ng-zorro-antd/notification";
 
 
 //
@@ -59,7 +60,7 @@ import {IColumnMeta} from "../common/tis.plugin";
         </p>
 
         <ng-container *ngIf="this.colsMeta">
-          <div class="item-head"><label>列</label></div>
+          <div class="item-head"><label>列（s）</label></div>
           <p>
             <table-cols-meta [colsMeta]="this.colsMeta"></table-cols-meta>
 
@@ -71,7 +72,11 @@ import {IColumnMeta} from "../common/tis.plugin";
   `,
 
   styles: [
-    `.clear {
+    ` .item-head label {
+      font-weight: bold;
+    }
+
+    .clear {
       clear: both;
     }`]
 })
@@ -86,8 +91,8 @@ export class WorkflowAddDbtableSetterComponent
   colsMeta: Array<IColumnMeta>;
 
   constructor(tisService: TISService, //
-              modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>) {
-    super(tisService, modalService, drawerRef);
+              modalService: NzModalService, drawerRef: NzDrawerRef<BasicSideBar>, notification: NzNotificationService) {
+    super(tisService, modalService, drawerRef, notification);
   }
 
   ngOnInit(): void {
@@ -111,11 +116,15 @@ export class WorkflowAddDbtableSetterComponent
 
   // 点击保存按钮
   _saveClick() {
-   // console.log(this.cascadervalues);
+    // console.log(this.cascadervalues);
     let dbId: string = this.cascadervalues[0];
     let tabName: string = this.cascadervalues[1];
 
-    // console.log(this.dto);
+    //console.log([dbId, tabName]);
+    if (!dbId || !tabName) {
+      this.errNotify("请选择表", 12000);
+      return;
+    }
 
     this.saveClick.emit(new DumpTable(this.nodeMeta, this.dto.nodeid
       , dbId, tabName));

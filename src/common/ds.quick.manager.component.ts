@@ -78,11 +78,20 @@ export function createDrawer(drawerService: NzDrawerService, creatorRouter: Crea
           <button nz-button nzType="link" (click)="exitDataSource(ds)">{{ds.name}}</button>
         </ng-template>
       </tis-col>
+      <tis-col title="更新时间">
+        <ng-template let-ds='r'>
+          <span class="ds-update-time"><i nz-icon nzType="field-time" nzTheme="outline"></i>  {{ds.opDate|date : "yyyy/MM/dd"}}</span>
+        </ng-template>
+      </tis-col>
+
     </tis-page>
 
   `,
   styles: [`
-
+   .ds-update-time{
+      font-size: 10px;
+      color: #666666;
+   }
   `]
 })
 export class DatasourceQuickManagerComponent extends BasicFormComponent implements OnInit {
@@ -135,6 +144,7 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
   }
 
   initComponents(b: boolean) {
+    this.ngOnInit();
     // let action = 'emethod=get_datasource_info&action=offline_datasource_action';
     // this.httpPost('/offline/datasource.ajax', action)
     //   .then(result => {

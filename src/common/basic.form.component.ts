@@ -109,7 +109,7 @@ export class BasicFormComponent implements TISCoreService {
     }
   }
 
-  protected errNotify(msg: string, duration?: number) {
+  public errNotify(msg: string, duration?: number) {
     this.checkNotificationInstance();
     this.notification.error('错误', msg, {nzDuration: duration > 0 ? duration : 6000});
   }
@@ -282,10 +282,17 @@ export abstract class BasicSidebarDTO {
   ],
   template: `
     <div [ngClass]="{'sidebar': !tabBarExtraContent}">
-      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()"><span nz-icon nzType="delete" nzTheme="outline"></span>删除</button>
+      <button *ngIf="!deleteDisabled" nz-button nzType="primary" nzDanger (click)="_deleteNode()"><span nz-icon
+                                                                                                        nzType="delete"
+                                                                                                        nzTheme="outline"></span>删除
+      </button>
       <div [ngClass]="{'float-right': !tabBarExtraContent}">
-        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()"><span nz-icon nzType="save" nzTheme="outline"></span>保存</button>&nbsp;
-        <button nz-button nzType="default" (click)="_closeSidebar($event)"><span nz-icon nzType="close" nzTheme="outline"></span>关闭</button>
+        <button *ngIf="!saveDisabled" nz-button nzType="primary" (click)="_saveClick()"><span nz-icon nzType="save"
+                                                                                              nzTheme="outline"></span>保存
+        </button>&nbsp;
+        <button nz-button nzType="default" (click)="_closeSidebar($event)"><span nz-icon nzType="close"
+                                                                                 nzTheme="outline"></span>关闭
+        </button>
       </div>
     </div>
     <div style="clear: both"></div>
@@ -422,7 +429,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
         // console.log(params['name'] + ",getCurrentAppCache:" + this._getCurrentAppCache);
         // if (this.tisService instanceof AppTISService) {
         let appTisService: TISService = this.tisService;
-       // console.log([params['name'],this._getCurrentAppCache]);
+        // console.log([params['name'],this._getCurrentAppCache]);
         if (!this._getCurrentAppCache) {
           let collectionName = params['name'];
 
@@ -431,7 +438,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
           }
           if (!appTisService.currentApp && collectionName) {
             appTisService.currentApp = new CurrentCollection(0, collectionName);
-         //   console.log(appTisService.currentApp);
+            //   console.log(appTisService.currentApp);
           } else {
             // appTisService.currentApp = null;
           }
