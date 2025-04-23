@@ -21,12 +21,20 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {
+    DATAX_PREFIX_DB,
+    Descriptor,
+    HeteroList,
+    Item,
+    PluginSaveResponse,
+    PluginType,
+    SavePluginEvent
+} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
+import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 

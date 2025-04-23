@@ -21,12 +21,10 @@ import {AppFormComponent, CurrentCollection} from "../common/basic.form.componen
 
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {Component, EventEmitter, Injectable, Input, Output} from "@angular/core";
+import {EventEmitter, Injectable, Input, Output} from "@angular/core";
 import {DataxDTO} from "./datax.add.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
-
-export const DATAX_PREFIX_DB = "dataxDB_";
 
 @Injectable()
 export abstract class BasicDataXAddComponent extends AppFormComponent {

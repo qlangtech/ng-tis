@@ -1,7 +1,6 @@
-import {Descriptor, HeteroList, Item, PluginType} from "../common/tis.plugin";
+import {DATAX_PREFIX_DB, Descriptor, HeteroList, Item, PluginType} from "../common/tis.plugin";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {NzTreeNode} from "ng-zorro-antd/tree";
-import {DATAX_PREFIX_DB} from "../base/datax.add.base";
 
 import {CreatorRouter, router2PluginTypes} from "../common/plugin/type.utils";
 import {PluginsComponent} from "./plugins.component";

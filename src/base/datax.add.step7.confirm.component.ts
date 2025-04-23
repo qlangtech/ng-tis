@@ -122,7 +122,8 @@ const UPDATE_ROUT_PATH = '../update';
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of genCfgFileList">
-                <button nz-tooltip [nzTooltipTitle]="f.fileName" nzTooltipPlacement="top" (click)="viewDataXCfg(f)" nz-button nzType="link" nzSize="large">
+                <button nz-tooltip [nzTooltipTitle]="f.fileName" nzTooltipPlacement="top" (click)="viewDataXCfg(f)"
+                        nz-button nzType="link" nzSize="large">
                   <i nz-icon nzType="file-text" nzTheme="outline"></i>{{f.fileName}}
                 </button>
               </li>
@@ -144,9 +145,10 @@ const UPDATE_ROUT_PATH = '../update';
           <nz-page-header-content class="item-block child-block script-block">
             <ul>
               <li *ngFor="let f of createDDLFileList">
-                <button nz-tooltip [nzTooltipTitle]="f" nzTooltipPlacement="top" (click)="viewCreateDDLFile(f)" nz-button nzType="link" nzSize="large"><i nz-icon
-                                                                                                 nzType="console-sql"
-                                                                                                 nzTheme="outline"></i>{{f}}
+                <button nz-tooltip [nzTooltipTitle]="f" nzTooltipPlacement="top" (click)="viewCreateDDLFile(f)"
+                        nz-button nzType="link" nzSize="large"><i nz-icon
+                                                                  nzType="console-sql"
+                                                                  nzTheme="outline"></i>{{f}}
                 </button>
               </li>
               <li>
@@ -156,9 +158,9 @@ const UPDATE_ROUT_PATH = '../update';
 
                 <nz-button-group>
                   <button nz-button nzSize="small" (click)="reGenerateSqlDDL()">重新生成</button>
-<!--                  <button nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="menu1" nzPlacement="bottomRight">-->
-<!--                    <i nz-icon nzType="down" nzTheme="outline"></i>-->
-<!--                  </button>-->
+                  <!--                  <button nz-button nzSize="small" nz-dropdown [nzDropdownMenu]="menu1" nzPlacement="bottomRight">-->
+                  <!--                    <i nz-icon nzType="down" nzTheme="outline"></i>-->
+                  <!--                  </button>-->
                 </nz-button-group>
                 <nz-dropdown-menu #menu1="nzDropdownMenu">
                   <ul nz-menu>
@@ -176,7 +178,7 @@ const UPDATE_ROUT_PATH = '../update';
           <ul>
             <li style="overflow: inherit" *ngFor="let f of transformerRules">
               <nz-badge nzSize="small" [nzCount]="f.ruleCount">
-                <button (click)="showTransformer(f.tableName)" nz-button nzType="link" nzSize="large">
+                <button (click)="showTransformer(f)" nz-button nzType="link" nzSize="large">
                   <i nz-icon nzType="retweet" nzTheme="outline"></i>{{f.tableName}}
                 </button>
 
@@ -276,9 +278,10 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
   lastestGenFileTime: number;
 
   // readModel = ExecModel.Reader;
-  public static  createPluginExtraParam(createModel:boolean,dto: DataxDTO) {
+  public static createPluginExtraParam(createModel: boolean, dto: DataxDTO) {
     return `update_${!createModel},justGetItemRelevant_true,dataxName_${dto.dataxPipeName},${DataxDTO.KEY_PROCESS_MODEL}_${dto.processModel}`;
   }
+
   @Input()
   set dtoooo(dto: DataxDTO) {
     this.dto = dto;
@@ -301,11 +304,10 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     if (!this.dto) {
       throw new Error("dto can not be null");
     }
-    this.pluginExtraParam = DataxAddStep7Component.createPluginExtraParam(this.createModel,this.dto);
+    this.pluginExtraParam = DataxAddStep7Component.createPluginExtraParam(this.createModel, this.dto);
 
     super.ngOnInit();
   }
-
 
 
   protected initialize(app: CurrentCollection): void {
@@ -401,13 +403,22 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     });
   }
 
-  showTransformer(tableName: string) {
-
+  /**
+   *
+   * @param tinfo
+   */
+  showTransformer(tinfo: TransformerInfo) {
+    let tableName = tinfo.tableName;
     let meta = <ISubDetailTransferMeta>{id: tableName};
     let basePluginMeta: PluginType[] = []
     let baseHetero: HeteroList[] = [];
+    //console.log(this.dto);
+    // let dto = new SelectedTabDTO(meta, basePluginMeta
+    //   , (EXTRA_PARAM_DATAX_NAME + this.dto.dataxPipeName + "," + DataxDTO.KEY_PROCESS_MODEL + "_" + this.dto.processModel), baseHetero);
 
-    let dto = new SelectedTabDTO(meta, basePluginMeta, (EXTRA_PARAM_DATAX_NAME + this.dto.dataxPipeName), baseHetero);
+    let dto = new SelectedTabDTO(meta, basePluginMeta
+      , (tinfo.pipeParma + "," + DataxDTO.KEY_PROCESS_MODEL + "_" + this.dto.processModel), baseHetero);
+
     const drawerRef = this.drawerService.create<TableTransformerComponent, {}, {}>({
       // 此处宽度不能用百分比，不然内部的codemirror显示会有问题
       nzWidth: "900px",
@@ -507,7 +518,7 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     }
     cpt.httpPost("/coredefine/corenodemanage.ajax"
       , "action=datax_action&emethod=create_update_process&execId=" + execId + "&"
-      + DataxDTO.KEY_PROCESS_MODEL + "=" + processModel,e)
+      + DataxDTO.KEY_PROCESS_MODEL + "=" + processModel, e)
       .then((r) => {
         if (r.success) {
           router.navigate([routPath], {
