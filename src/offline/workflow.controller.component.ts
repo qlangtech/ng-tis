@@ -17,7 +17,7 @@ import {AddStep2ComponentCfg} from "../base/common/datax.common";
 
 @Component({
   template: `
-    <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流','/offline/wf']" [title]="this._currWorkFlow.appName">
+    <tis-page-header *ngIf="updateProfile" [breadcrumb]="['数据流分析（EMR）','/offline/wf']" [title]="this._currWorkFlow.appName">
     </tis-page-header>
     <nz-spin nzSize="large" [nzSpinning]="formDisabled" style="min-height: 300px">
       <ng-template #container></ng-template>

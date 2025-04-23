@@ -23,21 +23,22 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {
-  Descriptor,
-  EXTRA_PARAM_DATAX_NAME,
-  HeteroList,
-  IFieldError,
-  Item,
-  ItemPropVal,
-  PluginMeta,
-  PluginSaveResponse,
-  PluginType,
-  SavePluginEvent,
-  TisResponseResult
+    DATAX_PREFIX_DB,
+    Descriptor,
+    EXTRA_PARAM_DATAX_NAME,
+    HeteroList,
+    IFieldError,
+    Item,
+    ItemPropVal,
+    PluginMeta,
+    PluginSaveResponse,
+    PluginType,
+    SavePluginEvent,
+    TisResponseResult
 } from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
-import {BasicDataXAddComponent, DATAX_PREFIX_DB} from "./datax.add.base";
+import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ExecModel} from "./datax.add.step7.confirm.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";

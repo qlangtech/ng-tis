@@ -31,6 +31,11 @@ export class DataxProfile {
 export interface TransformerInfo {
   ruleCount: number;
   tableName: string;
+
+  /**
+   * example: dataxName_mysql_mysql or dataxDB_xxxx
+   */
+  pipeParma: string;
 }
 
 export interface DataXCfgFile {

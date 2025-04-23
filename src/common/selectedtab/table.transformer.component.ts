@@ -1,11 +1,17 @@
 import {Component, EventEmitter, OnInit} from "@angular/core";
-import {Descriptor, EXTRA_PARAM_DATAX_NAME, HeteroList, PluginMeta, PluginSaveResponse} from "../../common/tis.plugin";
+import {
+    DATAX_PREFIX_DB,
+    Descriptor,
+    EXTRA_PARAM_DATAX_NAME,
+    HeteroList,
+    PluginMeta,
+    PluginSaveResponse
+} from "../../common/tis.plugin";
 import {PluginsComponent} from "../../common/plugins.component";
 import {TISService} from "../../common/tis.service";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
 import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-component";
-import {DATAX_PREFIX_DB} from "../../base/datax.add.base";
 import {processSubFormHeteroList} from "../ds.utils";
 
 

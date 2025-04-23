@@ -27,14 +27,13 @@ import {KEY_subform_DetailIdValue, TuplesProperty} from "./plugin/type.utils";
 import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
 import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
 import * as ls from 'lodash';
-import {isBooleanLiteralLike} from "codelyzer/util/utils";
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
 export const PARAM_END_TYPE = "&endType=";
 
 export const EXTRA_PARAM_DATAX_NAME = "dataxName_";
-
+export const DATAX_PREFIX_DB = "dataxDB_";
 export const KEY_OPTIONS_ENUM = "enum";
 
 export declare type PluginName =

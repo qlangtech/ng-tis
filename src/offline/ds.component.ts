@@ -27,7 +27,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TableAddComponent} from "./table.add.component";
 import {PluginsComponent} from "../common/plugins.component";
 import {
-  DataBase,
+  DataBase, DATAX_PREFIX_DB,
   Descriptor,
   HeteroList,
   IColumnMeta,
@@ -39,7 +39,6 @@ import {
 import {NzFormatEmitEvent, NzTreeComponent, NzTreeNode, NzTreeNodeOptions} from "ng-zorro-antd/tree";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {DATAX_PREFIX_DB} from "../base/datax.add.base";
 
 import {TableSelectComponent} from "../common/table.select.component";
 import {

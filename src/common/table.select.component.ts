@@ -52,6 +52,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
     ></nz-cascader>
 
     <ng-template #renderTpl let-option let-index="index">
+
       <span nz-icon [nzType]="option.endType" nzTheme="outline"></span> {{ option.label }}
       <button *ngIf="index===0" (click)="manageDbTable(option,$event)" nz-button nzSize="small" nzType="link">
         <i nz-icon nzType="edit" nzTheme="outline"></i></button>
@@ -74,8 +75,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 
   `
 })
-export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit , ControlValueAccessor
-{
+export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   cascaderOptions: NzCascaderOption[] = [];
   // 应该是这样的结构 [dumpTab.dbid, dumpTab.cascaderTabId];
   cascadervalues: any = {};
@@ -96,7 +96,13 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
   manageDbTable(opt: NzCascaderOption, e: MouseEvent): void {
     // console.log(opt);
     let db = new DataBase(opt.value, opt.label);
-    // console.log(opt);
+    if (opt.path && Array.isArray(opt.path)) {
+      // 通过suggest查询获得的db列表，db信息在path中，需要通过path内的第一个元素获取
+      for (let child of opt.path) {
+        db = new DataBase(child.value, child.label);
+        break;
+      }
+    }
     DatasourceComponent.openAddTableDialog(this, db).then((r: SuccessAddedDBTabs) => {
       opt.children = r.tabKeys.map((tab) => {
         return {value: tab, label: tab, isLeaf: true}
@@ -177,7 +183,7 @@ export class TableSelectComponent extends BasicFormComponent implements OnInit, 
 
 
   onCascaderChanges(evt: any[]) {
-    // console.log(evt);
+     console.log(evt);
     if (evt.length < 1) {
       this.onCascaderSQLChanges.emit([]);
     } else {

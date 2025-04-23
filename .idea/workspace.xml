@@ -6,10 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/ds.quick.manager.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/ds.quick.manager.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/common/datax.common.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/common/datax.common.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.base.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.base.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step3.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step4.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step7.confirm.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/end.cpt.list.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/ds.utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/ds.utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/selectedtab/table.transformer.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/table.select.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/table.select.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.add.dbtable.setter.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/ds.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/ds.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/offline/workflow.controller.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,11 +83,11 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="es6.move.members.recent.items">
+      <recent name="$PROJECT_DIR$/src/common/tis.plugin.ts" />
       <recent name="$PROJECT_DIR$/src/common/ds.utils.ts" />
       <recent name="$PROJECT_DIR$/src/offline/ds.utils.ts" />
       <recent name="$PROJECT_DIR$/src/base/common/datax.common.ts" />
       <recent name="$PROJECT_DIR$/src/common/plugin/type.utils.ts" />
-      <recent name="$PROJECT_DIR$/src/common/selectedtab/basic-selected-tab-manager-component.ts" />
     </key>
   </component>
   <component name="RunManager" selected="npm.ng:serve-jit-amd64">
@@ -270,7 +278,7 @@
       <workItem from="1743051981707" duration="27058000" />
       <workItem from="1743253446351" duration="1051000" />
       <workItem from="1743254817347" duration="55558000" />
-      <workItem from="1744692094032" duration="63176000" />
+      <workItem from="1744692094032" duration="73098000" />
     </task>
     <servers />
   </component>
