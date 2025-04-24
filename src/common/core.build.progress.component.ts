@@ -343,6 +343,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
     // this.buildTask.startPhase = 1;
     // this.buildTask.endPhase = 2;
     // }
+   // console.log(wfid);
     if (wfid) {
       this.httpPost('/coredefine/full_build_history.ajax'
         , `emethod=get_workflow&action=core_action&wfid=${wfid}&taskid=${this.taskid}`).then((r) => {
