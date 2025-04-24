@@ -54,6 +54,8 @@ class ProcessStrategy {
 
     <ng-template #previewTpl><span nz-icon nzType="preview" nzTheme="fill"></span> 数据预览</ng-template>
 
+
+
     <div style="margin-top: 8px;" *ngIf="dataxProcess && dataXWorkerStatus">
       <nz-alert *ngIf="!dataXWorkerStatus.k8sReplicationControllerCreated" nzType="warning" nzMessage="告知"
                 [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
@@ -99,6 +101,12 @@ class ProcessStrategy {
         <button (click)="previewData()" [disabled]="formDisabled" nzSize="small" nz-button
                 nzType="default">
           <ng-container *ngTemplateOutlet="previewTpl"></ng-container>
+        </button>
+      </tis-page-header-left>
+
+      <tis-page-header-left *ngIf="!dataxProcess">
+        <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
+                nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>执行参数
         </button>
       </tis-page-header-left>
 
@@ -195,14 +203,17 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     this.route.params
       .subscribe((params: Params) => {
         this.wfid = parseInt(params['wfid'], 10);
+      //  console.log([this.wfid,this.breadcrumb]);
 
         this.route.queryParams.subscribe((p) => {
           this.httpPost('/coredefine/full_build_history.ajax'
-            , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`).then((r) => {
+            , `emethod=get_full_build_history&action=core_action&page=${p['page']}&wfid=${this.wfid}&getwf=${!this.breadcrumb}`)
+            .then((r) => {
             if (!this.breadcrumb) {
               let wfname = r.bizresult.payload[0];
               this.breadcrumb = [KEY_DATAFLOW_PARSER, '/offline/wf', wfname, `/offline/wf_update/${wfname}`];
             }
+        //    console.log([this.wfid,this.breadcrumb]);
             this.pager = Pager.create(r);
             this.buildHistory = r.bizresult.rows;
 
