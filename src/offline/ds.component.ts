@@ -87,8 +87,8 @@ export const KEY_DB_ID = "dbId";
           <i nz-icon nzType="search"></i>
         </ng-template>
         <nz-spin style="width:100%;min-height: 300px;" [nzSize]="'large'" [nzSpinning]="treeLoad">
-          <nz-tree id="ds-tree" #dbtree [nzData]="nodes" [nzShowIcon]="true"
-                   [nzSearchValue]="searchValue"
+          <nz-tree id="ds-tree"  #dbtree [nzData]="nodes" [nzShowIcon]="true"
+                   [nzSearchValue]="searchValue" [nzVirtualHeight]="'800px'"
                    (nzClick)="nzDSTreeClickEvent($event)"
                    (nzExpandChange)="nzEvent($event)">
           </nz-tree>
@@ -212,6 +212,7 @@ export const KEY_DB_ID = "dbId";
     </nz-layout>
   `,
   styles: [`
+
     .tis-item .ant-descriptions-item-label {
       width: 20%;
     }
