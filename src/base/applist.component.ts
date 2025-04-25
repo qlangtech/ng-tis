@@ -38,8 +38,9 @@ import {DataxDTO} from "./datax.add.component";
 
     <tis-page-header title="管道">
       <tis-header-tool>
-        <button data-testid="start-add" nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i class="fa fa-plus"
-                                                                                  aria-hidden="true"></i>添加<i
+        <button data-testid="start-add" nz-button nzType="primary" nz-dropdown [nzDropdownMenu]="menu"><i
+          class="fa fa-plus"
+          aria-hidden="true"></i>添加<i
           nz-icon nzType="down"></i></button>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
@@ -47,7 +48,7 @@ import {DataxDTO} from "./datax.add.component";
                    <a routerLink="/base/appadd">Solr实例</a>
                </li> -->
             <li nz-menu-item>
-              <a data-testid="add-new-pipeline" routerLink="/base/dataxadd">数据管道</a>
+              <a data-testid="add-new-pipeline" (click)="gotoDataXAdd()">数据管道</a>
             </li>
           </ul>
         </nz-dropdown-menu>
@@ -264,5 +265,14 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
       this.tisService.currentApp = null;
     }
     a.openAssist = !a.openAssist;
+  }
+
+  gotoDataXAdd() {
+    //routerLink="/base/dataxadd"
+    // console.log("xxx");
+    this.tisService.currentApp = null;
+    this.router.navigate(["/", "base", "dataxadd"], {
+      relativeTo: this.route
+    });
   }
 }

@@ -109,6 +109,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     let execId = paramsMap.get("execId");
     this.route.fragment.subscribe((r) => {
       let cpt: Type<any> = DataxAddStep1Component;
+
       switch (r) {
         case "reader":
           cpt = DataxAddStep3Component;
@@ -131,6 +132,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           })
           return;
         default:
+         // console.log([r,app]);
           if (app) {
             this.modalService.warning({
               nzTitle: "错误",
