@@ -604,6 +604,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   openSelectableInputManager(createRouter: CreatorRouter) {
     // console.log(createRouter);
     let drawerRef = null;
+    const currApp = this.tisService.currentApp;
     switch (createRouter.assistType) {
       case RouterAssistType.dbQuickManager: {
         drawerRef = createDrawer(this.drawerService, createRouter, false);
@@ -626,6 +627,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
 
     drawerRef.afterClose.subscribe(() => {
+      this.tisService.currentApp = currApp;
       let cpt = drawerRef.getContentComponent();
       if (cpt.hasSaved) {
         this.reloadSelectableItems();
