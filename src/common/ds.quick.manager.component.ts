@@ -72,7 +72,7 @@ export function createDrawer(drawerService: NzDrawerService, creatorRouter: Crea
           {{ds.id}}
         </ng-template>
       </tis-col>
-      <tis-col title="名称">
+      <tis-col title="名称" (search)="query($event)">
         <ng-template let-ds='r'>
           <span nz-icon style="font-size: 26px" [nzType]="ds.iconEndtype" nzTheme="outline"></span>
           <button nz-button nzType="link" (click)="exitDataSource(ds)">{{ds.name}}</button>
@@ -80,7 +80,8 @@ export function createDrawer(drawerService: NzDrawerService, creatorRouter: Crea
       </tis-col>
       <tis-col title="更新时间">
         <ng-template let-ds='r'>
-          <span class="ds-update-time"><i nz-icon nzType="field-time" nzTheme="outline"></i>  {{ds.opDate|date : "yyyy/MM/dd"}}</span>
+          <span class="ds-update-time"><i nz-icon nzType="field-time"
+                                          nzTheme="outline"></i>  {{ds.opDate|date : "yyyy/MM/dd"}}</span>
         </ng-template>
       </tis-col>
 
@@ -88,10 +89,10 @@ export function createDrawer(drawerService: NzDrawerService, creatorRouter: Crea
 
   `,
   styles: [`
-   .ds-update-time{
+    .ds-update-time {
       font-size: 10px;
       color: #666666;
-   }
+    }
   `]
 })
 export class DatasourceQuickManagerComponent extends BasicFormComponent implements OnInit {
@@ -118,21 +119,16 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
     tisService.currentApp = null;
   }
 
-  ngOnInit(): void {
-    // let nameQuery = '';
-    // for (let key in param) {
-    //   nameQuery += ('&' + key + '=' + param[key]);
-    // }
-    // this.httpPost('/offline/datasource.ajax'
-    //   , 'emethod=get_datasource_info&action=offline_datasource_action')
-    //   .then((r) => {
-    //     if (r.success) {
-    //       this.pager = Pager.create(r);
-    //       this.dsList = r.bizresult.rows;
-    //     }
-    //   });
+  query(criteria: { query: string, reset: boolean }) {
+    this.quickAssistLoadDSWithDesc(criteria.reset ? null : criteria.query);
+  }
 
-    loadDSWithDesc(this, this.filterDbsShallSupportReader, this.creatorRouter)
+  ngOnInit(): void {
+    this.quickAssistLoadDSWithDesc();
+  }
+
+  private quickAssistLoadDSWithDesc(datasourceName?: string) {
+    loadDSWithDesc(this, this.filterDbsShallSupportReader, this.creatorRouter, datasourceName)
       .then(({dbsWhichSupportDataXReader, desc}) => {
         // console.log([desc, dbsWhichSupportDataXReader]);
         this.datasourceDesc = desc;

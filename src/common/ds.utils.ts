@@ -146,14 +146,17 @@ export interface DataBaseMeta {
 export function loadDSWithDesc(
   basicCpt: BasicFormComponent
   , filterSupportReader = false
-  , creatorRouter?: CreatorRouter)
+  , creatorRouter?: CreatorRouter, datasourceName?: string)
   : Promise<{ "dbs": Array<DataBaseMeta>, "dbsWhichSupportDataXReader": Array<DataBaseMeta>, "desc": Array<Descriptor> }> {
 
   let action = 'emethod=get_datasource_info&action=offline_datasource_action&filterSupportReader=' + filterSupportReader;
   if (creatorRouter) {
-
     let ptypes: PluginType[] = router2PluginTypes(creatorRouter);
     action += ("&plugin=" + PluginsComponent.getPluginMetaParams(ptypes));
+  }
+
+  if (datasourceName) {
+    action += (`&datasourceName=${datasourceName}`);
   }
   return basicCpt.httpPost('/offline/datasource.ajax', action)
     .then(result => {
