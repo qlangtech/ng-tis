@@ -42,38 +42,60 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
     }
   ],
   template: `
-    <nz-cascader [nzLoadData]="cascaderOptions.length>0?loadData: null" [nzShowSearch]="true" [style]="nzStyle"
-                 [nzSize]="this.nzSize" name="dbTable"
-                 class="clear"
-                 [nzOptionRender]="renderTpl"
-                 [nzNotFoundContent]="notFoundTpl"
-                 [nzOptions]="cascaderOptions" [(ngModel)]="value"
-                 (ngModelChange)="onCascaderChanges($event)"
-    ></nz-cascader>
+      <div class="container">
+          <div class="flex-main">
+              <nz-cascader [nzLoadData]="cascaderOptions.length>0?loadData: null" [nzShowSearch]="true"
+                           [style]="nzStyle"
+                           [nzSize]="this.nzSize" name="dbTable"
+                           class="clear"
+                           [nzOptionRender]="renderTpl"
+                           [nzNotFoundContent]="notFoundTpl"
+                           [nzOptions]="cascaderOptions" [(ngModel)]="value"
+                           (ngModelChange)="onCascaderChanges($event)"
+              ></nz-cascader>
+              <ng-template #renderTpl let-option let-index="index">
 
-    <ng-template #renderTpl let-option let-index="index">
+                  <span nz-icon [nzType]="option.endType" nzTheme="outline"></span> {{ option.label }}
+                  <button *ngIf="index===0" (click)="manageDbTable(option,$event)" nz-button nzSize="small"
+                          nzType="link">
+                      <i nz-icon nzType="edit" nzTheme="outline"></i></button>
+              </ng-template>
 
-      <span nz-icon [nzType]="option.endType" nzTheme="outline"></span> {{ option.label }}
-      <button *ngIf="index===0" (click)="manageDbTable(option,$event)" nz-button nzSize="small" nzType="link">
-        <i nz-icon nzType="edit" nzTheme="outline"></i></button>
-    </ng-template>
+              <ng-template #notFoundTpl>
+                  <button nz-button nzType="primary" nzSize="small" (click)="addDataSource()"><span nz-icon
+                                                                                                    nzType="plus"
+                                                                                                    nzTheme="outline"></span>数据源
+                  </button>
+              </ng-template>
+          </div>
+          <div>
+              <button class="assist-btn" nz-button
+                      nzSize="small" nzType="link" (click)="addDataSource()"><i nz-icon [nzType]="'setting'" [nzTheme]="'outline'"></i>数据源
+              </button>
+          </div>
+      </div>
 
-    <ng-template #notFoundTpl>
-      <button nz-button nzType="primary" nzSize="small" (click)="addDataSource()"><span nz-icon nzType="plus"
-                                                                                        nzTheme="outline"></span>数据源
-      </button>
-    </ng-template>
 
-    <!--      <ng-template #labelTpl let-nodes="nodes">-->
-    <!--        <span nz-icon nzType="home"></span>-->
-    <!--        {{nodes|json}}-->
-    <!--        <span *ngFor="let node of nodes; let last = last" class="custom-label">-->
-    <!--    {{ node.label }} ({{ node.value }})-->
-    <!--    <span *ngIf="!last">/</span>-->
-    <!--  </span>-->
-    <!--      </ng-template>-->
+      <!--      <ng-template #labelTpl let-nodes="nodes">-->
+      <!--        <span nz-icon nzType="home"></span>-->
+      <!--        {{nodes|json}}-->
+      <!--        <span *ngFor="let node of nodes; let last = last" class="custom-label">-->
+      <!--    {{ node.label }} ({{ node.value }})-->
+      <!--    <span *ngIf="!last">/</span>-->
+      <!--  </span>-->
+      <!--      </ng-template>-->
 
-  `
+  `,
+  styles:[
+    `
+      .container{
+        display:flex;
+      }
+      .flex-main{
+        width: 85%;
+      }
+    `
+  ]
 })
 export class TableSelectComponent extends BasicFormComponent implements OnInit, AfterViewInit, ControlValueAccessor {
   cascaderOptions: NzCascaderOption[] = [];

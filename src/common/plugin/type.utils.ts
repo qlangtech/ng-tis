@@ -96,6 +96,7 @@ export interface TargetPlugin {
   hetero: PluginName;
   extraParam?: string;
   descName?: string;
+  endType?: string;
 }
 
 export interface OpenPluginDialogOptions {

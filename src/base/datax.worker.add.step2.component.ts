@@ -45,6 +45,7 @@ import {PowerjobCptType} from "./base.manage-routing.module";
       <h4>基本配置</h4>
       <div class="item-block">
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+                     [savePluginEventCreator]="_savePluginEventCreator"
                      [savePlugin]="savePlugin" [showSaveButton]="false"
                      (afterSave)="afterSaveReader($event)"
                      [shallInitializePluginItems]="false" [_heteroList]="dto.powderJobWorkerHetero"
@@ -52,7 +53,8 @@ import {PowerjobCptType} from "./base.manage-routing.module";
       </div>
       <h4>资源规格</h4>
       <div class="item-block">
-        <k8s-replics-spec [hpaDisabled]="true" [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem" #k8sReplicsSpec
+        <k8s-replics-spec [hpaDisabled]="true" [(rcSpec)]="dto.powderJobWorkerRCSpec" [errorItem]="errorItem"
+                          #k8sReplicsSpec
                           [labelSpan]="5">
         </k8s-replics-spec>
       </div>
@@ -66,8 +68,13 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {name: 'datax-worker', require: true, extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.Worker};
+  pluginCategory: PluginType = {
+    name: 'datax-worker',
+    require: true,
+    extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.Worker
+  };
   errorItem: Item;
+  _savePluginEventCreator: () => SavePluginEvent;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
@@ -87,12 +94,17 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
     if (!spec.validate()) {
       return;
     }
+    let e = this.createSavePluginEvent();
+    this.savePlugin.emit(e);
+  }
+
+  private createSavePluginEvent(): SavePluginEvent {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
     e.serverForward = "coredefine:datax_action:save_datax_worker";
     e.postPayload = {"k8sSpec": this.dto.powderJobWorkerRCSpec};
     e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
-    this.savePlugin.emit(e);
+    return e;
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -101,9 +113,17 @@ export class DataxWorkerAddStep2Component extends AppFormComponent implements Af
   ngAfterViewInit() {
   }
 
+  // createSavePluginEvent(): SavePluginEvent {
+  //   let e = this.dto.processMeta.step1CreateSaveEvent(this);
+  //   e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetNameGetter(this.route.snapshot.params));
+  //   return e;
+  // }
 
   ngOnInit(): void {
     // console.log(this.dto);
+    this._savePluginEventCreator = () => {
+      return this.createSavePluginEvent();
+    }
     if (!this.dto.powderJobWorkerRCSpec) {
       let dftSpec = K8SReplicsSpecComponent.createInitRcSpec();
       dftSpec.cuplimit = 2;

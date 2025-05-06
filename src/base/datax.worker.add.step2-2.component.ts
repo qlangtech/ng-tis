@@ -30,20 +30,25 @@ import {PowerjobCptType} from "./base.manage-routing.module";
 
 @Component({
   template: `
-      <tis-steps [type]="this.dto.processMeta.stepsType" [step]="2"></tis-steps>
-      <tis-page-header [showBreadcrumb]="false">
-          <tis-header-tool>
-              <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStep1Next()">下一步</button>
-          </tis-header-tool>
-      </tis-page-header>
-      <nz-spin [nzSpinning]="this.formDisabled" >
-        <div class="item-block">
+    <tis-steps [type]="this.dto.processMeta.stepsType" [step]="2"></tis-steps>
+    <tis-page-header [showBreadcrumb]="false">
+      <tis-header-tool>
+        <button nz-button nzType="default" (click)="prestep()">上一步</button>&nbsp;<button nz-button nzType="primary"
+                                                                                            (click)="createStep1Next()">
+        下一步
+      </button>
+      </tis-header-tool>
+    </tis-page-header>
+    <nz-spin [nzSpinning]="this.formDisabled">
+      <div class="item-block">
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+                     [savePluginEventCreator]="_savePluginEventCreator"
                      [savePlugin]="savePlugin" [showSaveButton]="false"
                      (afterSave)="afterSaveReader($event)"
-                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderjobJobTplHetero" #pluginComponent></tis-plugins>
-        </div>
-      </nz-spin>
+                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderjobJobTplHetero"
+                     #pluginComponent></tis-plugins>
+      </div>
+    </nz-spin>
 
   `
 })
@@ -53,8 +58,13 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {name: 'datax-worker', require: true,extraParam:EXTRA_PARAM_DATAX_NAME+ PowerjobCptType.JobTpl};
+  pluginCategory: PluginType = {
+    name: 'datax-worker',
+    require: true,
+    extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.JobTpl
+  };
   errorItem: Item;
+  _savePluginEventCreator: () => SavePluginEvent;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
@@ -65,13 +75,7 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
   }
 
   createStep1Next() {
-
-    let e = new SavePluginEvent();
-    e.notShowBizMsg = true;
-
-    // let appTisService: TISService = this.tisService;
-    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
+    let e = this.createSavePluginEvent();
     this.savePlugin.emit(e);
 
     // console.log(k8sReplicsSpec.k8sControllerSpec);
@@ -92,6 +96,16 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
     //   });
   }
 
+  private createSavePluginEvent() {
+    let e = new SavePluginEvent();
+    e.notShowBizMsg = true;
+
+    // let appTisService: TISService = this.tisService;
+    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
+    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetName);
+    return e;
+  }
+
   protected initialize(app: CurrentCollection): void {
   }
 
@@ -100,6 +114,9 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
 
 
   ngOnInit(): void {
+    this._savePluginEventCreator = () => {
+      return this.createSavePluginEvent();
+    }
   }
 
 

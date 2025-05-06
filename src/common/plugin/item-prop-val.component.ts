@@ -6,7 +6,7 @@ import {
   Descriptor,
   HeteroList,
   ItemPropVal,
-  OptionEnum,
+  OptionEnum, PluginMeta,
   PluginType,
   TYPE_ENUM,
   TYPE_PLUGIN_SELECTION,
@@ -419,7 +419,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
       nzCancelText: '取消',
       nzOnOk: () => {
         let endType = null;
-
+        //console.log(pluginMeta);
         if (HeteroList.isDescFilterDefined(pluginMeta)) {
           endType = pluginMeta.descFilter.endType();
         }
@@ -448,7 +448,16 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
             if (!pluginMeta) {
               //  throw new Error("pluginMeta can not be null");
             }
-
+            if (targetPlugin.endType) {
+              pluginMeta =
+                Object.assign(pluginMeta || {}, {
+                  descFilter: {
+                    endType: () => targetPlugin.endType,
+                    localDescFilter: () => true
+                  }
+                }) as unknown as PluginMeta;
+            }
+          //  console.log(pluginMeta);
             ItemPropValComponent.openPluginInstall(drawerService, cpt, descName, r.bizresult.notFoundExtension, pluginMeta, false);
 
           }
@@ -460,7 +469,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
   }
 
   openPluginDialog(_pp: ItemPropVal, targetPlugin: TargetPlugin) {
-    console.log(this.pluginMeta);
+    console.log([this.pluginMeta, targetPlugin]);
     ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, this.pluginMeta, targetPlugin)
       .then((desc) => {
         if (!desc) {

@@ -597,7 +597,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     heteroList.forEach((h) => {
       //
       let its: Item[] = [];
-      console.log(h.items);
+     // console.log(h.items);
       for (let item of h.items) {
         its.push(item.project());
       }
@@ -661,7 +661,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     //  console.log([this.plugins, h.pluginCategory]);
     let nh = Object.assign(new HeteroList(), h);
     nh.items = [item];
-    this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
+   // this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
+    this._savePluginInfo(event, savePlugin, this.plugins, [nh]);
   }
 
   // openNotebook(h: HeteroList, item: Item, event: MouseEvent) {

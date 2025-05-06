@@ -44,6 +44,7 @@ import {PowerjobCptType} from "./base.manage-routing.module";
       <div class="item-block">
 
         <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
+                     [savePluginEventCreator]="_savePluginEventCreator"
                      (ajaxOccur)="ajaxOccur($event)" (afterSave)="afterSaveReader($event)"
                      [savePlugin]="savePlugin" [showSaveButton]="false"
                      [shallInitializePluginItems]="false" [_heteroList]="dto.step1Hetero"
@@ -75,6 +76,7 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
     require: true,
     extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.FlinkCluster
   };
+  _savePluginEventCreator: () => SavePluginEvent;
 
   constructor(tisService: TISService, route: ActivatedRoute, modalService: NzModalService) {
     super(tisService, route, modalService);
@@ -84,19 +86,20 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
   //   return new CurrentCollection(0, this.dto.processMeta.targetName);
   // }
   createStep1Next() {
-     ///console.log(this.spec);
+    ///console.log(this.spec);
     if (this.spec && !this.spec.validate()) {
       return;
     }
     // EventSource
-    let e = this.dto.processMeta.step1CreateSaveEvent(this);// new SavePluginEvent();
-    // e.notShowBizMsg = true;
-    // e.serverForward = "coredefine:datax_action:save_datax_worker";
-    // e.postPayload = {"k8sSpec": this.dto.primaryRCSpec};
-    // let appTisService: TISService = this.tisService;
-    // appTisService.currentApp = new CurrentCollection(0, this.dto.processMeta.targetName);
-    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetNameGetter(this.route.snapshot.params));
+    let e = this.createSavePluginEvent();
+    //console.log(e);
     this.savePlugin.emit(e);
+  }
+
+  createSavePluginEvent(): SavePluginEvent {
+    let e = this.dto.processMeta.step1CreateSaveEvent(this);
+    e.overwriteHttpHeaderOfAppName(this.dto.processMeta.targetNameGetter(this.route.snapshot.params));
+    return e;
   }
 
   protected initialize(app: CurrentCollection): void {
@@ -110,6 +113,10 @@ export class DataxWorkerAddStep1Component extends AppFormComponent implements Af
     let evt = this.dto.processMeta.step1CreateSaveEvent(this);
     this.rcSpecShow = !!evt.postPayload;
     this.pluginCategory = this.dto.processMeta.step1PluginType;
+    this._savePluginEventCreator = () => {
+      return this.createSavePluginEvent();
+    }
+    //  console.log(this.pluginCategory);
   }
 
   afterSaveReader(e: PluginSaveResponse) {
