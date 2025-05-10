@@ -76,6 +76,14 @@ export declare type PluginMeta = {
 };
 export declare type PluginType = PluginName | PluginMeta;
 
+export function getPluginTypeName(pt: PluginType): PluginName {
+  if ((pt as any).name) {
+    return (pt as PluginMeta).name
+  } else {
+    return pt as PluginName;
+  }
+}
+
 export const TYPE_ENUM = 5;
 export const TYPE_PLUGIN_SELECTION = 6;
 export const TYPE_PLUGIN_MULTI_SELECTION = 8;
@@ -151,7 +159,7 @@ export class ItemPropVal extends ErrorFeedback {
     }
 
     let ip: ItemPropVal = ls.pick(this, pickProps);
-    if(descValProject){
+    if (descValProject) {
       ip.descVal = descValProject;
     }
     //let cols = ip.mcolsEnums;
@@ -442,7 +450,7 @@ export class Descriptor {
     return manipulate;
   }
 
-  public get helpPath() :string {
+  public get helpPath(): string {
     return this.extractProps["helpPath"];
   }
 

@@ -33,7 +33,7 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {ActivatedRoute, Router} from "@angular/router";
 import {
   Descriptor,
-  FLAG_DELETE_PROCESS,
+  FLAG_DELETE_PROCESS, getPluginTypeName,
   HeteroList,
   IFieldError,
   Item,
@@ -597,7 +597,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     heteroList.forEach((h) => {
       //
       let its: Item[] = [];
-     // console.log(h.items);
+      // console.log(h.items);
       for (let item of h.items) {
         its.push(item.project());
       }
@@ -661,8 +661,19 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     //  console.log([this.plugins, h.pluginCategory]);
     let nh = Object.assign(new HeteroList(), h);
     nh.items = [item];
-   // this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
-    this._savePluginInfo(event, savePlugin, this.plugins, [nh]);
+    //console.log([h.pluginCategory,this.plugins]);
+    let hpluginName = getPluginTypeName(h.pluginCategory);
+    let pname: PluginName = null;
+    for (let p of this.plugins) {
+      pname = getPluginTypeName(p);
+      if (pname === hpluginName) {
+        this._savePluginInfo(event, savePlugin, [p], [nh]);
+        return;
+      }
+    }
+    console.log([h.pluginCategory, this.plugins]);
+    throw new Error("can not find pluginCategory pluginName:" + hpluginName);
+    // this._savePluginInfo(event, savePlugin, this.plugins, [nh]);
   }
 
   // openNotebook(h: HeteroList, item: Item, event: MouseEvent) {
@@ -1097,7 +1108,7 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
 
   ngOnInit(): void {
     let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
-    this.pluginTyps =  convertReducePluginType2PluginTypes(reducePluginType);
+    this.pluginTyps = convertReducePluginType2PluginTypes(reducePluginType);
   }
 
   whenAjaxOccur(e: PluginSaveResponse) {
