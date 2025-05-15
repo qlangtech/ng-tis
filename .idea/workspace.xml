@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.add.exist.powerjob.cluster.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +274,7 @@
       <workItem from="1746329079826" duration="14896000" />
       <workItem from="1746510392125" duration="8000" />
       <workItem from="1746514600996" duration="3828000" />
-      <workItem from="1746610711867" duration="4957000" />
+      <workItem from="1746610711867" duration="6835000" />
     </task>
     <servers />
   </component>
