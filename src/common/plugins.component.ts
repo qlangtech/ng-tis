@@ -675,28 +675,6 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     throw new Error("can not find pluginCategory pluginName:" + hpluginName);
     // this._savePluginInfo(event, savePlugin, this.plugins, [nh]);
   }
-
-  // openNotebook(h: HeteroList, item: Item, event: MouseEvent) {
-  //
-  //   // if (!item.dspt.notebook.activate) {
-  //   //   this.modalService.warning({
-  //   //     nzTitle: "错误",
-  //   //     nzContent: this.notebookNotActivate,
-  //   //     nzOkText: "知道啦"
-  //   //   });
-  //   //   return;
-  //   // }
-  //
-  //   let savePlugin = new SavePluginEvent();
-  //   savePlugin.createOrGetNotebook = true;
-  //   if (!h.pluginCategory) {
-  //     throw new Error("pluginCategory can not be null");
-  //   }
-  //   let nh = Object.assign(new HeteroList(), h);
-  //   nh.items = [item];
-  //   this._savePluginInfo(event, savePlugin, [h.pluginCategory], [nh]);
-  // }
-
   @Input()
   set plugins(metas: PluginType[]) {
     // console.log(metas);
