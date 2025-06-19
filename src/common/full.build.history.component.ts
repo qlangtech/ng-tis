@@ -36,16 +36,8 @@ import {PreviewComponent} from "./preview.component";
 import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 class ProcessStrategy {
-// {
-//   url: "/coredefine/coredefine.ajax",
-//   post: "action=datax_action&emethod=trigger_fullbuild_task",
-//   sucMsg: 'DataX任务已经触发'
-// }
   constructor(public url: string, public post: string, public sucMsg: string) {
-
-
   }
-
 }
 
 @Component({

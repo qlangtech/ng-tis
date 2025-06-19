@@ -16,7 +16,7 @@
  *   limitations under the License.
  */
 
-import {EventEmitter, Injectable, NgZone} from '@angular/core';
+import {EventEmitter, Injectable, NgZone, Type} from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
 import {BasicFormComponent, CurrentCollection, WSMessage} from './basic.form.component';
@@ -39,6 +39,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {comment} from "postcss";
 import {openParamsCfg} from "./plugins.component";
 import {SelectedTabDTO} from "./selectedtab/plugin-sub-form.component";
+import {FreshmanReadmeComponent} from "./freshman.readme.component";
 
 declare var TIS: any;
 
@@ -53,6 +54,8 @@ export enum SystemError {
   FLINK_INSTANCE_LOSS_OF_CONTACT = 'FLINK_INSTANCE_LOSS_OF_CONTACT',
   FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT = 'FLINK_SESSION_CLUSTER_LOSS_OF_CONTACT',
   POWER_JOB_CLUSTER_LOSS_OF_CONTACT = 'POWER_JOB_CLUSTER_LOSS_OF_CONTACT',
+  // TIS 刚打开时候还没有阅读新人指南
+  TIS_FRESHMAN_README_HAVE_NOT_READ = 'TIS_FRESHMAN_README_HAVE_NOT_READ',
   HTTP_CONNECT_FAILD = 'HTTP_CONNECT_FAILD',
   LICENSE_INVALID = 'LICENSE_INVALID'
 }
@@ -420,6 +423,20 @@ export class TISService implements TISCoreService {
             }
             break;
           }
+          case SystemError.TIS_FRESHMAN_README_HAVE_NOT_READ: {
+            sysErrorRestoreStrategy = {
+              title: "🎉 欢迎加入TIS数据集成大家庭！",
+              okText: "已经了解了(不再显示)",
+              cancelText: "稍后再看",
+              modelContent: FreshmanReadmeComponent,
+              onOKExec: okEventEmitter,
+              afterSuccessRestore: (errVal) => {
+                // this.router.navigate(["/base/flink-cluster-list"], {relativeTo: this.route});
+               // console.log('afterSuccessRestore');
+              }
+            }
+            break;
+          }
           case SystemError.POWER_JOB_CLUSTER_LOSS_OF_CONTACT: {
             sysErrorRestoreStrategy = {
               title: "PowerJob服务已经失联，是否要重新创建？",
@@ -460,7 +477,7 @@ export class TISService implements TISCoreService {
           mref = this.modalService.error({
             nzWidth: 500,
             nzTitle: sysErrorRestoreStrategy.title,
-            nzContent: errContent,
+            nzContent: sysErrorRestoreStrategy.modelContent || errContent,
             nzOkText: sysErrorRestoreStrategy.okText,
             nzCancelText: sysErrorRestoreStrategy.cancelText,
             nzOnOk: sysErrorRestoreStrategy.onOKExec
@@ -622,6 +639,7 @@ interface SysErrorRestoreStrategy {
   title: string;
   okText: string;
   cancelText: string;
+  modelContent?: Type<any>
   onOKExec: EventEmitter<any>;
   afterSuccessRestore: (errVal: ErrorVal) => void
 };

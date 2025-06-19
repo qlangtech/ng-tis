@@ -71,7 +71,7 @@ import {createDrawer} from "../ds.quick.manager.component";
                       <nz-input-number [attr.data-testid]="_pp.key" style="width: 50%;" [disabled]="disabled"
                                        *ngIf="_pp.primaryVal"
                                        [(ngModel)]="_pp.primary"
-                                       [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number><li style="display: inline-block;margin-left: 3px;font-size: 12px">{{_pp._eprops['unit']}}</li>
+                                       [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"></nz-input-number><li style="display: inline-block;margin-left: 3px;font-size: 12px"><nz-tag nzColor="default">{{_pp._eprops['unit']}}</nz-tag></li>
                   </ng-container>
 
 
