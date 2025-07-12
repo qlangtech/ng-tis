@@ -19,8 +19,13 @@
 /**
  * Created by baisui on 2017/3/29 0029.
  */
-import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {TISService} from "./tis.service";
+import {Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {
+  createFreshmanReadmeDialogStrategy,
+  createSystemErrorProcessDialogModelOptions,
+  SysErrorRestoreStrategy,
+  TISService
+} from "./tis.service";
 import {BasicFormComponent, CurrentCollection} from "./basic.form.component";
 
 import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
@@ -85,10 +90,11 @@ import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
               <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
               <li nz-menu-item><a routerLink="/base/flink-cluster-list">Flink Cluster</a></li>
               <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
-<!--              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>-->
+              <!--              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>-->
               <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
               <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
-              <li nz-menu-item> <a href="javascript:void()" (click)="openLicense()">License</a></li>
+              <li nz-menu-item><a href="javascript:void()" (click)="openLicense()">License</a></li>
+              <li nz-menu-item><a href="javascript:void()" (click)="openFreshManReadme()">新人指南</a></li>
             </ul>
           </nz-dropdown-menu>
         </li>
@@ -416,6 +422,17 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
   openLicense(): void {
     openParamsCfg("License", null, this);
+  }
+
+  openFreshManReadme(): void {
+    let mref: NzModalRef = null;
+    let closeEmitter = new EventEmitter();
+    closeEmitter.subscribe((_) => {
+      if (mref) {
+        mref.close();
+      }
+    });
+    mref = this.modalService.create(createSystemErrorProcessDialogModelOptions(createFreshmanReadmeDialogStrategy(closeEmitter, closeEmitter), null));
   }
 }
 

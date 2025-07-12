@@ -174,7 +174,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
     DataxAddStep5Component.rewriteProcessMeta(this, this.dto)
       .then((pmeta) => {
-        // console.log(pmeta);
+         console.log(pmeta);
         // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
         if (pmeta.readerRDBMS) {
           if (pmeta.writerRDBMS) {

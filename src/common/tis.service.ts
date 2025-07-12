@@ -80,6 +80,42 @@ export interface TISCoreService {
   openConfirmDialog<T>(options?: ModalOptions<T>, confirmType?: ConfirmType): NzModalRef<T>;
 }
 
+export function createFreshmanReadmeDialogStrategy(okEventEmitter: EventEmitter<any>, cancelEventEmitter: EventEmitter<any>): SysErrorRestoreStrategy {
+  return {
+    title: "🎉 欢迎加入TIS数据集成大家庭！",
+    okText: "已经了解了(不再显示)",
+    cancelText: "稍后再看",
+    modelContent: FreshmanReadmeComponent,
+    onOKExec: okEventEmitter,
+    isInfo: true,
+    onCancel: cancelEventEmitter,
+    afterSuccessRestore: (errVal) => {
+      // this.router.navigate(["/base/flink-cluster-list"], {relativeTo: this.route});
+      // console.log('afterSuccessRestore');
+    }
+  }
+}
+
+export function createSystemErrorProcessDialogModelOptions(sysErrorRestoreStrategy: SysErrorRestoreStrategy, errContent: string): ModalOptions {
+  let config: ModalOptions = {
+    nzWidth: 500,
+    nzClosable: false,
+    nzTitle: sysErrorRestoreStrategy.title,
+    nzContent: sysErrorRestoreStrategy.modelContent || errContent,
+    nzOkText: sysErrorRestoreStrategy.okText,
+    nzCancelText: sysErrorRestoreStrategy.cancelText,
+    nzOnOk: sysErrorRestoreStrategy.onOKExec,
+
+    // nzOnCancel: null,
+    // nzAfterClose: null,
+  }
+
+  if (sysErrorRestoreStrategy.onCancel) {
+    config.nzOnCancel = sysErrorRestoreStrategy.onCancel;
+  }
+  return config;
+}
+
 // @ts-ignore
 @Injectable()
 export class TISService implements TISCoreService {
@@ -424,17 +460,22 @@ export class TISService implements TISCoreService {
             break;
           }
           case SystemError.TIS_FRESHMAN_README_HAVE_NOT_READ: {
-            sysErrorRestoreStrategy = {
-              title: "🎉 欢迎加入TIS数据集成大家庭！",
-              okText: "已经了解了(不再显示)",
-              cancelText: "稍后再看",
-              modelContent: FreshmanReadmeComponent,
-              onOKExec: okEventEmitter,
-              afterSuccessRestore: (errVal) => {
-                // this.router.navigate(["/base/flink-cluster-list"], {relativeTo: this.route});
-               // console.log('afterSuccessRestore');
+            let cancelEventEmitter = new EventEmitter<any>();
+            cancelEventEmitter.subscribe((next) => {
+              // 当前时间加1个星期
+              if (mref) {
+                let cfg = mref.getConfig();
+                cfg.nzOkLoading = true;
+                errorVal.payload["remindMeLater"] = true;
+                TISService.restoreExcpetion(this, errorVal)
+                  .then((r) => {
+                    mref.close();
+                  }).finally(() => {
+                  cfg.nzOkLoading = false;
+                });
               }
-            }
+            })
+            sysErrorRestoreStrategy = createFreshmanReadmeDialogStrategy(okEventEmitter, cancelEventEmitter);
             break;
           }
           case SystemError.POWER_JOB_CLUSTER_LOSS_OF_CONTACT: {
@@ -473,15 +514,14 @@ export class TISService implements TISCoreService {
               });
             }
           });
+          let config = createSystemErrorProcessDialogModelOptions(sysErrorRestoreStrategy, errContent);
+          // if(sysErrorRestoreStrategy.afterClose){
+          //   config.nzOnCancel = sysErrorRestoreStrategy.afterClose;
+          // }
 
-          mref = this.modalService.error({
-            nzWidth: 500,
-            nzTitle: sysErrorRestoreStrategy.title,
-            nzContent: sysErrorRestoreStrategy.modelContent || errContent,
-            nzOkText: sysErrorRestoreStrategy.okText,
-            nzCancelText: sysErrorRestoreStrategy.cancelText,
-            nzOnOk: sysErrorRestoreStrategy.onOKExec
-          });
+          mref = sysErrorRestoreStrategy.isInfo
+            ? this.modalService.create(config)
+            : this.modalService.error(config);
         } else {
           this.defaultSystemErrorHandle(errContent, logFileName);
         }
@@ -527,12 +567,12 @@ export class TISService implements TISCoreService {
    */
   private static restoreExcpetion(tisService: TISService, errorVal: ErrorVal): Promise<TisResponseResult> {
 
-    let params = "event_submit_do_exception_restore=y&action=operation_log_action&errorCode=" + errorVal.code;
+    let params = "event_submit_do_exception_restore=y&action=collection_action&errorCode=" + errorVal.code;
     for (let key in errorVal.payload) {
       params += ('&' + key + "=" + errorVal.payload[key]);
     }
 
-    return tisService.httpPost('/runtime/addapp.ajax', params).then((r) => {
+    return tisService.httpPost('/config/addapp.ajax', params).then((r) => {
       if (r.success) {
         return r;
       }
@@ -635,17 +675,24 @@ export class TISService implements TISCoreService {
 }
 
 
-interface SysErrorRestoreStrategy {
+export interface SysErrorRestoreStrategy {
   title: string;
   okText: string;
   cancelText: string;
   modelContent?: Type<any>
+  onCancel?: EventEmitter<any>,
+  afterClose?: EventEmitter<any>,
   onOKExec: EventEmitter<any>;
+  /**
+   * 是否是普通通知
+   */
+  isInfo?: boolean,
   afterSuccessRestore: (errVal: ErrorVal) => void
 };
 
 export class EventSourceSubject {
-  constructor(public targetResName: string, private eventSource: EventSource, private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]>) {
+  constructor(public targetResName: string, private eventSource: EventSource
+    , private observable: Observable<[EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]>) {
 
   }
 

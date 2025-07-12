@@ -26,6 +26,8 @@ import {Subject} from "rxjs";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {TisResponseResult} from "../common/tis.plugin";
 import {ControlPanelComponent} from "../common/control.panel.component";
+import {ChartDataSets, ChartOptions} from "chart.js";
+import {openParamsCfg} from "src/common/plugins.component";
 
 @Component({
   template: `
@@ -40,7 +42,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
       </div>
       <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
         <nz-tab nzTitle="基本">
-          <ng-template nz-tab [ngSwitch]="this.dto.state === 'DISAPPEAR' ||this.dto.state === 'FAILED' ">
+          <ng-template nz-tab [ngSwitch]="this.dto.faildDown ">
             <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
             <!--                      <ng-template #errorTpl>-->
             <!--                          增量处理节点启动有误-->
@@ -69,9 +71,13 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                 <nz-descriptions-item
                   nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
                 <nz-descriptions-item
-                  nzTitle="Start Time"><i nz-icon nzType="field-time" nzTheme="outline"></i>{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                  nzTitle="Start Time"><i nz-icon nzType="field-time"
+                                          nzTheme="outline"></i>{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                </nz-descriptions-item>
                 <nz-descriptions-item *ngIf="dto.state !== 'RUNNING'"
-                  nzTitle="End Time"><i nz-icon nzType="field-time" nzTheme="outline"></i>{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}</nz-descriptions-item>
+                                      nzTitle="End Time"><i nz-icon nzType="field-time"
+                                                            nzTheme="outline"></i>{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                </nz-descriptions-item>
                 <nz-descriptions-item
                   nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
               </nz-descriptions>
@@ -80,8 +86,7 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}
-                                  </span>
+                  <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}</span>
                   <span *nzSpaceItem>
                               <nz-tag [nzColor]="this.dto.flinkJobDetail.statusColor">
                                   <i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync"
@@ -109,6 +114,35 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                   </button>
                 </nz-space>
               </ng-template>
+              <div style="padding: 10px 0px 10px 10px;border-top: 1px solid #cccccc;border-bottom: 1px solid #cccccc">
+                <nz-row [nzGutter]="16">
+                  <nz-col [nzSpan]="3">
+                    <nz-statistic id="income-rate" [class.flash]="incomeRateFlash" [nzSuffix]="suffixTplOne"
+                                  [nzValue]="(tisIncrStatus?.summary.tableConsumeCount | number)!"
+                                  [nzTitle]="statisticTitle"></nz-statistic>
+                    <ng-template #suffixTplOne>
+                      <li style="font-size: 12px">avg/10 sec
+                        <button (click)="editRateConfig()" [disabled]="formDisabled" nzSize="small" nz-button
+                                nzType="link"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
+                      </li>
+                    </ng-template>
+                    <ng-template #statisticTitle>
+                      <strong>实时流量</strong> &nbsp;
+                      <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
+                              nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>流控
+                      </button>
+                    </ng-template>
+                  </nz-col>
+                  <nz-col [nzSpan]="21">
+                    <div class="chart-container" style="height: 100px">
+                      <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                              [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+                      </canvas>
+                    </div>
+                  </nz-col>
+                </nz-row>
+              </div>
+
               <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
                 <tis-col title="Name" width="20">
                   <ng-template let-rr="r">
@@ -160,15 +194,15 @@ import {ControlPanelComponent} from "../common/control.panel.component";
                     {{rr.duration | timeconsume}}
                   </ng-template>
                 </tis-col>
-<!--                <tis-col title="End Time" width="10">-->
-<!--                  <ng-template let-rr="r">-->
-<!--                    <ng-container [ngSwitch]="rr.endTime > 0">-->
-<!--                                      <span *ngSwitchCase="true">-->
-<!--                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}-->
-<!--                                      </span>-->
-<!--                    </ng-container>-->
-<!--                  </ng-template>-->
-<!--                </tis-col>-->
+                <!--                <tis-col title="End Time" width="10">-->
+                <!--                  <ng-template let-rr="r">-->
+                <!--                    <ng-container [ngSwitch]="rr.endTime > 0">-->
+                <!--                                      <span *ngSwitchCase="true">-->
+                <!--                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}-->
+                <!--                                      </span>-->
+                <!--                    </ng-container>-->
+                <!--                  </ng-template>-->
+                <!--                </tis-col>-->
               </tis-page>
             </ng-container>
           </ng-template>
@@ -236,6 +270,48 @@ import {ControlPanelComponent} from "../common/control.panel.component";
   `,
   styles: [
     `
+
+      ::ng-deep #income-rate span.ant-statistic-content-value-int {
+        font-weight: bold;
+        padding: 2px 5px 2px 5px;
+        color: white;
+        background-color: green;
+        animation: none; /* 应用闪烁动画，但默认不执行，通过类控制 */
+        /* animation: blink 0.5s linear infinite;  应用闪烁动画，但默认不执行，通过类控制 */
+        transition: background-color 0.5s; /* 添加平滑的颜色过渡效果 */
+      }
+
+      /* 定义闪烁动画 */
+      @keyframes blink {
+        0% {
+          background-color: #fff;
+        }
+        50% {
+          background-color: green;
+        }
+        /* 闪烁时的颜色，这里设置为红色 */
+        100% {
+          background-color: #fff;
+        }
+      }
+
+      ::ng-deep #income-rate.flash span.ant-statistic-content-value-int {
+        animation: blink 0.3s linear infinite; /* 应用闪烁动画，但默认不执行，通过类控制 */
+      }
+
+      .chart-container {
+
+        position: relative;
+        height: 100px;
+        width: 100%;
+      }
+
+      .chart-container canvas {
+        display: block;
+        height: 100px !important;
+        width: 100% !important;
+      }
+
       .pods {
         margin-top: 12px;
       }
@@ -289,15 +365,121 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   dto: IndexIncrStatus = new IndexIncrStatus();
   msgSubject: Subject<WSMessage>;
 
+  incomeRateFlash = false;
+  public barChartData: ChartDataSets[] = [
+    // {data: [], label: 'updateCount'}
+    {backgroundColor: '#95e4fa', data: [], label: 'Event Nums'},
+  ];
+  barChartLabels: Array<any> = [];// [];
+  tisIncrStatus: TisIncrStatus = {
+    "summary": {
+      tableConsumeCount: 0,
+      solrConsume: 0
+    },
+    tags: []
+  };
+  lineChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [{
+        display: false,
+        ticks: {
+          min: 0,
+          beginAtZero: true
+        },
+        gridLines: {
+          display: false // 隐藏X轴网格线
+        }
+      }]
+    }
+  };
+
   // 实时流量配置
   constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {
     super(tisService, route, modalService, notification);
   }
 
+  editLocalJob() {
+
+    let targetDesc = 'IncrRateController';
+
+    openParamsCfg(targetDesc, null, this, "设置流控参数");
+  }
+
+  editRateConfig() {
+
+    let targetDesc = 'IndexCollectionConfig';
+
+    openParamsCfg(targetDesc, null, this, "设置采集参数");
+  }
+
+
   protected initialize(app: CurrentCollection): void {
   }
 
+  /**
+   * message
+   * <pre>
+   *   {
+   *     "summary": {
+   *         "tableConsumeCount": 70,
+   *         "solrConsume": 17
+   *     },
+   *     "tags": [
+   *         {
+   *             "binlogIncr": 33,
+   *             "lastUpdate": "01/01 08:00:00",
+   *             "tag": "tableConsumeCount",
+   *             "trantransferIncr": 57
+   *         }
+   *     ]
+   * }
+   *   </pre>
+   */
   ngAfterContentInit(): void {
+    // console.log(this.dto);
+    if (this.dto.faildDown) {
+      return;
+    }
+    let serial = new FixedLengthQueue<TagState>(10);
+    this.msgSubject.subscribe((response: WSMessage): void => {
+        if (this.componentDestroy) {
+          return;
+        }
+        switch (response.logtype) {
+          case "mq_tags_status":
+            // console.log(response);
+            this.incomeRateFlash = true;
+            this.tisIncrStatus = response.data.msg;
+            this.tisIncrStatus.tags.forEach((tag) => {
+              serial.enqueue(tag);
+            });
+
+            this.barChartLabels = serial.items.map((t) => t.lastUpdate);
+            this.barChartData[0].data = serial.items.map((t) => t.trantransferIncr);
+
+            setTimeout(() => {
+
+              this.incomeRateFlash = false;
+              // 这里可以重新开启闪烁动画，如果需要的话，不过通常一次变化后保持静止更常见
+            }, 500); // 0.5秒后移除高亮，根据需要调整时间
+            // if (!this.tisIncrStatus) {
+            //
+            //
+            // } else {
+            //   this.tisIncrStatus = response.data.msg;
+            //    = this.tisIncrStatus.tags.map((t) => t.trantransferIncr);
+            // }
+            break;
+        }
+      },
+      (error: any): void => {
+        console.log(error);
+      }, () => {
+        console.log("complete");
+      }
+    );
   }
 
 
@@ -314,9 +496,16 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
           throw  new Error("have not found any pod");
         }
       } else {
-        // this.startMonitorMqTagsStatus('mq_tags_status');
+        if (this.dto.faildDown) {
+          return;
+        }
+        this.focusOnMQ_tags_status();
       }
     })
+  }
+
+  private focusOnMQ_tags_status() {
+    this.startMonitorMqTagsStatus('mq_tags_status');
   }
 
   reload() {
@@ -324,6 +513,11 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
       //  if(this.dto.state !== incrStatus.state){
       //  console.log(this.dto);
       this.dto = incrStatus;
+      this.ngOnDestroy();
+
+      this.focusOnMQ_tags_status();
+      this.componentDestroy = false;
+      this.ngAfterContentInit();
       this.successNotify("状态已更新");
       // }
     }, false);
@@ -338,7 +532,8 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   ngOnDestroy(): void {
     this.componentDestroy = true;
     if (this.msgSubject) {
-      this.msgSubject.unsubscribe()
+      this.msgSubject.unsubscribe();
+      this.msgSubject = null;
     }
   }
 
@@ -436,9 +631,76 @@ interface TisIncrStatus {
 interface TagState {
   tag: string;
   trantransferIncr: number;
+  lastUpdate: string;
 }
 
 interface IncrSummary {
   solrConsume: number;
   tableConsumeCount: number;
+}
+
+class FixedLengthQueue<T> {
+  public items: T[] = [];
+  private maxSize: number;
+
+  constructor(maxSize: number) {
+    if (maxSize <= 0) {
+      throw new Error("队列大小必须是正整数");
+    }
+    this.maxSize = maxSize;
+  }
+
+  // 入队操作 - 如果队列已满，先移除最早的元素
+  enqueue(item: T): void {
+    if (this.items.length >= this.maxSize) {
+      this.dequeue(); // 移除最早的元素
+    }
+    this.items.push(item);
+  }
+
+  // 出队操作 - 移除并返回最早的元素
+  dequeue(): T | undefined {
+    return this.items.shift();
+  }
+
+  // 查看队首元素
+  peekFront(): T | undefined {
+    return this.items[0];
+  }
+
+
+  // 查看队尾元素
+  peekRear(): T | undefined {
+    return this.items[this.items.length - 1];
+  }
+
+  // 检查队列是否为空
+  isEmpty(): boolean {
+    return this.items.length === 0;
+  }
+
+  // 检查队列是否已满
+  isFull(): boolean {
+    return this.items.length === this.maxSize;
+  }
+
+  // 获取当前队列长度
+  size(): number {
+    return this.items.length;
+  }
+
+  // 清空队列
+  clear(): void {
+    this.items = [];
+  }
+
+  // 获取队列的字符串表示
+  toString(): string {
+    return this.items.join(" → ");
+  }
+
+  // 获取队列最大容量
+  getMaxSize(): number {
+    return this.maxSize;
+  }
 }

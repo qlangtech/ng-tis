@@ -56,7 +56,7 @@ class ProcessStrategy {
         <ul style="padding-left: 1em;">
           <li><a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a></li>
           <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank"
-                                                      href="https://tis.pub/docs/guide/integer-dolphinscheduler/">详细</a>
+                                                      href="https://tis.pub/docs/install/integer-dolphinscheduler/">详细</a>
             <nz-tag [nzColor]="'pink'">推荐</nz-tag>
           </li>
         </ul>
@@ -356,37 +356,6 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     let targetDesc = 'DataXSubmitParams';
 
     openParamsCfg(targetDesc, this.drawerService, this, "设置任务触发参数");
-
-    // let pluginMeta: PluginType = {
-    //   "name": 'params-cfg',
-    //   "require": true,
-    //   "extraParam": "targetItemDesc_" + targetDesc,
-    //   "descFilter": {
-    //     "localDescFilter": (desc: Descriptor) => {
-    //       //  console.log(desc);
-    //       return targetDesc === desc.displayName;
-    //     }
-    //   }
-    // };
-    // let targetPlugin: TargetPlugin = {
-    //   hetero: 'params-cfg',
-    //   descName: targetDesc
-    // };
-    // ItemPropValComponent.checkAndInstallPlugin(this.drawerService, this, pluginMeta, targetPlugin)
-    //   .then((desc) => {
-    //     if (!desc) {
-    //       throw new Error("desc can not be null");
-    //     }
-    //     desc.forEach((d) => {
-    //
-    //
-    //       PluginsComponent.openPluginDialog({shallLoadSavedItems: true}
-    //         , this, d, pluginMeta, "设置任务触发参数", (biz) => {
-    //         });
-    //     });
-    //   }, (rejectReason) => {
-    //     // console.log(rejectReason);
-    //   });
   }
 
   editDistributeJob() {

@@ -161,6 +161,10 @@ export class K8SControllerStatus {
   public installLocal: boolean;
   public rcDeployments: Array<RCDeployment>;
 
+  public get faildDown(): boolean {
+    return this.state === 'DISAPPEAR' || this.state === 'FAILED'
+  }
+
   public get rcDeployment(): RCDeployment {
     if (!this.rcDeployments) {
       return null;
