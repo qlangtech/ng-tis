@@ -416,7 +416,7 @@ export class TISService implements TISCoreService {
             let licenseOKEventEmitter = new EventEmitter<any>();
             licenseOKEventEmitter.subscribe(() => {
               // console.log("licenseOKEventEmitter");
-              openParamsCfg("License", null, this);
+              openParamsCfg("License", '',null, this);
               if (mref) {
                 mref.close();
               }

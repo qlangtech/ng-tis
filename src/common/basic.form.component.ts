@@ -40,6 +40,7 @@ import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
  */
 declare var jQuery: any;
 const KEY_show_Bread_crumb = "showBreadcrumb";
+export const KEY_INCR_CONTROL_WEBSOCKET_PATH = "/tis-assemble/incr-control-websocket";
 
 // declare var NProgress: any;
 export class BasicFormComponent implements TISCoreService {
@@ -96,6 +97,32 @@ export class BasicFormComponent implements TISCoreService {
       });
     });
 
+  }
+
+
+
+  protected getWSMsgSubject(logtype: string, servletContextPath?: string): Subject<WSMessage> {
+    let app = this.currentApp;
+
+    return <Subject<WSMessage>>this.tisService.wsconnect(
+      `ws://${window.location.host}${servletContextPath ? servletContextPath : "/tjs/download/logfeedback"}?logtype=${logtype}&collection=${app ? app.name : ''}`)
+      .pipe(map((response: MessageEvent) => {
+        let json = JSON.parse(response.data);
+        // console.log(json);
+        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
+          return new WSMessage('mq_tags_status', json);
+        } else if (json.logType && json.logType === "INCR") {
+          return new WSMessage('incr', json);
+        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
+          return new WSMessage(LogType.INCR_DEPLOY_STATUS_CHANGE, json);
+        } else if (json.logType && json.logType === "DATAX_WORKER_POD_LOG") {
+          return new WSMessage(LogType.DATAX_WORKER_POD_LOG, json);
+        }else if (json.logType && json.logType === "ALL_RUNNING_PIPELINE_CONSUME_TAGS_STATUS") {
+          /* 所有正在运行的数据通道消费量报告*/
+          return new WSMessage(LogType.ALL_RUNNING_PIPELINE_CONSUME_TAGS_STATUS, json);
+        }
+        return null;
+      }));
   }
 
   public successNotify(msg: string, duration?: number): NzNotificationRef {
@@ -450,24 +477,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
 
   protected abstract initialize(app: CurrentCollection): void ;
 
-  protected getWSMsgSubject(logtype: string): Subject<WSMessage> {
-    let app = this.currentApp;
-    return <Subject<WSMessage>>this.tisService.wsconnect(`ws://${window.location.host}/tjs/download/logfeedback?logtype=${logtype}&collection=${app ? app.name : ''}`)
-      .pipe(map((response: MessageEvent) => {
-        let json = JSON.parse(response.data);
-        // console.log(json);
-        if (json.logType && json.logType === "MQ_TAGS_STATUS") {
-          return new WSMessage('mq_tags_status', json);
-        } else if (json.logType && json.logType === "INCR") {
-          return new WSMessage('incr', json);
-        } else if (json.logType && json.logType === "INCR_DEPLOY_STATUS_CHANGE") {
-          return new WSMessage(LogType.INCR_DEPLOY_STATUS_CHANGE, json);
-        } else if (json.logType && json.logType === "DATAX_WORKER_POD_LOG") {
-          return new WSMessage(LogType.DATAX_WORKER_POD_LOG, json);
-        }
-        return null;
-      }));
-  }
+
 }
 
 export class CurrentCollection {

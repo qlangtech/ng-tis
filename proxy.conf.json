@@ -4,8 +4,8 @@
     "secure": false,
     "ws": true
   },
-  "/next": {
-    "target": "http://localhost:8082",
+  "/tis-assemble": {
+    "target": "http://localhost:8083",
     "secure": false,
     "ws": true
   }

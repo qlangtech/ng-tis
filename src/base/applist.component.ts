@@ -17,9 +17,14 @@
  */
 
 import {TISService} from '../common/tis.service';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BasicFormComponent, CurrentCollection} from '../common/basic.form.component';
+import {
+  BasicFormComponent,
+  CurrentCollection,
+  KEY_INCR_CONTROL_WEBSOCKET_PATH,
+  WSMessage
+} from '../common/basic.form.component';
 
 import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -28,8 +33,11 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 import {LocalStorageService} from "angular-2-local-storage";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
-import {Descriptor, SavePluginEvent} from "../common/tis.plugin";
+import {Descriptor, Item, SavePluginEvent} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
+import {Subject, Subscription} from "rxjs";
+import {LogType} from "../runtime/misc/RCDeployment";
+import {debounceTime} from "rxjs/operators";
 
 
 // 全局配置文件
@@ -66,7 +74,7 @@ import {DataxDTO} from "./datax.add.component";
 
       </page-row-assist>
 
-      <tis-col title="实例" width="14" (search)="filterByAppName($event)">
+      <tis-col title="实例" width="16" (search)="filterByAppName($event)">
         <ng-template let-app='r'>
 
           <button nz-button nzType="link" style="cursor: pointer" nzSize="small"
@@ -78,8 +86,17 @@ import {DataxDTO} from "./datax.add.component";
           <button nz-button nzType="link" nzSize="small"
                   (click)="gotoApp(app)">{{app.projectName}}</button>
 
+          <div *ngIf="app.incrRunning" style="margin-left: 25px">
+
+            <nz-tag nzColor="success"><span nz-icon nzType="sync" nzSpin></span>
+              <span>累积消费：{{app.incrConsumeNum}}</span><a
+                [routerLink]="['/x',app.projectName,'incr_build']">，进入</a></nz-tag>
+          </div>
+
+
         </ng-template>
       </tis-col>
+
       <tis-col title="类型" width="10">
         <ng-template let-app="r">
           <ng-container [ngSwitch]="app.appType">
@@ -129,7 +146,8 @@ import {DataxDTO} from "./datax.add.component";
             </tis-plugin-add-btn-extract-item>
             <tis-plugin-add-btn-extract-item (click)="startEditWriter(app)" nz-icon="edit" li-name="Writer">
             </tis-plugin-add-btn-extract-item>
-            <tis-plugin-add-btn-extract-item (click)="startDeletePipeline(app)" nz-icon="delete" li-name="删除">
+            <tis-plugin-add-btn-extract-item (click)="startDeletePipeline(app)" nz-icon="delete"
+                                             li-name="删除">
             </tis-plugin-add-btn-extract-item>
             <i nz-icon nzType="setting" nzTheme="outline"></i>
           </tis-plugin-add-btn>
@@ -139,13 +157,17 @@ import {DataxDTO} from "./datax.add.component";
     </tis-page>
   `
 })
-export class ApplistComponent extends BasicFormComponent implements OnInit {
+export class ApplistComponent extends BasicFormComponent implements OnInit, OnDestroy {
   processorExend = 'com.qlangtech.tis.datax.DefaultDataXProcessorManipulate';
   // allrowCount: number;
   pager: Pager = new Pager(1, 1);
   pageList: Array<Application> = [];
+
   processorDescriptors: Descriptor[] = [];
 
+  private runningPipes: { [Key: string]: number } = null;
+  private assembleWS: Subject<WSMessage>;
+  private assembleWSSubscription: Subscription;
 
   constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService, private _localStorageService: LocalStorageService
   ) {
@@ -183,7 +205,19 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.assembleWS.unsubscribe();
+    this.assembleWSSubscription.unsubscribe();
+  }
+
   ngOnInit(): void {
+
+    this.assembleWS = this.getWSMsgSubject(
+      "all_running_pipeline_consume_tags_status", KEY_INCR_CONTROL_WEBSOCKET_PATH);
+
+
+    this.assembleWSSubscription = this.subcribe_all_running_pipeline_consume_tags_status();
+
     this.route.queryParams.subscribe((param) => {
 
       let nameQuery = '';
@@ -196,6 +230,7 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
           if (r.success) {
             this.pager = Pager.create(r);
             this.pageList = r.bizresult.rows;
+            this.setAppListRunningIncrConsumeStat();
           }
         });
     });
@@ -210,6 +245,34 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     //   }).finally(() => {
     //   // this.formDisabled = false;
     // });
+  }
+
+  private subcribe_all_running_pipeline_consume_tags_status() {
+    return this.assembleWS.subscribe((msg) => {
+
+      if (msg.logtype == LogType.ALL_RUNNING_PIPELINE_CONSUME_TAGS_STATUS) {
+        //console.log(msg.data.msg);
+
+        this.runningPipes = msg.data.msg;
+        this.setAppListRunningIncrConsumeStat();
+      }
+    });
+  }
+
+  private setAppListRunningIncrConsumeStat() {
+    if (this.runningPipes) {
+      this.pageList.forEach((app) => {
+        let incrConsumeNum;
+        //console.log([app.projectName, runningPipes[app.projectName]]);
+        if ((incrConsumeNum = this.runningPipes[app.projectName]) != undefined) {
+
+          app.incrRunning = true;
+          app.incrConsumeNum = incrConsumeNum;
+        } else {
+          app.incrRunning = false;
+        }
+      });
+    }
   }
 
   public gotoPage(p: number) {
@@ -276,3 +339,5 @@ export class ApplistComponent extends BasicFormComponent implements OnInit {
     });
   }
 }
+
+

@@ -35,6 +35,8 @@ export class Application {
   projectName: string;
   recept: string;
   updateTime: number;
+  incrRunning: boolean = false;
+  incrConsumeNum: number;
 }
 
 export enum AppType {

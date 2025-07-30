@@ -66,12 +66,12 @@ import {ItemPropValComponent} from "./plugin/item-prop-val.component";
  * @param drawerService
  * @param cpt
  */
-export function openParamsCfg(targetDesc: string, drawerService: NzDrawerService, cpt: TISCoreService, dialogTitle?: string): Promise<PluginSaveResponse> {
+export function openParamsCfg(targetDesc: string, appendExtraParam = '' ,drawerService: NzDrawerService, cpt: TISCoreService, dialogTitle?: string): Promise<PluginSaveResponse> {
 
   let pluginMeta: PluginType = {
     "name": 'params-cfg',
     "require": true,
-    "extraParam": "targetItemDesc_" + targetDesc,
+    "extraParam": "targetItemDesc_" + targetDesc +"," + appendExtraParam,
     "descFilter": {
       "localDescFilter": (desc: Descriptor) => {
         //  console.log(desc);

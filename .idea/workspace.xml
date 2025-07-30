@@ -6,12 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.add.step5.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/freshman.readme.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/freshman.readme.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy.conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/proxy.conf.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/applist.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/applist.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/plugin.manage.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/application.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/application.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/basic.form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/basic.form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/full.build.history.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/full.build.history.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/launch.waitting.process.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/launch.waitting.process.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/navigate.bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/plugins.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/plugins.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.plugin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.plugin.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/incr.build.step4.stoped.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/misc/RCDeployment.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -288,7 +295,10 @@
       <workItem from="1749831403738" duration="10668000" />
       <workItem from="1750385423178" duration="5142000" />
       <workItem from="1750395644139" duration="4729000" />
-      <workItem from="1751581338227" duration="29246000" />
+      <workItem from="1751581338227" duration="62394000" />
+      <workItem from="1753151947309" duration="5290000" />
+      <workItem from="1753408687653" duration="51000" />
+      <workItem from="1753412496250" duration="4638000" />
     </task>
     <servers />
   </component>

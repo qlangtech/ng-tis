@@ -355,7 +355,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
     let targetDesc = 'DataXSubmitParams';
 
-    openParamsCfg(targetDesc, this.drawerService, this, "设置任务触发参数");
+    openParamsCfg(targetDesc,'' ,this.drawerService, this, "设置任务触发参数");
   }
 
   editDistributeJob() {

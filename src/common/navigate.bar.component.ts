@@ -421,7 +421,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   openLicense(): void {
-    openParamsCfg("License", null, this);
+    openParamsCfg("License",'' ,null, this);
   }
 
   openFreshManReadme(): void {
