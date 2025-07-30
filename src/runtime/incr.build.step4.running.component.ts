@@ -16,78 +16,94 @@
  *   limitations under the License.
  */
 
-import {AfterContentInit, Component, EventEmitter, OnDestroy, Output} from "@angular/core";
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  OnDestroy,
+  Output
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
-import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
+import {
+  AppFormComponent,
+  CurrentCollection,
+  KEY_INCR_CONTROL_WEBSOCKET_PATH,
+  WSMessage
+} from "../common/basic.form.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {Subject} from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import {IndexIncrStatus} from "./misc/RCDeployment";
-import {TisResponseResult} from "../common/tis.plugin";
+import {EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE, TisResponseResult} from "../common/tis.plugin";
 import {ControlPanelComponent} from "../common/control.panel.component";
 import {ChartDataSets, ChartOptions} from "chart.js";
 import {openParamsCfg} from "src/common/plugins.component";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   template: `
-    <nz-spin size="large" [nzSpinning]="this.formDisabled">
-      <div style="margin-top: 8px;" *ngIf="true">
-        <nz-alert *ngIf="true" nzType="info" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
-        <ng-template #unableToUseK8SController>
-          可直接打开Flink控制台<a target="_blank"
-                                  [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'"><i
-          nz-icon nzType="link" nzTheme="outline"></i>控制台</a>
-        </ng-template>
-      </div>
-      <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
-        <nz-tab nzTitle="基本">
-          <ng-template nz-tab [ngSwitch]="this.dto.faildDown ">
-            <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
-            <!--                      <ng-template #errorTpl>-->
-            <!--                          增量处理节点启动有误-->
-            <!--                          <button nz-button nzType="link" (click)="tabSelectIndex=2">查看启动日志</button>-->
-            <!--                      </ng-template>-->
-            <!--                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>-->
-
-            <ng-container *ngSwitchCase="true">
-              <nz-alert class="alter-notice"
-                        nzType="warning"
-                        nzMessage="异常状态"
-                        [nzDescription]="alterNotice"
-                        nzShowIcon
-              ></nz-alert>
-              <ng-template #alterNotice>服务端获取不到该Job（状态为：{{this.dto.state}}），可能是因为Flink-Cluster重启导致，请手动
-                <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i
-                  nz-icon
-                  nzType="rollback"
-                  nzTheme="outline"></i>恢复
-                </button>
+      <nz-spin size="large" [nzSpinning]="this.formDisabled">
+          <div style="margin-top: 8px;" *ngIf="true">
+              <nz-alert *ngIf="true" nzType="info" [nzDescription]="unableToUseK8SController" nzShowIcon></nz-alert>
+              <ng-template #unableToUseK8SController>
+                  可直接打开Flink控制台<a target="_blank"
+                                          [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'"><i
+                      nz-icon nzType="link" nzTheme="outline"></i>控制台</a>
               </ng-template>
-            </ng-container>
-            <ng-container *ngSwitchCase="false">
+          </div>
 
-              <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
-                <nz-descriptions-item
-                  nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
-                <nz-descriptions-item
-                  nzTitle="Start Time"><i nz-icon nzType="field-time"
-                                          nzTheme="outline"></i>{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                </nz-descriptions-item>
-                <nz-descriptions-item *ngIf="dto.state !== 'RUNNING'"
-                                      nzTitle="End Time"><i nz-icon nzType="field-time"
-                                                            nzTheme="outline"></i>{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                </nz-descriptions-item>
-                <nz-descriptions-item
-                  nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
-              </nz-descriptions>
-              <ng-template #descTitle>
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}</span>
-                  <span *nzSpaceItem>
+          <nz-tabset [nzTabBarExtraContent]="extraTemplate" nzSize="large" [(nzSelectedIndex)]="tabSelectIndex">
+              <nz-tab nzTitle="基本">
+                  <ng-template nz-tab [ngSwitch]="this.dto.faildDown ">
+                      <!--                      <nz-alert *ngIf="this.dto.incrProcessLaunchHasError" nzType="error" [nzDescription]="errorTpl" nzShowIcon></nz-alert>-->
+                      <!--                      <ng-template #errorTpl>-->
+                      <!--                          增量处理节点启动有误-->
+                      <!--                          <button nz-button nzType="link" (click)="tabSelectIndex=2">查看启动日志</button>-->
+                      <!--                      </ng-template>-->
+                      <!--                      <incr-build-step4-running-tab-base [msgSubject]="msgSubject" [dto]="dto"></incr-build-step4-running-tab-base>-->
+
+                      <ng-container *ngSwitchCase="true">
+                          <nz-alert class="alter-notice"
+                                    nzType="warning"
+                                    nzMessage="异常状态"
+                                    [nzDescription]="alterNotice"
+                                    nzShowIcon
+                          ></nz-alert>
+                          <ng-template #alterNotice>服务端获取不到该Job（状态为：{{this.dto.state}}
+                              ），可能是因为Flink-Cluster重启导致，请手动
+                              <button (click)="route2SavepointTab()" nz-button nzSize="small" nzType="primary"><i
+                                      nz-icon
+                                      nzType="rollback"
+                                      nzTheme="outline"></i>恢复
+                              </button>
+                          </ng-template>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="false">
+
+                          <nz-descriptions style="margin-left: 10px" [nzTitle]="descTitle" [nzExtra]="extraTpl">
+                              <nz-descriptions-item
+                                      nzTitle="ID">{{this.dto.flinkJobDetail.jobId}}</nz-descriptions-item>
+                              <nz-descriptions-item
+                                      nzTitle="Start Time"><i nz-icon nzType="field-time"
+                                                              nzTheme="outline"></i>{{this.dto.flinkJobDetail.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                              </nz-descriptions-item>
+                              <nz-descriptions-item *ngIf="dto.state !== 'RUNNING'"
+                                                    nzTitle="End Time"><i nz-icon nzType="field-time"
+                                                                          nzTheme="outline"></i>{{this.dto.flinkJobDetail.endTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                              </nz-descriptions-item>
+                              <nz-descriptions-item
+                                      nzTitle="Duration">{{this.dto.flinkJobDetail.duration | timeconsume}}</nz-descriptions-item>
+                          </nz-descriptions>
+                          <ng-template #descTitle>
+                              <nz-space [nzSplit]="spaceSplit">
+                                  <ng-template #spaceSplit>
+                                      <nz-divider nzType="vertical"></nz-divider>
+                                  </ng-template>
+                                  <span *nzSpaceItem>{{this.dto.flinkJobDetail.name}}</span>
+                                  <span *nzSpaceItem>
                               <nz-tag [nzColor]="this.dto.flinkJobDetail.statusColor">
                                   <i *ngIf="this.dto.flinkJobDetail.statusColor === 'processing'" nz-icon nzType="sync"
                                      nzSpin></i> {{this.dto.flinkJobDetail.jobStatus}}</nz-tag>
@@ -95,178 +111,205 @@ import {openParamsCfg} from "src/common/plugins.component";
                                       nzSize="small" nzType="primary"><i nz-icon nzType="rollback"
                                                                          nzTheme="outline"></i>恢复</button>
                               </span>
-                  <span *nzSpaceItem>
+                                  <span *nzSpaceItem>
                                   <nz-tag style="margin: 0"
                                           *ngFor="let s of this.dto.flinkJobDetail.jobVerticesPerState"
                                           [nzColor]="s.stateColor">{{s.count}}</nz-tag>
                               </span>
-                </nz-space>
-              </ng-template>
-              <ng-template #extraTpl>
-                <nz-space *ngIf="this.dto.flinkJobDetail.cancelable">
-                  <button [nzLoading]="this.formDisabled" (click)="reload()" *nzSpaceItem nz-button><i nz-icon
-                                                                                                       nzType="reload"
-                                                                                                       nzTheme="outline"></i>
-                  </button>
-                  <button *nzSpaceItem nz-button [nzLoading]="this.formDisabled" (click)="manageChannel()"><i nz-icon
-                                                                                                              nzType="setting"
-                                                                                                              nzTheme="outline"></i>操作
-                  </button>
-                </nz-space>
-              </ng-template>
-              <div style="padding: 10px 0px 10px 10px;border-top: 1px solid #cccccc;border-bottom: 1px solid #cccccc">
-                <nz-row [nzGutter]="16">
-                  <nz-col [nzSpan]="3">
-                    <nz-statistic id="income-rate" [class.flash]="incomeRateFlash" [nzSuffix]="suffixTplOne"
-                                  [nzValue]="(tisIncrStatus?.summary.tableConsumeCount | number)!"
-                                  [nzTitle]="statisticTitle"></nz-statistic>
-                    <ng-template #suffixTplOne>
-                      <li style="font-size: 12px">avg/10 sec
-                        <button (click)="editRateConfig()" [disabled]="formDisabled" nzSize="small" nz-button
-                                nzType="link"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
-                      </li>
-                    </ng-template>
-                    <ng-template #statisticTitle>
-                      <strong>实时流量</strong> &nbsp;
-                      <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
-                              nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>流控
-                      </button>
-                    </ng-template>
-                  </nz-col>
-                  <nz-col [nzSpan]="21">
-                    <div class="chart-container" style="height: 100px">
-                      <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
-                              [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
-                      </canvas>
-                    </div>
-                  </nz-col>
-                </nz-row>
-              </div>
+                              </nz-space>
+                          </ng-template>
+                          <ng-template #extraTpl>
+                              <nz-space *ngIf="this.dto.flinkJobDetail.cancelable">
+                                  <button [nzLoading]="this.formDisabled" (click)="reload()" *nzSpaceItem nz-button><i
+                                          nz-icon
+                                          nzType="reload"
+                                          nzTheme="outline"></i>
+                                  </button>
+                                  <button *nzSpaceItem nz-button [nzLoading]="this.formDisabled"
+                                          (click)="manageChannel()"><i nz-icon nzType="setting" nzTheme="outline"></i>操作
+                                  </button>
+                              </nz-space>
+                          </ng-template>
+                          <div style="padding: 10px 0px 10px 10px;border-top: 1px solid #cccccc;border-bottom: 1px solid #cccccc">
+                              <nz-row [nzGutter]="16">
+                                  <nz-col [nzSpan]="24">
+                                      <nz-space>
+                                          <strong *nzSpaceItem>实时流量</strong> &nbsp;
+                                          <nz-button-group *nzSpaceItem>
+                                              <button nzSize="small" nz-button nzType="default"
+                                                      style="background-color: rgb(103,103,103) ;color:white;letter-spacing: 2px;font-weight: bold">{{tisIncrStatus.limitRateStateDesc}}
+                                              </button>
+                                              <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small"
+                                                      nz-button
+                                                      nzType="default"><span nz-icon nzType="setting"
+                                                                             nzTheme="outline"></span>流控
+                                              </button>
+                                          </nz-button-group>
+                                          <nz-tag *nzSpaceItem nzColor="cyan">
+                                              <strong>Insert：</strong>{{(tisIncrStatus?.summary.tableInsertCount | number)!}}
+                                          </nz-tag>
+                                          <nz-tag *nzSpaceItem nzColor="cyan">
+                                              <strong>Update：</strong>{{(tisIncrStatus?.summary.tableUpdateCount | number)!}}
+                                          </nz-tag>
+                                          <nz-tag *nzSpaceItem nzColor="cyan">
+                                              <strong>Delete：</strong>{{(tisIncrStatus?.summary.tableDeleteCount | number)!}}
+                                          </nz-tag>
+                                      </nz-space>
+                                  </nz-col>
+                              </nz-row>
+                              <nz-row [nzGutter]="16">
+                                  <nz-col [nzSpan]="3">
+                                      <nz-statistic id="income-rate" [class.flash]="incomeRateFlash"
+                                                    [nzSuffix]="suffixTplOne"
+                                                    [nzValue]="(tisIncrStatus?.summary.tableConsumeCount | number)!"
+                                                    [nzTitle]="statisticTitle"></nz-statistic>
+                                      <ng-template #suffixTplOne>
+                                          <li style="font-size: 12px">avg/10 sec
+                                              <button (click)="editRateConfig()" [disabled]="formDisabled"
+                                                      nzSize="small" nz-button
+                                                      nzType="link"><span nz-icon nzType="edit"
+                                                                          nzTheme="outline"></span></button>
+                                          </li>
+                                      </ng-template>
+                                      <ng-template #statisticTitle>
 
-              <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
-                <tis-col title="Name" width="20">
-                  <ng-template let-rr="r">
-                    <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName"
-                       nzOverlayClassName="tooltip-pree"
-                       [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url +'/#/job/running/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+
+                                      </ng-template>
+                                  </nz-col>
+                                  <nz-col [nzSpan]="21">
+                                      <div class="chart-container" style="height: 100px">
+                                          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                                                  [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+                                          </canvas>
+                                      </div>
+                                  </nz-col>
+                              </nz-row>
+                          </div>
+
+                          <tis-page [rows]="this.dto.flinkJobDetail.sources" [showPagination]="false">
+                              <tis-col title="Name" width="20">
+                                  <ng-template let-rr="r">
+                                      <a target="_blank" nz-tooltip [nzTooltipTitle]="rr.fullName"
+                                         nzOverlayClassName="tooltip-pree"
+                                         [href]="this.dto.flinkJobDetail.clusterCfg.jobManagerAddress.url +'/#/job/running/'+ this.dto.flinkJobDetail.jobId +'/overview/'+ rr.jobVertexId +'/detail'">{{rr.name}}</a>
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Status" width="10">
+                                  <ng-template let-rr="r">
+                                      <nz-tag [nzColor]="rr.executionStateColor"><i
+                                              *ngIf="rr.executionStateColor === 'processing'"
+                                              nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}
+                                      </nz-tag>
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Bytes Received" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.bytesRead}}B
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Records Received" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.recordsRead}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Bytes Sent" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.bytesWritten}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Records Sent" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.jobVertexMetrics.recordsWritten}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Parallelism" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.parallelism}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Start Time" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
+                                  </ng-template>
+                              </tis-col>
+                              <tis-col title="Duration" width="10">
+                                  <ng-template let-rr="r">
+                                      {{rr.duration | timeconsume}}
+                                  </ng-template>
+                              </tis-col>
+                              <!--                <tis-col title="End Time" width="10">-->
+                              <!--                  <ng-template let-rr="r">-->
+                              <!--                    <ng-container [ngSwitch]="rr.endTime > 0">-->
+                              <!--                                      <span *ngSwitchCase="true">-->
+                              <!--                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}-->
+                              <!--                                      </span>-->
+                              <!--                    </ng-container>-->
+                              <!--                  </ng-template>-->
+                              <!--                </tis-col>-->
+                          </tis-page>
+                      </ng-container>
                   </ng-template>
-                </tis-col>
-                <tis-col title="Status" width="10">
-                  <ng-template let-rr="r">
-                    <nz-tag [nzColor]="rr.executionStateColor"><i
-                      *ngIf="rr.executionStateColor === 'processing'"
-                      nz-icon nzType="sync" nzSpin></i>{{rr.executionState}}
-                    </nz-tag>
+              </nz-tab>
+              <nz-tab nzTitle="配置">
+                  <ng-template nz-tab>
+                      <h3>基本信息</h3>
+                      <div class="item-block">
+                          <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false"
+                                       [plugins]="[{name: 'incr-config', require: true}]"></tis-plugins>
+                      </div>
+                      <h3>Source/Sink信息</h3>
+                      <div class="item-block">
+                          <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false"
+                                       [plugins]="[{    name: 'mq', require: true  }, {    name: 'sinkFactory', require: true  }]"></tis-plugins>
+                      </div>
                   </ng-template>
-                </tis-col>
-                <tis-col title="Bytes Received" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.jobVertexMetrics.bytesRead}}B
+              </nz-tab>
+              <nz-tab [nzTitle]="settingTemplate">
+                  <ng-template #settingTemplate>
+                      <i nz-icon nzType="setting" nzTheme="outline"></i>操作
                   </ng-template>
-                </tis-col>
-                <tis-col title="Records Received" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.jobVertexMetrics.recordsRead}}
+
+                  <control-prompt panelType="normal-stop-incr"
+                                  [procDesc]="'停止增量实例 停止过程中会记录当前任务的savepoint，以便重启之用'"
+                                  [disabled]="dto.state !== 'RUNNING'" (controlClick)="incrChannelStop($event)">
+                  </control-prompt>
+
+
+                  <control-prompt panelType="danger-delete" [procDesc]="'删除增量实例'"
+                                  (controlClick)="incrChannelDelete($event)">
+                  </control-prompt>
+
+                  <!--                  <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">-->
+                  <!--                  </nz-page-header>-->
+
+                  <!--                  <nz-list class="ant-advanced-search-form ant-advanced-search-form-danger" nzBordered>-->
+                  <!--                      <nz-list-item>-->
+                  <!--                          <span nz-typography>删除增量实例</span>-->
+                  <!--                          <button nz-button nzType="primary" nzDanger (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>-->
+                  <!--                      </nz-list-item>-->
+                  <!--                  </nz-list>-->
+              </nz-tab>
+              <nz-tab nzTitle="Savepoint">
+                  <ng-template nz-tab>
+                      <incr-build-step4-running-savepoint (afterRelaunch)="afterRelaunch($event)"
+                                                          [dto]="this.dto"></incr-build-step4-running-savepoint>
                   </ng-template>
-                </tis-col>
-                <tis-col title="Bytes Sent" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.jobVertexMetrics.bytesWritten}}
-                  </ng-template>
-                </tis-col>
-                <tis-col title="Records Sent" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.jobVertexMetrics.recordsWritten}}
-                  </ng-template>
-                </tis-col>
-                <tis-col title="Parallelism" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.parallelism}}
-                  </ng-template>
-                </tis-col>
-                <tis-col title="Start Time" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.startTime | date : "yyyy/MM/dd HH:mm:ss"}}
-                  </ng-template>
-                </tis-col>
-                <tis-col title="Duration" width="10">
-                  <ng-template let-rr="r">
-                    {{rr.duration | timeconsume}}
-                  </ng-template>
-                </tis-col>
-                <!--                <tis-col title="End Time" width="10">-->
-                <!--                  <ng-template let-rr="r">-->
-                <!--                    <ng-container [ngSwitch]="rr.endTime > 0">-->
-                <!--                                      <span *ngSwitchCase="true">-->
-                <!--                                       {{rr.endTime | date : "yyyy/MM/dd HH:mm:ss"}}-->
-                <!--                                      </span>-->
-                <!--                    </ng-container>-->
-                <!--                  </ng-template>-->
-                <!--                </tis-col>-->
-              </tis-page>
-            </ng-container>
+              </nz-tab>
+          </nz-tabset>
+          <ng-template #extraTemplate>
+              <!--
+               <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
+                   操作
+                   <i nz-icon nzType="down"></i>
+               </button>
+               <nz-dropdown-menu #menu4="nzDropdownMenu">
+                   <ul nz-menu>
+                       <li nz-menu-item><i nz-icon nzType="delete" nzTheme="outline"></i>删除</li>
+                   </ul>
+               </nz-dropdown-menu>
+              -->
           </ng-template>
-        </nz-tab>
-        <nz-tab nzTitle="配置">
-          <ng-template nz-tab>
-            <h3>基本信息</h3>
-            <div class="item-block">
-              <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false"
-                           [plugins]="[{name: 'incr-config', require: true}]"></tis-plugins>
-            </div>
-            <h3>Source/Sink信息</h3>
-            <div class="item-block">
-              <tis-plugins [disabled]="true" [errorsPageShow]="false" [shallInitializePluginItems]="false"
-                           [plugins]="[{    name: 'mq', require: true  }, {    name: 'sinkFactory', require: true  }]"></tis-plugins>
-            </div>
-          </ng-template>
-        </nz-tab>
-        <nz-tab [nzTitle]="settingTemplate">
-          <ng-template #settingTemplate>
-            <i nz-icon nzType="setting" nzTheme="outline"></i>操作
-          </ng-template>
-
-          <control-prompt panelType="normal-stop-incr"
-                          [procDesc]="'停止增量实例 停止过程中会记录当前任务的savepoint，以便重启之用'"
-                          [disabled]="dto.state !== 'RUNNING'" (controlClick)="incrChannelStop($event)">
-          </control-prompt>
-
-
-          <control-prompt panelType="danger-delete" [procDesc]="'删除增量实例'"
-                          (controlClick)="incrChannelDelete($event)">
-          </control-prompt>
-
-          <!--                  <nz-page-header class="danger-control-title" nzTitle="危险操作" nzSubtitle="以下操作可能造成某些组件功能不可用">-->
-          <!--                  </nz-page-header>-->
-
-          <!--                  <nz-list class="ant-advanced-search-form ant-advanced-search-form-danger" nzBordered>-->
-          <!--                      <nz-list-item>-->
-          <!--                          <span nz-typography>删除增量实例</span>-->
-          <!--                          <button nz-button nzType="primary" nzDanger (click)="incrChannelDelete()"><i nz-icon nzType="delete" nzTheme="outline"></i>删除</button>-->
-          <!--                      </nz-list-item>-->
-          <!--                  </nz-list>-->
-        </nz-tab>
-        <nz-tab nzTitle="Savepoint">
-          <ng-template nz-tab>
-            <incr-build-step4-running-savepoint (afterRelaunch)="afterRelaunch($event)"
-                                                [dto]="this.dto"></incr-build-step4-running-savepoint>
-          </ng-template>
-        </nz-tab>
-      </nz-tabset>
-      <ng-template #extraTemplate>
-        <!--
-         <button nz-button nz-dropdown [nzDropdownMenu]="menu4">
-             操作
-             <i nz-icon nzType="down"></i>
-         </button>
-         <nz-dropdown-menu #menu4="nzDropdownMenu">
-             <ul nz-menu>
-                 <li nz-menu-item><i nz-icon nzType="delete" nzTheme="outline"></i>删除</li>
-             </ul>
-         </nz-dropdown-menu>
-        -->
-      </ng-template>
-    </nz-spin>
+      </nz-spin>
   `,
   styles: [
     `
@@ -364,20 +407,17 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   @Output() preStep = new EventEmitter<any>();
   dto: IndexIncrStatus = new IndexIncrStatus();
   msgSubject: Subject<WSMessage>;
-
+  subscription: Subscription;
   incomeRateFlash = false;
   public barChartData: ChartDataSets[] = [
     // {data: [], label: 'updateCount'}
     {backgroundColor: '#95e4fa', data: [], label: 'Event Nums'},
   ];
   barChartLabels: Array<any> = [];// [];
-  tisIncrStatus: TisIncrStatus = {
-    "summary": {
-      tableConsumeCount: 0,
-      solrConsume: 0
-    },
-    tags: []
-  };
+  tisIncrStatus = new DefaultTisIncrStatus(LimitRateControllerType.NoLimitParam, -1, {
+      tableConsumeCount: 0, tableUpdateCount: 0, tableInsertCount: 0, tableDeleteCount: 0
+    }, []
+  );
   lineChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -396,22 +436,27 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   };
 
   // 实时流量配置
-  constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService) {
+  constructor(tisService: TISService, route: ActivatedRoute, private router: Router, modalService: NzModalService, notification: NzNotificationService,private cd: ChangeDetectorRef) {
     super(tisService, route, modalService, notification);
+   // cd.detach();
   }
 
   editLocalJob() {
 
     let targetDesc = 'IncrRateController';
 
-    openParamsCfg(targetDesc, null, this, "设置流控参数");
+   //
+
+    openParamsCfg(targetDesc, EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE,null, this, "设置流控参数");
   }
 
   editRateConfig() {
 
     let targetDesc = 'IndexCollectionConfig';
-
-    openParamsCfg(targetDesc, null, this, "设置采集参数");
+ //targetPipelineNameAware_true
+    openParamsCfg(targetDesc,EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE ,null, this, "设置采集参数").finally(()=>{
+     // this.cd.detectChanges();
+    });
   }
 
 
@@ -437,21 +482,25 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
    * }
    *   </pre>
    */
+  // taskIdx = 0;
   ngAfterContentInit(): void {
     // console.log(this.dto);
     if (this.dto.faildDown) {
       return;
     }
+    //const index = this.taskIdx++;
     let serial = new FixedLengthQueue<TagState>(10);
-    this.msgSubject.subscribe((response: WSMessage): void => {
+    this.subscription = this.msgSubject.subscribe((response: WSMessage): void => {
         if (this.componentDestroy) {
           return;
         }
+        //  console.log(index);
         switch (response.logtype) {
           case "mq_tags_status":
             // console.log(response);
             this.incomeRateFlash = true;
-            this.tisIncrStatus = response.data.msg;
+            let msg: TisIncrStatus = response.data.msg;
+            this.tisIncrStatus = new DefaultTisIncrStatus(msg.controllerType, msg.perSecRateNums, msg.summary, msg.tags);
             this.tisIncrStatus.tags.forEach((tag) => {
               serial.enqueue(tag);
             });
@@ -478,6 +527,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
         console.log(error);
       }, () => {
         console.log("complete");
+
       }
     );
   }
@@ -525,15 +575,16 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   public startMonitorMqTagsStatus(logtype: string) {
     // console.log(this.currentApp);
-    this.msgSubject = this.getWSMsgSubject(logtype);
+    this.msgSubject = this.getWSMsgSubject(logtype, KEY_INCR_CONTROL_WEBSOCKET_PATH);
   }
 
 
   ngOnDestroy(): void {
     this.componentDestroy = true;
-    if (this.msgSubject) {
-      this.msgSubject.unsubscribe();
-      this.msgSubject = null;
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      // console.log("unsubscribe");
+      this.subscription = null;
     }
   }
 
@@ -551,7 +602,8 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
         //  this.router.navigate(["."], {relativeTo: this.route});
         // this.nextStep.next(this.dto);
         // IndexIncrStatus.getIncrStatusThenEnter(this, (incrStatus) => {
-        this.dto = r.bizresult;
+        this.dto = IndexIncrStatus.wrap(r.bizresult);// Object.assign(new IndexIncrStatus(), r.bizresult);
+
         this.tabSelectIndex = 0;
         // });
       }
@@ -623,9 +675,50 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
 }
 
+/**
+ * mapper to com.qlangtech.tis.realtime.yarn.rpc.IncrRateControllerCfgDTO.RateControllerType
+ */
+enum LimitRateControllerType {
+  Paused = 1,
+  FloodDischargeRate = 2,
+  NoLimitParam = 3,
+  RateLimit = 4,
+  SkipProcess = 5,
+}
+
 interface TisIncrStatus {
   summary: IncrSummary;
   tags: Array<TagState>;
+
+  controllerType: LimitRateControllerType;
+  perSecRateNums: number;
+}
+
+class DefaultTisIncrStatus implements TisIncrStatus {
+
+
+  constructor(public controllerType: LimitRateControllerType, public perSecRateNums: number, public summary: IncrSummary, public tags: Array<TagState>) {
+
+  }
+
+  public get limitRateStateDesc(): string {
+    //
+    switch (this.controllerType) {
+      case LimitRateControllerType.FloodDischargeRate:
+        return "正在泄洪";
+      case LimitRateControllerType.NoLimitParam:
+       // console.log("xxx");
+        return "正常执行中";
+      case LimitRateControllerType.Paused:
+        return "暂停中";
+      case LimitRateControllerType.RateLimit:
+        return "限流执行，每秒上限：" + this.perSecRateNums+ "条";
+      case LimitRateControllerType.SkipProcess:
+        throw new Error("illegal controllerType:" + this.controllerType);
+    }
+
+  }
+
 }
 
 interface TagState {
@@ -635,8 +728,11 @@ interface TagState {
 }
 
 interface IncrSummary {
-  solrConsume: number;
+  //solrConsume: number;
   tableConsumeCount: number;
+  tableInsertCount: number;
+  tableUpdateCount: number;
+  tableDeleteCount: number;
 }
 
 class FixedLengthQueue<T> {

@@ -468,7 +468,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   private installLicense(userProfile: TISBaseProfile) {
-    openParamsCfg("License", null, this)
+    openParamsCfg("License",'' , null, this)
       .then((resp) => {
         let vresult: Array<LicenseValidateResult> = resp.biz();
         for (let v of vresult) {

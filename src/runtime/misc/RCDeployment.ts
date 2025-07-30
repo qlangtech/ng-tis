@@ -109,7 +109,8 @@ export interface K8sPodState {
 
 export enum LogType {
   INCR_DEPLOY_STATUS_CHANGE = "incrdeploy-change",
-  DATAX_WORKER_POD_LOG = "datax-worker-pod-log"
+  DATAX_WORKER_POD_LOG = "datax-worker-pod-log",
+  ALL_RUNNING_PIPELINE_CONSUME_TAGS_STATUS = "all_running_pipeline_consume_tags_status"
 }
 
 export interface RcHpaStatus {
@@ -162,7 +163,8 @@ export class K8SControllerStatus {
   public rcDeployments: Array<RCDeployment>;
 
   public get faildDown(): boolean {
-    return this.state === 'DISAPPEAR' || this.state === 'FAILED'
+    // console.log([this.state,this.state === 'DISAPPEAR',this.state === 'FAILED']);
+    return this.state === 'DISAPPEAR' || this.state === 'FAILED';
   }
 
   public get rcDeployment(): RCDeployment {
@@ -215,13 +217,16 @@ export class IndexIncrStatus extends K8SControllerStatus {
   public readerDesc: PluginExtraProps;
   public writerDesc: PluginExtraProps;
 
+  public static wrap(incrStatus: any): IndexIncrStatus {
+    return Object.assign(new IndexIncrStatus(), incrStatus);
+  }
 
   public static getIncrStatusThenEnter(basicForm: BasicFormComponent, hander: ((r: IndexIncrStatus) => void), cache = true) {
     basicForm.httpPost('/coredefine/corenodemanage.ajax'
       , `action=core_action&emethod=get_incr_status&cache=${cache}`)
       .then((r) => {
         if (r.success) {
-          let incrStatus: IndexIncrStatus = Object.assign(new IndexIncrStatus(), r.bizresult);
+          let incrStatus: IndexIncrStatus = IndexIncrStatus.wrap(r.bizresult);// Object.assign(new IndexIncrStatus(), r.bizresult);
           hander(incrStatus);
         }
       });

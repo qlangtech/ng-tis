@@ -227,7 +227,7 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
         this.httpPost('/coredefine/corenodemanage.ajax'
           , "event_submit_do_discard_savepoint=y&action=core_action&savepointPath=" + sp.path).then((r) => {
           if (r.success) {
-            this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
+            this.dto = IndexIncrStatus.wrap(r.bizresult);// Object.assign(new IndexIncrStatus(), r.bizresult);
             this.initialize(null);
             this.successNotify(`已经成功删除Savepoint${sp.path}`);
             //  this.router.navigate(["."], {relativeTo: this.route});
@@ -260,7 +260,7 @@ export class IncrBuildStep4StopedComponent extends AppFormComponent implements A
         this.httpPost('/coredefine/corenodemanage.ajax'
           , "event_submit_do_create_new_savepoint=y&action=core_action").then((r) => {
           if (r.success) {
-            this.dto = Object.assign(new IndexIncrStatus(), r.bizresult);
+            this.dto = IndexIncrStatus.wrap(r.bizresult);// Object.assign(new IndexIncrStatus(), r.bizresult);
             this.initialize(null);
             this.successNotify(`已经成功为${this.currentApp.appName}创建Savepoint`);
           }

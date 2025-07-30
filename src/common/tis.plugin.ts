@@ -32,6 +32,7 @@ export const CONST_FORM_LAYOUT_VERTICAL = 3;
 
 export const PARAM_END_TYPE = "&endType=";
 
+export const EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE = "targetPipelineNameAware_true";
 export const EXTRA_PARAM_DATAX_NAME = "dataxName_";
 export const DATAX_PREFIX_DB = "dataxDB_";
 export const KEY_OPTIONS_ENUM = "enum";

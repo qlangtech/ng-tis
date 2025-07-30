@@ -50,7 +50,7 @@ export function openWaittingProcessComponent(drawerService: NzDrawerService, sub
             <span nz-icon nzType="reload" nzTheme="outline"></span> 重新执行
           </button>
           <button nz-button (click)="closeDrawer()">
-             关闭
+            <span nz-icon nzType="close-circle" nzTheme="outline"></span>关闭
           </button>
         </nz-page-header-extra>
         <nz-page-header-content>
