@@ -66,12 +66,12 @@ import {ItemPropValComponent} from "./plugin/item-prop-val.component";
  * @param drawerService
  * @param cpt
  */
-export function openParamsCfg(targetDesc: string, appendExtraParam = '' ,drawerService: NzDrawerService, cpt: TISCoreService, dialogTitle?: string): Promise<PluginSaveResponse> {
+export function openParamsCfg(targetDesc: string, appendExtraParam = '', drawerService: NzDrawerService, cpt: TISCoreService, dialogTitle?: string): Promise<PluginSaveResponse> {
 
   let pluginMeta: PluginType = {
     "name": 'params-cfg',
     "require": true,
-    "extraParam": "targetItemDesc_" + targetDesc +"," + appendExtraParam,
+    "extraParam": "targetItemDesc_" + targetDesc + (appendExtraParam ? "," + appendExtraParam : ''),
     "descFilter": {
       "localDescFilter": (desc: Descriptor) => {
         //  console.log(desc);
@@ -675,6 +675,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     throw new Error("can not find pluginCategory pluginName:" + hpluginName);
     // this._savePluginInfo(event, savePlugin, this.plugins, [nh]);
   }
+
   @Input()
   set plugins(metas: PluginType[]) {
     // console.log(metas);
