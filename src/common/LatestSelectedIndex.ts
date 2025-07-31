@@ -30,6 +30,9 @@ export class SelectedIndex {
   public timestamp: number;
 
   constructor(public name: string, public appType: AppType) {
+    if (!appType) {
+      throw new Error("param appType can not be null");
+    }
     this.timestamp = (new Date()).getTime();
   }
 }
@@ -86,12 +89,12 @@ export class LatestSelectedIndex {
     }
   }
 
-  public remove(_localStorageService: LocalStorageService,app: CurrentCollection) {
+  public remove(_localStorageService: LocalStorageService, app: CurrentCollection) {
     let findIndex = this._queue.findIndex((r) => {
       return (r.name === app.name && r.appType === app.appTyp);
     });
     if (findIndex > -1) {
-      this._queue.splice(findIndex,1)
+      this._queue.splice(findIndex, 1)
     }
 
     _localStorageService.set(this.localLatestIndexKey, this);
