@@ -467,6 +467,6 @@ export interface TISBaseProfile {
   usr: UserProfile;
   tisMeta: TISMeta;
   license: LicenseValidateResult;
-
+  firstPipelinePK: boolean;
   latestSelectedAppsIndex(): LatestSelectedIndex;
 }
