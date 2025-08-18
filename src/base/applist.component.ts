@@ -101,7 +101,7 @@ import {debounceTime} from "rxjs/operators";
         <ng-template let-app="r">
           <ng-container [ngSwitch]="app.appType">
             <nz-tag *ngSwitchCase="1" [nzColor]="'processing'">Solr</nz-tag>
-            <nz-tag *ngSwitchCase="2" [nzColor]="'processing'">DataX</nz-tag>
+            <nz-tag *ngSwitchCase="2" [nzColor]="'processing'">Pipeline</nz-tag>
           </ng-container>
           <!--
           <a [routerLink]="['/offline/wf_update',app.dataflowName]">{{app.dataflowName}}</a>
