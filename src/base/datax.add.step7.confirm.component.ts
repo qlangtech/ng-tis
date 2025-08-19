@@ -30,14 +30,7 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {
-  EXTRA_PARAM_DATAX_NAME,
-  HeteroList,
-  Item,
-  PluginSaveResponse,
-  PluginType,
-  SavePluginEvent
-} from "../common/tis.plugin";
+import {HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StepType} from "../common/steps.component";
@@ -48,6 +41,9 @@ import {TableTransformerComponent} from "src/common/selectedtab/table.transforme
 import {SelectedTabDTO} from "../common/selectedtab/plugin-sub-form.component";
 import {DataXCfgFile, TransformerInfo} from "./common/datax.common";
 import {ISubDetailTransferMeta} from "../common/ds.utils";
+import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
+import {LocalStorageService} from "angular-2-local-storage";
+import {Application, AppType} from "../common/application";
 
 export enum ExecModel {
   Create, Reader
@@ -287,7 +283,8 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
     this.dto = dto;
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router, route: ActivatedRoute, notification: NzNotificationService) {
+  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router
+    , route: ActivatedRoute, notification: NzNotificationService, private _localStorageService: LocalStorageService) {
     super(tisService, modalService, r, route, notification);
   }
 
@@ -379,16 +376,15 @@ export class DataxAddStep7Component extends BasicDataXAddComponent implements On
       .then((r) => {
         this.processResult(r);
         if (r.success) {
-          // console.log(dto);
-          // this.nextStep.emit(this.dto);
-          // this.successNotify(`DataX 实例:'${this.dto.dataxPipeName}'已创建成功`, 2000)
+
           setTimeout(() => {
-            this.r.navigate(["/x", this.dto.dataxPipeName], {relativeTo: this.route});
+            //  this.r.navigate(["/x", this.dto.dataxPipeName], {relativeTo: this.route});
+            let app = new Application();
+            app.projectName = this.dto.dataxPipeName;
+            app.appType = AppType.DataX;
+            LatestSelectedIndex.routeToApp(this.tisService, this._localStorageService, this.r, app);
           }, 1000);
 
-          // onClose.subscribe(() => {
-          //
-          // })
         } else {
           this.errorItem = Item.processFieldsErr(r);
         }
