@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,12 +79,22 @@
       <recent name="$PROJECT_DIR$/src/common/plugin/type.utils.ts" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.ng:serve-jit-amd64">
-    <configuration name="ng:serve-aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="npm.ng:serve-jit-arm64">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
       <scripts>
-        <script value="ng:serve-aot" />
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build:aot" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build:aot" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -95,6 +105,16 @@
       <command value="run" />
       <scripts>
         <script value="ng:serve-jit-amd64" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="ng:serve-jit-arm64" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve-jit-arm64" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -112,9 +132,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.ng:serve-jit-arm64" />
         <item itemvalue="npm.ng:serve-jit-amd64" />
+        <item itemvalue="npm.build:aot" />
+        <item itemvalue="npm.build" />
         <item itemvalue="npm.ng:serve-jit" />
-        <item itemvalue="npm.ng:serve-aot" />
       </list>
     </recent_temporary>
   </component>
@@ -291,7 +313,7 @@
       <workItem from="1755499802214" duration="673000" />
       <workItem from="1755512441813" duration="1344000" />
       <workItem from="1755568384226" duration="1255000" />
-      <workItem from="1757668807681" duration="444000" />
+      <workItem from="1757668807681" duration="3377000" />
     </task>
     <servers />
   </component>
