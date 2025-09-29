@@ -142,7 +142,7 @@ interface TaskTemplate {
               <div class="textarea-wrapper">
                 <textarea nz-input
                           nzShowCount
-                          [nzMaxCharacterCount]="1000"
+                          [maxlength]="1000"
                           [(ngModel)]="inputText"
                           rows="2"
                           placeholder="请描述您的需求，例如：创建MySQL到Paimon的数据同步管道..."
