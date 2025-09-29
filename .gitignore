@@ -7,5 +7,6 @@
 !rollup-config.js_bak
 /dist
 .idea
+.angular
 
 
