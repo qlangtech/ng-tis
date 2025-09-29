@@ -9,7 +9,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginsComponent} from "../common/plugins.component";
 import {CreatorRouter} from "../common/plugin/type.utils";
-import {NzDrawerRef} from "ng-zorro-antd/drawer/drawer-ref";
+import {NzDrawerRef} from "ng-zorro-antd/drawer";
 import {
   clickDBNode, createDataSourceDetailedPluginsMetas,
   DataBaseMeta,

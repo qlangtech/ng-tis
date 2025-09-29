@@ -28,7 +28,7 @@ import {K8SRCSpec, K8SReplicsSpecComponent} from "../common/k8s.replics.spec.com
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginType} from "../common/tis.plugin";
-import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzStatusType} from "ng-zorro-antd/steps";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {PowerjobCptType} from "./base.manage-routing.module";

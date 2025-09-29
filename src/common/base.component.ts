@@ -16,23 +16,27 @@
  *   limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {UserRoutingModule} from './user-routing.module';
-import {UserListComponent} from './user.list.component';
+import {Injectable, OnDestroy} from '@angular/core';
+import { Subject } from 'rxjs';
 
-import {UserAddComponent} from './user.add.component';
-import {UserIndexComponent} from './user.index.component';
-import {CommonModule} from '@angular/common';
-import {TisCommonModule} from '../common/common.module';
+/**
+ * 基础组件类，提供统一的订阅管理和内存泄露防护
+ * 所有需要处理订阅的组件都应该继承此类
+ */
+@Injectable()
+export abstract class BaseComponent implements OnDestroy {
+  /**
+   * 用于管理组件订阅的Subject
+   * 组件销毁时会自动取消所有订阅
+   */
+  protected readonly destroy$ = new Subject<void>();
 
-
-
-@NgModule({
-  id: 'usermanage',
-  imports: [CommonModule, FormsModule,  UserRoutingModule, TisCommonModule],
-  declarations: [UserIndexComponent, UserListComponent, UserAddComponent
-  ]
-})
-export class UserModule {
+  /**
+   * 组件销毁时的清理逻辑
+   * 自动取消所有通过takeUntil(this.destroy$)管理的订阅
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

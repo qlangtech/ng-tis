@@ -27,7 +27,7 @@ import {ExecModel} from "../base/datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
 import {ControlPanelComponent} from "../common/control.panel.component";
 import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "../common/local-storage.service";
 
 
 @Component({

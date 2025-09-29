@@ -17,8 +17,9 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "../common/local-storage.service";
 import {TISService} from "../common/tis.service";
+import {BaseComponent} from "../common/base.component";
 
 // 这个类专门负责router
 @Component({
@@ -27,9 +28,10 @@ import {TISService} from "../common/tis.service";
     <router-outlet></router-outlet>
   `,
 })
-export class AppComponent  implements OnInit {
+export class AppComponent extends BaseComponent implements OnInit {
 
   constructor( private _localStorageService: LocalStorageService, private  tisService: TISService) {
+    super();
   }
 
   ngOnInit(): void {

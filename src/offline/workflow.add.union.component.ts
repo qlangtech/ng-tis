@@ -22,7 +22,6 @@ import {TISService} from '../common/tis.service';
 // @ts-ignore
 // import * as $ from 'jquery';
 import 'codemirror/mode/sql/sql.js';
-import 'codemirror/lib/codemirror.css';
 import {EditorConfiguration, fromTextArea} from 'codemirror';
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";

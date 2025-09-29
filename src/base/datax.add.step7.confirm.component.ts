@@ -42,7 +42,7 @@ import {SelectedTabDTO} from "../common/selectedtab/plugin-sub-form.component";
 import {DataXCfgFile, TransformerInfo} from "./common/datax.common";
 import {ISubDetailTransferMeta} from "../common/ds.utils";
 import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "../common/local-storage.service";
 import {Application, AppType} from "../common/application";
 
 export enum ExecModel {

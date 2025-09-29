@@ -54,9 +54,7 @@ import {BasicWFComponent, Dataflow, WorkflowComponent} from './workflow.componen
 //  @ts-ignore
 import {Draggable} from '@shopify/draggable';
 import * as G6 from '@antv/g6';
-// @ts-ignore
-// import {Grid} from '@antv/plugins';
-import {Grid} from '@antv/g6/build/plugins.js';
+import {Grid} from '@antv/g6-plugin';
 // @ts-ignore
 //import * as dagre from 'dagre';
 // import * as graphlib from 'graphlib';
@@ -710,10 +708,7 @@ export class WorkflowAddComponent extends BasicWFComponent
 
     // sqlmirror.setValue("select * from mytable;");
 
-    const grid = new Grid({
-      cell: 20,
-      type: 'dot'
-    });
+    const grid = new Grid();
     let canvas_container = $('#canvas_container')[0];
     this.graph = new G6.Graph({
       container: canvas_container,

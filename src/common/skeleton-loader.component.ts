@@ -16,23 +16,35 @@
  *   limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {UserRoutingModule} from './user-routing.module';
-import {UserListComponent} from './user.list.component';
+import { Component, Input } from '@angular/core';
 
-import {UserAddComponent} from './user.add.component';
-import {UserIndexComponent} from './user.index.component';
-import {CommonModule} from '@angular/common';
-import {TisCommonModule} from '../common/common.module';
-
-
-
-@NgModule({
-  id: 'usermanage',
-  imports: [CommonModule, FormsModule,  UserRoutingModule, TisCommonModule],
-  declarations: [UserIndexComponent, UserListComponent, UserAddComponent
-  ]
+@Component({
+  selector: 'tis-skeleton-loader',
+  template: `
+    <div class="skeleton-loader" *ngIf="loading">
+      <nz-skeleton 
+        [nzActive]="true" 
+        [nzAvatar]="showAvatar"
+        [nzParagraph]="{ rows: rows }"
+        [nzTitle]="showTitle">
+      </nz-skeleton>
+    </div>
+    <div *ngIf="!loading">
+      <ng-content></ng-content>
+    </div>
+  `,
+  styles: [`
+    .skeleton-loader {
+      padding: 20px;
+      background: #fff;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+  `]
 })
-export class UserModule {
+export class SkeletonLoaderComponent {
+  @Input() loading = false;
+  @Input() showAvatar = false;
+  @Input() showTitle = true;
+  @Input() rows = 3;
 }

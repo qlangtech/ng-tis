@@ -32,7 +32,7 @@ import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
-import {NzButtonSize} from "ng-zorro-antd/button/button.component";
+import {NzButtonSize} from "ng-zorro-antd/button";
 import {PluginsComponent} from "./plugins.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";

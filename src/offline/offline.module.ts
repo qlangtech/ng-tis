@@ -81,11 +81,6 @@ import {TableColsMetaComponent} from "./table.cols.meta.component";
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     // tslint:disable-next-line:whitespace
     , WorkflowAddNestComponent, WorkflowERComponent, WorkflowAddErCardinalityComponent
-  ],
-  entryComponents: [WorkflowComponent, DatasourceComponent, OffileIndexComponent, DbAddComponent, TableAddComponent, WorkflowAddErMetaComponent
-    , WorkflowAddComponent,
-    WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
-    , WorkflowAddNestComponent, WorkflowAddErCardinalityComponent
   ]
 })
 export class OfflineModule {

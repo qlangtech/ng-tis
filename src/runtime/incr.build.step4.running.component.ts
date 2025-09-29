@@ -39,7 +39,8 @@ import {Subject, Subscription} from "rxjs";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE, TisResponseResult} from "../common/tis.plugin";
 import {ControlPanelComponent} from "../common/control.panel.component";
-import {ChartDataSets, ChartOptions} from "chart.js";
+import {ChartOptions} from "chart.js";
+import {ChartDataset} from 'chart.js';
 import {openParamsCfg} from "src/common/plugins.component";
 
 @Component({
@@ -429,7 +430,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   msgSubject: Subject<WSMessage>;
   subscription: Subscription;
   incomeRateFlash = false;
-  public barChartData: ChartDataSets[] = [
+  public barChartData: ChartDataset[] = [
     // {data: [], label: 'updateCount'}
     {backgroundColor: '#95e4fa', data: [], label: 'Event Nums'},
   ];
@@ -442,16 +443,14 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      yAxes: [{
+      y: {
         display: false,
-        ticks: {
-          min: 0,
-          beginAtZero: true
-        },
-        gridLines: {
+        beginAtZero: true,
+        min: 0,
+        grid: {
           display: false // 隐藏X轴网格线
         }
-      }]
+      }
     }
   };
 

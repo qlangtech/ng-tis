@@ -21,7 +21,8 @@ import {TISService} from "../common/tis.service";
 import {AppFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 
 import {ActivatedRoute, Router} from "@angular/router";
-import {ChartDataSets, ChartOptions} from "chart.js";
+import {ChartOptions} from "chart.js";
+import {ChartDataset} from 'chart.js';
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subject} from "rxjs";
@@ -81,8 +82,8 @@ import {IndexIncrStatus} from "./misc/RCDeployment";
               </div>
               <div nz-col [nzSpan]="8">
                   <nz-card nzTitle="实时流量" [nzBodyStyle]="{'height':'300px'}">
-                      <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
-                              [options]="lineChartOptions" [legend]="false" [chartType]="'bar'">
+                      <canvas baseChart type="bar" [data]="{labels: barChartLabels, datasets: barChartData}"
+                              [options]="lineChartOptions" [legend]="false">
                       </canvas>
                   </nz-card>
               </div>
@@ -270,16 +271,15 @@ export class IncrBuildStep4RunningTabBaseComponent extends AppFormComponent impl
   lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {
-      yAxes: [{
-        ticks: {
-          min: 0
-        }
-      }]
+      y: {
+        beginAtZero: true,
+        min: 0
+      }
     }
   };
 
   // 实时各表tag流量监控图
-  public barChartData: ChartDataSets[] = [
+  public barChartData: ChartDataset[] = [
     // {data: [], label: 'updateCount'}
     {backgroundColor: '#95e4fa', data: []},
   ];

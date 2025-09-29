@@ -18,7 +18,7 @@
 
 import {CurrentCollection} from "./basic.form.component";
 import {Application, AppType} from "./application";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "./local-storage.service";
 import {Router} from "@angular/router";
 import {TISService} from "./tis.service";
 import {TISBaseProfile} from "./navigate.bar.component";

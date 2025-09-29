@@ -39,10 +39,10 @@ import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 
 import {debounceTime, map} from 'rxjs/operators';
 import {CreateLaunchingTarget, DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
-import {NzProgressStatusType} from "ng-zorro-antd/progress/typings";
+import {NzProgressStatusType} from "ng-zorro-antd/progress";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {dataXWorkerCfg} from "./base.manage-routing.module";
-import {NzTabSetComponent} from "ng-zorro-antd/tabs/tabset.component";
+import {NzTabSetComponent} from "ng-zorro-antd/tabs";
 import {LaunchK8SClusterWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {DataxWorkerComponent} from "./datax.worker.component";
 import {KEY_APPNAME} from "../common/plugin/type.utils";

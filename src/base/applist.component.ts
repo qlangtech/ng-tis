@@ -30,7 +30,7 @@ import {Pager} from '../common/pagination.component';
 import {NzModalService} from "ng-zorro-antd/modal";
 import {Application} from "../common/application";
 import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "../common/local-storage.service";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
 import {Descriptor, Item, SavePluginEvent} from "../common/tis.plugin";

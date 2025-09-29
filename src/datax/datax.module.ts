@@ -33,7 +33,7 @@ import {NzFormModule} from 'ng-zorro-antd/form';
 import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
-import {ChartsModule} from 'ng2-charts';
+import {BaseChartDirective} from 'ng2-charts';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzTableModule} from 'ng-zorro-antd/table';
@@ -52,15 +52,14 @@ import {PipelineControllerComponent} from "./pipeline.controller.component";
   id: 'datax',
   imports: [CommonModule, DataxRoutingModule, FormsModule, CoreNodeManageModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
-    , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
+    , BaseChartDirective, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
   ],
   declarations: [DataxIndexComponent, DataxMainComponent, DataxConfigComponent, PipelineControllerComponent //,NotebookEntryComponent
   ],
   providers: [
     // {provide: NZ_ICON_DEFAULT_TWOTONE_COLOR, useValue: '#00ff00'}, // 不提供的话，即为 Ant Design 的主题蓝色
     // {provide: NZ_ICONS, useValue: icons}
-  ],
-  entryComponents: []
+  ]
 })
 export class DataxModule implements OnInit {
   ngOnInit(): void {

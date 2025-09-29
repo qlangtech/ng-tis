@@ -17,7 +17,7 @@
  */
 
 import {Injectable, NgModule} from '@angular/core';
-import {CorenodemanageComponent} from './corenodemanage.component';
+// import {CorenodemanageComponent} from './corenodemanage.component';
 
 import {
   ActivatedRoute,
@@ -31,7 +31,7 @@ import {
 } from '@angular/router';
 // import {SnapshotsetComponent} from '../common/snapshotset.component';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
-import {IndexQueryComponent} from './index.query.component';
+// import {IndexQueryComponent} from './index.query.component';
 import {OperationLogComponent} from "../common/operation.log.component";
 import {MonitorComponent} from "./monitor.component";
 import {MembershipComponent} from "./membership.component";
@@ -108,10 +108,10 @@ const coreNodeRoutes: Routes = [
             path: 'plugin',
             component: CorePluginConfigComponent
           },
-          {   // Schema 配置文件一览
-            path: 'query',
-            component: IndexQueryComponent
-          },
+          // {   // Schema 配置文件一览
+          //   path: 'query',
+          //   component: IndexQueryComponent
+          // },
           {   // Schema 配置文件一览
             path: 'incr_build',
             component: IncrBuildComponent
@@ -128,11 +128,11 @@ const coreNodeRoutes: Routes = [
             path: 'operationlog',
             component: OperationLogComponent
           }
-          ,
-          {
-            path: '',
-            component: CorenodemanageComponent
-          }
+          // ,
+          // {
+          //   path: '',
+          //   component: CorenodemanageComponent
+          // }
         ]
       }
     ]
