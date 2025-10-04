@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/chat.pipeline.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/chat.pipeline.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -314,7 +318,7 @@
       <workItem from="1755568384226" duration="1255000" />
       <workItem from="1757668807681" duration="19978000" />
       <workItem from="1758853655565" duration="660000" />
-      <workItem from="1759045731737" duration="13695000" />
+      <workItem from="1759045731737" duration="35344000" />
     </task>
     <servers />
   </component>

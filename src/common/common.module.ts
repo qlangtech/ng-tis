@@ -185,7 +185,7 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
   ],
   exports: [SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
     , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
-    , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotLinkComponent
+    , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotLinkComponent, NzInputModule
     , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     NzPopoverModule, NzListModule, NzButtonModule, NzToolTipModule, NzAnchorModule, NzSwitchModule, NzAffixModule, NzInputNumberModule, NzEmptyModule, NzSpinModule, ViewGenerateCfgComponent,
     CompareEachOtherComponent, CompareResultComponent, NzModalModule, NzRadioModule, NzBadgeModule, TisStepsToolbarComponent,

@@ -843,7 +843,7 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
       //
       //?resulthandler=exec_null&action=datax_action&emethod=apply_pod_number&targetName=datax-worker&cptType=powerjob-worker&podNumber=2
       evtSubject.events.subscribe((e: [EventType, Array<ExecuteStep> | MessageData | ExecuteStep]) => {
-        ;
+
         switch (e[0]) {
           case EventType.TASK_MILESTONE:
             let milestone: ExecuteStep = <ExecuteStep>e[1];
