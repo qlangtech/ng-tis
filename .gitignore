@@ -6,5 +6,6 @@
 *.metadata.json
 !rollup-config.js_bak
 /dist
-.idea
+.idea/*
+.angular/*
 
