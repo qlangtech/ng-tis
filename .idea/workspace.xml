@@ -7,6 +7,13 @@
     <list default="true" id="5f10523e-898f-484b-9208-c914dd2c75e8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
+=======
+      <change beforePath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/datax.worker.running.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/common.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/common.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/tis.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/tis.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runtime/chat.pipeline.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/runtime/chat.pipeline.component.ts" afterDir="false" />
+>>>>>>> upgrade-ng-zorro-antd-v18
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,22 +52,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/src/base&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/mozhenghua/j2ee_solution/project/tis-console/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "upgrade-ng-zorro-antd-v18",
+    "last_opened_file_path": "/Users/mozhenghua/j2ee_solution/project/tis-console/src/base",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Users/mozhenghua/j2ee_solution/project/tis-console/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/base" />
@@ -100,6 +107,16 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="ng:serve-aot-arm64" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="ng:serve-aot-arm64" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <configuration name="ng:serve-jit-amd64" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -120,23 +137,13 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="ng:serve-jit" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="ng:serve-jit" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="npm.ng:serve-jit-arm64" />
+        <item itemvalue="npm.ng:serve-aot-arm64" />
         <item itemvalue="npm.ng:serve-jit-amd64" />
         <item itemvalue="npm.build:aot" />
         <item itemvalue="npm.build" />
-        <item itemvalue="npm.ng:serve-jit" />
       </list>
     </recent_temporary>
   </component>
@@ -313,7 +320,9 @@
       <workItem from="1755499802214" duration="673000" />
       <workItem from="1755512441813" duration="1344000" />
       <workItem from="1755568384226" duration="1255000" />
-      <workItem from="1757668807681" duration="3377000" />
+      <workItem from="1757668807681" duration="19978000" />
+      <workItem from="1758853655565" duration="660000" />
+      <workItem from="1759045731737" duration="35344000" />
     </task>
     <servers />
   </component>
@@ -363,7 +372,6 @@
         <option value="$PROJECT_DIR$/src/runtime/monitor.component.js.map" />
         <option value="$PROJECT_DIR$/src/common/form.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js.map" />
         <option value="$PROJECT_DIR$/src/service/script.service.js" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js" />
         <option value="$PROJECT_DIR$/src/common/snapshotset.component.js" />
@@ -376,14 +384,12 @@
         <option value="$PROJECT_DIR$/src/runtime/app.component.js" />
         <option value="$PROJECT_DIR$/src/datax/datax.module.js.map" />
         <option value="$PROJECT_DIR$/src/common/pager.header.component.js" />
-        <option value="$PROJECT_DIR$/src/runtime/sync.cfg.component.js" />
         <option value="$PROJECT_DIR$/src/common/tis.service.js" />
         <option value="$PROJECT_DIR$/src/polyfills.js" />
         <option value="$PROJECT_DIR$/src/common/application.js" />
         <option value="$PROJECT_DIR$/src/runtime/snapshot.change.log.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/core.node.manage-routing.module.js" />
         <option value="$PROJECT_DIR$/src/service/script.service.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/index.query.component.js" />
         <option value="$PROJECT_DIR$/src/common/form.component.js" />
         <option value="$PROJECT_DIR$/src/runtime/root-welcome-component.js.map" />
@@ -404,7 +410,6 @@
         <option value="$PROJECT_DIR$/src/user/user.index.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/schema-xml-edit.component.js" />
         <option value="$PROJECT_DIR$/src/corecfg/basic.edit.component.js.map" />
-        <option value="$PROJECT_DIR$/src/runtime/trigger_dump.component.js" />
         <option value="$PROJECT_DIR$/src/common/application.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/index.query.component.js.map" />
         <option value="$PROJECT_DIR$/src/runtime/incr.build.step3.component.js.map" />
@@ -466,4 +471,18 @@
       </map>
     </option>
   </component>
+<<<<<<< HEAD
+=======
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/runtime/app.module-jit.ts</url>
+          <line>37</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+>>>>>>> upgrade-ng-zorro-antd-v18
 </project>

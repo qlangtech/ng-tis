@@ -19,7 +19,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TISService} from '../common/tis.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import 'rxjs/add/operator/switchMap';
 import {AppFormComponent, CurrentCollection} from '../common/basic.form.component';
 
 import {NzModalService} from "ng-zorro-antd/modal";

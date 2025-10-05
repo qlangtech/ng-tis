@@ -17,17 +17,15 @@
  */
 
 import {NgModule, OnInit} from '@angular/core';
-import {CorenodemanageComponent} from './corenodemanage.component';
-import {TriggerDumpComponent} from './trigger_dump.component';
+// import {CorenodemanageComponent} from './corenodemanage.component';
+// import {TriggerDumpComponent} from './trigger_dump.component';
 import {CoreNodeRoutingModule} from './core.node.manage-routing.module';
 
 import {CommonModule} from '@angular/common';
 import {CorenodemanageIndexComponent} from './core.node.manage.index.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {IndexQueryComponent, QueryResultRowContentComponent} from './index.query.component';
-import {PojoComponent} from './pojo.component';
+// import {IndexQueryComponent, QueryResultRowContentComponent} from './index.query.component';
 import {CopyOtherCoreComponent} from './copy.other.core.component';
-import {SyncConfigComponent} from './sync.cfg.component';
 import {TisCommonModule} from "../common/common.module";
 import {MembershipComponent} from "./membership.component";
 import {MonitorComponent} from "./monitor.component";
@@ -49,7 +47,7 @@ import {NzFormModule} from 'ng-zorro-antd/form';
 import {NzInputModule} from 'ng-zorro-antd/input';
 import {NzSelectModule} from 'ng-zorro-antd/select';
 import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
-import {ChartsModule} from 'ng2-charts';
+import {BaseChartDirective} from 'ng2-charts';
 
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import {NzIconModule} from 'ng-zorro-antd/icon';
@@ -67,14 +65,13 @@ import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.
   id: 'coremanage',
   imports: [CommonModule, CoreNodeRoutingModule, FormsModule, TisCommonModule, NzLayoutModule, NzCollapseModule
     , NzStepsModule, NzButtonModule, NzTabsModule, NgTerminalModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzSelectModule, NzInputNumberModule
-    , ChartsModule, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
+    , BaseChartDirective, NzDividerModule, NzIconModule, NzTableModule, NzTagModule, NzPopoverModule
   ],
   declarations: [LineChartComponent,
-    TriggerDumpComponent, CorePluginConfigComponent, QueryResultRowContentComponent, IncrBuildStep4RunningTabBaseComponent,
-    IndexQueryComponent, PojoComponent,
-    CorenodemanageComponent, CorenodemanageIndexComponent,
+     CorePluginConfigComponent,  IncrBuildStep4RunningTabBaseComponent,
+    // IndexQueryComponent,QueryResultRowContentComponent,
+     CorenodemanageIndexComponent,
     CopyOtherCoreComponent
-    , SyncConfigComponent
     , MembershipComponent, MonitorComponent, IncrBuildComponent, IncrBuildStep0Component
     , IncrBuildStep1Component, IncrBuildStep1ExecEngineSelectComponent, IncrBuildStep2SetSinkComponent //
     , IncrBuildStep1ExtendSelectedTabPropsComponent,
@@ -87,11 +84,7 @@ import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.
   ],
   exports: [
     //  IncrPodLogsStatusComponent
-  ],
-  entryComponents: [TriggerDumpComponent, PojoComponent,
-    SyncConfigComponent,
-    CopyOtherCoreComponent
-    , MonitorComponent, MembershipComponent, IncrBuildStep0Component, IncrBuildStep1Component, IncrBuildStep3Component, IncrBuildStep4RunningComponent]
+  ]
 })
 export class CoreNodeManageModule implements OnInit {
   ngOnInit(): void {

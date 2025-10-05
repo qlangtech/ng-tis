@@ -25,9 +25,7 @@ import {TISService} from '../common/tis.service';
 
 // @ts-ignore
 import * as $ from 'jquery';
-
-import {Grid} from "@antv/g6/build/plugins.js";
-
+import {Grid} from '@antv/g6-plugin';
 import * as G6 from '@antv/g6';
 import {TYPE_DUMP_TABLE, WorkflowAddComponent} from "./workflow.add.component";
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -356,10 +354,7 @@ export class WorkflowERComponent
   }
 
   ngAfterViewInit(): void {
-    const grid = new Grid({
-      cell: 20,
-      type: 'dot'
-    });
+    const grid = new Grid();
     let canvas_container = $('#er_canvas_container')[0];
     this.graph = new G6.Graph({
       container: canvas_container,

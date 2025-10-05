@@ -71,6 +71,7 @@ export class ItemPropValPipe implements PipeTransform {
 @Pipe({name: 'errormsg'})
 export class ErrorMsgPipe implements PipeTransform {
 
+  // @ts-ignore
   transform(value: any): string {
     if (typeof value === 'string') {
       return value

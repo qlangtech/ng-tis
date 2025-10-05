@@ -68,10 +68,6 @@ import {EndCptListComponent} from "./end.cpt.list.component";
     , DataxWorkerAddStep22Component, DataxWorkerAddStep3Component
     , DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent
   ],
-  entryComponents: [ApplistComponent
-    , BaseMangeIndexComponent, DepartmentListComponent, AddGlobalParamComponent
-    , GlobalUpdateParamComponent, AddAppFormComponent, AddAppConfirmComponent, AddappSelectNodesComponent
-  ],
   // providers: [TISService,ScriptService]
   exports: [AddAppFlowDirective]
 })

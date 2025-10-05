@@ -21,7 +21,7 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {CreateLaunchingTarget} from "../base/datax.worker.add.step3.component";
-import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzStatusType} from "ng-zorro-antd/steps";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 /**

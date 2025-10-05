@@ -22,8 +22,8 @@ import {Component, EventEmitter, Injectable, Input, OnInit, Output, Type} from '
 // import JQuery from 'jquery';
 // @ts-ignore
 import * as NProgress from 'nprogress/nprogress.js';
-import 'nprogress/nprogress.css';
 import {ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
+import {BaseComponent} from './base.component';
 
 import {NzNotificationRef, NzNotificationService} from "ng-zorro-antd/notification";
 import {SavePluginEvent, TisResponseResult} from "./tis.plugin";
@@ -33,7 +33,7 @@ import {LogType} from "../runtime/misc/RCDeployment";
 
 import {AppType} from "./application";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
-import {ConfirmType} from "ng-zorro-antd/modal/modal-types";
+import {ConfirmType} from "ng-zorro-antd/modal";
 
 /**
  * Created by baisui on 2017/4/12 0012.
@@ -43,7 +43,7 @@ const KEY_show_Bread_crumb = "showBreadcrumb";
 export const KEY_INCR_CONTROL_WEBSOCKET_PATH = "/tis-assemble/incr-control-websocket";
 
 // declare var NProgress: any;
-export class BasicFormComponent implements TISCoreService {
+export class BasicFormComponent extends BaseComponent implements TISCoreService {
   result: TisResponseResult;
   // 表单是否禁用
 
@@ -74,6 +74,7 @@ export class BasicFormComponent implements TISCoreService {
 
   constructor(protected tisService: TISService
     , public modalService?: NzModalService, protected notification?: NzNotificationService) {
+    super();
   }
 
   protected confirm(content: string, onOK?: () => void): Promise<void> {
@@ -82,6 +83,7 @@ export class BasicFormComponent implements TISCoreService {
     }
     return new Promise((resolve, reject) => {
 
+      // @ts-ignore
       this.modalService.confirm({
         nzTitle: '确认',
         nzContent: content,

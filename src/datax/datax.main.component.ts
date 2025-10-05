@@ -22,7 +22,8 @@ import {TISService} from "../common/tis.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {ChartDataSets, ChartOptions} from "chart.js";
+import {ChartOptions} from "chart.js";
+import {ChartDataset} from 'chart.js';
 
 
 // 这个类专门负责router
@@ -134,7 +135,7 @@ export class DataxMainComponent extends AppFormComponent {
 
   allStatis: { errCount: number, successCount: number } = {errCount: 0, successCount: 0};
 
-  public barChartData: ChartDataSets[] = [
+  public barChartData: ChartDataset[] = [
     // {data: [], label: 'updateCount'}
     // {backgroundColor: '#95e4fa', data: []},
   ];
@@ -142,13 +143,11 @@ export class DataxMainComponent extends AppFormComponent {
   barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    // aspectRatio: 1.7,
     scales: {
-      yAxes: [{
-        ticks: {
-          min: 0
-        }
-      }]
+      y: {
+        beginAtZero: true,
+        min: 0
+      }
     }
   };
 
@@ -169,9 +168,9 @@ export class DataxMainComponent extends AppFormComponent {
         // let rows = [{timeLab: "5/12", successCount: 1, errCount: 1}, {timeLab: "5/13", successCount: 3, errCount: 1}]; // data.bizresult;
         this.allStatis = data.bizresult.statis;
         let rows = data.bizresult.data;
-        let successData: ChartDataSets = {label: "success", backgroundColor: '#398400', data: []};
+        let successData: ChartDataset = {label: "success", backgroundColor: '#398400', data: []};
         //  successData.data = [];
-        let faildData: ChartDataSets = {label: "faild", backgroundColor: '#af0f16', data: []};
+        let faildData: ChartDataset = {label: "faild", backgroundColor: '#af0f16', data: []};
         // faildData.data = [];
         let labels: Array<any> = [];
         this.barChartLabels = [];

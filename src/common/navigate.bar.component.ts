@@ -32,7 +32,7 @@ import {ActivatedRoute, Router, RouterOutlet} from "@angular/router";
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, map, switchMap} from 'rxjs/operators';
 import {HttpClient} from "@angular/common/http";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "./local-storage.service";
 import {LatestSelectedIndex, SelectedIndex} from "./LatestSelectedIndex";
 // @ts-ignore
 import {NzModalRef, NzModalService} from "ng-zorro-antd/modal";

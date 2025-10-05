@@ -26,7 +26,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {IndexIncrStatus} from "./misc/RCDeployment";
 import {SavePluginEvent} from "../common/tis.plugin";
 import {EditorConfiguration} from "codemirror";
-import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzStatusType} from "ng-zorro-antd/steps";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";

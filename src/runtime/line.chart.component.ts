@@ -19,7 +19,8 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {TISService} from "../common/tis.service";
-import {ChartDataSets, ChartOptions} from "chart.js";
+import {ChartOptions} from "chart.js";
+import {ChartDataset} from 'chart.js';
 
 export declare type ChartType = 'solrQuery' | 'docUpdate';
 
@@ -32,8 +33,8 @@ interface ChartTypeStrategy {
   selector: "line-chart",
   template: `
       <nz-card [nzTitle]="timerangeBar">
-          <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                  [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+          <canvas baseChart type="line" [data]="{labels: lineChartLabels, datasets: lineChartData}"
+                  [options]="lineChartOptions" [legend]="false">
           </canvas>
       </nz-card>
       <ng-template #timerangeBar>
@@ -51,7 +52,7 @@ interface ChartTypeStrategy {
 export class LineChartComponent extends BasicFormComponent implements OnInit {
   rageVal = '1440';
   // 近期各时段更新量监控
-  public lineChartData: ChartDataSets[] = [
+  public lineChartData: ChartDataset[] = [
     // {data: [], label: 'updateCount'}
     {backgroundColor: '#95e4fa', data: []},
   ];
@@ -64,11 +65,10 @@ export class LineChartComponent extends BasicFormComponent implements OnInit {
     // maintainAspectRatio: false,
     // aspectRatio: 1.7,
     scales: {
-      yAxes: [{
-        ticks: {
-          min: 0
-        }
-      }]
+      y: {
+        beginAtZero: true,
+        min: 0
+      }
     }
   };
 
@@ -96,8 +96,7 @@ export class LineChartComponent extends BasicFormComponent implements OnInit {
     this.httpPost('/runtime/cluster_status.ajax', 'action=cluster_state_collect_action&event_submit_do_collect=y&m=' + range)
       .then((data) => {
         let rows = data.bizresult;
-        let serialData: { data?: any, label: string } = {label: "UpdateCount"};
-        serialData.data = [];
+        let serialData: ChartDataset = {label: "UpdateCount", data: []};
         let labels: Array<any> = [];
         this.lineChartLabels = [];
         rows.forEach((r: any) => {

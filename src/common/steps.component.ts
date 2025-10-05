@@ -29,7 +29,7 @@ import {
 import {NzModalService} from "ng-zorro-antd/modal";
 import {PageHeaderLeftComponent} from "./pager.header.component";
 import {TisResponseResult} from "./tis.plugin";
-import {NzDirectionType} from "ng-zorro-antd/steps/steps.component";
+import {NzDirectionType} from "ng-zorro-antd/steps";
 import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 

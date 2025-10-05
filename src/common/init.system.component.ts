@@ -21,7 +21,7 @@ import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzModalRef} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NzProgressStatusType} from "ng-zorro-antd/progress/typings";
+import {NzProgressStatusType} from "ng-zorro-antd/progress";
 
 @Component({
   template: `

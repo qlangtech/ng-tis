@@ -802,7 +802,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   @Input()
-  private savePluginEventCreator = () => new SavePluginEvent();
+  public savePluginEventCreator = () => new SavePluginEvent();
 
   savePluginSetting(event: MouseEvent, savePluginEvent: SavePluginEvent) {
     this._savePluginInfo(event, savePluginEvent, this.plugins, this._heteroList);

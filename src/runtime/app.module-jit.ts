@@ -27,7 +27,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TISService} from "../common/tis.service";
 import {TisCommonModule} from "../common/common.module";
 import {RootWelcomeComponent} from "./root-welcome-component";
-import {MarkdownModule, MarkedOptions, MarkedRenderer} from 'ngx-markdown';
+import {MarkdownModule, MARKED_OPTIONS} from 'ngx-markdown';
+import {MarkedOptions, Renderer} from 'marked';
 import {NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
 import {NzMessageService} from "ng-zorro-antd/message";
 // import {TRASH_FOLDER_ID_TOKEN} from "@zeppelin/interfaces";
@@ -35,170 +36,163 @@ import {NzMessageService} from "ng-zorro-antd/message";
 // import {loadMonaco} from "@zeppelin/app.module";
 import {NzIconService} from "ng-zorro-antd/icon";
 import {IconDefinition} from "@ant-design/icons-angular";
-import {LocalStorageService} from "angular-2-local-storage";
+import {LocalStorageService} from "../common/local-storage.service";
+import {ChatPipelineComponent} from "./chat.pipeline.component";
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 
 const local_endtype_icons = 'local_endtype_icons';
 registerLocaleData(zh);
 
 export function markedOptionsFactory(): MarkedOptions {
-  const renderer = new MarkedRenderer();
+    const renderer = new Renderer();
 
-  renderer.link = (href: string | null, title: string | null, text: string) => {
-    return `<a href="${href}" target="_blank">${text}</a>`;
-  };
-  return {
-    renderer: renderer
-  };
+    renderer.link = ({href, text}: {href?: string | null; text?: string}) => {
+        return `<a href="${href}" target="_blank">${text}</a>`;
+    };
+    return {
+        renderer: renderer
+    } as MarkedOptions;
 }
 
 // https://github.com/angular/angular/issues/11075 loadChildren 子模块不支持aot编译的问题讨论
 // router 的配置
 // @ts-ignore
 @NgModule({
-  id: 'tisRoot',
-  imports: [BrowserModule, FormsModule, TisCommonModule,
-    BrowserAnimationsModule,
-    MarkdownModule.forRoot({
-      markedOptions: {
-        provide: MarkedOptions,
-        useFactory: markedOptionsFactory
-      }
-    }),
-    RouterModule.forRoot([
-      {  // 索引一览
-        path: '',
-        component: RootWelcomeComponent
-      },
-      {  // 索引一览
-        path: 'base',
-        loadChildren: () => import( "../base/base.manage.module").then(m => m.BasiManageModule)
-      },
-      {  // 用户权限
-        path: 'usr',
-        loadChildren: () => import("../user/user.module").then(m => m.UserModule)
-      },
-      {   // 离线模块
-        path: 'offline',
-        loadChildren: () => import("../offline/offline.module").then(m => m.OfflineModule)
-      },
-      {   // 索引控制台
-        path: 'c/:name',
-        loadChildren: () => import("./core.node.manage.module").then(m => m.CoreNodeManageModule)
-      },
-      {   // datax控制台
-        path: 'x/:name',
-        loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
-      },
-      // {
-      //   path: 'z/zeppelin',
-      //   loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
-      //   outlet: "zeppelin"
-      // }
-      // ,{
-      //   path: 'z/zpl',
-      //   loadChildren: () => import('../zeppelin_app/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
-      // },
-    ])
-  ],
-  declarations: [AppComponent, RootWelcomeComponent
-    // CodemirrorComponent///
-  ],
-  exports: [],
-  entryComponents: [],
-  bootstrap: [AppComponent],
-  // bootstrap: [CodemirrorComponent],
-  providers: [TISService, NzIconService, NzMessageService
-    , {provide: NZ_I18N, useValue: zh_CN},
-    // {
-    //   provide: TRASH_FOLDER_ID_TOKEN,
-    //   useValue: '~Trash'
-    // },
-    // {
-    //   provide: NZ_CODE_EDITOR_CONFIG,
-    //   useValue: {
-    //     defaultEditorOption: {
-    //       scrollBeyondLastLine: false,
-    //       lineHeight: 20
-    //     },
-    //     onLoad: loadMonaco
-    //   }
-    // }
-  ]
+    id: 'tisRoot',
+    imports: [BrowserModule, FormsModule,
+        BrowserAnimationsModule,
+        TisCommonModule,
+        MarkdownModule.forRoot({
+            markedOptions: {
+                provide: MARKED_OPTIONS,
+                useFactory: markedOptionsFactory
+            }
+        }),
+        RouterModule.forRoot([
+            {  // 索引一览
+                path: '',
+                component: RootWelcomeComponent
+            },
+            {  // 索引一览
+                path: 'base',
+                loadChildren: () => import( "../base/base.manage.module").then(m => m.BasiManageModule)
+            },
+            {  // 用户权限
+                path: 'usr',
+                loadChildren: () => import("../user/user.module").then(m => m.UserModule)
+            },
+            {   // 离线模块
+                path: 'offline',
+                loadChildren: () => import("../offline/offline.module").then(m => m.OfflineModule)
+            },
+            {   // 索引控制台
+                path: 'c/:name',
+                loadChildren: () => import("./core.node.manage.module").then(m => m.CoreNodeManageModule)
+            },
+            {   // datax控制台
+                path: 'x/:name',
+                loadChildren: () => import("../datax/datax.module").then(m => m.DataxModule)
+            },
+            // {
+            //   path: 'z/zeppelin',
+            //   loadChildren: () => import('@zeppelin/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+            //   outlet: "zeppelin"
+            // }
+            // ,{
+            //   path: 'z/zpl',
+            //   loadChildren: () => import('../zeppelin_app/pages/workspace/workspace.module').then(m => m.WorkspaceModule),
+            // },
+        ])
+    ],
+    declarations: [AppComponent, RootWelcomeComponent, ChatPipelineComponent
+        // CodemirrorComponent///
+    ],
+    exports: [],
+    bootstrap: [AppComponent],
+    // bootstrap: [CodemirrorComponent],
+    providers: [TISService, NzIconService, NzMessageService
+        , {provide: NZ_I18N, useValue: zh_CN}
+        , provideCharts(withDefaultRegisterables())
+    ]
 
 })
 export class AppModule {
 
-  private appendIconService(iconService: NzIconService, iconDefs: Array<TISIconDefinition>): void {
+    private appendIconService(iconService: NzIconService, iconDefs: Array<TISIconDefinition>): void {
 
-    let id: TISIconDefinition = null;
-    let ref: IconDefinition = null;
-    let iconMap: Map<string, TISIconDefinition> = new Map<string, TISIconDefinition>();
+        let id: TISIconDefinition = null;
+        let ref: IconDefinition = null;
+        let iconMap: Map<string, TISIconDefinition> = new Map<string, TISIconDefinition>();
 
-    for (let i = 0; i < iconDefs.length; i++) {
-      id = iconDefs[i];
-      iconMap.set(id.name + "_" + id.theme, id);
-    }
-
-    for (let i = 0; i < iconDefs.length; i++) {
-      id = iconDefs[i];
-      if (id.ref) {
-        ref = iconMap.get(id.ref + "_" + id.theme);
-        if (!ref) {
-          throw new Error("resource reference:'" + id.ref + "_" + id.theme + "' can not be null");
-        }
-        iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
-      } else {
-        if (id.icon) {
-          iconService.addIcon(iconDefs[i]);
-        }else{
-          ref = iconMap.get(id.name + "_fill"  );
-          if (!ref) {
-            throw new Error("resource:'" + id.name + "_" + id.theme + "' can not find relevant schema of 'fill' type");
-          }
-          iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+        for (let i = 0; i < iconDefs.length; i++) {
+            id = iconDefs[i];
+            iconMap.set(id.name + "_" + id.theme, id);
         }
 
-      }
+        for (let i = 0; i < iconDefs.length; i++) {
+            id = iconDefs[i];
+            if (id.ref) {
+                ref = iconMap.get(id.ref + "_" + id.theme);
+                if (!ref) {
+                    throw new Error("resource reference:'" + id.ref + "_" + id.theme + "' can not be null");
+                }
+                iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+            } else {
+                if (id.icon) {
+                    iconService.addIcon(iconDefs[i]);
+                } else {
+                    ref = iconMap.get(id.name + "_fill");
+                    if (!ref) {
+                        throw new Error("resource:'" + id.name + "_" + id.theme + "' can not find relevant schema of 'fill' type");
+                    }
+                    iconService.addIcon({name: id.name, theme: id.theme, icon: ref.icon});
+                }
+
+            }
+        }
     }
-  }
 
-  constructor(iconService: NzIconService, tisService: TISService, _localStorageService: LocalStorageService) {
-    let localEndTypesIcons: LocalEndtypeIcons = _localStorageService.get(local_endtype_icons)
-    // console.log(localEndTypesIcons);
-    let requestBody = `action=plugin_action&emethod=get_endtype_icons`;
-    if (localEndTypesIcons) {
-      requestBody += ("&vertoken=" + localEndTypesIcons.verToken);
-      this.appendIconService(iconService, localEndTypesIcons.iconsDefs);
-    }
-
-    tisService.httpPost('/coredefine/corenodemanage.ajax', requestBody)
-      .then((result) => {
-        let r: LocalEndtypeIcons = result.bizresult;
-
-        if (r.iconsDefs.length > 0) {
-          this.appendIconService(iconService, r.iconsDefs);
-          _localStorageService.set(local_endtype_icons, r);
+    constructor(iconService: NzIconService, tisService: TISService, _localStorageService: LocalStorageService) {
+        _localStorageService.configure({
+            prefix: 'tis',
+            storageType: 'localStorage'
+        });
+        let localEndTypesIcons: LocalEndtypeIcons = _localStorageService.get(local_endtype_icons)
+        // console.log(localEndTypesIcons);
+        let requestBody = `action=plugin_action&emethod=get_endtype_icons`;
+        if (localEndTypesIcons) {
+            requestBody += ("&vertoken=" + localEndTypesIcons.verToken);
+            this.appendIconService(iconService, localEndTypesIcons.iconsDefs);
         }
 
+        tisService.httpPost('/coredefine/corenodemanage.ajax', requestBody)
+            .then((result) => {
+                let r: LocalEndtypeIcons = result.bizresult;
 
-        // console.log("xxxxxxxxxxxxxxxxxxxxx");
-      });
-    // })();
-    //
+                if (r.iconsDefs.length > 0) {
+                    this.appendIconService(iconService, r.iconsDefs);
+                    _localStorageService.set(local_endtype_icons, r);
+                }
 
 
-  }
+                // console.log("xxxxxxxxxxxxxxxxxxxxx");
+            });
+        // })();
+        //
+
+
+    }
 
 }
 
 interface LocalEndtypeIcons {
-  // 引用其他类型的Icon
-  iconsDefs: Array<TISIconDefinition>;
-  verToken: string;
+    // 引用其他类型的Icon
+    iconsDefs: Array<TISIconDefinition>;
+    verToken: string;
 }
 
 interface TISIconDefinition extends IconDefinition {
-  // 引用其他类型的Icon
-  ref: string;
+    // 引用其他类型的Icon
+    ref: string;
 }

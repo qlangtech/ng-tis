@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, NgZone, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {NgTerminal} from "ng-terminal";
 import {EventSourceSubject, EventType, ExecuteStep, MessageData, TISService} from "./tis.service";
-import {NzStatusType} from "ng-zorro-antd/steps/steps.component";
+import {NzStatusType} from "ng-zorro-antd/steps";
 import {ScalaLog} from "../runtime/misc/RCDeployment";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {HeteroList} from "./tis.plugin";
