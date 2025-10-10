@@ -87,6 +87,7 @@ import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
           <nz-dropdown-menu #baseManage="nzDropdownMenu">
             <ul nz-menu nzSelectable>
               <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
+              <li nz-menu-item><a routerLink="/base/user-profile">会员</a></li>
               <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
               <li nz-menu-item><a routerLink="/base/flink-cluster-list">Flink Cluster</a></li>
               <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>

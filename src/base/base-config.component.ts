@@ -20,9 +20,10 @@ import {BasicFormComponent} from "../common/basic.form.component";
 import {Component, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 
-import {PluginSaveResponse, TisResponseResult} from "../common/tis.plugin";
+import {EXTRA_PARAM_DATAX_NAME, PluginSaveResponse, PluginType, TisResponseResult} from "../common/tis.plugin";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
+import {PowerjobCptType} from "./base.manage-routing.module";
 
 enum PluginCategory {
   Global = 'global',
@@ -35,6 +36,7 @@ enum PluginCategory {
     <tis-page-header title="插件配置"></tis-page-header>
     <nz-spin [nzSize]="'large'" [nzSpinning]="this.formDisabled || pluginComponentDisabled">
       <nz-tabset (nzSelectedIndexChange)="tabChange($event)" [nzSelectedIndex]="selectedIndex">
+
         <nz-tab nzTitle="全局" (nzClick)="goto('global')" (nzDeselect)="configDeSelect($event)">
           <ng-template nz-tab>
             <tis-plugins [showExtensionPoint]="this.showExtensionPoint" [showSaveButton]="true"

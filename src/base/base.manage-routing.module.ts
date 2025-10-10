@@ -40,6 +40,7 @@ import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {EndCptListComponent} from "./end.cpt.list.component";
+import {UserProfileComponent} from "./user.profile.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
 
@@ -431,6 +432,10 @@ const basemanageRoutes: Routes = [
           {
             path: 'departmentlist',
             component: DepartmentListComponent
+          },
+          {
+            path: 'user-profile',
+            component: UserProfileComponent
           },
           {
             path: 'operationlog',

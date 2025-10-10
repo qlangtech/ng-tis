@@ -733,7 +733,8 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         this.subFieldForms.delete(meta.id);
         delete itemVals.vals[meta.id]
       } else if (!itemVals.vals[meta.id]) {
-        let hlist: HeteroList[] = PluginsComponent.pluginDesc(this.subFormHetero.descriptorList[0], null, (key, propVal) => {
+        let hlist: HeteroList[] = PluginsComponent.pluginDesc(
+            this.subFormHetero.descriptorList[0], null, (key, propVal) => {
           if (propVal.pk) {
             propVal.primary = meta.id;
           }

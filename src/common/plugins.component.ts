@@ -434,6 +434,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
       if (r && r.saveSuccess && r.hasBiz()) {
         modalRef.close();
         let db = r.biz();
+       // console.log([r,db])
         onSuccess(r, db);
       }
     });

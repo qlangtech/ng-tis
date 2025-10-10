@@ -201,34 +201,9 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
 
     if (!powerjobServer || !powerjobUseExistCluster || !powerjobWorker || !jobTpl) {
 
-      // let pluginMeta: PluginType = {
-      //   name: 'datax-worker', require: true,
-      //   descFilter: {
-      //     endType: () => 'powerjob',
-      //     localDescFilter: (desc) => true
-      //   }
-      // };
-
-      // ItemPropValComponent.openPluginInstall(
-      //   this.drawerService, this, 'PowerJob'
-      //   , 'com.qlangtech.tis.datax.job.DataXJobWorker', this.pluginCategory);
       this.openPowerJobRelevantPlugin();
       return;
     }
-
-    // if (!powerjobServer) {
-    //   throw new Error("powerjobServer can not be null");
-    // }
-    // if (!powerjobUseExistCluster) {
-    //   throw new Error("powerjobUseExistCluster can not be null");
-    // }
-    // if (!powerjobWorker) {
-    //   throw new Error("powerjobWorker can not be null");
-    // }
-    // if (!jobTpl) {
-    //   throw new Error("jobTpl can not be null");
-    // }
-
 
     this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, this.powerJobPluginCategory);
     this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.powerJobPluginCategory);

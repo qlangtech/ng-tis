@@ -53,6 +53,7 @@ import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.ex
 import {NgTerminalModule} from "ng-terminal";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {EndCptListComponent} from "./end.cpt.list.component";
+import {UserProfileComponent} from "./user.profile.component";
 
 
 @NgModule({
@@ -66,7 +67,7 @@ import {EndCptListComponent} from "./end.cpt.list.component";
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component
     , DataxWorkerAddExistPowerjobClusterComponent
     , DataxWorkerAddStep22Component, DataxWorkerAddStep3Component
-    , DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent
+    , DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent,UserProfileComponent
   ],
   // providers: [TISService,ScriptService]
   exports: [AddAppFlowDirective]

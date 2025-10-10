@@ -1,9 +1,11 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit} from "@angular/core";
+import {Component, ComponentFactoryResolver, model, OnDestroy, OnInit} from "@angular/core";
 import {BasicFormComponent} from "../common/basic.form.component";
-import {HeteroList} from "../common/tis.plugin";
+import {HeteroList, Item, ItemPropVal} from "../common/tis.plugin";
 import {EventSourceSubject, EventType, TISService} from "../common/tis.service";
-import {NzDrawerRef} from "ng-zorro-antd/drawer";
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzMessageService} from "ng-zorro-antd/message";
+import {PluginManageComponent} from "../base/plugin.manage.component";
+import {getUserProfile} from "../base/common/datax.common";
 
 interface ChatMessage {
     role: 'user' | 'assistant' | 'system';
@@ -14,9 +16,37 @@ interface ChatMessage {
     selectionData?: {
         requestId: string;
         prompt: string;
-        options: any;
+        options: { fieldName: string, candidates: Array<CandidateDescriptorOption> };
         [key: string]: any
     };
+}
+
+interface CandidateDescriptorOption {
+    index: number;
+    // plugin display name
+    name: string;
+    /**
+     * 插件扩展点
+     */
+    extendpoint: string;
+    /**
+     * 目标端类型，例如：mysql，doris，starRocks
+     */
+    endType?: string;
+    description: string;
+    installed: boolean;
+    /**
+     * plugin 的实现类
+     */
+    version?: string;
+}
+
+interface SelectionDataOptions {
+    /**
+     * relevant field name
+     * */
+    fieldName: string;
+    candidates: Array<CandidateDescriptorOption>
 }
 
 interface ChatSession {
@@ -33,9 +63,19 @@ interface TaskTemplate {
     sampleText: string;
 }
 
+interface LLMProvider {
+    id: string;
+    name: string;
+    description: string;
+    status: 'active' | 'inactive' | 'error';
+    createTime?: number;
+}
+
 @Component({
     // selector: 'nz-drawer-custom-component',
     template: `
+
+
         <nz-layout class="chat-container">
             <!-- 左侧历史记录面板 -->
             <nz-sider nzWidth="250" nzTheme="light" class="chat-sidebar">
@@ -60,7 +100,39 @@ interface TaskTemplate {
             <nz-layout>
 
                 <nz-header class="chat-header">
-                    <div class="header-content">
+                    <div >
+                        <item-prop-val *ngIf="itemPp" [formLevel]="1"
+                                       [disabled]="false"
+                                       [formControlSpan]="7" [labelSpan]="1" [pp]="itemPp"
+                                       (valChange)="llmChange($event)"
+                        ></item-prop-val>
+                        <!--                        <div class="llm-provider-selector">-->
+                        <!--                            <span class="provider-label">模型:</span>-->
+                        <!--                            <nz-select [(ngModel)]="selectedProviderId"-->
+                        <!--                                       placeholder="请选择大模型提供者"-->
+                        <!--                                       nzShowSearch-->
+                        <!--                                       nzAllowClear-->
+                        <!--                                       class="provider-select"-->
+                        <!--                                       (ngModelChange)="onProviderChange($event)">-->
+                        <!--                                <nz-option *ngFor="let provider of llmProviders"-->
+                        <!--                                           [nzValue]="provider.id"-->
+                        <!--                                           [nzLabel]="provider.name">-->
+                        <!--                                    <span>-->
+                        <!--                                        <i nz-icon-->
+                        <!--                                           [nzType]="getProviderIcon(provider.status)"-->
+                        <!--                                           [class]="'status-' + provider.status"></i>-->
+                        <!--                                        {{provider.name}}-->
+                        <!--                                    </span>-->
+                        <!--                                </nz-option>-->
+                        <!--                            </nz-select>-->
+                        <!--                            <button nz-button-->
+                        <!--                                    nzType="primary"-->
+                        <!--                                    nzSize="small"-->
+                        <!--                                    (click)="createLLMProvider()"-->
+                        <!--                                    nz-tooltip="创建新的模型提供者">-->
+                        <!--                                <i nz-icon nzType="plus"></i>-->
+                        <!--                            </button>-->
+                        <!--                        </div>-->
                         <div class="token-counter" *ngIf="tokenCount > 0">
                             <i nz-icon nzType="fire" nzTheme="fill"></i>
                             Token使用: {{tokenCount}}
@@ -99,13 +171,23 @@ interface TaskTemplate {
                                             <div class="selection-option">
                                                 <div class="option-name">{{option.name}}</div>
                                                 <div class="option-description">{{option.description}}</div>
-                                                <nz-tag *ngIf="option.installed" nzColor="success">已安装</nz-tag>
-                                                <nz-tag *ngIf="!option.installed" nzColor="default">未安装</nz-tag>
+                                                <div class="option-status">
+                                                    <nz-tag *ngIf="option.installed" nzColor="success">已安装</nz-tag>
+                                                    <nz-tag *ngIf="!option.installed" nzColor="default">未安装</nz-tag>
+                                                    <button *ngIf="!option.installed"
+                                                            nz-button
+                                                            nzType="primary"
+                                                            nzSize="small"
+                                                            class="install-button"
+                                                            (click)="installOption(msg.selectionData.requestId,option , msg.selectionData.options.candidates ,$event)">
+                                                        安装
+                                                    </button>
+                                                </div>
                                             </div>
                                         </label>
                                     </nz-radio-group>
                                     <button nz-button nzType="primary"
-                                            [disabled]="msg.selectionData['selectedIndex'] === undefined"
+                                            [disabled]="isSelectionDisabled(msg.selectionData)"
                                             (click)="submitSelection(msg.selectionData)">
                                         确认选择
                                     </button>
@@ -152,7 +234,7 @@ interface TaskTemplate {
                             </nz-textarea-count>
                             <button nz-button
                                     nzType="primary"
-                                    [disabled]="!inputText || isProcessing"
+                                    [disabled]="!inputText || isProcessing || !selectedProviderId"
                                     (click)="sendMessage()">
                                 <i nz-icon nzType="send"></i> 发送
                             </button>
@@ -215,8 +297,7 @@ interface TaskTemplate {
             background: #fff;
             padding: 0 24px;
             border-bottom: 1px solid #e8e8e8;
-            display: flex;
-            align-items: center;
+
         }
 
         .header-content {
@@ -224,6 +305,34 @@ interface TaskTemplate {
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .llm-provider-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .provider-label {
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .provider-select {
+            min-width: 200px;
+        }
+
+        .status-active {
+            color: #52c41a;
+        }
+
+        .status-inactive {
+            color: #faad14;
+        }
+
+        .status-error {
+            color: #ff4d4f;
         }
 
         .token-counter {
@@ -354,6 +463,16 @@ interface TaskTemplate {
             margin-bottom: 4px;
         }
 
+        .option-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .install-button {
+            margin-left: 8px;
+        }
+
         .typing-indicator {
             display: flex;
             align-items: center;
@@ -419,6 +538,10 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     isTyping: boolean = false;
     tokenCount: number = 0;
     templates: TaskTemplate[] = [];
+    llmProviders: LLMProvider[] = [];
+    selectedProviderId: string = '';
+
+    itemPp: ItemPropVal = null;
 
     private eventSource: EventSourceSubject | null = null;
     private currentTypingMessage: string = '';
@@ -427,13 +550,15 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         tisService: TISService,
         public drawer: NzDrawerRef<{ hetero: HeteroList }>,
         private _componentFactoryResolver: ComponentFactoryResolver,
-        private messageService: NzMessageService
+        private messageService: NzMessageService,
+        private drawerService: NzDrawerService
     ) {
         super(tisService);
     }
 
     ngOnInit(): void {
         this.loadTemplates();
+        this.loadLLMProviders();
         this.createNewSession();
     }
 
@@ -451,6 +576,92 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 }
             });
     }
+
+    // createLLMProvider(): void {
+    //     const drawerRef = PluginManageComponent.openPluginManage(
+    //         this.drawerService,
+    //         'com.qlangtech.tis.extension.impl.LLMProvider',
+    //         '',
+    //         []
+    //     );
+    //
+    //     drawerRef.afterClose.subscribe((result) => {
+    //         if (result) {
+    //             this.loadLLMProviders();
+    //             this.messageService.success('大模型提供者创建成功');
+    //         }
+    //     });
+    // }
+
+    llmChange(event: ItemPropVal) {
+
+        this.httpPost('/coredefine/corenodemanage.ajax', `action=chat_pipeline_action&emethod=change_llm&llm=${event.primary}`)
+            .then((r) => {
+                if (r.success) {
+                    this.selectedProviderId = event.primary;
+                    // this.templates = r.bizresult;
+
+                    // this.successNotify()
+                }
+            });
+    }
+
+    loadLLMProviders(): void {
+
+        getUserProfile(this).then((result) => {
+            //  result.userProfileCategory;
+            let hlist = result.hlist;
+            // hlist.descriptors
+            // for (const [key, desc] of hlist.descriptors) {
+            //     let attrDesc = desc.findAttrDesc("llm");
+            //     // attrDesc
+            //
+            //     // for (attrDesc.options) {
+            //     //
+            //     // }
+            //     console.log(attrDesc);
+            //     break;
+            // }
+            aa: for (let item of hlist.items) {
+                for (let pp of item.propVals) {
+                    if (pp.key === 'llm') {
+                        this.itemPp = pp;
+                        this.selectedProviderId = pp.primary;
+                        break aa;
+                    }
+                }
+                throw new Error("have not find llm property");
+            }
+        })
+
+        // this.httpPost('/coredefine/corenodemanage.ajax', 'action=chat_pipeline_action&emethod=get_llm_providers')
+        //     .then((r) => {
+        //         if (r.success) {
+        //             this.llmProviders = r.bizresult;
+        //             if (this.llmProviders.length > 0 && !this.selectedProviderId) {
+        //                 const activeProvider = this.llmProviders.find(p => p.status === 'active');
+        //                 if (activeProvider) {
+        //                     this.selectedProviderId = activeProvider.id;
+        //                 }
+        //             }
+        //         }
+        //     });
+    }
+
+
+    getProviderIcon(status: string): string {
+        switch (status) {
+            case 'active':
+                return 'check-circle';
+            case 'inactive':
+                return 'exclamation-circle';
+            case 'error':
+                return 'close-circle';
+            default:
+                return 'question-circle';
+        }
+    }
+
 
     createNewSession(): void {
         this.httpPost('/coredefine/corenodemanage.ajax', 'action=chat_pipeline_action&emethod=create_session')
@@ -482,7 +693,10 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     }
 
     sendMessage(): void {
-        if (!this.inputText || this.isProcessing) {
+        if (!this.inputText || this.isProcessing || !this.selectedProviderId) {
+            if (!this.selectedProviderId) {
+                this.messageService.warning('请先选择大模型提供者');
+            }
             return;
         }
 
@@ -510,7 +724,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
     private connectSSE(userInput: string): void {
         const url = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=chat` +
-            `&resulthandler=exec_null&sessionId=${this.currentSessionId}&input=${encodeURIComponent(userInput)}`;
+            `&resulthandler=exec_null&sessionId=${this.currentSessionId}&input=${encodeURIComponent(userInput)}` +
+            `&providerId=${this.selectedProviderId}`;
 
         this.eventSource = this.tisService.createEventSource(
             "tis-ai-agent", url, [
@@ -609,6 +824,12 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         this.scrollToBottom();
     }
 
+
+    /**
+     * CandidateDescriptorOption
+     * @param data
+     * @private
+     */
     private addSelectionMessage(data: any): void {
         const message: ChatMessage = {
             role: 'assistant',
@@ -647,6 +868,73 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         }).catch(error => {
             this.messageService.error('提交失败: ' + error);
         });
+    }
+
+    installOption(requestId: string, option: CandidateDescriptorOption, candidates: Array<CandidateDescriptorOption>, event: Event): void {
+        // 阻止事件冒泡，防止触发radio选择
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        const drawerRef
+            = PluginManageComponent.openPluginManage(this.drawerService, option.extendpoint, option.endType, []);
+        drawerRef.afterClose.subscribe((result) => {
+            const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=checkInstallOption`;
+            this.jsonPost(url, {
+                sessionId: this.currentSessionId,
+                requestId: requestId,
+            }).then(response => {
+                let updateCandidates: Array<CandidateDescriptorOption> = response.bizresult;
+                let local: CandidateDescriptorOption = null;
+                let update: CandidateDescriptorOption = null;
+                for (let idx = 0; idx < updateCandidates.length; idx++) {
+                    local = candidates[idx];
+                    update = updateCandidates[idx];
+                    if (local.installed != update.installed) {
+                        local.installed = update.installed;
+                        if (local.installed) {
+                            this.messageService.success('插件' + local.name + '已安装');
+                        }
+                    }
+                }
+
+            }).catch(error => {
+                this.messageService.error('提交失败: ' + error);
+            });
+        });
+
+        // }
+
+        // const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=installOption`;
+        //
+        // this.jsonPost(url, {
+        //     sessionId: this.currentSessionId,
+        //     optionIndex: option.index,
+        //     optionName: option.name
+        // }).then(response => {
+        //     if (response.success) {
+        //         // 更新选项状态为已安装
+        //         option.installed = true;
+        //         this.messageService.success(`${option.name} 安装成功`);
+        //     } else {
+        //         this.messageService.error(`安装失败: ${response.msg || '未知错误'}`);
+        //     }
+        // }).catch(error => {
+        //     this.messageService.error(`安装失败: ${error}`);
+        // });
+    }
+
+    isSelectionDisabled(selectionData: any): boolean {
+        if (selectionData.selectedIndex === undefined) {
+            return true;
+        }
+
+        const selectedOption = selectionData.options.candidates.find(
+            (option: any) => option.index === selectionData.selectedIndex
+        );
+
+        return selectedOption && !selectedOption.installed;
     }
 
     private addErrorMessage(error: string): void {
@@ -707,4 +995,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         }
         this.drawer.close();
     }
+
+    protected readonly model = model;
+
+
 }
