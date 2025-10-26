@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {TISService} from "../../common/tis.service";
 import {NzDrawerRef} from "ng-zorro-antd/drawer";
-import {HeteroList, PluginSaveResponse, SavePluginEvent} from "../../common/tis.plugin";
+import {HeteroList, PluginSaveResponse, SavePluginEvent, VerifyConfig} from "../../common/tis.plugin";
 import {BasicSelectedTabManagerComponent} from "./basic-selected-tab-manager-component";
 const KEY_SKIP_TRANSFORMER = 'skip';
 
@@ -67,7 +67,8 @@ export class TableBaseComponent extends BasicSelectedTabManagerComponent impleme
 
   private createSaveEvent(skip: boolean) {
     let evt = new SavePluginEvent();
-    evt.verifyConfig = true;
+   // evt.verifyConfig = true;
+    evt.verifyConfig = VerifyConfig.VERIFY;
     evt.postPayload = {};
     evt.postPayload[KEY_SKIP_TRANSFORMER] = skip;
     return evt;

@@ -415,25 +415,7 @@ export class Descriptor {
         , itemPropSetter: (key: string, propVal: ItemPropVal) => ItemPropVal): void {
         let nItem = Descriptor.createNewItem(des, updateModel, itemPropSetter);
 
-        // nItem.displayName = des.displayName;
-        // nItem.implUrl = des.implUrl;
-        // // nItem.containAdvance = des.containAdvance;
-        // des.attrs.forEach((attr) => {
-        //   //Item.wrapItemPropVal
-        //   nItem.vals[attr.key] = itemPropSetter(attr.key, ((attr.addNewEmptyItemProp(updateModel))));
-        // });
-
-        // nItem.wrapItemVals();
-
-        // let nitems: Item[] = [];
-        // // console.log(h.items);
-        // h.items.forEach((r) => {
-        //   nitems.push(r);
-        // });
-        // //
-        // nitems.push(nItem);
-
-        h.items = [...h.items, nItem]; //nitems;
+        h.items = [...h.items, nItem];
     }
 
 
@@ -739,29 +721,23 @@ export class Item {
             return v;
         }
         let newVal: ItemPropVal = at.addNewEmptyItemProp(true);
-        // console.log([at.key, at]);
+
         if (at.describable) {
             let d = at.descriptors.get(v.impl);
             if (!d) {
-                //
-                throw new Error(`impl:${v.impl} can not find relevant descriptor`);
+                console.log(v);
+                throw new Error(`impl:${v.impl},field:${at.key} exist descs:${at.descriptors.size} can not find relevant descriptor`);
             }
             let ii: Item = Object.assign(new Item(d), v);
             ii.wrapItemVals();
-            // console.log([ii,at]);
             newVal.descVal = at.createDescribleVal(ii);
         } else {
-            // console.log([at.key, at.isMultiSelectableType]);
             if (at.isMultiSelectableType) {
                 this.buildMultiSelectedAttr(v, at, newVal);
-
-
             } else {
                 newVal._primaryVal = v;
             }
-            // newVal.pk = (at.key === this.dspt.pkField);
         }
-        // console.log([newVal.key,newVal]);
         return newVal;
     }
 
@@ -1125,7 +1101,7 @@ export class PluginSaveResponse {
     }
 
     public get verify(): boolean {
-        return this.savePluginEvent && this.savePluginEvent.verifyConfig;
+        return this.savePluginEvent && (this.savePluginEvent.verifyConfig === VerifyConfig.VERIFY);
     }
 
     public hasBiz(): boolean {
@@ -1157,12 +1133,36 @@ export interface OptionEnum {
     checked: boolean;
 }
 
+export enum VerifyConfig {
+    FIRST_VALIDATE = ("first"),
+    SECOND_VALIDATE = ("second"),
+    VERIFY = ("verify"),
+    /**
+     * 最严格的校验 VERIFY + FIRST_VALIDATE 都要执行
+     */
+    STRICT = ("strict")
+}
+
 export const FLAG_DELETE_PROCESS = "deleteProcess";
 
 export class SavePluginEvent {
+    /**
+     * 是否跳过插件持久化保存阶段
+     */
+    skipPluginSave: boolean = false;
+    public verifyConfig: VerifyConfig = VerifyConfig.FIRST_VALIDATE;
 
-    // savePlugin: EventEmitter<{ ?: boolean, ?: boolean }>;
-    // 创建notebook
+    public get justVerify(): boolean {
+        return this.verifyConfig === VerifyConfig.VERIFY;
+    }
+
+    /**
+     * example: "coredefine:core_action:determine_process_kerbernete_application_cfg";
+     */
+    public serverForward;
+    public postPayload: { [key: string]: any };
+    public overwriteHttpHeader: Map<string, string>;
+
     constructor(public notShowBizMsg = false) {
     }
 
@@ -1172,23 +1172,10 @@ export class SavePluginEvent {
         this.overwriteHttpHeader = headerOverwrite;
     }
 
-    // public createOrGetNotebook = false;
-    public verifyConfig = false;
-    // public notShowBizMsg = false;
-    // 顺带要在服务端执行一段脚本
-    // namespace:corename:method
-    /**
-     * example: "coredefine:core_action:determine_process_kerbernete_application_cfg";
-     */
-    public serverForward;
-    public postPayload: { [key: string]: any };
-
     get deleteProcess(): boolean {
         return this.postPayload && this.postPayload[FLAG_DELETE_PROCESS];
     }
 
-    // public basicModule: BasicFormComponent;
-    public overwriteHttpHeader: Map<string, string>;
 }
 
 export interface DataType {
@@ -1217,11 +1204,14 @@ export class SuccessAddedDBTabs {
     public db: DataBase;
 
     constructor(tab: TablePojo, private tabs: { [key: string]: Array<Item> }) {
-        this.db = new DataBase(tab.dbId, tab.dbName);
+        if (tab) {
+            this.db = new DataBase(tab.dbId, tab.dbName);
+        }
     }
 
     public get tabKeys(): Array<string> {
         let tabs: Array<string> = [];
+
         for (let tabName in this.tabs) {
             tabs.push(tabName);
         }

@@ -114,14 +114,17 @@ import {createDrawer} from "../ds.quick.manager.component";
                   </ng-container>
                   <ng-container *ngSwitchCase="6">
                     <!--select-->
+
                       <nz-select [attr.data-testid]="_pp.key" [disabled]="disabled" [(ngModel)]="_pp.primary"
-                                 [name]="_pp.key"
+                                 [name]="_pp.key" [nzCustomTemplate]="selOptsTpl"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option nzCustomContent *ngFor="let e of _pp.options" [nzLabel]="e.name"
-                                      [nzValue]="e.name">
-                             <span *ngIf="e.endType" nzTheme="fill" nz-icon nz [nzType]="e.endType"></span> {{e.name}}
+                                      [nzValue]="e.name" [nzDisabled]="false" [nzTitle]="e.endType" >
+                             {{e.name}}
                            </nz-option>
                        </nz-select>
+
+                       <ng-template #selOptsTpl let-opt> <span nz-icon style="font-size: 18px" [nzType]="opt.nzTitle" nzTheme="fill" ></span> {{ opt.nzLabel}}</ng-template>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
@@ -413,6 +416,11 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         return (this._pp && this._pp.pk && this._pp.updateModel) || this._disabled || this._pp.readonly;
     }
 
+    getOptionEndType(opt: any, pp: ItemPropVal): string {
+        // 通过 nzValue 找到对应的 option 对象
+        console.log(opt);
+        return 'folder'; // 如果找不到，返回默认图标
+    }
 
     @Input() set pp(item: ItemPropVal) {
         // console.log(item);
@@ -670,6 +678,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
 
     reloadSelectableItems() {
+        if (!this._pluginImpl) {
+            throw new Error("prop _pluginImpl can not be null");
+        }
         let url = "/coredefine/corenodemanage.ajax";
         this.httpPost(url, `action=plugin_action&emethod=get_fresh_enum_field&impl=${this._pluginImpl}&field=${this._pp.key}`)
             .then((r) => {

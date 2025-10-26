@@ -1,24 +1,50 @@
 import {Component, ComponentFactoryResolver, model, OnDestroy, OnInit} from "@angular/core";
 import {BasicFormComponent} from "../common/basic.form.component";
-import {HeteroList, Item, ItemPropVal} from "../common/tis.plugin";
+import {
+    Descriptor,
+    HeteroList,
+    ItemPropVal,
+    PluginName,
+    SavePluginEvent,
+    SuccessAddedDBTabs,
+    VerifyConfig
+} from "../common/tis.plugin";
 import {EventSourceSubject, EventType, TISService} from "../common/tis.service";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {getUserProfile} from "../base/common/datax.common";
+import {PluginsComponent} from "../common/plugins.component";
+import {ProcessedDBRecord} from "../common/ds.utils";
+import {DatasourceComponent} from "../offline/ds.component";
+import {ExecAddModel} from "../offline/table.add.component";
+import {NzNotificationService} from "ng-zorro-antd/notification";
+import {NzModalService} from "ng-zorro-antd/modal";
 
 interface ChatMessage {
     role: 'user' | 'assistant' | 'system';
     content: string;
     timestamp: number;
-    type?: 'text' | 'plugin' | 'error' | 'progress' | 'selection';
-    pluginData?: any;
-    selectionData?: {
-        requestId: string;
-        prompt: string;
-        options: { fieldName: string, candidates: Array<CandidateDescriptorOption> };
-        [key: string]: any
-    };
+    type?: 'text' | 'plugin' | 'error' | 'progress' | 'selection' | 'select_tabs';
+    pluginData?: HeteroList;
+    dataxName?: string;
+    dataXReaderDesc?: Descriptor;
+    requestId?: string;
+    selectionData?: SelectionOptionData;
+}
+
+interface SubmitInfo {
+    requestId: string;
+    sessionId: string;
+
+    [key: string]: any;
+}
+
+interface SelectionOptionData {
+    prompt: string;
+    options: { fieldName: string, candidates: Array<CandidateDescriptorOption> };
+
+    [key: string]: any
 }
 
 interface CandidateDescriptorOption {
@@ -100,10 +126,10 @@ interface LLMProvider {
             <nz-layout>
 
                 <nz-header class="chat-header">
-                    <div >
+                    <div>
                         <item-prop-val *ngIf="itemPp" [formLevel]="1"
                                        [disabled]="false"
-                                       [formControlSpan]="7" [labelSpan]="1" [pp]="itemPp"
+                                       [formControlSpan]="7" [labelSpan]="1" [pp]="itemPp" [pluginImpl]="this.itemImpl"
                                        (valChange)="llmChange($event)"
                         ></item-prop-val>
                         <!--                        <div class="llm-provider-selector">-->
@@ -158,8 +184,15 @@ interface LLMProvider {
                                     <span class="progress-text">{{msg.content}}</span>
                                 </div>
                                 <div *ngIf="msg.type === 'plugin'" class="message-plugin">
-                                    <button nz-button nzType="primary" (click)="openPluginDialog(msg.pluginData)">
+                                    <button nz-button nzType="primary" nzSize="small"
+                                            (click)="openPluginDialog(msg)">
                                         <i nz-icon nzType="setting"></i> 配置插件
+                                    </button>
+                                </div>
+                                <div *ngIf="msg.type === 'select_tabs'" class="message-select-tabs">
+                                    <button nz-button nzType="primary" nzSize="small"
+                                            (click)="openSelectTargetTablesDialog(msg)">
+                                        <i nz-icon nzType="setting"></i>设置目标表
                                     </button>
                                 </div>
                                 <div *ngIf="msg.type === 'selection'" class="message-selection">
@@ -179,16 +212,16 @@ interface LLMProvider {
                                                             nzType="primary"
                                                             nzSize="small"
                                                             class="install-button"
-                                                            (click)="installOption(msg.selectionData.requestId,option , msg.selectionData.options.candidates ,$event)">
+                                                            (click)="installOption(msg.selectionData, msg.requestId,option  ,$event)">
                                                         安装
                                                     </button>
                                                 </div>
                                             </div>
                                         </label>
                                     </nz-radio-group>
-                                    <button nz-button nzType="primary"
+                                    <button nz-button nzType="primary" nzSize="small"
                                             [disabled]="isSelectionDisabled(msg.selectionData)"
-                                            (click)="submitSelection(msg.selectionData)">
+                                            (click)="submitSelection(msg)">
                                         确认选择
                                     </button>
                                 </div>
@@ -542,6 +575,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     selectedProviderId: string = '';
 
     itemPp: ItemPropVal = null;
+    itemImpl: string;
 
     private eventSource: EventSourceSubject | null = null;
     private currentTypingMessage: string = '';
@@ -551,9 +585,11 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         public drawer: NzDrawerRef<{ hetero: HeteroList }>,
         private _componentFactoryResolver: ComponentFactoryResolver,
         private messageService: NzMessageService,
-        private drawerService: NzDrawerService
+        private drawerService: NzDrawerService,
+        // modalService: NzModalService,
+        notification: NzNotificationService
     ) {
-        super(tisService);
+        super(tisService, null, notification);
     }
 
     ngOnInit(): void {
@@ -609,23 +645,14 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     loadLLMProviders(): void {
 
         getUserProfile(this).then((result) => {
-            //  result.userProfileCategory;
             let hlist = result.hlist;
-            // hlist.descriptors
-            // for (const [key, desc] of hlist.descriptors) {
-            //     let attrDesc = desc.findAttrDesc("llm");
-            //     // attrDesc
-            //
-            //     // for (attrDesc.options) {
-            //     //
-            //     // }
-            //     console.log(attrDesc);
-            //     break;
-            // }
             aa: for (let item of hlist.items) {
+
                 for (let pp of item.propVals) {
                     if (pp.key === 'llm') {
+                        // console.log(item.impl);
                         this.itemPp = pp;
+                        this.itemImpl = item.impl;
                         this.selectedProviderId = pp.primary;
                         break aa;
                     }
@@ -633,33 +660,6 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 throw new Error("have not find llm property");
             }
         })
-
-        // this.httpPost('/coredefine/corenodemanage.ajax', 'action=chat_pipeline_action&emethod=get_llm_providers')
-        //     .then((r) => {
-        //         if (r.success) {
-        //             this.llmProviders = r.bizresult;
-        //             if (this.llmProviders.length > 0 && !this.selectedProviderId) {
-        //                 const activeProvider = this.llmProviders.find(p => p.status === 'active');
-        //                 if (activeProvider) {
-        //                     this.selectedProviderId = activeProvider.id;
-        //                 }
-        //             }
-        //         }
-        //     });
-    }
-
-
-    getProviderIcon(status: string): string {
-        switch (status) {
-            case 'active':
-                return 'check-circle';
-            case 'inactive':
-                return 'exclamation-circle';
-            case 'error':
-                return 'close-circle';
-            default:
-                return 'question-circle';
-        }
     }
 
 
@@ -730,7 +730,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         this.eventSource = this.tisService.createEventSource(
             "tis-ai-agent", url, [
                 EventType.AI_AGNET_ERROR, EventType.AI_AGNET_DONE, EventType.AI_AGNET_MESSAGE
-                , EventType.AI_AGNET_PLUGIN, EventType.AI_AGNET_PROGRESS, EventType.AI_AGNET_INPUT_REQUEST
+                , EventType.AI_AGNET_PLUGIN, EventType.AI_AGNET_PROGRESS, EventType.AI_AGNET_INPUT_REQUEST, EventType.AI_AGNET_SELECT_TABS
                 , EventType.AI_AGNET_SELECTION_REQUEST, EventType.AI_AGNET_TOKEN, EventType.SSE_CLOSE]);
         this.eventSource.events.subscribe((evt: [EventType, any]) => {
             let data = evt[1];
@@ -746,6 +746,10 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 }
                 case EventType.AI_AGNET_ERROR: {
                     this.addErrorMessage(data.message);
+                    return;
+                }
+                case EventType.AI_AGNET_SELECT_TABS: {
+                    this.selectTargetTables(data);
                     return;
                 }
                 case EventType.AI_AGNET_MESSAGE: {
@@ -782,6 +786,27 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         });
     }
 
+    private selectTargetTables(data: any) {
+        // let hlist = PluginsComponent.wrapperHeteroList(data.config, null);
+        let descMap = Descriptor.wrapDescriptors(data.dataXReaderDesc);
+        for (const [impl, desc] of descMap) {
+            const message: ChatMessage = {
+                role: 'assistant',
+                content: '选择目标表',
+                timestamp: Date.now(),
+                type: 'select_tabs',
+                requestId: data.requestId,
+                dataxName: data.dataxName,
+                dataXReaderDesc: desc
+            };
+            this.currentMessages.push(message);
+            this.scrollToBottom();
+            return;
+        }
+
+        throw new Error("have not find any desc");
+    }
+
     private handleSSEMessage(data: any): void {
         this.isTyping = false;
 
@@ -813,12 +838,16 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     }
 
     private addPluginMessage(data: any): void {
+        // console.log(data.config);
+        let hlist = PluginsComponent.wrapperHeteroList(data.config, null);
+
         const message: ChatMessage = {
             role: 'assistant',
             content: '插件配置',
             timestamp: Date.now(),
             type: 'plugin',
-            pluginData: data
+            requestId: data.requestId,
+            pluginData: hlist
         };
         this.currentMessages.push(message);
         this.scrollToBottom();
@@ -836,8 +865,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             content: data.prompt,
             timestamp: Date.now(),
             type: 'selection',
+            requestId: data.requestId,
             selectionData: {
-                requestId: data.requestId,
                 prompt: data.prompt,
                 options: data.options,
                 selectedIndex: undefined
@@ -851,26 +880,35 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         this.scrollToBottom();
     }
 
-    submitSelection(selectionData: any): void {
+    submitSelection(chatMsg: ChatMessage): void {
+        let selectionData = chatMsg.selectionData;
         if (selectionData.selectedIndex === undefined) {
             this.messageService.warning('请先选择一个选项');
             return;
         }
 
         const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=submitSelection`;
-
-        this.jsonPost(url, {
-            sessionId: this.currentSessionId,
-            requestId: selectionData.requestId,
-            selectedIndex: selectionData.selectedIndex
-        }).then(response => {
+        let submitInfo: SubmitInfo =
+            {
+                sessionId: this.currentSessionId,
+                requestId: chatMsg.requestId,
+                selectedIndex: selectionData.selectedIndex
+            };
+        this.jsonPost(url, submitInfo).then(response => {
             this.messageService.success('选择已提交');
         }).catch(error => {
             this.messageService.error('提交失败: ' + error);
         });
     }
 
-    installOption(requestId: string, option: CandidateDescriptorOption, candidates: Array<CandidateDescriptorOption>, event: Event): void {
+
+    installOption(selectionOpt: SelectionOptionData, requestId: string
+        , option: CandidateDescriptorOption
+        , event: Event): void {
+        if (!requestId) {
+            throw new Error("param requestId can not be empty");
+        }
+        let candidates = selectionOpt.options;
         // 阻止事件冒泡，防止触发radio选择
         if (event) {
             event.stopPropagation();
@@ -881,10 +919,12 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             = PluginManageComponent.openPluginManage(this.drawerService, option.extendpoint, option.endType, []);
         drawerRef.afterClose.subscribe((result) => {
             const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=checkInstallOption`;
-            this.jsonPost(url, {
+
+            const submitInfo: SubmitInfo = {
                 sessionId: this.currentSessionId,
                 requestId: requestId,
-            }).then(response => {
+            };
+            this.jsonPost(url, submitInfo).then(response => {
                 let updateCandidates: Array<CandidateDescriptorOption> = response.bizresult;
                 let local: CandidateDescriptorOption = null;
                 let update: CandidateDescriptorOption = null;
@@ -925,7 +965,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         // });
     }
 
-    isSelectionDisabled(selectionData: any): boolean {
+    isSelectionDisabled(selectionData: SelectionOptionData): boolean {
         if (selectionData.selectedIndex === undefined) {
             return true;
         }
@@ -948,9 +988,95 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         this.scrollToBottom();
     }
 
-    openPluginDialog(pluginData: any): void {
-        // TODO: 调用PluginsComponent.openPluginDialog显示插件配置对话框
-        console.log('Open plugin dialog:', pluginData);
+    /**
+     * 选择目标表
+     * @param chatMsg
+     */
+    openSelectTargetTablesDialog(chatMsg: ChatMessage): void {
+
+        if (!chatMsg.dataxName || !chatMsg.dataXReaderDesc) {
+            throw new Error("!chatMsg.dataxName || !chatMsg.dataXReaderDesc");
+        }
+
+        DatasourceComponent.openAddTableDialog(this
+            , (cpt) => {
+                cpt.execAddMode = ExecAddModel.Pipeline;
+                cpt.processMode.dtoSet = (dto) => {
+
+                    dto.tablePojo = null;
+                    dto.dataxPipeName = chatMsg.dataxName;
+                    dto.readerDescriptor = (chatMsg.dataXReaderDesc)
+
+                    if (!dto.readerDescriptor) {
+                        throw new Error("readerDescriptor can not be null");
+                    }
+                }
+            })
+            .then((r: SuccessAddedDBTabs) => {
+                // 提交服务服务端继续执行
+                const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=confirmTableSelection`;
+
+                const submitInfo: SubmitInfo = {
+                    sessionId: this.currentSessionId,
+                    requestId: chatMsg.requestId,
+                    "selectedTabs": r.tabKeys
+                };
+                this.jsonPost(url, submitInfo).then((response) => {
+                    if (response.success) {
+                        this.successNotify("已经选择了" + r.tabKeys.length + "张目标表");
+                    }
+                }).catch(error => {
+                    this.messageService.error('提交失败: ' + error);
+                });
+            });
+
+    }
+
+    openPluginDialog(chatMsg: ChatMessage): void {
+        let requestId: string = chatMsg.requestId;
+        let pluginData: HeteroList = chatMsg.pluginData;
+        if (!requestId) {
+            console.log(chatMsg);
+            throw new Error("illegal argument requestId can not be empty");
+        }
+        let pluginDesc: Descriptor = null;
+        for (const [key, val] of pluginData.descriptors) {
+            pluginDesc = val;
+            break;
+        }
+        for (const item of pluginData.items) {
+            if (!pluginDesc) {
+                throw new Error("pluginDesc can not be null");
+            }
+            let saveOpt = new SavePluginEvent();
+            saveOpt.verifyConfig = VerifyConfig.STRICT;
+            saveOpt.skipPluginSave = true;
+            saveOpt.serverForward = "coredefine:chat_pipeline_action:submit_plugin_props_complement";
+
+            const submitInfo: SubmitInfo = {
+                sessionId: this.currentSessionId,
+                requestId: requestId
+            };
+
+            saveOpt.postPayload = submitInfo;
+            PluginsComponent.openPluginDialog({
+                    shallLoadSavedItems: false,
+                    item: item,
+                    opt: saveOpt,
+                    savePluginEventCreator: () => saveOpt
+                } //
+                , this, pluginDesc
+                , {
+                    name: pluginData.identityId as PluginName, require: true
+                }
+                , `设置${pluginDesc.displayName}实例`
+                , (saveResult, plugin: ProcessedDBRecord) => {
+
+                });
+            return;
+        }
+
+        throw new Error("have not find any item,item size:" + pluginData.items.length);
     }
 
     formatMessage(content: string): string {

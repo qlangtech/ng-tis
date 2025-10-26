@@ -193,7 +193,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       throw new Error("descriptor can not be null");
     }
     // ,targetItemDesc_batch_source_process_extend
-      console.log([meta, this.dataXReaderTargetName,this.descriptor]);
+     // console.log([meta, this.dataXReaderTargetName,this.descriptor]);
     let detailId = meta.id;
     let pluginMeta: PluginType[]
       = [dataXReaderSubFormPluginMeta(
@@ -405,7 +405,6 @@ export class SelectedTabsComponent extends BasicFormComponent {
 // 设置所选table的表以及 表的列
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
-  // templateUrl: '/runtime/addapp.htm'
   selector: "datax-reader-table-select",
   template: `
     <tis-steps *ngIf="createModel && this.dto.headerStepShow" [type]="stepType" [step]="0"></tis-steps>
@@ -452,10 +451,7 @@ export class SelectedTabsComponent extends BasicFormComponent {
       </ng-template>
     </nz-spin>
   `
-  , styles: [
-    `
-    `
-  ]
+  , styles: [``]
 })
 export class DataxAddStep4Component extends BasicDataXAddComponent implements OnInit, AfterViewInit {
   errorItem: Item = Item.create([]);
@@ -484,13 +480,6 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   writerDesc: Array<Descriptor> = [];
   tabFormErrors: Map<string, Array<IFieldError>>;
 
-  // savePlugin = new EventEmitter<any>();
-
-
-
-
-
-
   /**
    *
    * @param baseCpt
@@ -510,11 +499,8 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
         }
         let subFieldForms: Map<string /*tableName*/, Array<Item>> = new Map();
         let subFormHetero: HeteroList = hList[0];
-        // console.log(subFormHetero);
         let item: Item = null;
         let subForm: Array<Item> = null;
-        //  let desc: Descriptor = subFormHetero.descriptors.get(this.dto.readerDescriptor.impl);
-
         if (!readerDescriptorImpl) {
           item = subFormHetero.items[0];
           if (!item) {
@@ -522,20 +508,16 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           }
           readerDescriptorImpl = item.impl;
         }
-
         if (!readerDescriptorImpl) {
           throw new Error("readerDescriptorImpl can not be undefined");
         }
-        //console.log([subFormHetero.descriptors,readerDescriptorImpl]);
         let desc: Descriptor = subFormHetero.descriptors.get(readerDescriptorImpl);
         if (!desc) {
-          // console.log(subFormHetero.descriptors.keys());
           throw new Error("readerDescriptorImpl:" + readerDescriptorImpl);
         }
 
         for (let itemIdx = 0; itemIdx < subFormHetero.items.length; itemIdx++) {
           item = subFormHetero.items[itemIdx];
-         // console.log([subFormHetero.items, itemIdx ,item]);
           for (let tabKey in item.vals) {
             /**==========================
              *START: 删除历史脏数据保护措施
@@ -553,9 +535,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
             //  item.wrapItemVals();
             // @ts-ignore
             subForm = item.vals[tabKey];
-            // console.log([tabKey, subForm]);
-            // Item.wrapItemPropVal(v, at);
-             console.log([tabKey,subForm]);
+            // console.log([tabKey,subForm]);
             subFieldForms.set(tabKey, subForm);
           }
           break;
@@ -565,13 +545,13 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
           throw new Error("readerDescriptorImpl:" + readerDescriptorImpl + ",desc:" + desc.impl + " must has subForm");
         }
 
-        // console.log(subFieldForms);
         subFieldFormsCallback(subFieldForms, subFormHetero, desc);
       }
     );
   }
 
-  constructor(tisService: TISService, modalService: NzModalService, private drawerService: NzDrawerService, r: Router, route: ActivatedRoute, notification: NzNotificationService) {
+  constructor(tisService: TISService, modalService: NzModalService
+              , private drawerService: NzDrawerService, r: Router, route: ActivatedRoute, notification: NzNotificationService) {
     super(tisService, modalService, r, route, notification);
   }
 

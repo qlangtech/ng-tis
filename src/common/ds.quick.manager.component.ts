@@ -156,18 +156,6 @@ export class DatasourceQuickManagerComponent extends BasicFormComponent implemen
         this.hasSaved = true;
         let newDb: DataBaseMeta = {id: db.dbId, name: db.name, iconEndtype: pluginDesc.endtype};
         this.dsList = [newDb, ...this.dsList];
-        // let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};
-        // origin[KEY_DB_ID] = `${db.dbId}`;
-        // // KEY_DB_ID
-        // let newNode: NzTreeNodeOptions[] = [origin];
-        // this.nodes = newNode.concat(this.nodes);
-        //
-        // let e = {'type': NodeType.DB, 'dbId': `${db.dbId}`};
-        // // console.log([db, e, newNode]);
-        // this.treeNodeClicked = true;
-        // this.onEvent(e);
-        // this.addDBNode(db);
-        //  this.notify.success("成功", `数据库${db.name}添加成功`, {nzDuration: 6000});
       });
   }
 

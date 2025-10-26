@@ -116,9 +116,7 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
           require: true,
           appendParams: appendParams
         };
-        // console.log([pluginDesc,pluginCategory]);
 
-        // console.log(dto);
         let containTplRewriterPlugin = dto.typedPluginCount[PowerjobCptType.JobTplAppOverwrite];
         let modelRef = PluginsComponent.openPluginDialog({
             opt: opt,
