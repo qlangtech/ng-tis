@@ -19,8 +19,6 @@
 import {TISService} from '../common/tis.service';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {PluginSaveResponse} from "../common/tis.plugin";
-import {NotebookwrapperComponent} from "../common/plugins.component";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({

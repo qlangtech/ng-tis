@@ -119,12 +119,12 @@ import {createDrawer} from "../ds.quick.manager.component";
                                  [name]="_pp.key" [nzCustomTemplate]="selOptsTpl"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option nzCustomContent *ngFor="let e of _pp.options" [nzLabel]="e.name"
-                                      [nzValue]="e.name" [nzDisabled]="false" [nzTitle]="e.endType" >
+                                      [nzValue]="e.name" [nzDisabled]="false" [nzTitle]="e.endType?e.endType:null" >
                              {{e.name}}
                            </nz-option>
                        </nz-select>
 
-                       <ng-template #selOptsTpl let-opt> <span nz-icon style="font-size: 18px" [nzType]="opt.nzTitle" nzTheme="fill" ></span> {{ opt.nzLabel}}</ng-template>
+                       <ng-template #selOptsTpl let-opt> <span nz-icon style="font-size: 18px" *ngIf="opt.nzTitle" [nzType]="opt.nzTitle" nzTheme="fill" ></span> {{ opt.nzLabel}}</ng-template>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->

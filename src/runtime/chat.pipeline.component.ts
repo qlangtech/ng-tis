@@ -167,7 +167,7 @@ interface LLMProvider {
                 </nz-header>
                 <nz-content class="chat-content">
                     <!-- 消息列表 -->
-                    <div class="messages-container" #messagesContainer>
+                    <div class="messages-container" #messagesContainer *ngIf="hasMessages">
                         <div *ngFor="let msg of currentMessages" class="message" [ngClass]="'message-' + msg.role">
                             <div class="message-avatar">
                                 <i nz-icon [nzType]="msg.role === 'user' ? 'user' : 'robot'" nzTheme="outline"></i>
@@ -244,7 +244,7 @@ interface LLMProvider {
                     </div>
 
                     <!-- 输入区域 -->
-                    <div class="input-area">
+                    <div class="input-area" [ngClass]="{'input-area-centered': !hasMessages, 'input-area-bottom': hasMessages}">
                         <!-- 快捷模板按钮 -->
                         <div class="template-buttons">
                             <button *ngFor="let template of templates"
@@ -260,7 +260,7 @@ interface LLMProvider {
                             <nz-textarea-count [nzMaxCharacterCount]="1000">
                 <textarea nz-input
                           [(ngModel)]="inputText"
-                          rows="2"
+                          [rows]="hasMessages ? 3 : 2"
                           placeholder="请描述您的需求，例如：创建MySQL到Paimon的数据同步管道..."
                           (keydown.enter)="$event.ctrlKey && sendMessage()">
                 </textarea>
@@ -380,6 +380,7 @@ interface LLMProvider {
             background: #fff;
             margin: 16px;
             border-radius: 4px;
+            position: relative;
         }
 
         .messages-container {
@@ -539,9 +540,41 @@ interface LLMProvider {
         }
 
         .input-area {
-            border-top: 1px solid #e8e8e8;
             padding: 16px;
             background: #fff;
+            width: 100%;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-area-centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            padding: 24px;
+            background: linear-gradient(to bottom, #ffffff, #fafafa);
+            max-width: 800px;
+        }
+
+        .input-area-centered .template-buttons {
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .input-area-centered .input-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .input-area-bottom {
+            position: relative;
+            border-top: 1px solid #e8e8e8;
+            max-width: none;
+            margin: 0;
         }
 
         .template-buttons {
@@ -560,6 +593,16 @@ interface LLMProvider {
         .input-container nz-textarea-count {
             flex: 1;
         }
+
+        .input-area-bottom .input-container {
+            max-width: none;
+            width: 100%;
+        }
+
+        .input-area-bottom .template-buttons {
+            max-width: none;
+            width: 100%;
+        }
     `]
 })
 export class ChatPipelineComponent extends BasicFormComponent implements OnInit, OnDestroy {
@@ -576,6 +619,11 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
     itemPp: ItemPropVal = null;
     itemImpl: string;
+
+    // 计算属性：判断是否有消息
+    get hasMessages(): boolean {
+        return this.currentMessages && this.currentMessages.length > 0;
+    }
 
     private eventSource: EventSourceSubject | null = null;
     private currentTypingMessage: string = '';

@@ -49,7 +49,7 @@ import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {
-  NotebookwrapperComponent,
+ // NotebookwrapperComponent,
   PluginsComponent,
   SelectionInputAssistComponent
 } from "./plugins.component";
@@ -172,7 +172,7 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
     FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
   declarations: [SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent,PreviewComponent, DatasourceQuickManagerComponent ,JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
-    NotebookwrapperComponent, ControlPanelComponent, SchemaEditComponent,
+     ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
     PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
     TimeConsumePipe, MaxLengthPipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent

@@ -55,7 +55,7 @@ export function reducePluginType2Map(createCfg: CreatorRouter): Map<PluginName, 
         }
         tplugins.push(tp);
     }
-   // console.log(reducePluginType);
+    // console.log(reducePluginType);
     return reducePluginType;
 }
 
@@ -71,17 +71,20 @@ export function convertReducePluginType2PluginTypes(reducePluginType: Map<Plugin
             localDescFilter: (desc) => true
         };
         let tp: TargetPlugin = {hetero: key};
-        if (val.length === 1) {
+        if (val.length > 0) {
             tp = val[0];
-            extraParam = "targetItemDesc_" + (tp.targetItemDesc || tp.descName);
-            if (tp.extraParam) {
-                extraParam += (',' + tp.extraParam);
-            }
-            descFilter = {
-                localDescFilter: (desc) => {
-                    return desc.displayName === tp.descName;
+            let targetDescDisplayName = (tp.targetItemDesc || tp.descName);
+            if (targetDescDisplayName) {
+                extraParam = "targetItemDesc_" + targetDescDisplayName;
+                if (tp.extraParam) {
+                    extraParam += (',' + tp.extraParam);
                 }
-            };
+                descFilter = {
+                    localDescFilter: (desc) => {
+                        return desc.displayName === targetDescDisplayName;
+                    }
+                };
+            }
         }
         pluginTyps.push({
             name: tp.hetero

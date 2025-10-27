@@ -1039,27 +1039,27 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     }
 }
 
-@Component({
-    selector: "notebook-cpt",
-    template: `
-        <router-outlet (activate)="active($event)" name="zeppelin"></router-outlet>
-    `
-    , styles: [
-        `
-        `
-    ]
-})
-export class NotebookwrapperComponent implements OnInit {
-
-    constructor(private router: Router, private route: ActivatedRoute) {
-    }
-
-    ngOnInit(): void {
-    }
-
-    active(event: any) {
-    }
-}
+// @Component({
+//     selector: "notebook-cpt",
+//     template: `
+//         <router-outlet (activate)="active($event)" name="zeppelin"></router-outlet>
+//     `
+//     , styles: [
+//         `
+//         `
+//     ]
+// })
+// export class NotebookwrapperComponent implements OnInit {
+//
+//     constructor(private router: Router, private route: ActivatedRoute) {
+//     }
+//
+//     ngOnInit(): void {
+//     }
+//
+//     active(event: any) {
+//     }
+// }
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
@@ -1085,6 +1085,7 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
     ngOnInit(): void {
         let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
         this.pluginTyps = convertReducePluginType2PluginTypes(reducePluginType);
+        console.log([reducePluginType,this.pluginTyps]);
     }
 
     whenAjaxOccur(e: PluginSaveResponse) {
