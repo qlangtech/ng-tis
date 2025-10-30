@@ -90,6 +90,7 @@ export const TYPE_ENUM = 5;
 export const TYPE_PLUGIN_SELECTION = 6;
 export const TYPE_PLUGIN_MULTI_SELECTION = 8;
 export const KEY_DEFAULT_VALUE = 'dftVal';
+export const KEY_LABEL = 'label';
 
 export class ErrorFeedback {
     _error: string | any;
@@ -366,14 +367,16 @@ export class Descriptor {
         return descMap;
     }
 
-    public findAttrDesc(attrKey: string): AttrDesc {
+    public findAttrDesc(attrKey: string, validateNull: boolean): AttrDesc {
         for (let attr of this.attrs) {
             if (attrKey === attr.key) {
                 return attr;
             }
         }
-        throw new Error("can not find attr with key:"
-            + attrKey + " exist keys:" + this.attrs.map((attr) => attr.key).join(","));
+        if (validateNull) {
+            throw new Error("can not find attr with key:"
+                + attrKey + " exist keys:" + this.attrs.map((attr) => attr.key).join(","));
+        }
     }
 
     public get endtype(): string {
@@ -965,6 +968,10 @@ export class AttrDesc {
     // MULTI_SELECTABLE
     public get isMultiSelectableType(): boolean {
         return this.type === TYPE_PLUGIN_MULTI_SELECTION;
+    }
+
+    public get label(): string {
+        return this.eprops[KEY_LABEL];
     }
 
     /**

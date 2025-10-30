@@ -352,7 +352,7 @@ export class TISService implements TISCoreService {
     return this.jsonPost(url, JSON.stringify(o));
   }
 
-  private processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
+  public  processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
     // console.log(result);
     if (result.success) {
       // console.log([result.msg, e, (result.msg && result.msg.length > 0) , ( e === undefined || !e.notShowBizMsg) , ( (e === undefined) || !e.createOrGetNotebook)]);

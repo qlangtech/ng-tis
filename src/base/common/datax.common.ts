@@ -1,13 +1,13 @@
 import {BasicFormComponent} from "../../common/basic.form.component";
-import {Descriptor, HeteroList, PluginType} from "../../common/tis.plugin";
+import {Descriptor, HeteroList, PluginType, TisResponseResult} from "../../common/tis.plugin";
 import {PluginsComponent} from "../../common/plugins.component";
 
 export const KEY_DATAFLOW_PARSER = "数据流分析（EMR）";
 
-export function getUserProfile(module: BasicFormComponent): Promise<{
-    hlist: HeteroList,
-    userProfileCategory: PluginType
-}> {
+export function getUserProfile(
+    module: BasicFormComponent //
+    ,  targetActionMethod?: { action: string, method: string })
+    : Promise<{ hlist: HeteroList, userProfileCategory: PluginType, result: TisResponseResult }> {
     let targetDisplayName = 'UserProfile';
     let pluginCategory: PluginType = {
         name: 'params-cfg-user-isolation',
@@ -17,12 +17,17 @@ export function getUserProfile(module: BasicFormComponent): Promise<{
 
 // this.userProfileCategory = [pluginCategory];
 
+    let actionMethod = targetActionMethod
+        ? `action=${targetActionMethod.action}&emethod=${targetActionMethod.method}`
+        : "action=plugin_action&emethod=get_describle";
+
+
     return module.httpPost('/coredefine/corenodemanage.ajax'
-        , 'action=plugin_action&emethod=get_describle&plugin='
+        , actionMethod + '&plugin='
         + PluginsComponent.getPluginMetaParam(pluginCategory) + `&name=${targetDisplayName}&hetero=` + pluginCategory.name)
         .then((r) => {
             if (r.success) {
-                let hlist: HeteroList = PluginsComponent.wrapperHeteroList(r.bizresult, pluginCategory);
+                let hlist: HeteroList = PluginsComponent.wrapperHeteroList(targetActionMethod ? r.bizresult.hetero : r.bizresult, pluginCategory);
                 if (hlist.items.length < 1) {
                     Descriptor.addNewItem(hlist, hlist.descriptorList[0], false, (key, p) => {
                         if (key === 'name' && !p.primary) {
@@ -33,9 +38,7 @@ export function getUserProfile(module: BasicFormComponent): Promise<{
                         return p;
                     });
                 }
-                // // console.log(hlist);
-                // this.hlist = [hlist];
-                return {hlist: hlist, userProfileCategory: pluginCategory}
+                return {hlist: hlist, userProfileCategory: pluginCategory, result: r}
             }
         });
 }
