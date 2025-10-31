@@ -24,7 +24,7 @@ interface ChatMessage {
     role: 'user' | 'assistant' | 'system';
     content: string;
     timestamp: number;
-    type?: 'text' | 'plugin' | 'error' | 'progress' | 'selection' | 'select_tabs';
+    type?: 'text' | 'plugin' | 'error' | 'progress' | 'selection' | 'select_tabs' | 'llm_chat_status';
     // 设置插件用
     pluginData?: { desc: Descriptor, errorMsg: string[], item: Item, heteroIdentityId: PluginName };
     dataxName?: string;
@@ -103,8 +103,6 @@ interface LLMProvider {
 @Component({
     // selector: 'nz-drawer-custom-component',
     template: `
-
-
         <nz-layout class="chat-container">
             <!-- 左侧历史记录面板 -->
             <nz-sider nzWidth="250" nzTheme="light" class="chat-sidebar">
@@ -129,18 +127,24 @@ interface LLMProvider {
             <nz-layout>
                 <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
                     <nz-header class="chat-header">
-                        <div>
-                            <item-prop-val *ngIf="itemPp" [formLevel]="1"
-                                           [disabled]="false"
-                                           [formControlSpan]="7" [labelSpan]="1" [pp]="itemPp"
-                                           [pluginImpl]="this.itemImpl"
-                                           (valChange)="llmChange($event)"
-                            ></item-prop-val>
-                            <div class="token-counter" *ngIf="tokenCount > -1">
-                                <i nz-icon nzType="fire" nzTheme="fill"></i>
-                                Token使用: {{tokenCount}}
-                            </div>
-                        </div>
+
+                        <item-prop-val *ngIf="itemPp" [formLevel]="1"
+                                       [disabled]="false"
+                                       [formControlSpan]="8" [labelSpan]="1" [pp]="itemPp"
+                                       [pluginImpl]="this.itemImpl"
+                                       (valChange)="llmChange($event)" [extendInfo]="tokenCounter"
+                        ></item-prop-val>
+                        <ng-template #tokenCounter>
+                                <span class="token-counter" *ngIf="tokenCount>0"
+                                      [class.token-animated]="tokenAnimating">
+                                    <i nz-icon nzType="fire" nzTheme="fill" class="token-icon"></i>
+                                    <span class="token-value">Tokens:{{tokenCount}}</span>
+                                    <span class="token-burst" *ngIf="tokenAnimating">
+                                        <i nz-icon nzType="fire" nzTheme="fill"></i>
+                                    </span>
+                                </span>
+                        </ng-template>
+
                     </nz-header>
                     <nz-content class="chat-content">
                         <!-- 消息列表 -->
@@ -166,8 +170,19 @@ interface LLMProvider {
                                         <span class="progress-text">{{msg.content}}</span>
                                     </div>
 
+                                    <!-- LLM 调用状态消息 -->
+                                    <div *ngSwitchCase="'llm_chat_status'" class="message-llm-status">
+                                        <div class="llm-status-content">
+                                            <nz-spin nzSimple nzSize="small"></nz-spin>
+                                            <span class="llm-status-text">{{msg.content}}</span>
+                                        </div>
+                                    </div>
+
                                     <!-- 插件配置消息 -->
                                     <div *ngSwitchCase="'plugin'" class="message-plugin">
+                                        <!-- 倒计时或完成标记 -->
+                                        <ng-container
+                                                *ngTemplateOutlet="countdownTemplate; context: { message: msg }"></ng-container>
                                         <nz-list nzBordered>
                                             <nz-list-item>
                                                 <span nz-typography> <ng-container
@@ -187,7 +202,9 @@ interface LLMProvider {
 
                                     <!-- 选择目标表消息 -->
                                     <div *ngSwitchCase="'select_tabs'" class="message-select-tabs">
-
+                                        <!-- 倒计时或完成标记 -->
+                                        <ng-container
+                                                *ngTemplateOutlet="countdownTemplate; context: { message: msg }"></ng-container>
 
                                         <nz-list nzBordered>
                                             <nz-list-item>
@@ -204,6 +221,9 @@ interface LLMProvider {
 
                                     <!-- 选择项消息 -->
                                     <div *ngSwitchCase="'selection'" class="message-selection">
+                                        <!-- 倒计时或完成标记 -->
+                                        <ng-container
+                                                *ngTemplateOutlet="countdownTemplate; context: { message: msg }"></ng-container>
                                         <div class="selection-prompt">{{msg.selectionData.prompt}}</div>
                                         <nz-radio-group [disabled]="msg.resolved"
                                                         [(ngModel)]="msg.selectionData['selectedIndex']"
@@ -319,6 +339,32 @@ interface LLMProvider {
                 </nz-spin>
             </nz-layout>
         </nz-layout>
+
+        <!-- 倒计时模板 -->
+        <ng-template #countdownTemplate let-message="message">
+            <div class="countdown-indicator" [ngSwitch]="getMessageCountdownStatus(message)">
+                <!-- 倒计时进行中 -->
+                <span *ngSwitchCase="'counting'" class="countdown-timer">
+                    <i nz-icon nzType="clock-circle" nzTheme="outline"></i>
+                    剩余时间: {{getMessageRemainingTime(message)}}秒
+                </span>
+
+                <!-- 已正常完成 -->
+                <span *ngSwitchCase="'completed'" class="completion-mark">
+                    <i nz-icon nzType="check-circle" nzTheme="fill" style="color: #52c41a;"></i>
+                    已完成
+                </span>
+
+                <!-- 已超时 -->
+                <span *ngSwitchCase="'timeout'" class="timeout-mark">
+                    <i nz-icon nzType="close-circle" nzTheme="fill" style="color: #ff4d4f;"></i>
+                    已超时
+                </span>
+
+                <!-- 默认情况（不显示任何内容） -->
+                <span *ngSwitchDefault></span>
+            </div>
+        </ng-template>
     `,
     styles: [`
         :host {
@@ -448,6 +494,116 @@ interface LLMProvider {
         .token-counter {
             color: #ff7875;
             font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 12px;
+            white-space: nowrap;
+            vertical-align: middle;
+            position: relative;
+            transition: transform 0.1s ease;
+        }
+
+        .token-counter.token-animated {
+            animation: tokenPulse 0.5s ease-out;
+        }
+
+        .token-counter.token-animated .token-icon {
+            animation: iconRotate 0.5s ease-out;
+        }
+
+        .token-counter.token-animated .token-value {
+            animation: valueScale 0.6s ease-out;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        .token-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: burstEffect 0.8s ease-out forwards;
+            opacity: 0;
+            font-size: 24px;
+            color: #ff4d4f;
+        }
+
+        @keyframes tokenPulse {
+            0% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.2);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes iconRotate {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.3);
+                color: #ffec3d;
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        @keyframes valueScale {
+            0% {
+                transform: scale(1);
+                color: #ff7875;
+            }
+            20% {
+                transform: scale(1.5);
+                color: #ff4d4f;
+            }
+            40% {
+                transform: scale(1.3);
+                color: #ffec3d;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                color: #ff7875;
+            }
+        }
+
+        @keyframes burstEffect {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5);
+                filter: blur(0);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -150%) scale(1.5);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -200%) scale(2);
+                filter: blur(2px);
+            }
+        }
+
+        .token-icon {
+            margin-right: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .token-value {
+            font-weight: 600;
+            position: relative;
         }
 
         .chat-content {
@@ -537,6 +693,25 @@ interface LLMProvider {
             margin-top: 8px;
             font-size: 12px;
             color: #666;
+        }
+
+        .message-llm-status {
+            min-width: 300px;
+        }
+
+        .llm-status-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: #f0f7ff;
+            border-left: 3px solid #1890ff;
+            border-radius: 4px;
+        }
+
+        .llm-status-text {
+            font-size: 14px;
+            color: #333;
         }
 
         .message-selection {
@@ -776,6 +951,82 @@ interface LLMProvider {
             max-width: none;
             width: 100%;
         }
+
+        /* 倒计时和完成标记样式 */
+        .countdown-indicator {
+            position: absolute;
+            top: -20px;
+            right: 12px;
+            z-index: 10;
+        }
+
+        .message-plugin, .message-select-tabs, .message-selection {
+            position: relative;
+        }
+
+        .countdown-timer {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(255, 193, 7, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
+        }
+
+        .countdown-timer i {
+            font-size: 14px;
+        }
+
+        .completion-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .completion-mark i {
+            font-size: 16px;
+        }
+
+        .timeout-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: #ffebe6;
+            color: #cf1322;
+            border: 1px solid #ffccc7;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .timeout-mark i {
+            font-size: 16px;
+        }
     `]
 })
 export class ChatPipelineComponent extends BasicFormComponent implements OnInit, OnDestroy {
@@ -786,6 +1037,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     isProcessing: boolean = false;
     isTyping: boolean = false;
     tokenCount: number = 0;
+    tokenAnimating: boolean = false;
+    previousTokenCount: number = 0;
     templates: TaskTemplate[] = [];
     llmProviders: LLMProvider[] = [];
     selectedProviderId: string = '';
@@ -796,6 +1049,11 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
     itemPp: ItemPropVal = null;
     itemImpl: string;
+    // 等待用户输入超时时间
+    applyUserInputMaxWaitMillis: number;
+
+    // 倒计时管理
+    messageCountdowns: Map<ChatMessage, {startTime: number, remainingTime: number, timer?: any, timeout?: boolean}> = new Map();
 
     // 计算属性：判断是否有消息
     get hasMessages(): boolean {
@@ -820,6 +1078,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     ngOnInit(): void {
         getUserProfile(this, {action: "chat_pipeline_action", method: "get_page_initialize"})
             .then((result) => {
+                //applyUserInputMaxWaitMillis
+                this.applyUserInputMaxWaitMillis = result.result.bizresult.applyUserInputMaxWaitMillis;
                 let hlist = result.hlist;
                 aa: for (let item of hlist.items) {
                     for (let pp of item.propVals) {
@@ -861,6 +1121,98 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         if (this.eventSource) {
             this.eventSource.close();
         }
+        // 清理所有倒计时
+        this.messageCountdowns.forEach((countdown) => {
+            if (countdown.timer) {
+                clearInterval(countdown.timer);
+            }
+        });
+        this.messageCountdowns.clear();
+    }
+
+    // 开始倒计时
+    startCountdown(message: ChatMessage): void {
+        if (!this.applyUserInputMaxWaitMillis || message.resolved) {
+            return;
+        }
+
+        const startTime = Date.now();
+        const totalSeconds = Math.floor(this.applyUserInputMaxWaitMillis / 1000);
+
+        const countdownData = {
+            startTime: startTime,
+            remainingTime: totalSeconds,
+            timeout: false,
+            timer: setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const remaining = totalSeconds - elapsed;
+
+                if (message.resolved) {
+                    // 如果已经被处理，直接停止倒计时
+                    this.stopCountdown(message);
+                } else if (remaining <= 0) {
+                    // 倒计时结束，设置超时状态
+                    const cd = this.messageCountdowns.get(message);
+                    if (cd) {
+                        cd.remainingTime = 0;
+                        cd.timeout = true;
+                        clearInterval(cd.timer);
+                        cd.timer = null;
+                        // 设置 message 为已处理
+                        message.resolved = true;
+                    }
+                } else {
+                    const cd = this.messageCountdowns.get(message);
+                    if (cd) {
+                        cd.remainingTime = remaining;
+                    }
+                }
+            }, 1000)
+        };
+
+        this.messageCountdowns.set(message, countdownData);
+    }
+
+    // 停止倒计时
+    stopCountdown(message: ChatMessage): void {
+        const countdown = this.messageCountdowns.get(message);
+        if (countdown && countdown.timer) {
+            clearInterval(countdown.timer);
+            countdown.timer = null;
+        }
+    }
+
+    // 获取消息的剩余时间
+    getMessageRemainingTime(message: ChatMessage): number {
+        const countdown = this.messageCountdowns.get(message);
+        return countdown ? countdown.remainingTime : 0;
+    }
+
+    // 获取消息的倒计时状态
+    getMessageCountdownStatus(message: ChatMessage): 'counting' | 'completed' | 'timeout' | null {
+        // 首先检查是否是需要倒计时的消息类型
+        if (message.type !== 'selection' && message.type !== 'select_tabs' && message.type !== 'plugin') {
+            return null;
+        }
+
+        const countdown = this.messageCountdowns.get(message);
+
+        // 如果有倒计时信息且已超时
+        if (countdown && countdown.timeout === true) {
+            return 'timeout';
+        }
+
+        // 如果消息已处理（但不是超时）
+        if (message.resolved && (!countdown || !countdown.timeout)) {
+            return 'completed';
+        }
+
+        // 如果正在倒计时中（包括剩余时间为0但还未标记为超时的情况）
+        if (!message.resolved && countdown && countdown.remainingTime >= 0) {
+            return 'counting';
+        }
+
+        return null;
     }
 
 
@@ -954,7 +1306,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             "tis-ai-agent", url, [
                 EventType.AI_AGNET_ERROR, EventType.AI_AGNET_DONE, EventType.AI_AGNET_MESSAGE
                 , EventType.AI_AGNET_PLUGIN, EventType.AI_AGNET_PROGRESS, EventType.AI_AGNET_INPUT_REQUEST, EventType.AI_AGNET_SELECT_TABS
-                , EventType.AI_AGNET_SELECTION_REQUEST, EventType.AI_AGNET_TOKEN, EventType.SSE_CLOSE]);
+                , EventType.AI_AGNET_SELECTION_REQUEST, EventType.AI_AGNET_TOKEN, EventType.AI_AGNET_LLM_CHAT_STATUS, EventType.SSE_CLOSE]);
         this.eventSource.events.subscribe((evt: [EventType, any]) => {
             let data = evt[1];
             switch (evt[0]) {
@@ -993,7 +1345,16 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 }
                 case EventType.AI_AGNET_TOKEN: {
                     // const data = JSON.parse(event.data);
-                    this.tokenCount = data.count;
+                    const newCount = data.count;
+                    if (newCount !== this.previousTokenCount) {
+                        this.triggerTokenAnimation();
+                        this.previousTokenCount = this.tokenCount;
+                        this.tokenCount = newCount;
+                    }
+                    return;
+                }
+                case EventType.AI_AGNET_LLM_CHAT_STATUS: {
+                    this.handleLLMStatus(data);
                     return;
                 }
                 case EventType.SSE_CLOSE: {
@@ -1023,6 +1384,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 dataXReaderDesc: desc
             };
             this.currentMessages.push(message);
+            this.startCountdown(message); // 启动倒计时
             this.scrollToBottom();
             return;
         }
@@ -1102,7 +1464,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                             errors.errormsg.push("插件实例部分属性有误："
                                 + pluginErr.map((ferr) => {
                                     let attr = item.dspt.findAttrDesc(ferr.name, false);
-                                   // console.log(attr.eprops);
+                                    // console.log(attr.eprops);
                                     return "'" + ((attr && attr.label) ? attr.label : ferr.name) + "'" + (ferr.content ? ferr.content : '')
                                 }).join("，") + "，请设置");
                         }
@@ -1124,6 +1486,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
             // {Descriptor,Item}
             this.currentMessages.push(message);
+            this.startCountdown(message); // 启动倒计时
             this.scrollToBottom();
             return;
         }
@@ -1156,6 +1519,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         if (session) {
             session.messages.push(message);
         }
+        this.startCountdown(message); // 启动倒计时
         this.scrollToBottom();
     }
 
@@ -1176,6 +1540,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         this.jsonPost(url, submitInfo).then(response => {
             if (response.success) {
                 chatMsg.resolved = true;
+                this.stopCountdown(chatMsg); // 停止倒计时
                 this.messageService.success('选择已提交');
             }
 
@@ -1309,6 +1674,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 this.jsonPost(url, submitInfo).then((response) => {
                     if (response.success) {
                         chatMsg.resolved = true;
+                        this.stopCountdown(chatMsg); // 停止倒计时
                         this.successNotify("已经选择了" + r.tabKeys.length + "张目标表");
                     }
                 }).catch(error => {
@@ -1364,6 +1730,9 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             , (saveResult, plugin: ProcessedDBRecord) => {
                 console.log(saveResult);
                 chatMsg.resolved = saveResult.saveSuccess;
+                if (saveResult.saveSuccess) {
+                    this.stopCountdown(chatMsg); // 停止倒计时
+                }
             });
         return;
         //}
@@ -1405,6 +1774,72 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
                 container.scrollTop = container.scrollHeight;
             }
         }, 100);
+    }
+
+    private triggerTokenAnimation(): void {
+        this.tokenAnimating = true;
+        setTimeout(() => {
+            this.tokenAnimating = false;
+        }, 800); // 动画持续时间与CSS动画时长一致
+    }
+
+    /**
+     * 处理LLM调用状态
+     * @param data 包含status(Start/ERROR/Complete)和detail(可选的详情信息)
+     */
+    private handleLLMStatus(data: any): void {
+        const status = data.status;
+        const detail = data.detail;
+
+        switch (status) {
+            case 'Start':
+                // 显示加载状态
+                //this.formDisabled = true;
+                // 添加LLM状态消息到聊天记录
+                const statusMessage: ChatMessage = {
+                    role: 'system',
+                    content: detail ? `正在调用大模型处理: ${detail.substring(0, 50)}...` : '正在调用大模型处理...',
+                    timestamp: Date.now(),
+                    type: 'llm_chat_status'
+                };
+                this.currentMessages.push(statusMessage);
+                this.scrollToBottom();
+                break;
+            case 'ERROR':
+                // 显示错误状态
+               // this.formDisabled = false;
+                // 查找并移除最后一条llm_chat_status类型的消息
+                for (let i = this.currentMessages.length - 1; i >= 0; i--) {
+                    if (this.currentMessages[i].type === 'llm_chat_status') {
+                        this.currentMessages.splice(i, 1);
+                        break;
+                    }
+                }
+                // 添加错误消息到聊天记录
+                const errorMessage: ChatMessage = {
+                    role: 'assistant',
+                    content: detail ? `大模型调用失败: ${detail}` : '大模型调用失败',
+                    timestamp: Date.now(),
+                    type: 'error'
+                };
+                this.currentMessages.push(errorMessage);
+                this.scrollToBottom();
+                break;
+            case 'Complete':
+                // 完成状态
+               // this.formDisabled = false;
+                // 查找并移除最后一条llm_chat_status类型的消息
+                for (let i = this.currentMessages.length - 1; i >= 0; i--) {
+                    if (this.currentMessages[i].type === 'llm_chat_status') {
+                        this.currentMessages.splice(i, 1);
+                        break;
+                    }
+                }
+                // 可以选择添加成功消息，但通常不需要，因为会有返回的消息内容
+                break;
+            default:
+                console.warn('Unknown LLM status:', status);
+        }
     }
 
     close(): void {

@@ -6,7 +6,7 @@ import {
     Component,
     EventEmitter,
     Input,
-    Output
+    Output, TemplateRef
 } from "@angular/core";
 import {BasicFormComponent} from "../basic.form.component";
 import {
@@ -29,6 +29,7 @@ import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 import {PluginsComponent, SelectionInputAssistComponent} from "../plugins.component";
 import {CreatorRouter, RouterAssistType, TargetPlugin} from "./type.utils";
 import {createDrawer} from "../ds.quick.manager.component";
+import {AbstractControl, NgModel} from "@angular/forms";
 
 @Component({
     selector: 'item-prop-val',
@@ -214,6 +215,12 @@ import {createDrawer} from "../ds.quick.manager.component";
                                 </ul>
                             </nz-dropdown-menu>
                         </ng-container>
+
+                       <!-- extendInfo-->
+                       <ng-container *ngIf="extendInfo">
+                           <ng-container *ngTemplateOutlet="extendInfo"></ng-container>
+                       </ng-container>
+
                     </ng-container>
                     <ng-container *ngSwitchCase="false">
                         <nz-select [attr.data-testid]="_pp.key+'_plugin_impl_select'"
@@ -299,7 +306,7 @@ import {createDrawer} from "../ds.quick.manager.component";
             }
 
             .has-help-url {
-                width: calc(100% - 10em);
+                width: calc(100% - 14em);
                 display: inline-block;
             }
 
@@ -338,6 +345,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
     @Input()
     labelSpan = 5;
+
+    @Input()
+    extendInfo:  TemplateRef<any>;
 
     @Input()
     set disabled(val: boolean) {

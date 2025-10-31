@@ -720,6 +720,8 @@ export enum EventType {
   AI_AGNET_SELECT_TABS = 'ai_agent_select_tabs',
   // 选择使用插件类型 mysql-v5 or mysql-v8
   AI_AGNET_SELECTION_REQUEST = 'ai_agent_selection_request',
+  // 大模型调用状态
+  AI_AGNET_LLM_CHAT_STATUS = 'ai_agent_llm_chat_status',
   AI_AGNET_DONE = 'ai_agent_done'
 }
 
