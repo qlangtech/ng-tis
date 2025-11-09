@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, NgZone, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {NgTerminal} from "ng-terminal";
-import {EventSourceSubject, EventType, ExecuteStep, MessageData, TISService} from "./tis.service";
+import {EventSourceSubject, EventType, ExecuteMultiSteps, ExecuteStep, MessageData, TISService} from "./tis.service";
 import {NzStatusType} from "ng-zorro-antd/steps";
 import {ScalaLog} from "../runtime/misc/RCDeployment";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
@@ -8,6 +8,19 @@ import {HeteroList} from "./tis.plugin";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {Subscription} from "rxjs";
 import {CreateLaunchingTarget, DataxWorkerAddStep3Component} from "../base/datax.worker.add.step3.component";
+
+
+/**
+ * 打开实时增量启动进度状态显示对话框
+ * @param drawerService
+ * @param pipelineName
+ * @param subject
+ */
+export function openIncrSyncChannalLaunchingProcessDialog(drawerService: NzDrawerService, pipelineName: string, subject: EventSourceSubject): NzDrawerRef {
+  const drawerRef = openWaittingProcessComponent(drawerService, subject
+    , new CreateLaunchingTarget("core_action", "re_deploy_incr_sync_channal", `appname=${pipelineName}`));
+  return drawerRef;
+}
 
 export function openWaittingProcessComponent(drawerService: NzDrawerService, subject: EventSourceSubject, launchTarget?: CreateLaunchingTarget): NzDrawerRef {
   let ctParams = {"obserable": subject};
@@ -42,7 +55,7 @@ export function openWaittingProcessComponent(drawerService: NzDrawerService, sub
                   [nzTwotoneColor]="'#52c41a'"></span>
             <span *ngSwitchCase="'process'" nz-icon [nzType]="'sync'" [nzSpin]="true"></span>
           </ng-container>
-          启动执行状态
+          {{multiSteps.taskName}}执行状态
         </nz-page-header-title>
         <nz-page-header-extra>
           <button nz-button nzType="primary" *ngIf="!this.errScalaLog && this.execStatus === 'error'"
@@ -65,7 +78,7 @@ export function openWaittingProcessComponent(drawerService: NzDrawerService, sub
             </div>
             <div nz-col nzSpan="16" class="process-height">
 
-              <ng-terminal  #term></ng-terminal>
+              <ng-terminal #term></ng-terminal>
 
             </div>
           </div>
@@ -94,6 +107,7 @@ export class LaunchK8SClusterWaittingProcessComponent implements OnInit, OnDestr
   obserable: EventSourceSubject;
 
   execSteps: Array<ExecuteStep> = [];
+  multiSteps: ExecuteMultiSteps = {taskName: "", steps: []};
 
   _execStatus: NzStatusType;
   _currentExecIndex: number = -1;
@@ -206,8 +220,8 @@ export class LaunchK8SClusterWaittingProcessComponent implements OnInit, OnDestr
       }
       return;
     }
-    this.subscript = this.obserable.events.subscribe((msg: [EventType, Array<ExecuteStep> | MessageData | ExecuteStep | Event]) => {
-     // console.log(msg);
+    this.subscript = this.obserable.events.subscribe((msg: [EventType, ExecuteMultiSteps | MessageData | ExecuteStep | Event]) => {
+      // console.log(msg);
       // console.log(msg[1]);
 
       switch (msg[0]) {
@@ -216,7 +230,9 @@ export class LaunchK8SClusterWaittingProcessComponent implements OnInit, OnDestr
           this.terminal.write(msgLog.msg + "\r\n");
           break;
         case EventType.TASK_EXECUTE_STEPS:
-          let steps = <Array<ExecuteStep>>msg[1];
+          let stepBody = msg[1] as ExecuteMultiSteps;
+          this.multiSteps = stepBody;
+          let steps = <Array<ExecuteStep>>stepBody.steps;
           let copys = [];
           for (let i = 0; i < steps.length; i++) {
             copys.push(Object.assign(new ExecuteStep(), steps[i]));
@@ -238,7 +254,7 @@ export class LaunchK8SClusterWaittingProcessComponent implements OnInit, OnDestr
         case  EventType.SSE_CLOSE:
           // console.log(msg);
           this.formDisabled = false;
-          let evt = <Event> msg[1];
+          let evt = <Event>msg[1];
           if (evt) {
 
             let ref = this.notification.info("启动流程结束", "可以关闭'启动执行状态'对话框拉");

@@ -557,7 +557,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
     this.goto(PluginTab.avail);
   }
 
-  private goto(subpath: string) {
+  private goto(subpath: PluginTab) {
     if (this.drawerModel) {
       this.triggerSubPath(subpath);
     } else {

@@ -17,7 +17,14 @@
  */
 
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnInit, Output, ViewChild} from "@angular/core";
-import {EventSourceSubject, EventType, ExecuteStep, MessageData, TISService} from "../common/tis.service";
+import {
+  EventSourceSubject,
+  EventType,
+  ExecuteMultiSteps,
+  ExecuteStep,
+  MessageData,
+  TISService
+} from "../common/tis.service";
 import {AppFormComponent, BasicFormComponent, CurrentCollection, WSMessage} from "../common/basic.form.component";
 import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -842,7 +849,7 @@ export class PodsListComponent extends BasicFormComponent implements AfterViewIn
       );
       //
       //?resulthandler=exec_null&action=datax_action&emethod=apply_pod_number&targetName=datax-worker&cptType=powerjob-worker&podNumber=2
-      evtSubject.events.subscribe((e: [EventType, Array<ExecuteStep> | MessageData | ExecuteStep]) => {
+      evtSubject.events.subscribe((e: [EventType, ExecuteMultiSteps | MessageData | ExecuteStep]) => {
 
         switch (e[0]) {
           case EventType.TASK_MILESTONE:

@@ -703,6 +703,137 @@
 // ---
 @typography-title-font-weight: 600;
 
+// =======================
+// TIS 自定义主题变量
+// =======================
+
+// CSS变量定义（用于动态主题切换）
+:root {
+  // 主色调
+  --primary-color: @primary-color;
+  --success-color: @success-color;
+  --warning-color: @warning-color;
+  --error-color: @error-color;
+
+  // 背景色
+  --bg-color: #f0f2f5;
+  --header-bg: #ffffff;
+  --sider-bg: #ffffff;
+  --card-bg: #ffffff;
+
+  // 文字颜色
+  --text-color: rgba(0, 0, 0, 0.85);
+  --text-color-secondary: rgba(0, 0, 0, 0.65);
+  --text-color-tertiary: rgba(0, 0, 0, 0.45);
+
+  // 边框颜色
+  --border-color: #f0f0f0;
+  --border-color-split: #f0f0f0;
+
+  // 阴影
+  --box-shadow-base: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+}
+
+// 深色主题
+body.dark-theme {
+  --primary-color: #177ddc;
+  --success-color: #49aa19;
+  --warning-color: #d89614;
+  --error-color: #a61d24;
+
+  --bg-color: #141414;
+  --header-bg: #001529;
+  --sider-bg: #001529;
+  --card-bg: #1f1f1f;
+
+  --text-color: rgba(255, 255, 255, 0.85);
+  --text-color-secondary: rgba(255, 255, 255, 0.65);
+  --text-color-tertiary: rgba(255, 255, 255, 0.45);
+
+  --border-color: #303030;
+  --border-color-split: #303030;
+
+  --box-shadow-base: 0 1px 2px 0 rgba(0, 0, 0, 0.45), 0 1px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px 0 rgba(0, 0, 0, 0.35);
+
+  // ng-zorro暗色主题覆盖
+  .ant-layout {
+    background: var(--bg-color);
+  }
+
+  .ant-layout-header {
+    background: var(--header-bg);
+    color: var(--text-color);
+  }
+
+  .ant-layout-sider {
+    background: var(--sider-bg);
+    color: var(--text-color);
+  }
+
+  .ant-menu-dark {
+    background: var(--sider-bg);
+  }
+
+  .ant-card {
+    background: var(--card-bg);
+    color: var(--text-color);
+  }
+
+  .ant-modal-content {
+    background: var(--card-bg);
+    color: var(--text-color);
+  }
+
+  .ant-drawer-content {
+    background: var(--card-bg);
+  }
+}
+
+// 亮色主题
+body.light-theme {
+  // 使用默认的:root变量值
+}
+
+// TIS自定义组件样式
+.tis-layout {
+  background: var(--bg-color);
+}
+
+.tis-header {
+  background: var(--header-bg);
+  color: var(--text-color);
+  box-shadow: var(--box-shadow-base);
+}
+
+.tis-sidebar {
+  background: var(--sider-bg);
+  color: var(--text-color);
+}
+
+.tis-content {
+  background: transparent;
+}
+
+// 侧边栏菜单动画
+@keyframes slideVertical {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 响应式断点覆盖（如果需要）
+@screen-xs: 480px;
+@screen-sm: 576px;
+@screen-md: 768px;
+@screen-lg: 992px;
+@screen-xl: 1200px;
+@screen-xxl: 1600px;
+
 
 
 

@@ -23,7 +23,6 @@ import {Component, EventEmitter, Input, OnInit, TemplateRef, ViewChild} from '@a
 import {
   createFreshmanReadmeDialogStrategy,
   createSystemErrorProcessDialogModelOptions,
-  SysErrorRestoreStrategy,
   TISService
 } from "./tis.service";
 import {BasicFormComponent, CurrentCollection} from "./basic.form.component";
@@ -41,7 +40,6 @@ import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
 import {openParamsCfg} from "./plugins.component";
-import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 
 
 @Component({
@@ -150,21 +148,7 @@ import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
             <li nz-menu-item (click)="logout()"><i nz-icon nzType="logout" nzTheme="outline"></i>退出</li>
           </ul>
         </nz-dropdown-menu>
-        <ng-template #tisAbout>
-          <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
-            <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
-            <nz-descriptions-item nzTitle="发版时间"><img
-              src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
-            <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
-          </nz-descriptions>
-          <svg version="1.1"
-               preserveAspectRatio="xMinYMin meet"
-               xmlns="http://www.w3.org/2000/svg"
-               width="70" height="43"
-               xmlns:xlink="http://www.w3.org/1999/xlink">
-            <image xlink:href="/images/icon/tis-log.svg" width="70"/>
-          </svg>
-        </ng-template>
+
       </li>
       <li class="user-profile" nz-menu-item nzMatchRouter>
 
@@ -190,6 +174,22 @@ import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
                 </li>
          -->
     </ul>
+
+    <ng-template #tisAbout>
+      <nz-descriptions [nzColumn]="1" nzLayout="horizontal">
+        <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="发版时间"><img
+          src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
+        <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
+      </nz-descriptions>
+      <svg version="1.1"
+           preserveAspectRatio="xMinYMin meet"
+           xmlns="http://www.w3.org/2000/svg"
+           width="70" height="43"
+           xmlns:xlink="http://www.w3.org/1999/xlink">
+        <image xlink:href="/images/icon/tis-log.svg" width="70"/>
+      </svg>
+    </ng-template>
   `,
   styles: [`
     .ng-star-inserted {
@@ -219,7 +219,6 @@ import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
 })
 export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   // 页面部门控件选择的部门Id
-
   public appId: string;
   app: CurrentCollection;
   // public departmentId: number = -1;
@@ -242,42 +241,6 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   public get appHasNotDefine(): boolean {
     return this.app == null;
   }
-
-  // public static routeToApp(_localStorageService: LocalStorageService, r: Router, app: Application): string[] {
-  //   let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-  //   if (!popularSelected) {
-  //     popularSelected = new LatestSelectedIndex();
-  //   } else {
-  //     // Object.assign()
-  //     popularSelected = $.extend(new LatestSelectedIndex(), popularSelected);
-  //   }
-  //   popularSelected.add(new SelectedIndex(app.projectName, app.appType));
-  //   _localStorageService.set(KEY_LOCAL_STORAGE_LATEST_INDEX, popularSelected);
-  //   // console.log(popularSelected.popularLatestSelected);
-  //   // this.collectionOptionList = popularSelected.popularLatestSelected;
-  //
-  //   switch (app.appType) {
-  //     case AppType.DataX:
-  //       r.navigate(['/x/' + app.projectName]);
-  //       break;
-  //     case AppType.Solr:
-  //       r.navigate(['/c/' + app.projectName]);
-  //       break;
-  //     default:
-  //       throw new Error(`Error Type:${app.appType}`);
-  //   }
-  //   return popularSelected.popularLatestSelected;
-  // }
-  // public static popularSelectedIndex(_localStorageService: LocalStorageService): LatestSelectedIndex {
-  //   let popularSelected: LatestSelectedIndex = _localStorageService.get(KEY_LOCAL_STORAGE_LATEST_INDEX);
-  //
-  //   if (popularSelected) {
-  //     popularSelected = Object.assign(new LatestSelectedIndex(), popularSelected); // $.extend(, );
-  //   } else {
-  //     popularSelected = new LatestSelectedIndex();
-  //   }
-  //   return popularSelected;
-  // }
 
   constructor(tisService: TISService, modalService: NzModalService
     , private r: Router, private route: ActivatedRoute, private _http: HttpClient
@@ -322,17 +285,10 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
     });
 
 
-    // let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
-    // this.httpPost(getUserUrl, '').then((r) => {
-    // console.log(this.tisService.containMeta);
-    // if (this.tisService.containMeta) {
-
     this.tisService.tisMeta.then((meta: TISBaseProfile) => {
       this.userProfile = meta.usr;
       this.tisMeta = meta.tisMeta
-      // this.tisService.tisMeta = r.bizresult;// this.tisMeta;
-
-      let popularSelected = meta.latestSelectedAppsIndex(); //LatestSelectedIndex.popularSelectedIndex(this.tisService, this._localStorageService);
+      let popularSelected = meta.latestSelectedAppsIndex();
 
       if (this.app) {
         popularSelected.addIfNotContain(this.app);
@@ -345,9 +301,6 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
         this.openInitSystemDialog();
       }
     });
-
-    //}
-    // });
   }
 
   openInitSystemDialog() {
@@ -364,15 +317,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 
   // 点击切换当前app
   public change_app_top(): void {
-    // this.httpPost('/runtime/changedomain.ajax'
-    //   , 'event_submit_do_change_app_ajax=y&action=change_domain_action&selappid=' + this.appId)
-    //   .then(result => {
-    //     // this.refreshComponent(this.router.component);
-    //   });
-    // this.r.navigate(['/t/c/' + this.appId], {relativeTo: this.route});
-
     this.r.navigate(['/c/' + this.appId]);
-
   }
 
   onCollectionSearch(value: string) {
@@ -438,7 +383,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
 }
 
 
-interface UserProfile {
+export interface UserProfile {
   department: string;
   departmentid: number,
   id: string;

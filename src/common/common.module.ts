@@ -48,11 +48,7 @@ import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
-import {
- // NotebookwrapperComponent,
-  PluginsComponent,
-  SelectionInputAssistComponent
-} from "./plugins.component";
+import {PluginsComponent, SelectionInputAssistComponent} from "./plugins.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzFormModule} from 'ng-zorro-antd/form';
@@ -151,6 +147,10 @@ import {PreviewComponent} from "./preview.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 import {DatasourceQuickManagerComponent} from "./ds.quick.manager.component";
 import {FreshmanReadmeComponent} from "./freshman.readme.component";
+
+// 新增的导航组件和服务
+
+// import {NzAvatarModule} from 'ng-zorro-antd/avatar';
 // angular libraries: https://angular.io/guide/creating-libraries
 // https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004216480-Angular-Library-Module-Import-Error
 // import {HttpModule, JsonpModule} from "@angular/http";
@@ -170,7 +170,8 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
     NgTerminalModule, NzPageHeaderModule,
     NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule, NzBadgeModule,
     NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
-    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule],
+    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule,
+    ],
   declarations: [SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent,PreviewComponent, DatasourceQuickManagerComponent ,JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
      ControlPanelComponent, SchemaEditComponent,
     TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
@@ -181,7 +182,8 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
     CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent,
     TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
     , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
-    , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent
+    , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
+
   ],
     exports: [SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
         , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
@@ -195,7 +197,8 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
         , PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
         , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
         , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, MaxLengthPipe, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent
-        , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, ItemPropValComponent]
+        , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, ItemPropValComponent
+       ]
 })
 export class TisCommonModule {
 

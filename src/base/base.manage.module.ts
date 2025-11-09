@@ -24,8 +24,6 @@ import {BaseMangeRoutingModule} from "./base.manage-routing.module";
 import {ApplistComponent} from "./applist.component";
 import {BaseMangeIndexComponent} from "./base.manage.index.component";
 import {DepartmentListComponent} from "./department.list.component";
-import {AddGlobalParamComponent} from "./global.add.param";
-import {GlobalUpdateParamComponent} from "./global.update.param";
 import {AddAppFormComponent} from "./addapp-form.component";
 import {AddAppStepFlowComponent} from "./addapp.step.flow.component";
 import {AddAppFlowDirective} from "./addapp.directive";
@@ -62,7 +60,7 @@ import {UserProfileComponent} from "./user.profile.component";
     , NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
   declarations: [EndCptListComponent,FlinkClusterListComponent,
     ApplistComponent, ErrorListComponent, DepartmentAddComponent, BaseMangeIndexComponent //
-    , BaseConfigComponent, DepartmentListComponent, AddGlobalParamComponent, GlobalUpdateParamComponent
+    , BaseConfigComponent, DepartmentListComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component
     , DataxWorkerAddExistPowerjobClusterComponent

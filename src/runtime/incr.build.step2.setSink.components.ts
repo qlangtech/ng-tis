@@ -28,9 +28,8 @@ import {SavePluginEvent} from "../common/tis.plugin";
 import {EditorConfiguration} from "codemirror";
 import {NzStatusType} from "ng-zorro-antd/steps";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
-import {openWaittingProcessComponent} from "../common/launch.waitting.process.component";
+import {openIncrSyncChannalLaunchingProcessDialog} from "../common/launch.waitting.process.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {CreateLaunchingTarget} from "../base/datax.worker.add.step3.component";
 
 
 @Component({
@@ -133,52 +132,23 @@ export class IncrBuildStep2SetSinkComponent extends AppFormComponent implements 
     this.preStep.emit(this.dto);
   }
 
-  // buildStep2ParamsSetComponentAjax(event: PluginSaveResponse) {
-  //
-  // }
-
 
   createIndexStepNext() {
 
     let sseUrl = '/coredefine/corenodemanage.ajax?resulthandler=exec_null&event_submit_do_deploy_incr_sync_channal=y&action=core_action&appname=' + this.tisService.currentApp.appName;
-    // 保存MQ消息
-    // this.jsonPost(url, {}).then((r) => {
-    //   if (r.success) {
-    //     this.nextStep.emit(this.dto);
-    //   }
-    // });
-    ///////////////////////
+
     let subject = this.tisService.createEventSource(null, sseUrl);
-    const drawerRef = openWaittingProcessComponent(this.drawerService, subject
-      , new CreateLaunchingTarget("core_action", "re_deploy_incr_sync_channal",`appname=${this.tisService.currentApp.appName}`));// this.drawerService.create<LaunchK8SClusterWaittingProcessComponent, {}, {}>({
-    //   nzWidth: "60%",
-    //   nzHeight: "100%",
-    //   nzPlacement: "right",
-    //   nzContent: LaunchK8SClusterWaittingProcessComponent,
-    //   nzContentParams: {"obserable": subject},
-    //   nzClosable: false,
-    //   nzMaskClosable: false
-    // });
-    // let cpt: LaunchK8SClusterWaittingProcessComponent = drawerRef.getContentComponent();
-    // console.log(drawerRef);
-    // cpt.launchTarget =;
+    ;
+
+    const drawerRef = openIncrSyncChannalLaunchingProcessDialog(this.drawerService, this.tisService.currentApp.appName, subject);
+
     drawerRef.afterClose.subscribe((status: NzStatusType) => {
       subject.close();
       if (status === 'finish') {
-        // this.successNotify("已经成功在K8S集群中启动" + this.dto.processMeta.pageHeader);
-
         this.nextStep.emit(this.dto);
-
-        // let dataXWorkerStatus: DataXJobWorkerStatus
-        //   = Object.assign(new DataXJobWorkerStatus(), r.bizresult, {'processMeta': this.dto.processMeta});
-        //  this.dto.processMeta.successCreateNext(this);
-        // DataxWorkerComponent.getJobWorkerMeta(this, null, this.dto.processMeta)
-        //   .then((dataXWorkerStatus) => {
-        //     this.nextStep.emit(dataXWorkerStatus);
-        //   });
-
-
       }
     })
   }
+
+
 }

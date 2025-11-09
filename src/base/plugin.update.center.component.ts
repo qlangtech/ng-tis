@@ -17,7 +17,15 @@
  */
 
 import {BasicFormComponent} from "../common/basic.form.component";
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output} from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter, Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 
@@ -36,131 +44,176 @@ import {NzModalService} from "ng-zorro-antd/modal";
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@Component({
-  selector: "update-center",
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-      <nz-alert [style]="'margin:10px'" *ngIf="connCheckErr" nzType="error" nzMessage="服务端异常" [nzDescription]="connCheckErrTpl" nzShowIcon></nz-alert>
-      <ng-template #connCheckErrTpl>
-          {{connCheckErr.detailedStatus}}
-      </ng-template>
-      <nz-list nzItemLayout="vertical" [nzDataSource]="plugins">
-          <ng-container *ngFor="let item of plugins">
-              <nz-list-item *ngIf="item.type === 'InstallationJob'">
-                  <nz-list-item-meta>
-                      <nz-list-item-meta-title>
-                          {{item.name}} <i *ngIf="item.containClassifier" class="classifier-desc">({{item.classifier}})</i>
-                          <ng-container [ngSwitch]="item.status.type">
-                              <nz-tag *ngSwitchCase="'Success'" nzColor="success">
-                                  <i nz-icon nzType="check-circle"></i>
-                                  <span>success</span>
-                              </nz-tag>
-                              <nz-tag *ngSwitchCase="'Installing'" nzColor="processing">
-                                  <i nz-icon nzType="sync" nzSpin></i>
-                                  <span>Installing</span>
-                              </nz-tag>
-                              <nz-tag *ngSwitchCase="'Failure'" nzColor="error">
-                                  <i nz-icon nzType="close-circle"></i>
-                                  <span>Failure</span>
-                              </nz-tag>
-                              <nz-tag *ngSwitchCase="'Pending'" nzColor="warning">
-                                  <i nz-icon nzType="coffee"></i>
-                                  <span>Pending</span>
-                              </nz-tag>
-                          </ng-container>
-                      </nz-list-item-meta-title>
-                  </nz-list-item-meta>
-                  <ng-container [ngSwitch]="item.status.type">
-                      <div *ngSwitchCase="'Success'">
-                      </div>
-                      <div *ngSwitchCase="'Installing'">
-                          <ng-template #percent>
-                              {{item.status.percentage}}% <i class="percentage-desc">{{item.status.download}}</i>
-                          </ng-template>
-                          <nz-progress nzStrokeLinecap="round" [nzFormat]="percent" nzType="circle" [nzPercent]="item.status.percentage < 1 ? 1 : item.status.percentage"></nz-progress>
-                      </div>
-                      <pre *ngSwitchCase="'Failure'">{{item.status.problemStackTrace}}</pre>
-                  </ng-container>
-                  <nz-list-item-extra>
-                  </nz-list-item-extra>
-              </nz-list-item>
-          </ng-container>
-      </nz-list>
+export interface InstallPluginItem {
+    type: string;
+    name: string;
+    containClassifier: boolean;
+    classifier: string;
+    status: InstallPluginState;
+    error: ConnectionCheckJobError;
+}
 
-  `, styles: [
-      `
+export interface InstallPluginState {
+    type: "Success" | "Installing" | "Failure" | "Pending";
+    percentage: number;
+    download: number;
+    problemStackTrace: string;
+}
+
+@Component({
+    selector: "update-center",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <nz-alert [style]="'margin:10px'" *ngIf="connCheckErr" nzType="error" nzMessage="服务端异常"
+                  [nzDescription]="connCheckErrTpl" nzShowIcon></nz-alert>
+        <ng-template #connCheckErrTpl>
+            {{connCheckErr.detailedStatus}}
+        </ng-template>
+        <nz-list nzItemLayout="vertical" [nzDataSource]="_plugins">
+            <ng-container *ngFor="let item of _plugins">
+                <nz-list-item *ngIf="item.type === 'InstallationJob'">
+                    <nz-list-item-meta>
+                        <nz-list-item-meta-title>
+                            {{item.name}} <i *ngIf="item.containClassifier" class="classifier-desc">({{item.classifier}}
+                            )</i>
+                            <ng-container [ngSwitch]="item.status.type">
+                                <nz-tag *ngSwitchCase="'Success'" nzColor="success">
+                                    <i nz-icon nzType="check-circle"></i>
+                                    <span>success</span>
+                                </nz-tag>
+                                <nz-tag *ngSwitchCase="'Installing'" nzColor="processing">
+                                    <i nz-icon nzType="sync" nzSpin></i>
+                                    <span>Installing</span>
+                                </nz-tag>
+                                <nz-tag *ngSwitchCase="'Failure'" nzColor="error">
+                                    <i nz-icon nzType="close-circle"></i>
+                                    <span>Failure</span>
+                                </nz-tag>
+                                <nz-tag *ngSwitchCase="'Pending'" nzColor="warning">
+                                    <i nz-icon nzType="coffee"></i>
+                                    <span>Pending</span>
+                                </nz-tag>
+                            </ng-container>
+                        </nz-list-item-meta-title>
+                    </nz-list-item-meta>
+                    <ng-container [ngSwitch]="item.status.type">
+                        <div *ngSwitchCase="'Success'">
+                        </div>
+                        <div *ngSwitchCase="'Installing'">
+                            <ng-template #percent>
+                                {{item.status.percentage}}% <i class="percentage-desc">{{item.status.download}}</i>
+                            </ng-template>
+                            <nz-progress nzStrokeLinecap="round" [nzFormat]="percent" nzType="circle"
+                                         [nzPercent]="item.status.percentage < 1 ? 1 : item.status.percentage"></nz-progress>
+                        </div>
+                        <pre *ngSwitchCase="'Failure'">{{item.status.problemStackTrace}}</pre>
+                    </ng-container>
+                    <nz-list-item-extra>
+                    </nz-list-item-extra>
+                </nz-list-item>
+            </ng-container>
+        </nz-list>
+
+    `, styles: [
+        `
             .percentage-desc {
                 display: block;
                 font-size: 8px;
                 color: #989898;
             }
+
             .classifier-desc {
                 font-size: 7px;
                 color: #989898;
             }
-    `
-  ]
+        `
+    ]
 })
 export class PluginUpdateCenterComponent extends BasicFormComponent implements OnInit, OnDestroy {
 
-  plugins: Array<any> = [];
-  hasDestroy = false;
+    _plugins: Array<InstallPluginItem> = [];
+    hasDestroy = false;
 
-  @Output()
-  loading = new EventEmitter<boolean>();
-  firstLoad = true;
+    @Output()
+    loading = new EventEmitter<boolean>();
+    firstLoad = true;
 
-  connCheckErr: ConnectionCheckJobError;
+    @Input()
+    shallInit = true;
 
-  constructor(tisService: TISService, modalService: NzModalService, private cd: ChangeDetectorRef) {
-    super(tisService, modalService);
-    cd.detach();
-  }
+    connCheckErr: ConnectionCheckJobError;
 
-  ngOnDestroy(): void {
-    this.hasDestroy = true;
-  }
-
-  ngOnInit(): void {
-    if (this.firstLoad) {
-      this.loading.emit(true);
+    constructor(tisService: TISService, modalService: NzModalService, private cd: ChangeDetectorRef) {
+        super(tisService, modalService);
+        cd.detach();
     }
-    this.httpPost('/coredefine/corenodemanage.ajax'
-      , `action=plugin_action&emethod=get_update_center_status`)
-      .then((r) => {
-        if (this.firstLoad) {
-          this.loading.emit(false);
-          this.firstLoad = false;
-        }
-        this.plugins = r.bizresult;
-        let err = this.plugins.find((p) => {
-          return p.error !== undefined;
+
+    ngOnDestroy(): void {
+        this.hasDestroy = true;
+    }
+
+    @Input()
+    set plugins(installPlugins: Array<InstallPluginItem>) {
+        this._plugins = installPlugins;
+        let err = this._plugins.find((p) => {
+            return p.error !== undefined;
         });
         if (err) {
-          this.connCheckErr = Object.assign(new ConnectionCheckJobError(), err);
+            this.connCheckErr = Object.assign(new ConnectionCheckJobError(), err);
         }
-        let hasAnyInstalling =
-          this.plugins.find((p) => {
-            return p.type === 'InstallationJob' && (p.status.type === 'Installing' || p.status.type === 'Pending');
-          }) !== undefined;
         this.cd.detectChanges();
-        if (hasAnyInstalling && !this.hasDestroy) {
-          setTimeout(() => {
-            this.ngOnInit();
-          }, 2000);
+        // let hasAnyInstalling =
+        //     this._plugins.find((p) => {
+        //         return p.type === 'InstallationJob' && (p.status.type === 'Installing' || p.status.type === 'Pending');
+        //     }) !== undefined;
+    }
+
+    ngOnInit(): void {
+        if (!this.shallInit) {
+            return;
         }
-      });
-  }
+        if (this.firstLoad) {
+            this.loading.emit(true);
+        }
+        this.httpPost('/coredefine/corenodemanage.ajax'
+            , `action=plugin_action&emethod=get_update_center_status`)
+            .then((r) => {
+                if (this.firstLoad) {
+                    this.loading.emit(false);
+                    this.firstLoad = false;
+                }
+
+                this.plugins = (r.bizresult as Array<InstallPluginItem>);
+
+                // this.plugins = r.bizresult;
+                // let err = this.plugins.find((p) => {
+                //     return p.error !== undefined;
+                // });
+                // if (err) {
+                //     this.connCheckErr = Object.assign(new ConnectionCheckJobError(), err);
+                // }
+                let hasAnyInstalling =
+                    this._plugins.find((p) => {
+                        return p.type === 'InstallationJob' && (p.status.type === 'Installing' || p.status.type === 'Pending');
+                    }) !== undefined;
+
+                if (hasAnyInstalling && !this.hasDestroy) {
+                    setTimeout(() => {
+                        this.ngOnInit();
+                    }, 2000);
+                }
+            });
+    }
 }
 
-class ConnectionCheckJobError {
-  type: string;
-  statuses: Array<string>;
+export class ConnectionCheckJobError {
+    type: string;
+    statuses: Array<string>;
 
-  get detailedStatus(): string {
-    if (!this.statuses) {
-      return '';
+    get detailedStatus(): string {
+        if (!this.statuses) {
+            return '';
+        }
+        return this.statuses.join(" ");
     }
-    return this.statuses.join(" ");
-  }
 }

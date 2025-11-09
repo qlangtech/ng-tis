@@ -31,8 +31,8 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
 
 @Component({
   template: `
-    <my-navigate></my-navigate>
-    <nz-layout style="overflow-x: hidden">
+      <my-navigate></my-navigate>
+      <nz-layout style="overflow-x: hidden">
       <nz-layout>
         <nz-content style=" opacity: 0.8;">
           <div nz-row [nzGutter]="8">
@@ -63,7 +63,8 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
               <nz-card id="pipeline-chat" [nzHoverable]="true" (click)="openChat()">
                 <div class="tis-card-content">
                   <div class="compose">
-                    <h1>Chat</h1>
+                    <h1><i nz-icon nzType="robot" nzTheme="outline"></i>AI Agent</h1>
+                    向您的数据集成领域的专属智能体提出需求，TIS将为您高效自动化实现
                   </div>
                 </div>
               </nz-card>
@@ -97,45 +98,28 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
                 <div class="tis-card-content">
                   <div class="compose">
                     <h1>
-                      <!--                      <i nz-icon nzType="import" nzTheme="outline"></i>-->
-                      数据流分析（EMR）</h1>
-                    轻松构建基于TIS的物化视图
+                      <nz-badge [nzCount]="5" nzDot><i nz-icon nzType="branches" nzTheme="outline"></i></nz-badge>
+                      数据流
+                    </h1>
+                    使用PowerJob,Spark等计算引擎执行ETL作业
                   </div>
                 </div>
               </nz-card>
             </div>
             <div nz-col nzSpan="8">
-              <nz-card id="users" [nzHoverable]="true">
-                <div class="tis-card-content">
-                  <h1 class="compose"><i nz-icon nzType="user" nzTheme="outline"></i>会员</h1>
-                </div>
-              </nz-card>
-            </div>
-          </div>
-          <div nz-row [nzGutter]="8">
-            <div nz-col nzSpan="8">
-              <nz-card [nzHoverable]="true" (click)="routerTo('/base/plugin-manage')">
+              <nz-card [nzHoverable]="true" (click)="routerTo('/base/plugin-manager')">
                 <div class="tis-card-content">
                   <div class="compose">
                     <h1><i nz-icon nzType="api" nzTheme="outline"></i>插件池</h1>
-                    从<i>插件池</i>中选择需要的插件为我所用
-                  </div>
-                </div>
-              </nz-card>
-            </div>
-            <div nz-col nzSpan="8">
-              <nz-card id="operationlog" [nzHoverable]="true" (click)="routerTo('/base/operationlog')">
-                <div class="tis-card-content">
-                  <div class="compose">
-                    <h1><i nz-icon nzType="snippets" nzTheme="outline"></i>操作日志</h1>
-                    记录用户在TIS平台的操作流水
+                    TIS 核心机制，安装扩展插件，扩充更多可能
                   </div>
                 </div>
               </nz-card>
             </div>
           </div>
         </nz-content>
-        <nz-sider [nzWidth]="400">
+
+        <nz-sider nzWidth="500px" class="recent-using-tool">
           <nz-list [nzDataSource]="_latestSelected" nzBordered [nzItemLayout]="'horizontal'"
                    [nzHeader]="recentusedindex">
             <nz-list-item *ngFor="let item of _latestSelected">
@@ -270,6 +254,8 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
 
       nz-sider {
         background: #e3e3e3;
+        min-width: 500px !important;
+        max-width: 500px !important;
       }
 
       #backgroundText {
@@ -351,7 +337,7 @@ export class RootWelcomeComponent extends BasicFormComponent implements OnInit {
       , {  }
       , {  }>({
       nzWidth: "80%",
-      nzTitle: `Chat`,
+      nzTitle: `AI Agent`,
       nzContent: ChatPipelineComponent,
       nzContentParams: {
       }
