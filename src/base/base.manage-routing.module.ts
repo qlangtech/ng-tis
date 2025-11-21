@@ -34,7 +34,14 @@ import {Breadcrumb, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeploym
 import {PluginManageComponent} from "./plugin.manage.component";
 import {StepType} from "../common/steps.component";
 import {ErrorListComponent} from "./error.list.component";
-import {Descriptor, EXTRA_PARAM_DATAX_NAME, ItemPropVal, PluginMeta, SavePluginEvent} from "../common/tis.plugin";
+import {
+  createExtraDataXParam,
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
+  ItemPropVal,
+  PluginMeta,
+  SavePluginEvent
+} from "../common/tis.plugin";
 import {DataxWorkerAddStep0Component} from "./datax.worker.add.step0.component";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
@@ -43,6 +50,7 @@ import {EndCptListComponent} from "./end.cpt.list.component";
 import {UserProfileComponent} from "./user.profile.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
+
 
 export enum PowerjobCptType {
   Server = ("powerjob-server"),
@@ -138,7 +146,11 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
       {
 
         heteroPluginTypeGetter: (dto) => {
-          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.Server}
+          return {
+            name: dataXWorkerCfgTargetName,
+            require: true,
+            extraParam: createExtraDataXParam(PowerjobCptType.Server)
+          }
         },
         cptType: PowerjobCptType.Server,
         cptShow: (dto: DataxWorkerDTO) => true,
@@ -151,7 +163,11 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
       }
       , {
         heteroPluginTypeGetter: (dto) => {
-          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.Worker}
+          return {
+            name: dataXWorkerCfgTargetName,
+            require: true,
+            extraParam: createExtraDataXParam(PowerjobCptType.Worker)
+          }
         },
         cptType: PowerjobCptType.Worker,
         cptShow: (dto: DataxWorkerDTO) => !dto.usingPowderJobUseExistCluster,
@@ -159,7 +175,11 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
       }
       , {
         heteroPluginTypeGetter: (dto) => {
-          return {name: dataXWorkerCfgTargetName, require: true, extraParam: 'dataxName_' + PowerjobCptType.JobTpl}
+          return {
+            name: dataXWorkerCfgTargetName,
+            require: true,
+            extraParam: createExtraDataXParam(PowerjobCptType.JobTpl)
+          }
         },
         cptType: PowerjobCptType.JobTpl,
         cptShow: (dto: DataxWorkerDTO) => true,
@@ -274,7 +294,7 @@ export const flinkClusterCfg: { processMeta: ProcessMeta }
           return <PluginMeta>{
             name: flinkClusterCfgTargetName(),
             require: true,
-            extraParam: 'dataxName_' + itemPkVal.primary
+            extraParam: createExtraDataXParam(itemPkVal.primary)
           };
 
         },
@@ -307,7 +327,7 @@ export const flinkSessionDetail: { processMeta: ProcessMeta }
       cpt.router.navigate(["/base/flink-cluster-list"]);
     },
     successCreateNext: (step3: DataxWorkerAddStep3Component) => {
-      throw  new Error("shall not execute");
+      throw new Error("shall not execute");
     },
     targetNameGetter: (params) => {
       // @ts-ignore
@@ -354,7 +374,7 @@ export const flinkSessionDetail: { processMeta: ProcessMeta }
           return <PluginMeta>{
             name: flinkClusterCfgTargetName(),
             require: true,
-            extraParam: 'dataxName_' + params[KEY_TARGET_NAME]
+            extraParam: createExtraDataXParam(params[KEY_TARGET_NAME])
           };
         },
         cptType: PowerjobCptType.FlinkCluster,

@@ -116,7 +116,7 @@ import {AbstractControl, NgModel} from "@angular/forms";
                   <ng-container *ngSwitchCase="6">
                     <!--select-->
 
-                      <nz-select [attr.data-testid]="_pp.key" [disabled]="disabled" [(ngModel)]="_pp.primary"
+                      <nz-select [attr.data-testid]="_pp.key" [disabled]="disabled" [nzMode]="_pp.enumMode" [(ngModel)]="_pp.primary"
                                  [name]="_pp.key" [nzCustomTemplate]="selOptsTpl"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option nzCustomContent *ngFor="let e of _pp.options" [nzLabel]="e.name"

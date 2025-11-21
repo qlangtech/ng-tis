@@ -23,10 +23,10 @@ import {TISService} from "../common/tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataxDTO} from "./datax.add.component";
-import {DATAX_PREFIX_DB, Descriptor, HeteroList, PluginMeta, PluginType} from "../common/tis.plugin";
+import {createExtraDataXParam, HeteroList, PluginMeta, PluginType} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
-import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.utils";
+
 
 const KEY_END_TYPE = 'desc'
 const KEY_TRANSFORMER_END_TYPE = 'transformer_desc'
@@ -178,7 +178,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       let pluginMeta: PluginType = {
         name: 'transformerUDF',
         require: true,
-        "extraParam": ('dataxName_' + pipeName),
+        "extraParam": (createExtraDataXParam( pipeName)),
         descFilter: {
           localDescFilter: (d) => {
             return transformerEndType[0] === d.impl;

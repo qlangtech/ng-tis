@@ -1,5 +1,5 @@
 import {BasicFormComponent} from "../../common/basic.form.component";
-import {Descriptor, HeteroList, PluginType, TisResponseResult} from "../../common/tis.plugin";
+import {Descriptor, getPluginMetaParam, HeteroList, PluginType, TisResponseResult} from "../../common/tis.plugin";
 import {PluginsComponent} from "../../common/plugins.component";
 
 export const KEY_DATAFLOW_PARSER = "数据流分析（EMR）";
@@ -24,7 +24,7 @@ export function getUserProfile(
 
     return module.httpPost('/coredefine/corenodemanage.ajax'
         , actionMethod + '&plugin='
-        + PluginsComponent.getPluginMetaParam(pluginCategory) + `&name=${targetDisplayName}&hetero=` + pluginCategory.name)
+        + getPluginMetaParam(pluginCategory) + `&name=${targetDisplayName}&hetero=` + pluginCategory.name)
         .then((r) => {
             if (r.success) {
                 let hlist: HeteroList = PluginsComponent.wrapperHeteroList(targetActionMethod ? r.bizresult.hetero : r.bizresult, pluginCategory);

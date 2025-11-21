@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, EventEmitter, Input, Output} from "@angular/core";
 import {AppFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {IndexIncrStatus} from "./misc/RCDeployment";
-import {Descriptor, HeteroList, Item, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {createExtraDataXParam, Descriptor, HeteroList, Item, PluginType, SavePluginEvent} from "../common/tis.plugin";
 import {TISService} from "../common/tis.service";
 import {ActivatedRoute} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
@@ -9,6 +9,7 @@ import {DataxAddStep4Component} from "../base/datax.add.step4.component";
 import {TransferItem} from "ng-zorro-antd/transfer";
 import {PluginsComponent} from "../common/plugins.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+
 
 /**
  *   Licensed to the Apache Software Foundation (ASF) under one
@@ -41,7 +42,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
                   <ng-template nz-tab>
                       <selected-tables [showPagination]="false" [direction]="'right'" [items]="items" [disabled]="false" [descriptor]="incrSourceDescriptor" [batchSettableTabs]="[]"
                                        [pluginMetas]="pluginMetas" [subFormHetero]="this.subFormHetero" [stat]="{checkAll: false, checkHalf: false}" [subFieldForms]="subFieldForms"
-                                       [dataXReaderTargetName]="'dataxName_' + this.currentApp.name+','+targetItemDesc_incr_process_extend"
+                                       [dataXReaderTargetName]=" createExtraDataXParam(this.currentApp.name)  +','+targetItemDesc_incr_process_extend"
                                        (onItemSelect)="onItemSelect($event)" (onItemSelectAll)="onItemSelectAll($event)" [skipSubformDescNullError]="skipSubformDescNullError"></selected-tables>
                   </ng-template>
               </nz-tab>
@@ -242,6 +243,7 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
   //   })
   // }
 
+
   createIndexStepPre() {
     this.preStep.emit(this._dto);
   }
@@ -251,4 +253,6 @@ export class IncrBuildStep1ExtendSelectedTabPropsComponent extends AppFormCompon
 
   onItemSelectAll(event: any) {
   }
+
+  protected readonly createExtraDataXParam = createExtraDataXParam;
 }

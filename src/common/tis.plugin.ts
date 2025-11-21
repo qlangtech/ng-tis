@@ -37,6 +37,11 @@ export const EXTRA_PARAM_DATAX_NAME = "dataxName_";
 export const DATAX_PREFIX_DB = "dataxDB_";
 export const KEY_OPTIONS_ENUM = "enum";
 
+
+export function createExtraDataXParam(pipeline: string): string {
+    return EXTRA_PARAM_DATAX_NAME + pipeline;
+}
+
 export declare type PluginName =
     'mq'
     | 'transformer'
@@ -77,6 +82,22 @@ export declare type PluginMeta = {
         }
 };
 export declare type PluginType = PluginName | PluginMeta;
+
+
+export function getPluginMetaParam(p: PluginType): string {
+    let param: any = p;
+    // console.log(param);
+    if (param.name) {
+        let t: PluginMeta = <PluginMeta>param;
+        let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
+        if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
+            metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
+        }
+        return metaParam;
+    } else {
+        return `${p}`;
+    }
+}
 
 export function getPluginTypeName(pt: PluginType): PluginName {
     if ((pt as any).name) {
@@ -277,7 +298,9 @@ export class ItemPropVal extends ErrorFeedback {
             this.has_set_primaryVal = true;
         }
         if (this._primaryVal === undefined) {
-            this._primaryVal = (this.type === TYPE_ENUM && this.enumMode === 'multiple') ? [] : '';
+            this._primaryVal
+                = ((this.type === TYPE_ENUM || this.type === TYPE_PLUGIN_SELECTION) && this.enumMode === 'multiple')
+                ? [] : '';
         }
         return this._primaryVal;
         // return this.updateModel ? this._primaryVal : this.dftVal;
@@ -1171,6 +1194,16 @@ export class SavePluginEvent {
     public overwriteHttpHeader: Map<string, string>;
 
     constructor(public notShowBizMsg = false) {
+    }
+
+    public static createPostPayload(hostItem: Item, pluginMeta: PluginType, updateProcess: boolean): SavePluginEvent {
+        let opt = new SavePluginEvent();
+        opt.postPayload = {
+            'manipulateTarget': hostItem
+            , 'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
+            , 'updateProcess': updateProcess
+        };
+        return opt;
     }
 
     public overwriteHttpHeaderOfAppName(val: string) {

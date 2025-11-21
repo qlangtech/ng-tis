@@ -33,7 +33,7 @@ import {AppFormComponent, BasicFormComponent, CurrentCollection} from "../common
 import {ActivatedRoute, Router} from "@angular/router";
 import {
     Descriptor,
-    FLAG_DELETE_PROCESS, getPluginTypeName,
+    FLAG_DELETE_PROCESS, getPluginMetaParam, getPluginTypeName,
     HeteroList,
     IFieldError,
     Item,
@@ -103,6 +103,7 @@ export function openParamsCfg(targetDesc: string, appendExtraParam = '', drawerS
             });
     });
 }
+
 @Component({
     selector: 'tis-plugins',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -423,7 +424,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         pluginCpt.showSaveButton = true;
 
         pluginCpt.afterSave.subscribe((r: PluginSaveResponse) => {
-             console.log(r);
+            console.log(r);
             if (r && r.saveSuccess && r.hasBiz()) {
                 modalRef.close();
                 let db = r.biz();
@@ -436,25 +437,25 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     public static getPluginMetaParams(pluginMeta: PluginType[]): string {
         return pluginMeta.map((p) => {
-            return PluginsComponent.getPluginMetaParam(p);
+            return getPluginMetaParam(p);
         }).join("&plugin=");
     }
 
 
-    public static getPluginMetaParam(p: PluginType): string {
-        let param: any = p;
-        // console.log(param);
-        if (param.name) {
-            let t: PluginMeta = <PluginMeta>param;
-            let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
-            if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
-                metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
-            }
-            return metaParam;
-        } else {
-            return `${p}`;
-        }
-    }
+    // public static getPluginMetaParam(p: PluginType): string {
+    //     let param: any = p;
+    //     // console.log(param);
+    //     if (param.name) {
+    //         let t: PluginMeta = <PluginMeta>param;
+    //         let metaParam = `${t.name}:${t.require ? 'require' : ''}${t.extraParam ? (',' + t.extraParam) : ''}`
+    //         if (Array.isArray(t.appendParams) && t.appendParams.length > 0) {
+    //             metaParam += ("&" + t.appendParams.map((p) => p.key + "=" + p.val).join("&"));
+    //         }
+    //         return metaParam;
+    //     } else {
+    //         return `${p}`;
+    //     }
+    // }
 
     public static wrapperHeteroList(he: HeteroList, pm: PluginType): HeteroList {
         let h: HeteroList = Object.assign(new HeteroList(), he, {"pluginCategory": pm});
@@ -820,7 +821,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                 if (!savePluginEvent.justVerify
                     //  && !savePluginEvent.createOrGetNotebook
                 ) {
-                  //console.log([savePluginEvent.justVerify,savePluginEvent])
+                    //console.log([savePluginEvent.justVerify,savePluginEvent])
                     this.afterSave.emit(new PluginSaveResponse(r.success, false, savePluginEvent, r.bizresult));
                 } else {
                     if (savePluginEvent.justVerify && r.success) {
@@ -934,9 +935,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
      * @param hostDspt 宿主Descriptpr
      * @param manipuldateMeta
      */
-    openManipulateStore(pluginMeta: PluginType, hostItem: Item, hostDspt: Descriptor, manipuldateMeta: { identityName: string }) {
+    openManipulateStore(pluginMeta: PluginType, hostItem: Item, hostDspt: Descriptor, manipuldateMeta: {
+        identityName: string
+    }) {
         //console.log([hostDspt, manipuldateMeta.descMeta]);
-        let opt = this.createPostPayload(hostItem, pluginMeta, true);
+        let opt = SavePluginEvent.createPostPayload(hostItem, pluginMeta, true);
 
         this.httpPost('/coredefine/corenodemanage.ajax'
             , "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + hostDspt.impl + "&identityName=" + manipuldateMeta.identityName)
@@ -990,35 +993,70 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
      */
     public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
         //console.log(item.dspt.manipulate);
-        let opt = this.createPostPayload(item, pluginMeta, false /**添加操作*/);
-        // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
 
-
-        PluginsComponent.openPluginDialog({
-                saveBtnLabel: '执行',
-                shallLoadSavedItems: false //
-                , savePluginEventCreator: () => {
-                    return opt;
-                }
-            }
-            , this, pluginDesc
-            , {name: 'noStore', require: true}
-            , `${pluginDesc.displayName}`
-            , (_, biz) => {
-                // console.log(biz);
-                // let rr: TisResponseResult = {
-                //   success: true,
-                //   bizresult: biz
-                // }
-                // console.log([biz, pluginDesc.manipulateStorable]);
+        PluginsComponent.addManipulate(this, pluginMeta, item, pluginDesc)
+            .then((result) => {
                 if (pluginDesc.manipulateStorable) {
-                    item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
+                    item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: result.biz()}]
                     this.cdr.detectChanges();
                 }
-                this.afterPluginManipulate.emit(new PluginSaveResponse(true, false, null, biz));
-                // this.processTriggerResult(this.getProcessStrategy(true), Promise.resolve(rr));
-
+                this.afterPluginManipulate.emit(result);
             });
+
+        // let opt = SavePluginEvent.createPostPayload(item, pluginMeta, false /**添加操作*/);
+        // // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
+        //
+        //
+        // PluginsComponent.openPluginDialog({
+        //     saveBtnLabel: '执行',
+        //     shallLoadSavedItems: false //
+        //     , savePluginEventCreator: () => {
+        //       return opt;
+        //     }
+        //   }
+        //   , this, pluginDesc
+        //   , {name: 'noStore', require: true}
+        //   , `${pluginDesc.displayName}`
+        //   , (_, biz) => {
+        //     if (pluginDesc.manipulateStorable) {
+        //       item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
+        //       this.cdr.detectChanges();
+        //     }
+        //     this.afterPluginManipulate.emit(new PluginSaveResponse(true, false, null, biz));
+        //   });
+    }
+
+    public static addManipulate(coreService: TISCoreService, pluginMeta: PluginType, item: Item, pluginDesc: Descriptor, appName?: string): Promise<PluginSaveResponse> {
+        //console.log(item.dspt.manipulate);
+        let opt = SavePluginEvent.createPostPayload(item, pluginMeta, false /**添加操作*/);
+        if (appName) {
+            opt.overwriteHttpHeaderOfAppName(appName);
+        }
+        // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
+// resolve(biz);
+        // reject(rejectReason);
+        return new Promise<PluginSaveResponse>((resolve, reject) => {
+            PluginsComponent.openPluginDialog({
+                    saveBtnLabel: '执行',
+                    shallLoadSavedItems: false //
+                    , savePluginEventCreator: () => {
+                        return opt;
+                    }
+                    , opt: opt
+                }
+                , coreService, pluginDesc
+                , {name: 'noStore', require: true}
+                , `${pluginDesc.displayName}`
+                , (_, biz) => {
+                    if (pluginDesc.manipulateStorable) {
+                        // item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
+                        //  this.cdr.detectChanges();
+                    }
+                    resolve(new PluginSaveResponse(true, false, null, biz));
+                });
+        });
+
+
     }
 
 
@@ -1028,15 +1066,15 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
      * @param pluginMeta
      * @private
      */
-    private createPostPayload(hostItem: Item, pluginMeta: PluginType, updateProcess: boolean) {
-        let opt = new SavePluginEvent();
-        opt.postPayload = {
-            'manipulateTarget': hostItem
-            , 'manipulatePluginMeta': PluginsComponent.getPluginMetaParam(pluginMeta)
-            , 'updateProcess': updateProcess
-        };
-        return opt;
-    }
+    // public static createPostPayload(hostItem: Item, pluginMeta: PluginType, updateProcess: boolean) {
+    //     let opt = new SavePluginEvent();
+    //     opt.postPayload = {
+    //         'manipulateTarget': hostItem
+    //         , 'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
+    //         , 'updateProcess': updateProcess
+    //     };
+    //     return opt;
+    // }
 }
 
 // @Component({
@@ -1085,7 +1123,7 @@ export class SelectionInputAssistComponent extends BasicFormComponent implements
     ngOnInit(): void {
         let reducePluginType: Map<PluginName, Array<TargetPlugin>> = this.reducePluginType();
         this.pluginTyps = convertReducePluginType2PluginTypes(reducePluginType);
-        console.log([reducePluginType,this.pluginTyps]);
+        console.log([reducePluginType, this.pluginTyps]);
     }
 
     whenAjaxOccur(e: PluginSaveResponse) {

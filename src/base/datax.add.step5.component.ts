@@ -21,7 +21,15 @@ import {TISService} from "../common/tis.service";
 import {BasicFormComponent, CurrentCollection} from "../common/basic.form.component";
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
-import {Descriptor, HeteroList, Item, PluginSaveResponse, PluginType, SavePluginEvent} from "../common/tis.plugin";
+import {
+  createExtraDataXParam,
+  Descriptor,
+  HeteroList,
+  Item,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent
+} from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
@@ -35,6 +43,7 @@ import {AddAppDefSchemaComponent} from "./addapp-define-schema.component";
 import {StepType} from "../common/steps.component";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
 import {DataXCreateProcessMeta} from "./common/datax.common";
+
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -90,7 +99,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
       return evt;
     };
     let eprops: PluginExtraProps = this.dto.writerDescriptor.eprops;
-    let extraParam = 'dataxName_' + this.dto.dataxPipeName;
+    let extraParam = createExtraDataXParam(this.dto.dataxPipeName) ;
     extraParam += (',' + DataxDTO.KEY_PROCESS_MODEL + '_' + this.dto.processModel);
     this.pluginCategory = {
       name: 'dataxWriter', require: true, extraParam: extraParam

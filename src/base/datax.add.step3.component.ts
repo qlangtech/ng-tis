@@ -22,13 +22,14 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {AppDesc} from "./addapp-pojo";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {
-    DATAX_PREFIX_DB,
-    Descriptor,
-    HeteroList,
-    Item,
-    PluginSaveResponse,
-    PluginType,
-    SavePluginEvent
+  createExtraDataXParam,
+  DATAX_PREFIX_DB,
+  Descriptor,
+  HeteroList,
+  Item,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent
 } from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
@@ -37,6 +38,7 @@ import {DataxAddStep5Component} from "./datax.add.step5.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PluginExtraProps} from "../runtime/misc/RCDeployment";
+
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
@@ -138,7 +140,7 @@ export class DataxAddStep3Component extends BasicDataXAddComponent implements On
     this.pluginCategory = {
       name: 'dataxReader',
       require: true,
-      "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ('dataxName_' + this.dto.dataxPipeName),
+      "extraParam": this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : ( createExtraDataXParam(this.dto.dataxPipeName) ),
       descFilter: {
         endType: () => eprops.endType,
         localDescFilter: (_) => true

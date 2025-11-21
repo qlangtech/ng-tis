@@ -23,18 +23,19 @@ import {NzModalService} from "ng-zorro-antd/modal";
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {TransferChange, TransferDirection, TransferItem} from "ng-zorro-antd/transfer";
 import {
-    DATAX_PREFIX_DB,
-    Descriptor,
-    EXTRA_PARAM_DATAX_NAME,
-    HeteroList,
-    IFieldError,
-    Item,
-    ItemPropVal,
-    PluginMeta,
-    PluginSaveResponse,
-    PluginType,
-    SavePluginEvent,
-    TisResponseResult
+  createExtraDataXParam,
+  DATAX_PREFIX_DB,
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
+  HeteroList,
+  IFieldError,
+  Item,
+  ItemPropVal,
+  PluginMeta,
+  PluginSaveResponse,
+  PluginType,
+  SavePluginEvent,
+  TisResponseResult
 } from "../common/tis.plugin";
 import {PluginsComponent} from "../common/plugins.component";
 import {DataxDTO} from "./datax.add.component";
@@ -618,7 +619,7 @@ export class DataxAddStep4Component extends BasicDataXAddComponent implements On
   }
 
   get getDataXReaderTargetName() {
-    return this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : (EXTRA_PARAM_DATAX_NAME + this.dto.dataxPipeName);
+    return this.dto.tablePojo ? (DATAX_PREFIX_DB + this.dto.tablePojo.dbName) : (createExtraDataXParam( this.dto.dataxPipeName) );
   }
 
   ngAfterViewInit(): void {

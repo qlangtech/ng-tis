@@ -27,7 +27,7 @@ import {
   OnInit,
   Output, QueryList, TemplateRef, ViewContainerRef
 } from "@angular/core";
-import {Descriptor} from "./tis.plugin";
+import {Descriptor, SavePluginEvent} from "./tis.plugin";
 import {BasicFormComponent} from "./basic.form.component";
 import {TISService} from "./tis.service";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
@@ -45,7 +45,7 @@ import {TisColumn} from "./pagination.component";
 export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterViewInit {
 
   @Output()
- public click = new EventEmitter<void>();
+  public click = new EventEmitter<void>();
 
   @Input("nz-icon")
   nzIcon: string;
@@ -67,60 +67,60 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
 
-      <ng-container
-              [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 || extractLiItems.length> 0  ">
-          <ng-container *ngSwitchCase="true">
+    <ng-container
+      [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 || extractLiItems.length> 0  ">
+      <ng-container *ngSwitchCase="true">
 
-              <nz-button-group>
-                  <button nz-button [style]="btnStyle"
-                          [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
-                          (mouseenter)="lazyInitialize()"
-                          (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
-                          [disabled]="this.disabled || this.formDisabled">
-                      <ng-content></ng-content>
-                  </button>
-                  <button [disabled]="this.disabled || this.formDisabled" nz-button nz-dropdown
-                          (mouseenter)="lazyInitialize()"
-                          [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'" [nzSize]="btnSize"
-                          [nzDropdownMenu]="this.disabled?null:menu1" nzPlacement="bottomRight">
-                      <span nz-icon nzType="down"></span>
-                  </button>
-              </nz-button-group>
+        <nz-button-group>
+          <button nz-button [style]="btnStyle"
+                  [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
+                  (mouseenter)="lazyInitialize()"
+                  (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
+                  [disabled]="this.disabled || this.formDisabled">
+            <ng-content></ng-content>
+          </button>
+          <button [disabled]="this.disabled || this.formDisabled" nz-button nz-dropdown
+                  (mouseenter)="lazyInitialize()"
+                  [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'" [nzSize]="btnSize"
+                  [nzDropdownMenu]="this.disabled?null:menu1" nzPlacement="bottomRight">
+            <span nz-icon nzType="down"></span>
+          </button>
+        </nz-button-group>
 
-              <nz-dropdown-menu #menu1="nzDropdownMenu">
-                  <ul nz-menu>
-                      <ng-container *ngIf="extractLiItems.length> 0 ">
-                          <li nz-menu-item *ngFor="let li of extractLiItems" (click)="li.click.emit()">
-                              <i nz-icon
-                                 [nzType]="li.nzIcon"
-                                 nzTheme="outline"></i>{{li.liName}}
-                          </li>
-                          <li nz-menu-divider></li>
-                      </ng-container>
+        <nz-dropdown-menu #menu1="nzDropdownMenu">
+          <ul nz-menu>
+            <ng-container *ngIf="extractLiItems.length> 0 ">
+              <li nz-menu-item *ngFor="let li of extractLiItems" (click)="li.click.emit()">
+                <i nz-icon
+                   [nzType]="li.nzIcon"
+                   nzTheme="outline"></i>{{li.liName}}
+              </li>
+              <li nz-menu-divider></li>
+            </ng-container>
 
 
-                      <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
-                          <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
-                                                             nzTheme="outline"></span> {{d.displayName}}</a>
-                      </li>
-                      <ng-container *ngIf="enableAddplugin">
-                          <li nz-menu-divider></li>
-                          <li nz-menu-item (click)="addNewPlugin()">
-                              <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
-                          </li>
-                      </ng-container>
-                  </ul>
-              </nz-dropdown-menu>
+            <li nz-menu-item *ngFor="let d of descriptors" (click)="addNewPluginItem(d)">
+              <a href="javascript:void(0)"><span *ngIf="d.supportIcon" nz-icon [nzType]="d.endtype"
+                                                 nzTheme="outline"></span> {{d.displayName}}</a>
+            </li>
+            <ng-container *ngIf="enableAddplugin">
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="addNewPlugin()">
+                <a href="javascript:void(0)"><i nz-icon nzType="api" nzTheme="outline"></i>添加</a>
+              </li>
+            </ng-container>
+          </ul>
+        </nz-dropdown-menu>
 
-          </ng-container>
-          <ng-container *ngSwitchCase="false">
-              <button *ngIf="enableAddplugin" [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'"
-                      (click)="addNewPlugin()"
-                      [disabled]="this.disabled || this.formDisabled">
-                  <i nz-icon nzType="api" nzTheme="outline"></i>添加
-              </button>
-          </ng-container>
       </ng-container>
+      <ng-container *ngSwitchCase="false">
+        <button *ngIf="enableAddplugin" [style]="btnStyle" nz-button nzType="default" [nzSize]="'small'"
+                (click)="addNewPlugin()"
+                [disabled]="this.disabled || this.formDisabled">
+          <i nz-icon nzType="api" nzTheme="outline"></i>添加
+        </button>
+      </ng-container>
+    </ng-container>
 
 
   `
@@ -138,6 +138,8 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
 
   @Input()
   enableAddplugin = true;
+  @Input()
+  appname: string;
 
   @Input()
   initDescriptors = false;
@@ -204,7 +206,11 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
     return new Promise<Array<Descriptor>>((resolve, reject) => {
       if (forceInit || (this.descriptors.length < 1 && this.initDescriptors)) {
         if (shallExec) {
-          PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType)
+          let event = new SavePluginEvent();
+          if (this.appname) {
+            event.overwriteHttpHeaderOfAppName(this.appname);
+          }
+          PluginsComponent.getAllDesc(this, this.extendPoint as string, this.endType, event)
             .then((descs) => {
 
               this.descriptors = Array.from(descs.values());
