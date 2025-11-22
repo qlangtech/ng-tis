@@ -49,6 +49,7 @@ import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzSpinModule} from 'ng-zorro-antd/spin';
 import {PluginsComponent, SelectionInputAssistComponent} from "./plugins.component";
+import {ManipulatePluginComponent} from "./manipulate-plugin.component";
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzFormModule} from 'ng-zorro-antd/form';
@@ -179,7 +180,7 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
     TimeConsumePipe, MaxLengthPipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
     , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent, TableTransformerComponent, TableBaseComponent,
     CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent,
+    CodemirrorComponent, PluginsComponent, ManipulatePluginComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent,
     TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
     , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
     , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
@@ -194,7 +195,7 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
         NzIconModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe, TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent
         , TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
         , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp
-        , PluginsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
+        , PluginsComponent, ManipulatePluginComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
         , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
         , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, MaxLengthPipe, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent
         , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, ItemPropValComponent

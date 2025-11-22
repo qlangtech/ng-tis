@@ -16,6 +16,8 @@
  *   limitations under the License.
  */
 
+import {PluginManipulateMeta} from "./tis.plugin";
+
 /**
  * Created by baisui on 2017/3/29 0029.
  */
@@ -37,6 +39,8 @@ export class Application {
   updateTime: number;
   incrRunning: boolean = false;
   incrConsumeNum: number;
+
+  storedPlugins: Array<PluginManipulateMeta>
 }
 
 export enum AppType {

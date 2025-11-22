@@ -155,6 +155,22 @@ import {PluginsComponent} from "../common/plugins.component";
                         <i nz-icon nzType="setting" nzTheme="outline"></i>
                     </tis-plugin-add-btn>
 
+                    <tis-manipulate-plugin [disableVerify]="true"
+                                           [storedPlugins]="app.manipulateMetas"
+                                           [pluginMeta]="pluginMeta"
+                                           [appname]="app.projectName"
+                                           [hostPluginImpl]="'com.qlangtech.tis.plugin.datax.DefaultDataxProcessor'"
+                                           [manipulatePluginExtendPoint]="processorExend"
+                    (onPluginManipulate)="pipelineManipuate(app,$event)">
+                        <tis-plugin-add-btn-extract-item (click)="startEditReader(app)" nz-icon="edit" li-name="Reader">
+                        </tis-plugin-add-btn-extract-item>
+                        <tis-plugin-add-btn-extract-item (click)="startEditWriter(app)" nz-icon="edit" li-name="Writer">
+                        </tis-plugin-add-btn-extract-item>
+                        <tis-plugin-add-btn-extract-item (click)="startDeletePipeline(app)" nz-icon="delete"
+                                                         li-name="删除">
+                        </tis-plugin-add-btn-extract-item>
+                    </tis-manipulate-plugin>
+
                 </ng-template>
             </tis-col>
         </tis-page>
@@ -166,11 +182,18 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
     pager: Pager = new Pager(1, 1);
     pageList: Array<Application> = [];
 
-    processorDescriptors: Descriptor[] = [];
+    manipulateMetas: Descriptor[] = [];
 
     private runningPipes: { [Key: string]: number } = null;
     private assembleWS: Subject<WSMessage>;
     private assembleWSSubscription: Subscription;
+
+
+     pluginMeta: PluginMeta = {
+        name: 'appSource',
+        require: true,
+    //    extraParam: createExtraDataXParam(app.projectName)
+    };
 
     constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService, private _localStorageService: LocalStorageService
     ) {
@@ -353,8 +376,8 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
             require: true,
             extraParam: createExtraDataXParam(app.projectName)
         };
-        let item: Item = null;
-        PluginsComponent.addManipulate(this, pluginMeta, item, desc, app.projectName)
+
+        PluginsComponent.addManipulate(this, pluginMeta,  desc, app.projectName)
             .then((result) => {
                 if (desc.manipulateStorable) {
                     // this.cdr.detectChanges();

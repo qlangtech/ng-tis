@@ -502,8 +502,10 @@ export interface PluginManipulate {
      * supportIcon :true
      * </pre>
      */
-    stored: Array<{ descMeta: Descriptor, identityName: string }>;
+    stored: Array<PluginManipulateMeta>;
 }
+
+export type PluginManipulateMeta = { descMeta: Descriptor, identityName: string };
 
 export interface TisResponseResult {
     bizresult?: any;
@@ -1196,11 +1198,11 @@ export class SavePluginEvent {
     constructor(public notShowBizMsg = false) {
     }
 
-    public static createPostPayload(hostItem: Item, pluginMeta: PluginType, updateProcess: boolean): SavePluginEvent {
+    public static createPostPayload( pluginMeta: PluginType, updateProcess: boolean): SavePluginEvent {
         let opt = new SavePluginEvent();
         opt.postPayload = {
-            'manipulateTarget': hostItem
-            , 'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
+           // 'manipulateTarget': hostItem
+             'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
             , 'updateProcess': updateProcess
         };
         return opt;

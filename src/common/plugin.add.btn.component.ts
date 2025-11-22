@@ -74,6 +74,7 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
         <nz-button-group>
           <button nz-button [style]="btnStyle"
                   [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
+
                   (mouseenter)="lazyInitialize()"
                   (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
                   [disabled]="this.disabled || this.formDisabled">

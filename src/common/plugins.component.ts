@@ -183,42 +183,18 @@ export function openParamsCfg(targetDesc: string, appendExtraParam = '', drawerS
                         </nz-space>
                     </div>
                     <div>
-                        <nz-space nzSize="middle">
-
-
-                            <ng-container *ngIf="!disableVerify && item.dspt.veriflable">
-                                <button *nzSpaceItem nz-button nzSize="small"
-                                        (click)="configCheck(h , item,$event)"><i nz-icon nzType="check"
-                                                                                  nzTheme="outline"></i>校验
-                                </button>&nbsp;
-                            </ng-container>
-
-                            <ng-container *ngIf="!disableManipulate && item.dspt.manipulate">
-                                <tis-plugin-add-btn *nzSpaceItem [btnSize]="'small'"
-                                                    [extendPoint]="item.dspt.manipulate.extendPoint"
-                                                    [descriptors]="[]" [initDescriptors]="true"
-                                                    (addPlugin)="pluginManipulate(pluginMeta,item,$event)"
-                                                    [lazyInitDescriptors]="true">
-                                    <span nz-icon nzType="setting" nzTheme="outline"></span>
-                                </tis-plugin-add-btn>
-                                &nbsp;
-                                <!--PluginManipulate { descMeta: Descriptor, identityName: string }-->
-                                <ng-container *ngFor="let m of item.dspt.manipulate.stored let i = index">
-                                    <button style="background-color: #fae8ae" *nzSpaceItem nz-tooltip
-                                            [nzTooltipTitle]="m.identityName" nzTooltipPlacement="top" nz-button
-                                            nzSize="small"
-                                            nzShape="round" (click)="openManipulateStore(pluginMeta,item,item.dspt,m)">
-                                        <ng-container [ngSwitch]="m.descMeta.supportIcon">
-                                            <span *ngSwitchCase="true" nz-icon [nzType]="m.descMeta.endtype"></span>
-                                            <span *ngSwitchDefault nz-icon nzType="tags"></span>
-                                        </ng-container>
-                                        {{m.identityName | maxLength:15}}</button>
-                                </ng-container>
-
-                            </ng-container>
-
-
-                        </nz-space>
+                        <tis-manipulate-plugin
+                                [item]="item"
+                                [heteroList]="h"
+                                [pluginMeta]="pluginMeta"
+                                [disableVerify]="disableVerify"
+                                [disableManipulate]="disableManipulate"
+                                [manipulatePluginExtendPoint]="item.dspt.manipulate.extendPoint"
+                                [hostPluginImpl]="item.dspt.impl"
+                                [storedPlugins] = "item.dspt.manipulate.stored"
+                                (onConfigCheck)="configCheck(h, item, $event)"
+                                (onPluginManipulate)="pluginManipulate(pluginMeta, item, $event)">
+                        </tis-manipulate-plugin>
                     </div>
                     <div style="clear: both"></div>
                     <div *ngIf="item.containAdvanceField" style="padding-left: 20px">
@@ -935,11 +911,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
      * @param hostDspt 宿主Descriptpr
      * @param manipuldateMeta
      */
-    openManipulateStore(pluginMeta: PluginType, hostItem: Item, hostDspt: Descriptor, manipuldateMeta: {
+    openManipulateStore(pluginMeta: PluginType, hostDspt: Descriptor, manipuldateMeta: {
         identityName: string
     }) {
         //console.log([hostDspt, manipuldateMeta.descMeta]);
-        let opt = SavePluginEvent.createPostPayload(hostItem, pluginMeta, true);
+        let opt = SavePluginEvent.createPostPayload( pluginMeta, true);
 
         this.httpPost('/coredefine/corenodemanage.ajax'
             , "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + hostDspt.impl + "&identityName=" + manipuldateMeta.identityName)
@@ -994,7 +970,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
         //console.log(item.dspt.manipulate);
 
-        PluginsComponent.addManipulate(this, pluginMeta, item, pluginDesc)
+        PluginsComponent.addManipulate(this, pluginMeta,  pluginDesc)
             .then((result) => {
                 if (pluginDesc.manipulateStorable) {
                     item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: result.biz()}]
@@ -1002,39 +978,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                 }
                 this.afterPluginManipulate.emit(result);
             });
-
-        // let opt = SavePluginEvent.createPostPayload(item, pluginMeta, false /**添加操作*/);
-        // // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
-        //
-        //
-        // PluginsComponent.openPluginDialog({
-        //     saveBtnLabel: '执行',
-        //     shallLoadSavedItems: false //
-        //     , savePluginEventCreator: () => {
-        //       return opt;
-        //     }
-        //   }
-        //   , this, pluginDesc
-        //   , {name: 'noStore', require: true}
-        //   , `${pluginDesc.displayName}`
-        //   , (_, biz) => {
-        //     if (pluginDesc.manipulateStorable) {
-        //       item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: biz}]
-        //       this.cdr.detectChanges();
-        //     }
-        //     this.afterPluginManipulate.emit(new PluginSaveResponse(true, false, null, biz));
-        //   });
     }
 
-    public static addManipulate(coreService: TISCoreService, pluginMeta: PluginType, item: Item, pluginDesc: Descriptor, appName?: string): Promise<PluginSaveResponse> {
-        //console.log(item.dspt.manipulate);
-        let opt = SavePluginEvent.createPostPayload(item, pluginMeta, false /**添加操作*/);
+    public static addManipulate(coreService: TISCoreService, pluginMeta: PluginType, pluginDesc: Descriptor, appName?: string): Promise<PluginSaveResponse> {
+        let opt = SavePluginEvent.createPostPayload( pluginMeta, false /**添加操作*/);
         if (appName) {
             opt.overwriteHttpHeaderOfAppName(appName);
         }
-        // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
-// resolve(biz);
-        // reject(rejectReason);
         return new Promise<PluginSaveResponse>((resolve, reject) => {
             PluginsComponent.openPluginDialog({
                     saveBtnLabel: '执行',
