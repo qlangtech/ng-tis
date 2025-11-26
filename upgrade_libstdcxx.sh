@@ -60,17 +60,18 @@ echo -e "${YELLOW}步骤 3: 创建临时工作目录 $WORK_DIR${NC}"
 echo ""
 echo -e "${YELLOW}步骤 4: 下载新版本的 libstdc++ 库...${NC}"
 
-# 尝试从多个镜像源下载 devtoolset-7-runtime
-echo "尝试从 devtoolset-7 获取新版本库..."
+# 从 CentOS 8 下载包含完整库文件的 libstdc++
+echo "尝试从 CentOS 8 获取新版本库..."
 
 # 定义多个下载源
-DEVTOOLSET_RPM="devtoolset-7-runtime-7.1-4.el7.x86_64.rpm"
+# 使用 CentOS 8 的 libstdc++, 包含完整的运行时库 libstdc++.so.6.0.25 (支持 GLIBCXX_3.4.25+, CXXABI_1.3.11+)
+LIBSTDCXX_RPM="libstdc++-8.5.0-4.el8_5.x86_64.rpm"
 
 declare -a MIRROR_URLS=(
-    "http://vault.centos.org/7.9.2009/sclo/x86_64/rh/Packages/d/${DEVTOOLSET_RPM}"
-    "http://ftp.iij.ad.jp/pub/linux/centos-vault/7.6.1810/sclo/x86_64/rh/Packages/d/${DEVTOOLSET_RPM}"
-    "http://mirrors.163.com/centos-vault/7.6.1810/sclo/x86_64/rh/Packages/d/${DEVTOOLSET_RPM}"
-    "http://mirrors.aliyun.com/centos-vault/7.6.1810/sclo/x86_64/rh/Packages/d/${DEVTOOLSET_RPM}"
+   # "http://vault.centos.org/8.5.2111/BaseOS/x86_64/os/Packages/${LIBSTDCXX_RPM}"
+    "http://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/x86_64/os/Packages/${LIBSTDCXX_RPM}"
+    "http://mirrors.163.com/centos-vault/8.5.2111/BaseOS/x86_64/os/Packages/${LIBSTDCXX_RPM}"
+    "http://ftp.iij.ad.jp/pub/linux/centos-vault/8.5.2111/BaseOS/x86_64/os/Packages/${LIBSTDCXX_RPM}"
 )
 
 DOWNLOAD_SUCCESS=0
@@ -93,24 +94,53 @@ if [ $DOWNLOAD_SUCCESS -eq 0 ]; then
     echo -e "${RED}错误: 所有镜像源都下载失败${NC}"
     echo ""
     echo "你可以手动下载 RPM 包并放到当前目录,然后重新运行脚本:"
-    echo "  wget http://vault.centos.org/7.9.2009/sclo/x86_64/rh/Packages/d/${DEVTOOLSET_RPM}"
-    echo "  或者访问: https://centos.pkgs.org/7/centos-sclo-rh-testing-x86_64/devtoolset-7-runtime-7.1-4.el7.x86_64.rpm.html"
+    echo "  wget http://vault.centos.org/8.5.2111/BaseOS/x86_64/os/Packages/${LIBSTDCXX_RPM}"
+    echo "  或者访问: https://vault.centos.org/8.5.2111/BaseOS/x86_64/os/Packages/"
     echo ""
     exit 1
 fi
 
-# 解压 RPM 包
+# 解压 RPM 包并检查是否包含 libstdc++
 echo ""
-echo "正在解压 RPM 包...: ${DEVTOOLSET_RPM}"
-rpm2cpio $DEVTOOLSET_RPM | cpio -idmv 2>&1 | grep libstdc++
+echo "正在解压 RPM 包...: ${LIBSTDCXX_RPM}"
+
+# 保存解压输出到变量
+EXTRACT_OUTPUT=$(rpm2cpio $LIBSTDCXX_RPM | cpio -idmv 2>&1)
+
+# 检查解压输出中是否包含 libstdc++
+if echo "$EXTRACT_OUTPUT" | grep -q libstdc++; then
+    echo -e "${GREEN}✓ 解压成功,发现 libstdc++ 文件${NC}"
+    echo "$EXTRACT_OUTPUT" | grep libstdc++
+else
+    echo -e "${RED}错误: RPM 包中未找到 libstdc++ 相关文件!${NC}"
+    echo ""
+    echo "解压的完整内容:"
+    echo "$EXTRACT_OUTPUT"
+    echo ""
+    echo "可能的原因:"
+    echo "  1. 下载的 RPM 包不正确或已损坏"
+    echo "  2. RPM 包版本不包含所需的 libstdc++ 文件"
+    echo ""
+    echo "请检查下载的 RPM 包: $LIBSTDCXX_RPM"
+    echo "文件大小: $(ls -lh $LIBSTDCXX_RPM | awk '{print $5}')"
+    exit 1
+fi
+
+echo -e "${GREEN}rpm2cpio complete${NC}"
 
 # 查找新的 libstdc++ 文件
+# CentOS 8 的 libstdc++ 路径通常是: ./usr/lib64/libstdc++.so.6.0.25
 NEW_LIB=$(find $WORK_DIR -name "libstdc++.so.6.0.*" -type f | head -1)
+echo "NEW_LIB: ${NEW_LIB}"
 
 if [ -z "$NEW_LIB" ]; then
     echo -e "${RED}错误: 未找到新的 libstdc++ 库文件${NC}"
-    echo "RPM 包内容:"
-    rpm2cpio $DEVTOOLSET_RPM | cpio -t 2>&1 | grep -i libstdc
+    echo ""
+    echo "正在搜索所有 libstdc++ 相关文件:"
+    find $WORK_DIR -name "*libstdc*" -type f
+    echo ""
+    echo "RPM 包中的 libstdc 相关内容:"
+    rpm2cpio $LIBSTDCXX_RPM | cpio -t 2>&1 | grep -i libstdc
     exit 1
 fi
 

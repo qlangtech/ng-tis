@@ -38,7 +38,7 @@ import {
     IFieldError,
     Item,
     ItemPropVal,
-    PARAM_END_TYPE,
+    PARAM_END_TYPE, PluginManipulateMeta,
     PluginMeta,
     PluginName,
     PluginSaveResponse,
@@ -189,9 +189,9 @@ export function openParamsCfg(targetDesc: string, appendExtraParam = '', drawerS
                                 [pluginMeta]="pluginMeta"
                                 [disableVerify]="disableVerify"
                                 [disableManipulate]="disableManipulate"
-                                [manipulatePluginExtendPoint]="item.dspt.manipulate.extendPoint"
+                                [manipulatePluginExtendPoint]="item.dspt.manipulate?.extendPoint"
                                 [hostPluginImpl]="item.dspt.impl"
-                                [storedPlugins] = "item.dspt.manipulate.stored"
+                                [storedPlugins] = "item.dspt.manipulate?.stored"
                                 (onConfigCheck)="configCheck(h, item, $event)"
                                 (onPluginManipulate)="pluginManipulate(pluginMeta, item, $event)">
                         </tis-manipulate-plugin>
@@ -382,11 +382,13 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         } else {
             try {
                 let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
+
                 if (opts.item) {
                     for (let i = 0; i < hlist.length; i++) {
                         hlist[i].items = [opts.item];
                     }
                 }
+             //   console.log(hlist);
                 pluginCpt._heteroList = hlist;
             } catch (e) {
                 console.log(e);
@@ -973,7 +975,8 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         PluginsComponent.addManipulate(this, pluginMeta,  pluginDesc)
             .then((result) => {
                 if (pluginDesc.manipulateStorable) {
-                    item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: result.biz()}]
+                    // {descMeta: pluginDesc, identityName: result.biz()}
+                    item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, new PluginManipulateMeta(pluginDesc,result.biz()) ]
                     this.cdr.detectChanges();
                 }
                 this.afterPluginManipulate.emit(result);

@@ -18,120 +18,122 @@
 
 declare module flink.job.detail {
 
-  export interface JobManagerAddress {
-    host: string;
-    port: number;
-    url: string;
-  }
+    export interface JobManagerAddress {
+        host: string;
+        port: number;
+        url: string;
+    }
 
-  export interface ClusterCfg {
-    clusterId: string;
-    jobManagerAddress: JobManagerAddress;
-    name: string;
-  }
+    export interface ClusterCfg {
+        clusterId: string;
+        jobManagerAddress: JobManagerAddress;
+        name: string;
+    }
 
-  export interface IncrJobStatus {
-    // example:
-    jobId: string;
-    savePointRootPath: string;
-    savepointPaths: Array<FlinkSavepoint>;
-  }
+    export interface IncrJobStatus {
+        // example:
+        jobId: string;
+        savePointRootPath: string;
+        savepointPaths: Array<FlinkSavepoint>;
+    }
 
-  export interface FlinkSavepoint {
-    // {
-    //   "createTimestamp":1650173119716,
-    //   "path":"file:///opt/data/savepoint/savepoint_20220417132518248"
-    // }
-    createTimestamp: number;
-    path: string;
-  }
+    export interface FlinkSavepoint {
+        // {
+        //   "createTimestamp":1650173119716,
+        //   "path":"file:///opt/data/savepoint/savepoint_20220417132518248"
+        // }
+        createTimestamp: number;
+        path: string;
+    }
 
 
-  export interface JobVertexMetrics {
-    bytesRead: number;
-    bytesReadComplete: boolean;
-    bytesWritten: number;
-    bytesWrittenComplete: boolean;
-    recordsRead: number;
-    recordsReadComplete: boolean;
-    recordsWritten: number;
-    recordsWrittenComplete: boolean;
-  }
+    export interface JobVertexMetrics {
+        bytesRead: number;
+        bytesReadComplete: boolean;
+        bytesWritten: number;
+        bytesWrittenComplete: boolean;
+        recordsRead: number;
+        recordsReadComplete: boolean;
+        recordsWritten: number;
+        recordsWrittenComplete: boolean;
+    }
 
-  export interface TasksPerState {
-    RECONCILING: number;
-    FAILED: number;
-    RUNNING: number;
-    CANCELING: number;
-    CREATED: number;
-    SCHEDULED: number;
-    CANCELED: number;
-    DEPLOYING: number;
-    FINISHED: number;
-    INITIALIZING: number;
-  }
+    export interface TasksPerState {
+        RECONCILING: number;
+        FAILED: number;
+        RUNNING: number;
+        CANCELING: number;
+        CREATED: number;
+        SCHEDULED: number;
+        CANCELED: number;
+        DEPLOYING: number;
+        FINISHED: number;
+        INITIALIZING: number;
+    }
 
-  export interface JobVertexInfo {
-    duration: number;
-    endTime: number;
-    executionState: string;
-    jobVertexID: string;
-    jobVertexMetrics: JobVertexMetrics;
-    maxParallelism: number;
-    name: string;
-    parallelism: number;
-    startTime: any;
-    tasksPerState: TasksPerState;
-  }
+    export interface JobVertexInfo {
+        duration: number;
+        endTime: number;
+        executionState: string;
+        jobVertexID: string;
+        jobVertexMetrics: JobVertexMetrics;
+        maxParallelism: number;
+        name: string;
+        parallelism: number;
+        startTime: any;
+        tasksPerState: TasksPerState;
+    }
 
-  export interface JobVerticesPerState {
-    RECONCILING: number;
-    FAILED: number;
-    RUNNING: number;
-    CANCELING: number;
-    CREATED: number;
-    SCHEDULED: number;
-    CANCELED: number;
-    DEPLOYING: number;
-    FINISHED: number;
-    INITIALIZING: number;
-  }
+    export interface JobVerticesPerState {
+        RECONCILING: number;
+        FAILED: number;
+        RUNNING: number;
+        CANCELING: number;
+        CREATED: number;
+        SCHEDULED: number;
+        CANCELED: number;
+        DEPLOYING: number;
+        FINISHED: number;
+        INITIALIZING: number;
+    }
 
-  export interface PerExecState {
-    count: number;
-    stateColor: string;
-  }
+    export interface PerExecState {
+        count: number;
+        stateColor: string;
+    }
 
-  export interface Timestamps {
-    RECONCILING: number;
-    INITIALIZING: number;
-    RUNNING: number;
-    CANCELLING: number;
-    SUSPENDED: number;
-    RESTARTING: number;
-    FINISHED: number;
-    FAILED: number;
-    CANCELED: number;
-    FAILING: number;
-    CREATED: number;
-  }
+    export interface Timestamps {
+        RECONCILING: number;
+        INITIALIZING: number;
+        RUNNING: number;
+        CANCELLING: number;
+        SUSPENDED: number;
+        RESTARTING: number;
+        FINISHED: number;
+        FAILED: number;
+        CANCELED: number;
+        FAILING: number;
+        CREATED: number;
+    }
 
-  export interface FlinkJobDetail {
-    clusterCfg: ClusterCfg;
-    incrJobStatus: IncrJobStatus;
-    cancelable: boolean;
-    duration: number;
-    endTime: number;
-    jobId: string;
-    jobStatus: string;
-    statusColor: string;
-    sources: JobVertexInfo[];
-    jobVerticesPerState: PerExecState[];
-    maxParallelism: number;
-    name: string;
-    now: number;
-    startTime: number;
-    stoppable: boolean;
-    timestamps: Timestamps;
-  }
+    export interface FlinkJobDetail {
+        clusterCfg: ClusterCfg;
+        incrJobStatus: IncrJobStatus;
+        cancelable: boolean;
+        duration: number;
+        endTime: number;
+        jobId: string;
+        jobStatus: string;
+        statusColor: string;
+        sources: JobVertexInfo[];
+        jobVerticesPerState: PerExecState[];
+        maxParallelism: number;
+        name: string;
+        now: number;
+        startTime: number;
+        stoppable: boolean;
+        timestamps: Timestamps;
+        // jobManagerAddress.url+'/#/job/'+this.dto.flinkJobDetail.jobId+'/overview'
+        jobManagerUrl: string;
+    }
 }

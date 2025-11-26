@@ -333,26 +333,21 @@ export class Descriptor {
     }
     subForm: boolean;
 
-    private static wrapDescriptor(d: Descriptor): Descriptor {
+
+    public static wrapDescriptor(d: Descriptor): Descriptor {
 
 
         if (d.manipulate) {
             let pluginManipulate = d.manipulate;
-            let storeMeta: { descMeta: Descriptor, identityName: string };
+            // let storeMeta: { descMeta: Descriptor, identityName: string };
             if (pluginManipulate.stored) {
-                for (let i = 0; i < pluginManipulate.stored.length; i++) {
-                    storeMeta = pluginManipulate.stored[i];
-
-                    storeMeta.descMeta = Descriptor.wrapDescriptor(Object.assign(new Descriptor(), {attrs: []}, storeMeta.descMeta /**没有attrs*/));
-
-                    // console.log(storeMeta.descMeta);
-                    // let i: Item = Object.assign(new Item(desc), pluginManipulate.stored[i]);
-                    // i.wrapItemVals();
-                }
+                pluginManipulate.stored = PluginManipulateMeta.wrapManipulateStore(pluginManipulate.stored);
             }
         }
 
-
+        if (!d.attrs) {
+            throw new Error("d.attrs can not be null");
+        }
         let attrs: AttrDesc[] = [];
         let attr: AttrDesc;
         d.attrs.forEach((a) => {
@@ -371,6 +366,7 @@ export class Descriptor {
             attrs.push(attr);
         });
         d.attrs = attrs;
+        // }
         return d;
     }
 
@@ -464,10 +460,22 @@ export class Descriptor {
     //   let note: NotebookMeta = this.extractProps["notebook"];
     //   return note;
     // }
+    // private _pluginManipulate: PluginManipulate;
 
     public get manipulate(): PluginManipulate {
-        let manipulate: PluginManipulate = this.extractProps["manipulate"];
-        return manipulate;
+
+        return this.extractProps["manipulate"];
+
+        // if (!this._pluginManipulate) {
+        //     let manipulate: PluginManipulate = this.extractProps["manipulate"];
+        //     if (manipulate && Array.isArray(manipulate.stored)) {
+        //         manipulate.stored
+        //             = manipulate.stored
+        //             .map((plugin) => Object.assign(new PluginManipulateMeta(plugin.descMeta, plugin.identityName, plugin.stateSummary)))
+        //     }
+        //     this._pluginManipulate = manipulate;
+        // }
+        // return this._pluginManipulate;
     }
 
     public get helpPath(): string {
@@ -485,6 +493,11 @@ export class Descriptor {
 //   // 服务端是否激活
 //   activate: boolean;
 // }
+export interface ManipulateStateSummary {
+    "activate": boolean,
+    "status": Array<{ "stat": string }>,
+    "summary": string
+}
 
 /**
  * 插件操作扩展点
@@ -505,7 +518,41 @@ export interface PluginManipulate {
     stored: Array<PluginManipulateMeta>;
 }
 
-export type PluginManipulateMeta = { descMeta: Descriptor, identityName: string };
+export class PluginManipulateMeta {
+    public static wrapManipulateStore(stored: Array<PluginManipulateMeta>): Array<PluginManipulateMeta> {
+        let result: Array<PluginManipulateMeta> = [];
+        let storeMeta: PluginManipulateMeta = null;
+        for (let i = 0; i < stored.length; i++) {
+            let s = stored[i];
+            storeMeta = new PluginManipulateMeta(Descriptor.wrapDescriptor(Object.assign(new Descriptor(), {attrs: []}, s.descMeta /**没有attrs*/))
+                , s.identityName, s.stateSummary);
+            //storeMeta.descMeta = ;
+            result.push(storeMeta)
+        }
+        return result;
+    }
+
+    //  descMeta: Descriptor, identityName: string, stateSummary?: ManipulateStateSummary
+    constructor(public descMeta: Descriptor, public identityName: string, public stateSummary?: ManipulateStateSummary) {
+    }
+
+    public get tooltipTitle() {
+        // [nzTooltipTitle]="m.stateSummary?.summary"
+        return this.stateSummary ? this.stateSummary.summary : this.identityName;
+    }
+
+    public get manipulateDesc(): string {
+        // {{m.identityName | maxLength:15}}
+        // <ng-container *ngIf="m.stateSummary">
+        //     (<ng-container *ngFor="let s of m.stateSummary.status">{{s.stat}}</ng-container>)
+        // </ng-container>
+        let id = this.identityName.substring(0, 10);
+        if (this.stateSummary && this.stateSummary.status.length > 0) {
+            id += "(" + this.stateSummary.status.map((s) => s.stat).join(",") + ")";
+        }
+        return id;
+    }
+}
 
 export interface TisResponseResult {
     bizresult?: any;
@@ -1198,11 +1245,11 @@ export class SavePluginEvent {
     constructor(public notShowBizMsg = false) {
     }
 
-    public static createPostPayload( pluginMeta: PluginType, updateProcess: boolean): SavePluginEvent {
+    public static createPostPayload(pluginMeta: PluginType, updateProcess: boolean): SavePluginEvent {
         let opt = new SavePluginEvent();
         opt.postPayload = {
-           // 'manipulateTarget': hostItem
-             'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
+            // 'manipulateTarget': hostItem
+            'manipulatePluginMeta': getPluginMetaParam(pluginMeta)
             , 'updateProcess': updateProcess
         };
         return opt;

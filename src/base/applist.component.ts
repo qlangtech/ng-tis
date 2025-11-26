@@ -33,7 +33,14 @@ import {LatestSelectedIndex} from "../common/LatestSelectedIndex";
 import {LocalStorageService} from "../common/local-storage.service";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
 import {StepType} from "../common/steps.component";
-import {createExtraDataXParam, Descriptor, Item, PluginMeta, SavePluginEvent} from "../common/tis.plugin";
+import {
+    createExtraDataXParam,
+    Descriptor,
+    Item,
+    PluginManipulateMeta,
+    PluginMeta,
+    SavePluginEvent
+} from "../common/tis.plugin";
 import {DataxDTO} from "./datax.add.component";
 import {Subject, Subscription} from "rxjs";
 import {LogType} from "../runtime/misc/RCDeployment";
@@ -123,45 +130,13 @@ import {PluginsComponent} from "../common/plugins.component";
             <tis-col title="管理">
                 <ng-template let-app='r'>
 
-                    <!--          <nz-button-group>-->
-                    <!--            <button nz-button nz-dropdown nzSize="small" [nzDropdownMenu]="menu1" nzPlacement="bottomRight">-->
-                    <!--              <i nz-icon nzType="down" nzTheme="outline"></i>-->
-                    <!--            </button>-->
-                    <!--            <button nz-button nzType="link" nzSize="small"-->
-                    <!--                    (click)="gotoApp(app)">{{app.projectName}}</button>-->
-
-                    <!--          </nz-button-group>-->
-                    <!--          <nz-dropdown-menu #menu1="nzDropdownMenu">-->
-                    <!--            <ul nz-menu>-->
-                    <!--              <li nz-menu-item (click)="startEditReader(app)"><i nz-icon nzType="edit" nzTheme="outline"></i>Reader-->
-                    <!--              </li>-->
-                    <!--              <li nz-menu-item (click)="startEditWriter(app)"><i nz-icon nzType="edit" nzTheme="outline"></i>Writer-->
-                    <!--              </li>-->
-                    <!--            </ul>-->
-                    <!--          </nz-dropdown-menu>-->
-                    <tis-plugin-add-btn [enableAddplugin]="false" btnSize="small" [appname]="app.projectName"
-                                        [extendPoint]="processorExend"
-                                        (addPlugin)="pipelineManipuate(app,$event)"
-                                        [initDescriptors]="true"
-                                        [lazyInitDescriptors]="true"
-                                        [extendPoint]="'com.qlangtech.tis.datax.DefaultDataXProcessorManipulate'">
-                        <tis-plugin-add-btn-extract-item (click)="startEditReader(app)" nz-icon="edit" li-name="Reader">
-                        </tis-plugin-add-btn-extract-item>
-                        <tis-plugin-add-btn-extract-item (click)="startEditWriter(app)" nz-icon="edit" li-name="Writer">
-                        </tis-plugin-add-btn-extract-item>
-                        <tis-plugin-add-btn-extract-item (click)="startDeletePipeline(app)" nz-icon="delete"
-                                                         li-name="删除">
-                        </tis-plugin-add-btn-extract-item>
-                        <i nz-icon nzType="setting" nzTheme="outline"></i>
-                    </tis-plugin-add-btn>
-
                     <tis-manipulate-plugin [disableVerify]="true"
                                            [storedPlugins]="app.manipulateMetas"
                                            [pluginMeta]="pluginMeta"
                                            [appname]="app.projectName"
                                            [hostPluginImpl]="'com.qlangtech.tis.plugin.datax.DefaultDataxProcessor'"
                                            [manipulatePluginExtendPoint]="processorExend"
-                    (onPluginManipulate)="pipelineManipuate(app,$event)">
+                                           (onPluginManipulate)="pipelineManipuate(app,$event)">
                         <tis-plugin-add-btn-extract-item (click)="startEditReader(app)" nz-icon="edit" li-name="Reader">
                         </tis-plugin-add-btn-extract-item>
                         <tis-plugin-add-btn-extract-item (click)="startEditWriter(app)" nz-icon="edit" li-name="Writer">
@@ -182,17 +157,17 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
     pager: Pager = new Pager(1, 1);
     pageList: Array<Application> = [];
 
-    manipulateMetas: Descriptor[] = [];
+   // manipulateMetas: Descriptor[] = [];
 
     private runningPipes: { [Key: string]: number } = null;
     private assembleWS: Subject<WSMessage>;
     private assembleWSSubscription: Subscription;
 
 
-     pluginMeta: PluginMeta = {
+    pluginMeta: PluginMeta = {
         name: 'appSource',
         require: true,
-    //    extraParam: createExtraDataXParam(app.projectName)
+        //    extraParam: createExtraDataXParam(app.projectName)
     };
 
     constructor(tisService: TISService, private router: Router, private route: ActivatedRoute, modalService: NzModalService, private _localStorageService: LocalStorageService
@@ -287,8 +262,19 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
     }
 
     private setAppListRunningIncrConsumeStat() {
+        this.pageList.forEach((app) => {
+            // console.log(app.manipulateMetas);
+            if (Array.isArray(app.manipulateMetas)) {
+                app.manipulateMetas = PluginManipulateMeta.wrapManipulateStore(app.manipulateMetas);
+            } else {
+                app.manipulateMetas = [];
+            }
+        });
+
         if (this.runningPipes) {
             this.pageList.forEach((app) => {
+
+
                 let incrConsumeNum;
                 //console.log([app.projectName, runningPipes[app.projectName]]);
                 if ((incrConsumeNum = this.runningPipes[app.projectName]) != undefined) {
@@ -377,9 +363,14 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
             extraParam: createExtraDataXParam(app.projectName)
         };
 
-        PluginsComponent.addManipulate(this, pluginMeta,  desc, app.projectName)
+        PluginsComponent.addManipulate(this, pluginMeta, desc, app.projectName)
             .then((result) => {
                 if (desc.manipulateStorable) {
+                    // this.cdr.detectChanges();
+                    // {descMeta: desc, identityName: result.biz()}
+                    app.manipulateMetas = [...app.manipulateMetas, new PluginManipulateMeta(desc, result.biz())];
+                    //  console.log( app.manipulateMetas);
+                    //  item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: result.biz()}]
                     // this.cdr.detectChanges();
                 }
                 // this.afterPluginManipulate.emit(result);

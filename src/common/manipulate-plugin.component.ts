@@ -22,16 +22,26 @@ import {
     Component,
     ContentChildren,
     EventEmitter,
-    Input,
+    Input, OnInit,
     Output, QueryList
 } from "@angular/core";
-import {Descriptor, HeteroList, Item, PluginManipulateMeta, PluginType, SavePluginEvent} from "./tis.plugin";
+import {
+    createExtraDataXParam,
+    Descriptor,
+    HeteroList,
+    Item,
+    PluginManipulateMeta,
+    PluginMeta,
+    PluginType,
+    SavePluginEvent
+} from "./tis.plugin";
 import {PluginsComponent} from "./plugins.component";
 import {BasicFormComponent} from "./basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {TISService} from "./tis.service";
 import {TisPluginAddBtnExtractLiItem} from "./plugin.add.btn.component";
+
 
 /**
  * 插件操作按钮组件
@@ -41,7 +51,7 @@ import {TisPluginAddBtnExtractLiItem} from "./plugin.add.btn.component";
     selector: 'tis-manipulate-plugin',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <nz-space nzSize="middle">
+        <nz-space nzSize="small">
             <!-- 校验按钮 -->
             <ng-container *ngIf="!disableVerify && item.dspt.veriflable">
                 <button *nzSpaceItem nz-button nzSize="small"
@@ -65,25 +75,28 @@ import {TisPluginAddBtnExtractLiItem} from "./plugin.add.btn.component";
                     </tis-plugin-add-btn-extract-item>
                     <span nz-icon nzType="setting" nzTheme="outline"></span>
                 </tis-plugin-add-btn>
-                &nbsp;
+
                 <!-- 已存储的操作按钮 -->
                 <ng-container *ngFor="let m of storedPlugins  let i = index">
-                    <button style="background-color: #fae8ae" *nzSpaceItem nz-tooltip
-                            [nzTooltipTitle]="m.identityName" nzTooltipPlacement="top" nz-button
+                    <button nz-tooltip [nzTooltipTitle]="m.tooltipTitle"
+                            nzTooltipPlacement="top" [ngStyle]="{
+                              'background-color': m.stateSummary?.activate === false ? '#d9d9d9' : '#fae8ae'
+                            }" *nzSpaceItem nz-tooltip
+                            nz-button
                             nzSize="small"
                             nzShape="round" (click)="openManipulateStore(m)">
                         <ng-container [ngSwitch]="m.descMeta.supportIcon">
                             <span *ngSwitchCase="true" nz-icon [nzType]="m.descMeta.endtype"></span>
                             <span *ngSwitchDefault nz-icon nzType="tags"></span>
                         </ng-container>
-                        {{m.identityName | maxLength:15}}
+                        <span [ngStyle]="{'text-decoration': m.stateSummary?.activate === false ? 'line-through' : 'none'}">{{m.manipulateDesc}}</span>
                     </button>
                 </ng-container>
             </ng-container>
         </nz-space>
     `
 })
-export class ManipulatePluginComponent extends BasicFormComponent {
+export class ManipulatePluginComponent extends BasicFormComponent implements OnInit {
 
     /**
      * Item 对象,包含所有业务数据
@@ -92,7 +105,7 @@ export class ManipulatePluginComponent extends BasicFormComponent {
     item: Item;
 
     @Input()
-    appname:string;
+    appname: string;
     /**
      * HeteroList 对象,用于 configCheck
      */
@@ -124,7 +137,7 @@ export class ManipulatePluginComponent extends BasicFormComponent {
     hostPluginImpl: string;
 
     @Input()
-    manipulatePluginExtendPoint:string
+    manipulatePluginExtendPoint: string
 
     /**
      * 校验按钮点击事件
@@ -153,6 +166,10 @@ export class ManipulatePluginComponent extends BasicFormComponent {
         super(tisService, modalService, notification);
     }
 
+    ngOnInit(): void {
+        console.log(this.storedPlugins);
+    }
+
     /**
      * 打开插件操作存储对话框
      * @param manipuldateMeta 插件操作元数据
@@ -165,21 +182,30 @@ export class ManipulatePluginComponent extends BasicFormComponent {
             throw new Error("manipuldateMeta can not be null");
         }
 
-        let opt = SavePluginEvent.createPostPayload(this.pluginMeta, true);
+        let opt: SavePluginEvent = null;
+        if (this.appname) {
+            let pm: PluginMeta = Object.assign(this.pluginMeta, {"extraParam": createExtraDataXParam(this.appname)}) as PluginMeta;
+            opt = SavePluginEvent.createPostPayload(pm, true);
+            opt.overwriteHttpHeaderOfAppName(this.appname);
+        } else {
+            opt = SavePluginEvent.createPostPayload(this.pluginMeta, true);
+        }
 
         this.httpPost('/coredefine/corenodemanage.ajax',
-            "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + this.hostPluginImpl  + "&identityName=" + manipuldateMeta.identityName)
+            "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + this.hostPluginImpl + "&identityName=" + manipuldateMeta.identityName, opt)
             .then((result) => {
 
                 let descMap = Descriptor.wrapDescriptors(result.bizresult.desc);
 
                 for (let [_, desc] of descMap) {
-                    let i: any = Object.assign(new (class {
-                        wrapItemVals() {
-                        }
-                    })(), result.bizresult.item);
+                    // let i: any = Object.assign(new (class {
+                    //     wrapItemVals() {
+                    //     }
+                    // })(), result.bizresult.item);
+                    let i: Item = Object.assign(new Item(desc), result.bizresult.item);
                     i.wrapItemVals();
 
+                    //  console.log([i,desc]);
                     PluginsComponent.openPluginDialog({
                             saveBtnLabel: '更新',
                             enableDeleteProcess: true,
@@ -193,15 +219,27 @@ export class ManipulatePluginComponent extends BasicFormComponent {
                         {name: 'noStore', require: true},
                         `${desc.displayName}`,
                         (event, biz) => {
+                            // console.log([event, event.deleteProcess, biz]);
+                            let stored = this.storedPlugins;
+                            let idx = stored.findIndex((s) => s.identityName === manipuldateMeta.identityName);
                             if (event.deleteProcess) {
-                                let stored = this.storedPlugins;
-                                let idx = stored.findIndex((s) => s.identityName === manipuldateMeta.identityName);
                                 if (idx > -1) {
                                     stored.splice(idx, 1);
                                     this.storedPlugins = [...stored];
                                 }
-                                this.cdr.detectChanges();
+                            } else if (Array.isArray(biz)) {
+                                for (let meta of biz) {
+                                    if (typeof meta === 'string') {
+                                        return;
+                                    }
+                                }
+                                for (let meta of PluginManipulateMeta.wrapManipulateStore(biz)) {
+                                    stored[idx] = meta;
+                                    this.storedPlugins = [...stored];
+                                    break;
+                                }
                             }
+                            this.cdr.detectChanges();
                         });
                     break;
                 }
