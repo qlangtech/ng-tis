@@ -40,7 +40,7 @@ enum PluginTab {
 // 查看操作日志
 @Component({
   template: `
-      <tis-page-header *ngIf="!drawerModel" title="插件管理" [showBreadcrumb]="true">
+      <tis-page-header *ngIf="!drawerModel" title="插件市场" [showBreadcrumb]="true">
       </tis-page-header>
       <nz-alert *ngIf="updateSiteLoadErr" nzType="error" nzMessage="错误" [nzDescription]="updateSiteLoadErrTpl"
                 nzShowIcon></nz-alert>

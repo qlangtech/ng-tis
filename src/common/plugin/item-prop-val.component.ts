@@ -132,7 +132,7 @@ import {AbstractControl, NgModel} from "@angular/forms";
                       <nz-input-group [nzSuffix]="suffixTemplate">
                         <input [attr.data-testid]="_pp.key" [disabled]="disabled"
                                [type]="passwordVisible ? 'text' : 'password'" nz-input
-                               placeholder="input password" *ngIf="_pp.primaryVal" nz-input
+                               [placeholder]="_pp.placeholder" *ngIf="_pp.primaryVal" nz-input
                                [(ngModel)]="_pp.primary" [name]="_pp.key" (ngModelChange)="inputValChange(_pp,$event)"/>
                       </nz-input-group>
                       <ng-template #suffixTemplate>
