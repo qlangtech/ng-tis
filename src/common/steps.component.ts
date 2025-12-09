@@ -112,7 +112,7 @@ export class TisStepsComponent implements AfterContentInit, OnInit {
     <tis-page-header [result]="result" [showBreadcrumb]="false">
       <tis-page-header-left *ngIf="this.title">{{title}}</tis-page-header-left>
       <tis-header-tool>
-        <ng-container *ngIf="cancel.observers.length>0">
+        <ng-container *ngIf="goCancelBtnShow && cancel.observers.length>0">
           <button [disabled]="formDisabled" data-testid="cancel-step" nz-button (click)="cancelSteps()"><i nz-icon nzType="logout" nzTheme="outline"></i>取消</button>
           &nbsp;
         </ng-container>
@@ -153,7 +153,8 @@ export class TisStepsToolbarComponent implements AfterContentInit {
   goOnBtnShow = true;
   @Input()
   goBackBtnShow = true;
-
+  @Input()
+  goCancelBtnShow = true;
   @Input()
   result: TisResponseResult;
 

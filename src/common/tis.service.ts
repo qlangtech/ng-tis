@@ -709,6 +709,12 @@ export enum EventType {
      */
         // 开始 打开启动增量通道启动执行进度对话框
     AI_AGNET_OPEN_LAUNCHING_PROCESS = 'ai_agent_open_launching_process',
+    /**
+     * 当执行tdfs（非rdbms）同步mysql（rdbms）类型的场景
+     * 只有在reader为非rdbms，writer为rdbms的情况下进入该component设置
+     * ColsMetaSetter
+     */
+    AI_AGNET_TDFS_COLS_META_SETTER = 'ai_agent_tdfs_cols_meta_setter',
     AI_AGNET_INPUT_REQUEST = 'ai_agent_input_request',
     AI_AGNET_MESSAGE = 'ai_agent_message',
     AI_AGNET_TOKEN = 'ai_agent_token',

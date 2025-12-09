@@ -16,12 +16,14 @@
  *   limitations under the License.
  */
 
-import {AfterViewInit, Component, EventEmitter, OnInit} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, Input, OnInit} from "@angular/core";
 import {TISService} from "../common/tis.service";
 import {CurrentCollection} from "../common/basic.form.component";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {
-  Descriptor, EXTRA_PARAM_DATAX_NAME,
+  ColsAndMeta,
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
   HeteroList,
   Item,
   ItemPropVal,
@@ -32,33 +34,26 @@ import {
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MongoColsTabletView} from "../common/multi-selected/schema.edit.component";
-import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {PluginsComponent} from "../common/plugins.component";
-import {ISelectedCol, ISelectedTabMeta} from "./common/datax.common";
 import {ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.utils";
 
 
 // 文档：https://angular.io/docs/ts/latest/guide/forms.html
 @Component({
   template: `
-    <tis-steps [type]="stepType" [step]="offsetStep(3)"></tis-steps>
-    <!--      <tis-form [fieldsErr]="errorItem">-->
-    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-    <!--              <tis-header-tool>-->
-    <!--                  <button nz-button nzType="default" >上一步</button>&nbsp;<button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-    <!--              </tis-header-tool>-->
-    <!--          </tis-page-header>-->
-    <!--      </tis-form>-->
+    <tis-steps *ngIf="!shallNotInitialTabView" [type]="stepType" [step]="offsetStep(3)"></tis-steps>
+
     <nz-spin [nzSpinning]="this.formDisabled">
-      <tis-steps-tools-bar [result]="result" [title]="'Writer 目标表元数据'" (cancel)="cancel()" (goBack)="goback()"
-                           [goBackBtnShow]="_offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
+      <tis-steps-tools-bar [result]="result" [title]="'Writer 目标表元数据'" [goCancelBtnShow]="!shallNotInitialTabView" (cancel)="cancel()" (goBack)="goback()"
+                           [goBackBtnShow]="!shallNotInitialTabView && _offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
         <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">
           <input nz-input [(ngModel)]="writerTargetTabName"/>
         </tis-ipt>
         <tis-ipt #targetColsEnum title="Writer列描述" name="targetColsEnum">
           <db-schema-editor *ngIf="this.tabView.typeMetas.length>1" [enableVirtualColAdd]="true"
-                            [tabletView]="this.tabView" (colsMetaChange)="this.tabView.mcols = $event" ></db-schema-editor>
+                            [tabletView]="this.tabView"
+                            (colsMetaChange)="this.tabView.mcols = $event"></db-schema-editor>
         </tis-ipt>
       </tis-form>
     </nz-spin>
@@ -92,9 +87,21 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
 
   writerTargetTabName: string;
   writerFromTabName: string;
-  // colsMeta: Array<ReaderColMeta> = [];
-  // typeMetas: Array<DataTypeMeta> = [];
+
+  @Input()
+  shallNotInitialTabView = false;
+
+
   tabView: MongoColsTabletView = new MongoColsTabletView([], [], [], []);
+
+  @Input()
+  set initData(data: ColsAndMeta) {
+    let typeMetas = data.colMetas;
+    let tabMapper = data.tabMapper;
+    this.tabView = new MongoColsTabletView([], null, tabMapper.sourceCols, typeMetas);
+    this.writerTargetTabName = tabMapper.to;
+    this.writerFromTabName = tabMapper.from;
+  }
 
   constructor(tisService: TISService, modalService: NzModalService, r: Router, route: ActivatedRoute) {
     super(tisService, modalService, r, route);
@@ -102,26 +109,26 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
 
   protected initialize(app: CurrentCollection): void {
 
-    let url = '/coredefine/corenodemanage.ajax';
-    this.httpPost(url, 'action=datax_action&emethod=get_writer_cols_meta&dataxName=' + this.dto.dataxPipeName)
-      .then((r) => {
-        let typeMetas = r.bizresult.colMetas;
 
+    if (!this.shallNotInitialTabView) {
+      let url = '/coredefine/corenodemanage.ajax';
+      this.httpPost(url, 'action=datax_action&emethod=get_writer_cols_meta&dataxName=' + this.dto.dataxPipeName)
+        .then((r) => {
+          let biz :ColsAndMeta = r.bizresult;
 
-        //  this.typeMetas = typeMetas;
-        // let typeMap: Map<number, DataTypeMeta> = new Map();
-        //  for (let type of this.typeMetas) {
-        //    typeMap.set(type.type.type, type);
-        //  }
-        // console.log(typeMetas);
-        let tabMapper = r.bizresult.tabMapper;
+          this.initData = biz;
 
-        this.tabView = new MongoColsTabletView([], null, tabMapper.sourceCols, typeMetas);
-
-        this.writerTargetTabName = tabMapper.to;
-        this.writerFromTabName = tabMapper.from;
-      });
-
+          // let typeMetas = biz.colMetas;
+          // let tabMapper = biz.tabMapper;
+          //
+          //
+          //
+          // this.tabView = new MongoColsTabletView([], null, tabMapper.sourceCols, typeMetas);
+          //
+          // this.writerTargetTabName = tabMapper.to;
+          // this.writerFromTabName = tabMapper.from;
+        });
+    }
   }
 
   ngAfterViewInit(): void {
@@ -154,7 +161,7 @@ export class DataxAddStep6ColsMetaSetterComponent extends BasicDataXAddComponent
           let ip: ItemPropVal = null
           let colMeta: ReaderColMeta = null;
           for (let key in this.errorItem.vals) {
-           // console.log([key, this.errorItem.vals[key], this.tabView.mcols]);
+            // console.log([key, this.errorItem.vals[key], this.tabView.mcols]);
 
             // m = colsMetaTest.exec(key);
             //
@@ -256,7 +263,7 @@ export class DataxAddStep6TransformerSetterComponent extends BasicDataXAddCompon
   }
 
   protected initialize(app: CurrentCollection): void {
-     console.log(this.dto);
+    console.log(this.dto);
     // this.tisService.selectedTab = this.dto;
 
     for (const [key, val] of this.dto.selectableTabs) {
@@ -274,7 +281,7 @@ export class DataxAddStep6TransformerSetterComponent extends BasicDataXAddCompon
         }
       ];
 
-      if(!this.tisService.currentApp){
+      if (!this.tisService.currentApp) {
         this.tisService.currentApp = new CurrentCollection(0, this.dto.dataxPipeName);
       }
 

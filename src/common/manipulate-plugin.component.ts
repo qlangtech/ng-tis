@@ -167,7 +167,7 @@ export class ManipulatePluginComponent extends BasicFormComponent implements OnI
     }
 
     ngOnInit(): void {
-        console.log(this.storedPlugins);
+     //   console.log(this.storedPlugins);
     }
 
     /**

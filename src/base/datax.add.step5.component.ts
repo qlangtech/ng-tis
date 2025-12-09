@@ -50,13 +50,6 @@ import {DataXCreateProcessMeta} from "./common/datax.common";
 @Component({
   template: `
     <tis-steps [type]="stepType" [step]="offsetStep(2)"></tis-steps>
-    <!--      <tis-form [fieldsErr]="errorItem">-->
-    <!--          <tis-page-header [showBreadcrumb]="false" [result]="result">-->
-    <!--              <tis-header-tool>-->
-    <!--                  <button nz-button nzType="primary" (click)="createStepNext()">下一步</button>-->
-    <!--              </tis-header-tool>-->
-    <!--          </tis-page-header>-->
-    <!--      </tis-form>-->
     <nz-spin [nzSpinning]="this.formDisabled">
       <tis-steps-tools-bar [title]="'Writer '+ dto.writerDescriptor.displayName" (cancel)="cancel()"
                            [goBackBtnShow]="_offsetStep>0" (goBack)="goback()" (goOn)="createStepNext()">
@@ -183,7 +176,7 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
 
     DataxAddStep5Component.rewriteProcessMeta(this, this.dto)
       .then((pmeta) => {
-         console.log(pmeta);
+        // console.log(pmeta);
         // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
         if (pmeta.readerRDBMS) {
           if (pmeta.writerRDBMS) {

@@ -2,6 +2,7 @@ import {Component, ComponentFactoryResolver, model, OnDestroy, OnInit} from "@an
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {BasicFormComponent} from "../common/basic.form.component";
 import {
+  ColsAndMeta,
   Descriptor,
   HeteroList,
   IFieldError,
@@ -37,6 +38,7 @@ import {
   CandidateDescriptorOption,
   ChatMessage,
   ChatSession,
+  ColsAndMetaStatus,
   LaunchingProcessStatusMessage,
   LLMProvider,
   ManagerLink,
@@ -45,6 +47,9 @@ import {
   SubmitInfo,
   TaskTemplate
 } from "./misc/chat.pipeline.utils";
+import {DataxAddStep6ColsMetaSetterComponent} from "src/base/datax.add.step6.cols-meta-setter.component";
+import {DataxDTO} from "../base/datax.add.component";
+import {StepType} from "../common/steps.component";
 
 @Component({
   // selector: 'nz-drawer-custom-component',
@@ -63,6 +68,18 @@ import {
       })),
       transition('expanded <=> collapsed', [
         animate('300ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ])
+    ]),
+    trigger('messageAnimation', [
+      transition(':enter', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-20px) scale(0.95)'
+        }),
+        animate('600ms cubic-bezier(0.55, 0.0, 1, 1)', style({
+          opacity: 1,
+          transform: 'translateY(0) scale(1)'
+        }))
       ])
     ])
   ],
@@ -92,7 +109,6 @@ import {
       <nz-layout>
         <nz-spin [nzSpinning]="this.formDisabled" [nzDelay]="1000" nzSize="large">
           <nz-header class="chat-header">
-
             <item-prop-val *ngIf="itemPp" [formLevel]="1"
                            [disabled]="false"
                            [formControlSpan]="8" [labelSpan]="1" [pp]="itemPp"
@@ -115,7 +131,9 @@ import {
             <!-- 消息列表 -->
             <div class="messages-container" #messagesContainer *ngIf="hasMessages">
 
-              <div *ngFor="let msg of currentSession?.messages" class="message" [ngClass]="'message-' + msg.role">
+              <div *ngFor="let msg of currentSession?.messages" class="message"
+                   [@messageAnimation]
+                   [ngClass]="'message-' + msg.role">
                 <div class="message-avatar">
                   <i nz-icon [nzType]="msg.role === 'user' ? 'user' : 'robot'" nzTheme="outline"></i>
                 </div>
@@ -175,9 +193,27 @@ import {
                         </button>
                       </nz-list-item>
                     </nz-list>
-
-
                   </div>
+
+                  <div *ngSwitchCase="'ai_agent_tdfs_cols_meta_setter'" class="message-plugin">
+                    <!-- 倒计时或完成标记 -->
+                    <ng-container
+                      *ngTemplateOutlet="countdownTemplate; context: { message: ( msg )  }"></ng-container>
+                    <nz-list nzBordered>
+                      <nz-list-item>
+                                                <span nz-typography>设置列元数据类型，
+                                                   <ng-container
+                                                     *ngFor="let err of toColsAndMetaStatus(msg).errors">{{err.name + ":" + err.content + " "}}</ng-container>  </span>
+                        <button nz-button nzType="primary" [disabled]="msg.resolved"
+                                nzSize="small"
+                                (click)="openTdfsColsMetaSetterDialog(msg)"><span nz-icon
+                                                                                  nzType="edit"
+                                                                                  nzTheme="outline"></span>设置
+                        </button>
+                      </nz-list-item>
+                    </nz-list>
+                  </div>
+
 
                   <!-- 选择目标表消息 -->
                   <div *ngSwitchCase="'select_tabs'" class="message-select-tabs">
@@ -509,7 +545,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         aa: for (let item of hlist.items) {
           for (let pp of item.propVals) {
             if (pp.key === 'llm') {
-              // console.log(item.impl);
+              //console.log(pp.primary);
+              this.setLLMCanNotBeEmptyError(pp);
               this.itemPp = pp;
               this.itemImpl = item.impl;
               this.selectedProviderId = pp.primary;
@@ -530,6 +567,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
           '新对话 ' + new Date().toLocaleTimeString(),
           ses.createTime
         );
+        // 设置消息显示回调，用于自动滚动到底部
+        session.onMessageDisplayed = () => this.scrollToBottom();
         this.sessions.unshift(session);
         this.currentSession = session;
 
@@ -538,6 +577,13 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
          */
         this.templates = tpls;
       })
+  }
+
+  private setLLMCanNotBeEmptyError(pp: ItemPropVal) {
+    const pattern = /^\s*$/;
+    if (pattern.test(pp.primary || '')) {
+      pp.error = '不能为空，请选择模型';
+    }
   }
 
   ngOnDestroy(): void {
@@ -569,7 +615,11 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
 
   llmChange(event: ItemPropVal) {
-
+    if (!event.primary) {
+      this.setLLMCanNotBeEmptyError(event);
+      this.errNotify("模型不能设置为空");
+      return;
+    }
     this.httpPost('/coredefine/corenodemanage.ajax', `action=chat_pipeline_action&emethod=change_llm&llm=${event.primary}`)
       .then((r) => {
         if (r.success) {
@@ -588,6 +638,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             '新对话 ' + new Date().toLocaleTimeString(),
             r.bizresult.createTime
           );
+          // 设置消息显示回调，用于自动滚动到底部
+          session.onMessageDisplayed = () => this.scrollToBottom();
           this.sessions.unshift(session);
           this.currentSession = session;
           // 新建会话时，重置模板展开状态
@@ -702,6 +754,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         , EventType.AI_AGNET_TOKEN, EventType.AI_AGNET_LLM_CHAT_STATUS
         , EventType.AI_AGNET_OPEN_LAUNCHING_PROCESS
         , EventType.AI_AGNET_PLUGIN_INSTALL_STATUS
+        , EventType.AI_AGNET_TDFS_COLS_META_SETTER
         /**
          * 监听启动执行状态日志
          */
@@ -767,6 +820,10 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
             this.handlePluginInstallStatus(data);
             return;
           }
+          case  EventType.AI_AGNET_TDFS_COLS_META_SETTER: {
+            this.handleDfsColsMetaSetter(data);
+            return;
+          }
           case EventType.SSE_CLOSE: {
             this.isProcessing = false;
             this.isTyping = false;
@@ -810,9 +867,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         dataxName: data.dataxName,
         dataXReaderDesc: desc
       };
-      this.currentSession?.addMessage(message);
+      this.currentSession?.enqueueMessage(message);
       this.startCountdown(message); // 启动倒计时
-      this.scrollToBottom();
       return;
     }
 
@@ -831,11 +887,15 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
 
     message.managerLink = (data.payloadLink as ManagerLink);
 
-    this.currentSession?.addMessage(message);
-
-    this.scrollToBottom();
+    this.currentSession?.enqueueMessage(message);
   }
 
+  /**
+   * 打开增量启动执行日志
+   * @param data
+   * @param subject
+   * @private
+   */
   private handleOpenLaunchingProcessStatus(data: any, subject: EventSourceSubject): void {
     this.isTyping = false;
 
@@ -852,7 +912,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       }
     });
 
-    this.currentSession?.addMessage(message);
+    this.currentSession?.enqueueMessage(message);
 
     // 自动打开抽屉对话框
     const drawerRef = openIncrSyncChannalLaunchingProcessDialog(this.drawerService, message.pipeline, subject);
@@ -866,8 +926,6 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         // this.nextStep.emit(this.dto);
       }
     })
-
-    this.scrollToBottom();
   }
 
   // /**
@@ -926,6 +984,18 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     }
     // 这里理论上不应该发生，因为只有在 type 匹配时才会调用
     throw new Error('Message is not a PluginInstallStatus');
+  }
+
+  /**
+   * 转换函数：将 ChatMessage 安全转换为 ColsAndMetaStatus
+   * 用于模板中的类型转换
+   */
+  toColsAndMetaStatus(msg: ChatMessage): ColsAndMetaStatus {
+    if (msg instanceof ColsAndMetaStatus) {
+      return msg;
+    }
+    // 这里理论上不应该发生，因为只有在 type 匹配时才会调用
+    throw new Error('Message is not a ColsAndMetaStatus');
   }
 
   openLaunchingProcessDialog(msg: ChatMessage): void {
@@ -993,9 +1063,101 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       timestamp: Date.now(),
       type: 'progress'
     };
-    this.currentSession?.addMessage(message);
-    this.scrollToBottom();
+    this.currentSession?.enqueueMessage(message);
   }
+
+  /**
+   * 打开列设置对话框
+   * @param data
+   * @private
+   */
+  private handleDfsColsMetaSetter(data: any) {
+    let errors = (data.content as TisResponseResult);
+    errors.action_error_page_show = true;
+    let colsAndMeta: ColsAndMeta = data.colsMetaViewBiz;
+
+    const message = new ColsAndMetaStatus({
+      content: '文件列Schema解析设置',
+      requestId: data.requestId,
+      dataxName: data.dataxName,
+      colsAndMeta: colsAndMeta,
+      errorInfo: this.tisService.processResult(errors),
+      resolved: false
+    });
+
+    this.currentSession?.enqueueMessage(message);
+    this.startCountdown(message); // 启动倒计时
+  }
+
+  /**
+   * 打开TDFS列元数据设置对话框
+   * @param msg
+   */
+  openTdfsColsMetaSetterDialog(msg: ChatMessage) {
+    // 类型检查，确保是 ColsAndMetaStatus
+    if (!(msg instanceof ColsAndMetaStatus)) {
+      console.error('Invalid message type for cols meta setter dialog');
+      throw new Error("message must be ColsAndMetaStatus instance");
+    }
+
+    const colsMetaMsg = msg as ColsAndMetaStatus;
+
+    let dot = new DataxDTO();
+    dot.processModel = StepType.CreateDatax;
+    dot.dataxPipeName = colsMetaMsg.dataxName;
+
+    const drawerRef = this.drawerService.create<DataxAddStep6ColsMetaSetterComponent, {}, {}>({
+      nzWidth: "60%",
+      nzHeight: "100%",
+      nzPlacement: "right",
+      nzContent: DataxAddStep6ColsMetaSetterComponent,
+      nzContentParams: {
+        "shallNotInitialTabView": true,
+        "initData": colsMetaMsg.colsAndMeta,
+        "dto": dot
+      },
+      nzClosable: true,
+      nzMaskClosable: false
+    });
+
+    // 使用 afterOpen 钩子确保组件完全初始化后再订阅事件
+    drawerRef.afterOpen.subscribe(() => {
+      const component = drawerRef.getContentComponent();
+      if (component && component.nextStep) {
+        component.nextStep.subscribe((dto) => {
+
+          const url: string = `/coredefine/corenodemanage.ajax?action=chat_pipeline_action&emethod=checkTdfsColsMetaSetterDialog`;
+          let submitInfo: SubmitInfo =
+            {
+              sessionId: this.currentSession?.id || '',
+              requestId: msg.requestId,
+            };
+
+          this.jsonPost(url, submitInfo)
+            .then((biz) => {
+              if (biz.success) {
+                // 接收到 nextStep 事件后关闭抽屉
+                drawerRef.close();
+                // 标记消息为已完成
+                colsMetaMsg.resolved = true;
+                this.stopCountdown(colsMetaMsg);
+              }
+            });
+
+        });
+      }
+    });
+
+    return drawerRef;
+  }
+
+  // openWaittingProcessComponent(drawerService: NzDrawerService): NzDrawerRef {
+  //     // let ctParams = {"obserable": subject};
+  //     // if (launchTarget) {
+  //     //     ctParams["launchTarget"] = launchTarget;
+  //     // }
+  //
+  // }
 
   /**
    * @see openPluginDialog
@@ -1065,9 +1227,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       };
 
       // {Descriptor,Item}
-      this.currentSession?.addMessage(message);
+      this.currentSession?.enqueueMessage(message);
       this.startCountdown(message); // 启动倒计时
-      this.scrollToBottom();
       return;
     }
 
@@ -1094,9 +1255,8 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
         selectedIndex: undefined
       }
     };
-    this.currentSession?.addMessage(message);
+    this.currentSession?.enqueueMessage(message);
     this.startCountdown(message); // 启动倒计时
-    this.scrollToBottom();
   }
 
   submitSelection(chatMsg: ChatMessage): void {
@@ -1206,6 +1366,9 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
   }
 
   private addErrorMessage(data: any): void {
+    // 停止显示 LLM 调用状态消息
+    this.remoteLLMChatStatusMessage();
+
     let error = data.message;
     const message: ChatMessage = {
       role: 'assistant',
@@ -1214,8 +1377,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       type: 'error'
     };
     message.managerLink = (data.payloadLink as ManagerLink);
-    this.currentSession?.addMessage(message);
-    this.scrollToBottom();
+    this.currentSession?.enqueueMessage(message);
   }
 
   /**
@@ -1302,7 +1464,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       }
       , `设置${pluginData.desc.displayName}实例`
       , (saveResult, plugin: ProcessedDBRecord) => {
-        console.log(saveResult);
+        // console.log(saveResult);
         chatMsg.resolved = saveResult.saveSuccess;
         if (saveResult.saveSuccess) {
           this.stopCountdown(chatMsg); // 停止倒计时
@@ -1376,7 +1538,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
           timestamp: Date.now(),
           type: 'llm_chat_status'
         };
-        this.currentSession?.addMessage(statusMessage);
+        this.currentSession?.enqueueMessage(statusMessage);
         this.scrollToBottom();
         break;
       case 'ERROR':
@@ -1397,7 +1559,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
           timestamp: Date.now(),
           type: 'error'
         };
-        this.currentSession?.addMessage(errorMessage);
+        this.currentSession?.enqueueMessage(errorMessage);
         this.scrollToBottom();
         break;
       case 'Complete':
@@ -1413,13 +1575,23 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
   }
 
   private remoteLLMChatStatusMessage() {
-    if (!this.currentSession?.messages) {
+    if (!this.currentSession) {
       return;
     }
+
+    // 1. 先从待显示队列中查找并删除（如果消息还在队列中）
+    for (let i = this.currentSession.pendingMessages.length - 1; i >= 0; i--) {
+      if (this.currentSession.pendingMessages[i].type === 'llm_chat_status') {
+        this.currentSession.pendingMessages.splice(i, 1);
+        return; // 找到并删除后直接返回
+      }
+    }
+
+    // 2. 如果队列中没有，再从已显示列表中查找并删除
     for (let i = this.currentSession.messages.length - 1; i >= 0; i--) {
       if (this.currentSession.messages[i].type === 'llm_chat_status') {
         this.currentSession.messages.splice(i, 1);
-        break;
+        return;
       }
     }
   }
@@ -1455,10 +1627,9 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
       });
 
       // 添加到消息列表
-      this.currentSession.addMessage(installMessage);
+      this.currentSession.enqueueMessage(installMessage);
       // 添加到会话缓存
       this.currentSession.pluginInstallStatusCache.set(data.requestId, installMessage);
-      this.scrollToBottom();
     } else {
       // 更新现有消息的安装任务状态
       installMessage.updateInstallJobs(data.installJobs);
@@ -1491,11 +1662,13 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
     }
   }
 
-  /**
-   * 关闭增量启动执行状态显示
-   * @param msg
-   */
-  openLaunchiopenngProcessDialog(msg: ChatMessage) {
+  // /**
+  //  * 关闭增量启动执行状态显示
+  //  * @param msg
+  //  */
+  // openLaunchiopenngProcessDialog(msg: ChatMessage) {
+  //
+  // }
 
-  }
+
 }

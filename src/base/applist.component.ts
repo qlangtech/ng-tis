@@ -157,7 +157,7 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
     pager: Pager = new Pager(1, 1);
     pageList: Array<Application> = [];
 
-   // manipulateMetas: Descriptor[] = [];
+    // manipulateMetas: Descriptor[] = [];
 
     private runningPipes: { [Key: string]: number } = null;
     private assembleWS: Subject<WSMessage>;
@@ -368,7 +368,15 @@ export class ApplistComponent extends BasicFormComponent implements OnInit, OnDe
                 if (desc.manipulateStorable) {
                     // this.cdr.detectChanges();
                     // {descMeta: desc, identityName: result.biz()}
-                    app.manipulateMetas = [...app.manipulateMetas, new PluginManipulateMeta(desc, result.biz())];
+                    // console.log(); PluginManipulateMeta
+
+                    let metas: Array<PluginManipulateMeta> = result.biz();
+                    for (let meta of metas) {
+                        app.manipulateMetas = [...app.manipulateMetas, new PluginManipulateMeta(desc, meta.identityName, meta.stateSummary)];
+                        return;
+                    }
+
+
                     //  console.log( app.manipulateMetas);
                     //  item.dspt.manipulate.stored = [...item.dspt.manipulate.stored, {descMeta: pluginDesc, identityName: result.biz()}]
                     // this.cdr.detectChanges();
