@@ -546,7 +546,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
           for (let pp of item.propVals) {
             if (pp.key === 'llm') {
               //console.log(pp.primary);
-              this.setLLMCanNotBeEmptyError(pp);
+               this.setLLMCanNotBeEmptyError(pp);
               this.itemPp = pp;
               this.itemImpl = item.impl;
               this.selectedProviderId = pp.primary;
