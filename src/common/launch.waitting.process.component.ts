@@ -45,46 +45,52 @@ export function openWaittingProcessComponent(drawerService: NzDrawerService, sub
 @Component({
   selector: "k8s-cluster-launching",
   template: `
-    <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
-      <nz-page-header [nzGhost]="true">
-        <nz-page-header-title>
-          <ng-container [ngSwitch]="execStatus">
+      <nz-spin [nzSpinning]="this.formDisabled" nzSize="large">
+          <nz-page-header [nzGhost]="true">
+              <nz-page-header-title>
+                  <ng-container [ngSwitch]="execStatus">
               <span *ngSwitchCase="'error'" nz-icon nzType="close-circle" [nzTheme]="'twotone'" nzTheme="outline"
                     [nzTwotoneColor]="'#e30000'"></span>
-            <span *ngSwitchCase="'finish'" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'"
-                  [nzTwotoneColor]="'#52c41a'"></span>
-            <span *ngSwitchCase="'process'" nz-icon [nzType]="'sync'" [nzSpin]="true"></span>
-          </ng-container>
-          {{multiSteps.taskName}}执行状态
-        </nz-page-header-title>
-        <nz-page-header-extra>
-          <button nz-button nzType="primary" *ngIf="!this.errScalaLog && this.execStatus === 'error'"
-                  (click)="reExecute()">
-            <span nz-icon nzType="reload" nzTheme="outline"></span> 重新执行
-          </button>
-          <button nz-button (click)="closeDrawer()">
-            <span nz-icon nzType="close-circle" nzTheme="outline"></span>关闭
-          </button>
-        </nz-page-header-extra>
-        <nz-page-header-content>
-          <div nz-row class="item-block">
-            <div nz-col nzSpan="8" class="process-height">
-              <nz-steps nzDirection="vertical" [nzStatus]="execStatus" [nzCurrent]="index"
-                        (nzIndexChange)="onIndexChange($event)">
-                <!--nzIcon="loading"-->
-                <nz-step *ngFor="let step of execSteps" [nzTitle]="step.name" [nzIcon]="step.processIcon"
-                         [nzDescription]="step.describe"></nz-step>
-              </nz-steps>
-            </div>
-            <div nz-col nzSpan="16" class="process-height">
+                      <span *ngSwitchCase="'finish'" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'"
+                            [nzTwotoneColor]="'#52c41a'"></span>
+                      <span *ngSwitchCase="'process'" nz-icon [nzType]="'sync'" [nzSpin]="true"></span>
+                  </ng-container>
+                  {{multiSteps.taskName}}执行状态
+              </nz-page-header-title>
+              <nz-page-header-extra>
+                  <nz-space>
+                      <ng-container *nzSpaceItem>
+                          <button nz-button nzType="primary" *ngIf="!this.errScalaLog && this.execStatus === 'error'"
+                                  (click)="reExecute()">
+                              <span nz-icon nzType="reload" nzTheme="outline"></span> 重新执行
+                          </button>
+                      </ng-container>
+                      <ng-container *nzSpaceItem>
+                          <button nz-button (click)="closeDrawer()">
+                              <span nz-icon nzType="close-circle" nzTheme="outline"></span>关闭
+                          </button>
+                      </ng-container>
+                  </nz-space>
+              </nz-page-header-extra>
+              <nz-page-header-content>
+                  <div nz-row class="item-block">
+                      <div nz-col nzSpan="8" class="process-height">
+                          <nz-steps nzDirection="vertical" [nzStatus]="execStatus" [nzCurrent]="index"
+                                    (nzIndexChange)="onIndexChange($event)">
+                              <!--nzIcon="loading"-->
+                              <nz-step *ngFor="let step of execSteps" [nzTitle]="step.name" [nzIcon]="step.processIcon"
+                                       [nzDescription]="step.describe"></nz-step>
+                          </nz-steps>
+                      </div>
+                      <div nz-col nzSpan="16" class="process-height">
 
-              <ng-terminal #term></ng-terminal>
+                          <ng-terminal #term></ng-terminal>
 
-            </div>
-          </div>
-        </nz-page-header-content>
-      </nz-page-header>
-    </nz-spin>
+                      </div>
+                  </div>
+              </nz-page-header-content>
+          </nz-page-header>
+      </nz-spin>
 
 
   `

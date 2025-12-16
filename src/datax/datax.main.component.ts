@@ -35,7 +35,7 @@ import {ChartDataset} from 'chart.js';
           </tis-page-header>
           <nz-row [nzGutter]="16">
               <nz-col [nzSpan]="4">
-                  <nz-card [nzTitle]="'统计'">
+                  <nz-card [nzTitle]="'批量执行'">
                       <div style="" class="resource-spec">
                           <nz-statistic
                                   [nzValue]="(allStatis.successCount | number: '1.')!"

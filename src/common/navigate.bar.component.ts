@@ -86,6 +86,7 @@ import {openParamsCfg} from "./plugins.component";
                 <!--              <li nz-menu-item><a routerLink="/base/tpl/snapshotset">索引模版</a></li>-->
                 <li nz-menu-item><a routerLink="/base/operationlog">操作日志</a></li>
                 <li nz-menu-item><a routerLink="/base/sys-errors">系统异常</a></li>
+                <li nz-menu-item><a href="javascript:void()" (click)="openProxySetting()">Http代理设置</a></li>
                 <li nz-menu-item><a href="javascript:void()" (click)="openLicense()">License</a></li>
                 <li nz-menu-item><a href="javascript:void()" (click)="openFreshManReadme()">新人指南</a></li>
               </ul>
@@ -421,6 +422,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   @ViewChild('tisAbout', {read: TemplateRef, static: true}) tisAppAbout: TemplateRef<any>;
 
   @Input() set core(idxapp: any) {
+   // console.log(idxapp);
     this.app = idxapp;
   }
 
@@ -475,13 +477,13 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       this.userProfile = meta.usr;
       this.tisMeta = meta.tisMeta
       let popularSelected = meta.latestSelectedAppsIndex();
-
+     // console.log(this.app);
       if (this.app) {
         popularSelected.addIfNotContain(this.app);
       }
 
       this.collectionOptionList = popularSelected.popularLatestSelected;
-
+     // console.log(this.collectionOptionList);
 
       if (!meta.sysInitialized) {
         this.openInitSystemDialog();
@@ -565,6 +567,10 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
       }
     });
     mref = this.modalService.create(createSystemErrorProcessDialogModelOptions(createFreshmanReadmeDialogStrategy(closeEmitter, closeEmitter), null));
+  }
+
+  openProxySetting() {
+    openParamsCfg("Http-Proxy",'' ,null, this);
   }
 }
 
