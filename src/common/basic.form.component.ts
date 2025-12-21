@@ -156,6 +156,7 @@ export class BasicFormComponent extends BaseComponent implements TISCoreService 
   private webExecuteCallback = (r: TisResponseResult): TisResponseResult => {
     this.formDisabled = false;
     NProgress.done();
+    //console.log(["webExecuteCallback",this.formDisabled])
     return r;
   }
 
