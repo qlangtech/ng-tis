@@ -204,7 +204,7 @@ import {openParamsCfg} from "src/common/plugins.component";
                                   <nz-col [nzSpan]="21">
                                       <div class="chart-container" style="height: 100px">
                                           <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
-                                                  [options]="lineChartOptions" [legend]="false" [chartType]="'line'">
+                                                  [options]="lineChartOptions" [legend]="false" [type]="'line'">
                                           </canvas>
                                       </div>
                                   </nz-col>
@@ -434,16 +434,16 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
   msgSubject: Subject<WSMessage>;
   subscription: Subscription;
   incomeRateFlash = false;
-  public barChartData: ChartDataset[] = [
+  public barChartData: ChartDataset<'line'>[] = [
     // {data: [], label: 'updateCount'}
-    {backgroundColor: '#95e4fa', data: [], label: 'Event Nums'},
+    {backgroundColor: '#95e4fa',fill: true,borderColor: 'blue', tension: 0.5,data: [], label: 'Event Nums'},
   ];
   barChartLabels: Array<any> = [];// [];
   tisIncrStatus = new DefaultTisIncrStatus(LimitRateControllerType.NoLimitParam, -1, {
       tableConsumeCount: 0, tableUpdateCount: 0, tableInsertCount: 0, tableDeleteCount: 0
     }, []
   );
-  lineChartOptions: ChartOptions = {
+  lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {

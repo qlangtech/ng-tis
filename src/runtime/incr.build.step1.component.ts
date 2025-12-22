@@ -33,7 +33,7 @@ import {IncrBuildStep1ExtendSelectedTabPropsComponent} from "./incr.build.step1.
     <tis-steps type="createIncr" [step]="0"></tis-steps>
     <tis-page-header [showBreadcrumb]="false" [result]="result">
       <nz-affix [nzOffsetTop]="10">
-        <button nz-button nzType="primary"  (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon
+        <button nz-button nzType="primary" (click)="createIndexStep1Next()" [nzLoading]="this.formDisabled"><i nz-icon
                                                                                                                nzType="save"
                                                                                                                nzTheme="outline"></i>保存&下一步
         </button>
@@ -90,7 +90,7 @@ export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent im
   createIndexStep1Next() {
     let e = new SavePluginEvent();
     e.notShowBizMsg = true;
-   // e.serverForward = "coredefine:core_action:determine_process_kerbernete_application_cfg";
+    // e.serverForward = "coredefine:core_action:determine_process_kerbernete_application_cfg";
     this.savePlugin.emit(e);
     this.formDisabled = true;
   }
@@ -102,38 +102,38 @@ export class IncrBuildStep1ExecEngineSelectComponent extends AppFormComponent im
 
 @Component({
   template: `
-    <tis-steps type="createIncr" [step]="1"></tis-steps>
-    <tis-page-header [showBreadcrumb]="false" [result]="result">
-      <tis-header-tool>
-      </tis-header-tool>
-    </tis-page-header>
-    <nz-spin nzSize="large" [nzSpinning]="formDisabled">
-      <nz-tabset [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectIndex">
-        <nz-tab nzTitle="配置" (nzDeselect)="configDeSelect($event)">
-          <ng-template nz-tab>
-            <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins"
-                         (afterSave)="buildStep1ParamsSetComponentAjax($event)"
-                         #buildStep1ParamsSetComponent></tis-plugins>
+      <tis-steps type="createIncr" [step]="1"></tis-steps>
+      <tis-page-header [showBreadcrumb]="false" [result]="result">
+          <tis-header-tool>
+          </tis-header-tool>
+      </tis-page-header>
+      <nz-spin nzSize="large" [nzSpinning]="formDisabled">
+          <nz-tabset *ngIf="plugins" [nzTabBarExtraContent]="extraTemplate" [(nzSelectedIndex)]="tabSelectIndex">
+              <nz-tab nzTitle="配置" (nzDeselect)="configDeSelect($event)">
+                  <ng-template nz-tab>
+                      <tis-plugins [savePlugin]="savePlugin" [plugins]="this.plugins"
+                                   (afterSave)="buildStep1ParamsSetComponentAjax($event)"
+                                   #buildStep1ParamsSetComponent></tis-plugins>
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
+          <ng-template #extraTemplate>
+              <nz-affix [nzOffsetTop]="10">
+                  <button nz-button nzType="default" (click)="createIndexStepPre()">
+                      <i nz-icon nzType="backward"
+                         nzTheme="outline"></i>上一步
+                  </button>&nbsp;
+                  <button nz-button nzType="primary" (click)="createIndexStep1Next()"
+                          [nzLoading]="this.formDisabled">
+                      <i nz-icon
+                         nzType="save"
+                         nzTheme="outline"></i>保存&下一步
+                  </button>
+                  &nbsp;
+                  <button nz-button nzType="default" (click)="cancelStep()">取消</button>
+              </nz-affix>
           </ng-template>
-        </nz-tab>
-      </nz-tabset>
-      <ng-template #extraTemplate>
-        <nz-affix [nzOffsetTop]="10">
-          <button nz-button nzType="default" (click)="createIndexStepPre()">
-            <i nz-icon nzType="backward"
-               nzTheme="outline"></i>上一步
-          </button>&nbsp;
-          <button nz-button nzType="primary" (click)="createIndexStep1Next()"
-                  [nzLoading]="this.formDisabled">
-            <i nz-icon
-               nzType="save"
-               nzTheme="outline"></i>保存&下一步
-          </button>
-          &nbsp;
-          <button nz-button nzType="default" (click)="cancelStep()">取消</button>
-        </nz-affix>
-      </ng-template>
-    </nz-spin>
+      </nz-spin>
   `,
   styles: [
     ` nz-step {
@@ -147,27 +147,30 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: IndexIncrStatus;
-  plugins = [
-    <PluginMeta>{
-      name: 'mq', require: true
-      , descFilter: {
-        endType: () => this.dto.readerDesc.endType,
-        localDescFilter: (desc: Descriptor) => {
-          let tt = desc.extractProps['targetType'];
-          return tt === 'all' || this.dto.readerDesc.endType === tt;
-        }
-      }
-    },
-    <PluginMeta>{
-      name: 'sinkFactory', require: true
-      , descFilter: {
-        endType: () => this.dto.writerDesc.endType,
-        localDescFilter: (desc: Descriptor) => {
-          let tt = desc.extractProps['targetType'];
-          return tt === 'all' || this.dto.writerDesc.endType === tt;
-        }
-      }
-    }];
+  plugins: PluginMeta[] = null;
+  // [
+  // <PluginMeta>{
+  //   name: 'mq', require: true
+  //   ,extraParam:"endType_"+ this.dto.readerDesc.endType
+  //   , descFilter: {
+  //     endType: () => this.dto.readerDesc.endType,
+  //     localDescFilter: (desc: Descriptor) => {
+  //       let tt = desc.extractProps['targetType'];
+  //       return tt === 'all' || this.dto.readerDesc.endType === tt;
+  //     }
+  //   }
+  // },
+  // <PluginMeta>{
+  //   name: 'sinkFactory', require: true
+  //   ,extraParam:"endType_"+ this.dto.writerDesc.endType
+  //   , descFilter: {
+  //     endType: () => this.dto.writerDesc.endType,
+  //     localDescFilter: (desc: Descriptor) => {
+  //       let tt = desc.extractProps['targetType'];
+  //       return tt === 'all' || this.dto.writerDesc.endType === tt;
+  //     }
+  //   }
+  // }];
 
   savePlugin = new EventEmitter<SavePluginEvent>();
   tabSelectIndex = 0;
@@ -203,6 +206,29 @@ export class IncrBuildStep1Component extends AppFormComponent implements AfterCo
 
 
   protected initialize(app: CurrentCollection): void {
+    this.plugins = [
+      <PluginMeta>{
+        name: 'mq', require: true
+        , extraParam: "endType_" + this.dto.readerDesc.endType
+        , descFilter: {
+          endType: () => this.dto.readerDesc.endType,
+          localDescFilter: (desc: Descriptor) => {
+            let tt = desc.extractProps['targetType'];
+            return tt === 'all' || this.dto.readerDesc.endType === tt;
+          }
+        }
+      },
+      <PluginMeta>{
+        name: 'sinkFactory', require: true
+        , extraParam: "endType_" + this.dto.writerDesc.endType
+        , descFilter: {
+          endType: () => this.dto.writerDesc.endType,
+          localDescFilter: (desc: Descriptor) => {
+            let tt = desc.extractProps['targetType'];
+            return tt === 'all' || this.dto.writerDesc.endType === tt;
+          }
+        }
+      }];
   }
 
   ngAfterContentInit(): void {
