@@ -86,6 +86,7 @@ export function createFreshmanReadmeDialogStrategy(okEventEmitter: EventEmitter<
         onCancel: cancelEventEmitter,
         afterSuccessRestore: (errVal) => {
             // this.router.navigate(["/base/flink-cluster-list"], {relativeTo: this.route});
+            // console.log([this.router]);
             // console.log('afterSuccessRestore');
         }
     }
@@ -123,6 +124,7 @@ export class TISService implements TISCoreService {
     public execId: string;
     private _tisMeta: TISBaseProfile;
     private _selectedTab: SelectedTabDTO;
+    private _test: boolean = false;
 
     public static openSysErrorDetail(drawerService: NzDrawerService, showErrlistLink: boolean, logFileName: string) {
         const drawerRef = drawerService.create<ErrorDetailComponent, {}, {}>({
@@ -165,6 +167,14 @@ export class TISService implements TISCoreService {
     //   return !!this._tisMeta;
     // }
 
+    public get test(): boolean {
+        return this._test;
+    }
+
+    public set test(val: boolean) {
+        this._test = val;
+    }
+
     public get tisMeta(): Promise<TISBaseProfile> {
         // console.log(["getTisMeta", this._tisMeta]);
         if (!this._tisMeta) {
@@ -174,8 +184,9 @@ export class TISService implements TISCoreService {
                 // NProgress.done();
                 return r;
             }
-            let getUserUrl = `/runtime/applist.ajax?emethod=get_user_info&action=user_action`;
-            return this.httpPost(getUserUrl, '').then(webExecuteCallback).then((r) => {
+            let getUserUrl = `/runtime/applist.ajax`;
+            return this.httpPost(getUserUrl, 'emethod=get_user_info&action=user_action').then(webExecuteCallback).then((r) => {
+                // console.log(r);
                 if (r.success) {
 
                     let biz: TISBaseProfile = r.bizresult;
@@ -187,6 +198,13 @@ export class TISService implements TISCoreService {
                     });
                     return this._tisMeta;
                 }
+                // else {
+                //   //  r.errormsg
+                //   const {logFileName, errorVal, errCode, errContent} = this.parseError(r);
+                //   if(errCode === SystemError.TIS_FRESHMAN_README_HAVE_NOT_READ){
+                //
+                //   }
+                // }
             });
         }
         return new Promise((resolve) => {
@@ -349,6 +367,42 @@ export class TISService implements TISCoreService {
         return this.jsonPost(url, JSON.stringify(o));
     }
 
+    protected parseError(result: TisResponseResult): {
+        "logFileName": string[],
+        "errorVal": ErrorVal,
+        "errCode": SystemError,
+        "errContent": string
+    } {
+        // faild
+        let errs: Array<any> = result.errormsg;
+        let logFileName: string[];
+        let errorVal: ErrorVal = null;
+        let errCode: SystemError = null;
+        let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
+            if (typeof r === 'string') {
+                return `<li>${r}</li>`
+            } else if (typeof r === 'object') {
+                // {
+                //   "logFileName":"20220504130948886",
+                //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
+                // }
+                if (r.errCode) {
+                    errorVal = r.errCode;
+                    errCode = SystemError[errorVal.code];
+                    if (!errCode) {
+                        throw new Error("invalid errCode:" + r.errCode);
+                    }
+                    errorVal.code = errCode;
+                }
+                logFileName = [r.logFileName];
+                return `<li><a>详细</a> ${r.message}  </li>`
+            } else {
+                throw new Error('illegal type:' + r);
+            }
+        }).join('') + '</ul>';
+        return {"logFileName": logFileName, "errorVal": errorVal, "errCode": errCode, "errContent": errContent};
+    }
+
     public processResult(result: TisResponseResult, e?: SavePluginEvent): TisResponseResult {
         // console.log(result);
         if (result.success) {
@@ -361,38 +415,42 @@ export class TISService implements TISCoreService {
             }
             return result;
         } else {
-            // faild
-            let errs: Array<any> = result.errormsg;
+
 
             // 在页面上显示错误
             if (!!result.action_error_page_show) {
                 return result;
             }
-            let logFileName: string[];
-            let errorVal: ErrorVal = null;
-            let errCode: SystemError = null;
-            let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
-                if (typeof r === 'string') {
-                    return `<li>${r}</li>`
-                } else if (typeof r === 'object') {
-                    // {
-                    //   "logFileName":"20220504130948886",
-                    //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
-                    // }
-                    if (r.errCode) {
-                        errorVal = r.errCode;
-                        errCode = SystemError[errorVal.code];
-                        if (!errCode) {
-                            throw new Error("invalid errCode:" + r.errCode);
-                        }
-                        errorVal.code = errCode;
-                    }
-                    logFileName = [r.logFileName];
-                    return `<li><a>详细</a> ${r.message}  </li>`
-                } else {
-                    throw new Error('illegal type:' + r);
-                }
-            }).join('') + '</ul>';
+
+            // faild
+            // let errs: Array<any> = result.errormsg;
+            //  let logFileName: string[];
+            // let errorVal: ErrorVal = null;
+            // let errCode: SystemError = null;
+            //  let errContent = '<ul class="list-ul-msg">' + errs.map((r) => {
+            //    if (typeof r === 'string') {
+            //      return `<li>${r}</li>`
+            //    } else if (typeof r === 'object') {
+            //      // {
+            //      //   "logFileName":"20220504130948886",
+            //      //   "message":"IllegalStateException: xxxxxxxxxxxxxxxxxxxxx"
+            //      // }
+            //      if (r.errCode) {
+            //        errorVal = r.errCode;
+            //        errCode = SystemError[errorVal.code];
+            //        if (!errCode) {
+            //          throw new Error("invalid errCode:" + r.errCode);
+            //        }
+            //        errorVal.code = errCode;
+            //      }
+            //      logFileName = [r.logFileName];
+            //      return `<li><a>详细</a> ${r.message}  </li>`
+            //    } else {
+            //      throw new Error('illegal type:' + r);
+            //    }
+            //  }).join('') + '</ul>';
+
+            const {logFileName, errorVal, errCode, errContent} = this.parseError(result);
 
 
             if (errCode) {
@@ -453,6 +511,13 @@ export class TISService implements TISCoreService {
                     }
                     case SystemError.TIS_FRESHMAN_README_HAVE_NOT_READ: {
                         let cancelEventEmitter = new EventEmitter<any>();
+                        let refreshComponent = () => {
+                            // 刷新当前页面
+                            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+                                console.log(this.router.url);
+                                this.router.navigate([this.router.url]);
+                            });
+                        };
                         cancelEventEmitter.subscribe((next) => {
                             // 当前时间加1个星期
                             if (mref) {
@@ -462,12 +527,14 @@ export class TISService implements TISCoreService {
                                 TISService.restoreExcpetion(this, errorVal)
                                     .then((r) => {
                                         mref.close();
+                                        refreshComponent();
                                     }).finally(() => {
                                     cfg.nzOkLoading = false;
                                 });
                             }
                         })
                         sysErrorRestoreStrategy = createFreshmanReadmeDialogStrategy(okEventEmitter, cancelEventEmitter);
+                        sysErrorRestoreStrategy.afterSuccessRestore = refreshComponent;
                         break;
                     }
                     case SystemError.POWER_JOB_CLUSTER_LOSS_OF_CONTACT: {
@@ -756,6 +823,3 @@ export class ExecuteStep {
         return this._processing ? 'loading' : null;
     }
 }
-
-
-

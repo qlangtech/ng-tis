@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {BasicTuplesViewComponent, UdfDesc} from "./basic.tuples.view.component";
 import {
-  CMeta,
+  CMeta, createExtraDataXParam,
   DataTypeDesc,
   DataTypeMeta,
   Descriptor,
@@ -17,7 +17,6 @@ import {TISService} from "../tis.service";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {TuplesProperty} from "../plugin/type.utils";
-import {DataxAddStep4Component} from "../../base/datax.add.step4.component";
 import {TransformerRulesComponent} from "./transformer.rules.component";
 import {ISubDetailTransferMeta, processSubFormHeteroList} from "../ds.utils";
 
@@ -385,7 +384,7 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
       {
         name: "target-column",
         require: true,
-        extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : (EXTRA_PARAM_DATAX_NAME + this.tisService.currentApp.name),
+        extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : createExtraDataXParam(this.tisService.currentApp.name,this.tisService.test),
         descFilter:
           {
             localDescFilter: (desc: Descriptor) => true

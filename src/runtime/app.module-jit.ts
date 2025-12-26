@@ -160,13 +160,13 @@ export class AppModule {
         });
         let localEndTypesIcons: LocalEndtypeIcons = _localStorageService.get(local_endtype_icons)
         // console.log(localEndTypesIcons);
-        let requestBody = `action=plugin_action&emethod=get_endtype_icons`;
+        let requestBody = `action=config_action&emethod=get_endtype_icons`;
         if (localEndTypesIcons) {
             requestBody += ("&vertoken=" + localEndTypesIcons.verToken);
             this.appendIconService(iconService, localEndTypesIcons.iconsDefs);
         }
 
-        tisService.httpPost('/coredefine/corenodemanage.ajax', requestBody)
+        tisService.httpPost('/config/index.ajax', requestBody)
             .then((result) => {
                 let r: LocalEndtypeIcons = result.bizresult;
 

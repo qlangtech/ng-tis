@@ -1368,7 +1368,7 @@ export class ChatPipelineComponent extends BasicFormComponent implements OnInit,
   private addErrorMessage(data: any): void {
     // 停止显示 LLM 调用状态消息
     this.remoteLLMChatStatusMessage();
-
+ //console.log(data);
     let error = data.message;
     const message: ChatMessage = {
       role: 'assistant',

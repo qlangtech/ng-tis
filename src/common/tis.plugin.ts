@@ -38,8 +38,8 @@ export const DATAX_PREFIX_DB = "dataxDB_";
 export const KEY_OPTIONS_ENUM = "enum";
 
 
-export function createExtraDataXParam(pipeline: string): string {
-  return EXTRA_PARAM_DATAX_NAME + pipeline;
+export function createExtraDataXParam(pipeline: string, test?: boolean): string {
+  return EXTRA_PARAM_DATAX_NAME + pipeline + (test ? ",test_true" : '');
 }
 
 export declare type PluginName =
@@ -538,7 +538,7 @@ export class PluginManipulateMeta {
 
   //  descMeta: Descriptor, identityName: string, stateSummary?: ManipulateStateSummary
   constructor(public descMeta: Descriptor, public identityName: string, public stateSummary?: ManipulateStateSummary) {
-    if( !(typeof this.identityName === 'string') ){
+    if (!(typeof this.identityName === 'string')) {
       throw new Error("identityName must be string type");
     }
   }
@@ -553,7 +553,7 @@ export class PluginManipulateMeta {
     // <ng-container *ngIf="m.stateSummary">
     //     (<ng-container *ngFor="let s of m.stateSummary.status">{{s.stat}}</ng-container>)
     // </ng-container>
-    if(!this.identityName){
+    if (!this.identityName) {
       throw new Error("identityName can not be null");
     }
     let id = this.identityName.substring(0, 10);

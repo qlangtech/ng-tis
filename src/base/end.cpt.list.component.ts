@@ -135,6 +135,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
 
   constructor(tisService: TISService, modalService: NzModalService, private router: Router, private route: ActivatedRoute) {
     super(tisService, modalService);
+    tisService.test = true;
   }
 
   public get dataXReaderMeta(): PluginType[] {
@@ -173,12 +174,13 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
     this.tisService.currentApp = new CurrentCollection(0, pipeName);
 
     let transformerEndType: string[] = queryParams.getAll(KEY_TRANSFORMER_END_TYPE);
+
     if (transformerEndType && transformerEndType.length > 0) {
 
       let pluginMeta: PluginType = {
         name: 'transformerUDF',
         require: true,
-        "extraParam": (createExtraDataXParam( pipeName)),
+        "extraParam": (createExtraDataXParam( pipeName,true)),
         descFilter: {
           localDescFilter: (d) => {
             return transformerEndType[0] === d.impl;
@@ -193,6 +195,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
         // 是否已经设置子表单
         setted: false
       };
+      //console.log([transformerEndType,transformerEndType.length]);
       processSubFormHeteroList(this, pluginMeta, meta, [])
         .then((hlist: HeteroList[]) => {
          // console.log(hlist);
@@ -214,7 +217,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
         pluginMeta.push({
           name: 'dataxReader',
           require: true,
-          "extraParam": ('dataxName_xx'),
+          "extraParam":createExtraDataXParam( pipeName,true),
           descFilter: {
             localDescFilter: (_) => true
           }
@@ -238,7 +241,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       this._dataXReaderMeta = [{
         name: DATAX_READER,
         require: true,
-        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
         descFilter: {localDescFilter: (_) => true}
       }];
     }
@@ -248,7 +251,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       this._dataXWriterMeta = [{
         name: DATAX_WRITER,
         require: true,
-        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
         descFilter: {localDescFilter: (_) => true}
       }];
     }
@@ -259,7 +262,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       this._incrSourceMeta = [{
         name: INCR_SOURCE,
         require: true,
-        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
         descFilter: {localDescFilter: (_) => true}
       }];
     }
@@ -269,7 +272,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       this._incrSinkMeta = [{
         name: INCR_SINK,
         require: true,
-        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
         descFilter: {localDescFilter: (_) => true}
       }];
     }
@@ -283,7 +286,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
         this._dataSourceMeta.push({
           name: DATASOURCE_FACTORY,
           require: true,
-          extraParam: `targetItemDesc_${desc},type_detailed,update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+          extraParam: `targetItemDesc_${desc},type_detailed,update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
           descFilter: {localDescFilter: (_) => true}
         });
       }
@@ -297,7 +300,7 @@ export class EndCptListComponent extends BasicFormComponent implements OnInit {
       this._paramCfgMeta = [{
         name: PARAMS_CFG,
         require: true,
-        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,dataxName_xxx,${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
+        extraParam: `targetItemDesc_${descName},update_false,justGetItemRelevant_true,${createExtraDataXParam( pipeName,true)},${DataxDTO.KEY_PROCESS_MODEL}_createDatax`,
         descFilter: {localDescFilter: (_) => true}
       }];
     }
