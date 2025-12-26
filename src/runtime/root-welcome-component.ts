@@ -37,10 +37,10 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
         <nz-content style=" opacity: 0.8;">
           <div nz-row [nzGutter]="8">
             <div nz-col nzSpan="8">
-              <nz-card id="pipeline" [nzHoverable]="true" (click)="gotoIndexList()">
+              <nz-card id="pipeline" [nzHoverable]="true"  [nzExtra]="pipelineExtraTemplate">
                 <div class="tis-card-content">
                   <div class="compose">
-                    <h1>管道</h1>
+                    <h1 (click)="gotoIndexList()">管道</h1>
                     <ng-container [ngSwitch]="this.firstPipelinePK">
                       <ng-container *ngSwitchCase="true">Pipeline</ng-container>
                       <ng-container *ngSwitchCase="false">
@@ -57,29 +57,41 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
                   </div>
                 </div>
               </nz-card>
+              <ng-template #pipelineExtraTemplate>
+                <a target="_blank" href="https://tis.pub/docs/example/mysql-sync-doris">案例：多源同步Doris方案介绍</a>
+              </ng-template>
             </div>
 
             <div nz-col nzSpan="8">
-              <nz-card id="pipeline-chat" [nzHoverable]="true" (click)="openChat()">
-                <div class="tis-card-content">
+              <nz-card id="pipeline-chat" [nzHoverable]="true"  [nzExtra]="aiAgentExtraTemplate" >
+                <div class="tis-card-content" >
                   <div class="compose">
-                    <h1><i nz-icon nzType="robot" nzTheme="outline"></i>AI Agent</h1>
+                    <h1 (click)="openChat()"><i nz-icon nzType="robot" nzTheme="outline"></i>AI Agent</h1>
                     向您的数据集成领域的专属智能体提出需求，TIS将为您高效自动化实现
                   </div>
                 </div>
               </nz-card>
+              <ng-template #aiAgentExtraTemplate>
+                <a target="_blank" href="https://tis.pub/docs/guide/pipeline-ai-agent"><span nz-icon nzType="question-circle" nzTheme="outline"></span> 使用说明</a>
+
+              </ng-template>
+
             </div>
 
 
             <div nz-col nzSpan="8">
-              <nz-card id="datasource" [nzHoverable]="true" (click)="routerTo('/offline/ds')">
+              <nz-card id="datasource" [nzHoverable]="true" [nzExtra]="datasourceExtraTemplate" >
                 <div class="tis-card-content">
                   <div class="compose">
-                    <h1><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
+                    <h1 (click)="routerTo('/offline/ds')"><i nz-icon nzType="database" nzTheme="outline"></i>数据源</h1>
                     所有的一切从定义数据源开始
                   </div>
                 </div>
               </nz-card>
+              <ng-template #datasourceExtraTemplate>
+                <a target="_blank" href="https://tis.pub/docs/guide/datasource/"><span nz-icon nzType="question-circle" nzTheme="outline"></span> 使用说明</a>
+
+              </ng-template>
             </div>
           </div>
           <div nz-row [nzGutter]="8">
@@ -244,7 +256,7 @@ import {ChatPipelineComponent} from "./chat.pipeline.component";
       .tis-card-content .compose {
         text-align: center;
         position: relative;
-        top: 50%;
+        top: 40%;
         height: 30px;
         margin-top: -30px;
         #color: #767676;

@@ -189,7 +189,7 @@ import {openParamsCfg} from "./plugins.component";
         <nz-descriptions-item nzTitle="构建时间">{{tisMeta.createTime}}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="发版时间"><img
           src="https://img.shields.io/github/release-date/baisui1981/tis"/></nz-descriptions-item>
-        <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="版本">{{tisMeta.buildVersion}}  &nbsp;<a target="_blank" [href]="'https://github.com/datavane/tis/releases/tag/v'+tisMeta.buildVersion">Release Note</a></nz-descriptions-item>
       </nz-descriptions>
       <svg version="1.1"
            preserveAspectRatio="xMinYMin meet"
