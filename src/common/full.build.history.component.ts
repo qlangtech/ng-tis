@@ -25,7 +25,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataXJobWorkerStatus} from "../runtime/misc/RCDeployment";
 import {Descriptor, PluginType, SavePluginEvent, TisResponseResult} from "./tis.plugin";
-import {openParamsCfg, PluginsComponent} from "./plugins.component";
+import {openParamsCfg, PluginsComponent, TargetPluginCfg} from "./plugins.component";
 import {DataxWorkerAddStep0Component} from "../base/datax.worker.add.step0.component";
 import {NzNotificationService} from "ng-zorro-antd/notification";
 import {NzDrawerService} from "ng-zorro-antd/drawer";
@@ -110,7 +110,7 @@ class ProcessStrategy {
       </tis-plugin-add-btn>
 
     </tis-page-header>
-    <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)">
+    <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)" [enable-rows-manage]="{'enable':true,'idFieldName':'id','targetResType':'BuildHistoricalRecord'}" >
       <tis-col title="ID" width="10">
         <ng-template let-rr="r">
           <a [routerLink]="['./', rr.id]">#{{rr.id}}</a>
@@ -141,7 +141,7 @@ class ProcessStrategy {
           {{rr.consuming}}
         </ng-template>
       </tis-col>
-      <tis-col title="触发方式" width="10">
+      <tis-col title="触发方式" >
         <ng-template let-rr='r'>{{rr.triggerType}}</ng-template>
       </tis-col>
     </tis-page>
@@ -353,7 +353,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
 
   editLocalJob() {
 
-    let targetDesc = 'DataXSubmitParams';
+    let targetDesc = new TargetPluginCfg( 'DataXSubmitParams');
 
     openParamsCfg(targetDesc,'' ,this.drawerService, this, "设置任务触发参数");
   }

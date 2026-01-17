@@ -46,26 +46,46 @@ export abstract class BasicDataXAddComponent extends AppFormComponent {
     return this.dto.processModel; //  ? StepType.UpdateDataxReader : StepType.CreateDatax;
   }
 
+  ngOnInit(): void {
+    // Initialize _offsetStep before view rendering to avoid ExpressionChangedAfterItHasBeenCheckedError
+    this.initializeOffsetStep();
+    super.ngOnInit();
+  }
+
+  private initializeOffsetStep(): void {
+    if (this._offsetStep === -1 && this.dto) {
+      switch (this.dto.processModel) {
+        case StepType.UpdateDataxReader:
+          this._offsetStep = -1; // Will be offset by 1 in offsetStep()
+          break;
+        case StepType.UpdateDataxWriter:
+          this._offsetStep = -2; // Will be offset by 2 in offsetStep()
+          break;
+        default:
+          this._offsetStep = 0;
+      }
+    }
+  }
+
   protected initialize(app: CurrentCollection): void {
   }
 
   public offsetStep(step: number): number {
     //console.log(step);
     return this.tisService._zone.run(() => {
-      if (this._offsetStep > -1) {
-        return this._offsetStep;
+      if (this._offsetStep === -1) {
+        // Fallback: initialize if not yet initialized
+        this.initializeOffsetStep();
       }
+
       switch (this.dto.processModel) {
         case StepType.UpdateDataxReader:
-          this._offsetStep = step - 1;
-          break;
+          return step - 1;
         case StepType.UpdateDataxWriter:
-          this._offsetStep = step - 2;
-          break;
+          return step - 2;
         default:
-          this._offsetStep = step;
+          return step;
       }
-      return this._offsetStep;
     });
   }
 

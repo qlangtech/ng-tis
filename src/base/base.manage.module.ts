@@ -50,7 +50,7 @@ import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.componen
 import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {NgTerminalModule} from "ng-terminal";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
-import {EndCptListComponent} from "./end.cpt.list.component";
+import {EndCptListComponent, MulitStepsTestComponent} from "./end.cpt.list.component";
 import {UserProfileComponent} from "./user.profile.component";
 
 
@@ -58,7 +58,7 @@ import {UserProfileComponent} from "./user.profile.component";
   id: 'basemanage',
   imports: [MarkdownModule.forChild(), CommonModule, FormsModule, BaseMangeRoutingModule, TisCommonModule
     , NzStepsModule, NzInputModule, NzButtonModule, NzTabsModule, NgTerminalModule],
-  declarations: [EndCptListComponent,FlinkClusterListComponent,
+  declarations: [MulitStepsTestComponent,EndCptListComponent,FlinkClusterListComponent,
     ApplistComponent, ErrorListComponent, DepartmentAddComponent, BaseMangeIndexComponent //
     , BaseConfigComponent, DepartmentListComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent

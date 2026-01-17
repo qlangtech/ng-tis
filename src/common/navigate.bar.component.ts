@@ -39,7 +39,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
 import {InitSystemComponent} from "./init.system.component";
 import {TisResponseResult} from "./tis.plugin";
 import {Application} from "./application";
-import {openParamsCfg} from "./plugins.component";
+import {openParamsCfg, TargetPluginCfg} from "./plugins.component";
 
 
 @Component({
@@ -555,7 +555,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   openLicense(): void {
-    openParamsCfg("License",'' ,null, this);
+    openParamsCfg( new TargetPluginCfg( "License"),'' ,null, this);
   }
 
   openFreshManReadme(): void {
@@ -570,7 +570,7 @@ export class NavigateBarComponent extends BasicFormComponent implements OnInit {
   }
 
   openProxySetting() {
-    openParamsCfg("Http-Proxy",'' ,null, this);
+    openParamsCfg( new TargetPluginCfg("Http-Proxy"),'' ,null, this);
   }
 }
 

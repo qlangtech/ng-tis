@@ -21,12 +21,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ErrorMsgPipe, ItemPropValPipe, MaxLengthPipe, TimeConsumePipe} from "../common/date.format.pipe";
 import {ConsumeTimePipe} from "../common/consume.time.pipe";
 import {
-  PaginationComponent,
-  TdContentDirective,
-  ThDirective,
-  TisColumn,
-  TisPageHeader,
-  TisPageRowAssist
+    PaginationComponent,
+    TdContentDirective,
+    ThDirective,
+    TisColumn,
+    TisPageHeader,
+    TisPageRowAssist
 } from "../common/pagination.component";
 import {CommonModule} from "@angular/common";
 import {NavigateBarComponent} from "./navigate.bar.component";
@@ -34,11 +34,11 @@ import {RouterModule} from "@angular/router";
 import {OperationLogComponent} from "./operation.log.component";
 import {PluginDescCallbackPipe, SafePipe} from "./safe.pipe";
 import {
-  FinalExecControllerComponent,
-  PageHeaderComponent,
-  PageHeaderLeftComponent,
-  TisHeaderTool,
-  TisHeaderToolContent
+    FinalExecControllerComponent,
+    PageHeaderComponent,
+    PageHeaderLeftComponent,
+    TisHeaderTool,
+    TisHeaderToolContent
 } from "./pager.header.component";
 import {TisMsgComponent} from "./msg.component";
 import {FormComponent, InputContentDirective, TisInputProp, TisInputTool} from "./form.component";
@@ -66,8 +66,8 @@ import {NzDescriptionsModule} from 'ng-zorro-antd/descriptions';
 import {NzBackTopModule} from 'ng-zorro-antd/back-top';
 // import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
 import {
-  SchemaExpertAppCreateEditComponent,
-  SchemaVisualizingEditComponent
+    SchemaExpertAppCreateEditComponent,
+    SchemaVisualizingEditComponent
 } from "./schema.expert.create.edit.component";
 import {NzTransferModule} from 'ng-zorro-antd/transfer';
 import {NzTagModule} from 'ng-zorro-antd/tag';
@@ -115,10 +115,10 @@ import {DataxAddStep1Component} from "../base/datax.add.step1.component";
 import {DataxAddStep2Component} from "../base/datax.add.step2.component";
 import {DataxAddStep5Component} from "../base/datax.add.step5.component";
 import {DataxAddStep3Component} from "../base/datax.add.step3.component";
-import {DataxAddStep6Component} from "../base/datax.add.step6.maptable.component";
+// import {DataxAddStep6Component} from "../base/datax.add.step6.maptable.component";
 import {
-  DataxAddStep6ColsMetaSetterComponent,
-  DataxAddStep6TransformerSetterComponent
+    DataxAddStep6ColsMetaSetterComponent,
+    DataxAddStep6TransformerSetterComponent
 } from "../base/datax.add.step6.cols-meta-setter.component";
 import {IncrPodLogsStatusComponent} from "../runtime/incr.pod.logs.status.component";
 import {AddAppDefSchemaComponent} from "../base/addapp-define-schema.component";
@@ -148,6 +148,8 @@ import {PreviewComponent} from "./preview.component";
 // import {NgxTisCommonLibModule} from "ngx-tis-common-lib";
 import {DatasourceQuickManagerComponent} from "./ds.quick.manager.component";
 import {FreshmanReadmeComponent} from "./freshman.readme.component";
+import {PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
+import {TableJoinMatchConditionComponent} from "./multi-selected/table.join.match.condition.component";
 
 // 新增的导航组件和服务
 
@@ -157,35 +159,35 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
 // import {HttpModule, JsonpModule} from "@angular/http";
 // @ts-ignore
 @NgModule({
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  id: 'tiscommonModule',
-  providers: [],
-  imports: [
-    MarkdownModule.forChild(),
-    // NzIconModule.forChild([MySQLOutline]),
-    NzIconModule,
-    NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule, NzSkeletonModule,
-    // NgxTisCommonLibModule ,
-    NzUploadModule, NzDatePickerModule,
-    NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
-    NgTerminalModule, NzPageHeaderModule,
-    NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule, NzBadgeModule,
-    NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
-    FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    id: 'tiscommonModule',
+    providers: [],
+    imports: [
+        MarkdownModule.forChild(),
+        // NzIconModule.forChild([MySQLOutline]),
+        NzIconModule,
+        NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule, NzSkeletonModule,
+        // NgxTisCommonLibModule ,
+        NzUploadModule, NzDatePickerModule,
+        NzDrawerModule, NzToolTipModule, NzAnchorModule, NzTagModule, NzGridModule, NzDescriptionsModule, NzModalModule,
+        NgTerminalModule, NzPageHeaderModule,
+        NzLayoutModule, NzStatisticModule, NzEmptyModule, NzRadioModule, NzBadgeModule,
+        NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
+        FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule,
     ],
-  declarations: [SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent,PreviewComponent, DatasourceQuickManagerComponent ,JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
-     ControlPanelComponent, SchemaEditComponent,
-    TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
-    PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
-    TimeConsumePipe, MaxLengthPipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
-    , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent, TableTransformerComponent, TableBaseComponent,
-    CompareEachOtherComponent, CompareResultComponent,
-    CodemirrorComponent, PluginsComponent, ManipulatePluginComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent,
-    TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
-    , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component, DataxAddStep6Component
-    , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
+    declarations: [TableJoinMatchConditionComponent,SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent, PreviewComponent, DatasourceQuickManagerComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
+        ControlPanelComponent, SchemaEditComponent,
+        TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
+        PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
+        TimeConsumePipe, MaxLengthPipe, SafePipe, ItemPropValPipe, ErrorMsgPipe, PluginDescCallbackPipe, ItemPropValComponent, TisBreadcrumbComponent, FullBuildHistoryComponent
+        , BuildProgressComponent, TisStepsComponent, SchemaVisualizingEditComponent, PluginSubFormComponent, TableTransformerComponent, TableBaseComponent,
+        CompareEachOtherComponent, CompareResultComponent,
+        CodemirrorComponent, PluginsComponent, PluginsMultiStepsComponent, ManipulatePluginComponent, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, PluginUpdateCenterComponent, SelectionInputAssistComponent, FinalExecControllerComponent, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent,
+        TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
+        , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component
+        , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
 
-  ],
+    ],
     exports: [SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
         , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
         , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotLinkComponent, NzInputModule
@@ -195,11 +197,11 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
         NzIconModule, NzTableModule, CodemirrorComponent, SafePipe, PluginDescCallbackPipe, TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent
         , TdContentDirective, ThDirective, NavigateBarComponent, NzBreadCrumbModule
         , OperationLogComponent, PageHeaderComponent, TisMsgComponent, TisHeaderTool, FormComponent, TisInputTool, InputContentDirective, TisInputProp
-        , PluginsComponent, ManipulatePluginComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
+        , PluginsComponent, ManipulatePluginComponent, PluginsMultiStepsComponent, FullBuildHistoryComponent, BuildProgressComponent, NzSelectModule
         , TisStepsComponent, NzCheckboxModule, NzDescriptionsModule, NzBackTopModule, SchemaVisualizingEditComponent, NzTransferModule, NzTagModule, NzGridModule
         , NzCardModule, NzMenuModule, NzLayoutModule, NzFormModule, FinalExecControllerComponent, DataxAddStep7Component, MaxLengthPipe, DataxAddStep4Component, DataxAddStep6ColsMetaSetterComponent, DataxAddStep6TransformerSetterComponent
         , DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, DataxAddStep5Component, DataxAddStep3Component, IncrPodLogsStatusComponent, TimeConsumePipe, PluginAddBtnComponent, TisPluginAddBtnExtractLiItem, ItemPropValComponent
-       ]
+    ]
 })
 export class TisCommonModule {
 

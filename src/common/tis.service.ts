@@ -32,7 +32,7 @@ import {LocalStorageService} from "./local-storage.service";
 import {LatestSelectedIndex} from "./LatestSelectedIndex";
 import {ConfirmType, ModalOptions, NzModalRef, NzModalService} from "ng-zorro-antd/modal";
 import {ActivatedRoute, Router} from "@angular/router";
-import {openParamsCfg} from "./plugins.component";
+import {openParamsCfg, TargetPluginCfg} from "./plugins.component";
 import {SelectedTabDTO} from "./selectedtab/plugin-sub-form.component";
 import {FreshmanReadmeComponent} from "./freshman.readme.component";
 
@@ -466,7 +466,7 @@ export class TISService implements TISCoreService {
                         let licenseOKEventEmitter = new EventEmitter<any>();
                         licenseOKEventEmitter.subscribe(() => {
                             // console.log("licenseOKEventEmitter");
-                            openParamsCfg("License", '', null, this);
+                            openParamsCfg( new TargetPluginCfg("License"), '', null, this);
                             if (mref) {
                                 mref.close();
                             }

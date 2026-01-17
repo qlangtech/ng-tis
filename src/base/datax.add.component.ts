@@ -37,7 +37,7 @@ import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.c
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
-import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
+//import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component, ExecModel} from "./datax.add.step7.confirm.component";
 import {
   DataxAddStep6ColsMetaSetterComponent,
@@ -132,7 +132,7 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
           })
           return;
         default:
-         // console.log([r,app]);
+          console.log([r,app]);
           if (app) {
             this.modalService.warning({
               nzTitle: "错误",
@@ -160,9 +160,13 @@ export class DataxAddComponent extends AppFormComponent implements AfterViewInit
     configFST.set(DataxAddStep2Component, {next: DataxAddStep3Component, pre: DataxAddStep1Component});
     configFST.set(DataxAddStep3Component, {next: DataxAddStep4Component, pre: DataxAddStep2Component});
     configFST.set(DataxAddStep4Component, {next: DataxAddStep5Component, pre: DataxAddStep3Component});
-    configFST.set(DataxAddStep5Component, {next: DataxAddStep6Component, pre: DataxAddStep4Component});
-    configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
-    configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
+    // configFST.set(DataxAddStep5Component, {next: DataxAddStep6Component, pre: DataxAddStep4Component});
+    // configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+    // configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep6Component});
+
+    configFST.set(DataxAddStep5Component, {next: DataxAddStep7Component, pre: DataxAddStep4Component});
+   // configFST.set(DataxAddStep6Component, {next: DataxAddStep7Component, pre: DataxAddStep5Component});
+    configFST.set(DataxAddStep7Component, {next: null, pre: DataxAddStep5Component});
 
     configFST.set(DataxAddStep6ColsMetaSetterComponent, {next: DataxAddStep6TransformerSetterComponent, pre: DataxAddStep5Component});
     configFST.set(DataxAddStep6TransformerSetterComponent, {next: DataxAddStep7Component, pre: DataxAddStep6ColsMetaSetterComponent});

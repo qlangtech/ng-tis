@@ -176,153 +176,153 @@ export class MongoColsTabletView implements NextObserver<any>, TuplesProperty {
   selector: "db-schema-editor",
   template: `
 
-    <tis-page [rows]="_colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
-      <page-row-assist>
-        <ng-template let-u='r'>
-          <p class="row-assist">
-            <!--class: RowAssist-->
-            <tis-page [rows]="u?.docFieldSplitMetas" [tabSize]="'small'" [bordered]="true"
-                      [showPagination]="false">
-              <page-header>
-                <button nz-button nzSize="small" (click)="addMongoDocumentSplitter(u)">
+      <tis-page [rows]="_colsMeta" [tabSize]="'small'" [bordered]="true" [showPagination]="false">
+          <page-row-assist>
+              <ng-template let-u='r'>
+                  <p class="row-assist">
+                      <!--class: RowAssist-->
+                      <tis-page [rows]="u?.docFieldSplitMetas" [tabSize]="'small'" [bordered]="true"
+                                [showPagination]="false">
+                          <page-header>
+                              <button nz-button nzSize="small" (click)="addMongoDocumentSplitter(u)">
                                     <span nz-icon
                                           nzType="plus"
                                           nzTheme="outline"></span>添加
-                </button>
-              </page-header>
-              <tis-col title="新字段">
-                <ng-template let-uu='r'>
-                  <nz-form-item>
-                    <nz-form-control [nzValidateStatus]="uu.getIp('name').validateStatus"
-                                     [nzHasFeedback]="uu.getIp('name').hasFeedback"
-                                     [nzErrorTip]="uu.getIp('name').error">
-                      <input nz-input [(ngModel)]="uu.name" [disabled]="uu.disable"/>
-                    </nz-form-control>
-                  </nz-form-item>
-                </ng-template>
-              </tis-col>
-              <tis-col title="Json路径">
-                <ng-template let-uu='r'>
-                  <nz-form-item>
-                    <nz-form-control [nzValidateStatus]="uu.getIp('jsonPath').validateStatus"
-                                     [nzHasFeedback]="uu.getIp('jsonPath').hasFeedback"
-                                     [nzErrorTip]="uu.getIp('jsonPath').error">
-                      <input nz-input [(ngModel)]="uu.jsonPath" [disabled]="uu.disable"/>
-                    </nz-form-control>
-                  </nz-form-item>
-                </ng-template>
-              </tis-col>
-              <tis-col title="Jdbc类型">
-                <ng-template let-uu='r'>
-                  <!--                  <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:uu}"></ng-container>-->
-                  <jdbc-type [type]="uu.type" [typeMetas]="this.typeMetas"
-                             [disable]="uu.disable"></jdbc-type>
-                </ng-template>
-              </tis-col>
+                              </button>
+                          </page-header>
+                          <tis-col title="新字段">
+                              <ng-template let-uu='r'>
+                                  <nz-form-item>
+                                      <nz-form-control [nzValidateStatus]="uu.getIp('name').validateStatus"
+                                                       [nzHasFeedback]="uu.getIp('name').hasFeedback"
+                                                       [nzErrorTip]="uu.getIp('name').error">
+                                          <input nz-input [(ngModel)]="uu.name" [disabled]="uu.disable"/>
+                                      </nz-form-control>
+                                  </nz-form-item>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Json路径">
+                              <ng-template let-uu='r'>
+                                  <nz-form-item>
+                                      <nz-form-control [nzValidateStatus]="uu.getIp('jsonPath').validateStatus"
+                                                       [nzHasFeedback]="uu.getIp('jsonPath').hasFeedback"
+                                                       [nzErrorTip]="uu.getIp('jsonPath').error">
+                                          <input nz-input [(ngModel)]="uu.jsonPath" [disabled]="uu.disable"/>
+                                      </nz-form-control>
+                                  </nz-form-item>
+                              </ng-template>
+                          </tis-col>
+                          <tis-col title="Jdbc类型">
+                              <ng-template let-uu='r'>
+                                  <!--                  <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:uu}"></ng-container>-->
+                                  <jdbc-type [type]="uu.type" [typeMetas]="this.typeMetas"
+                                             [disable]="uu.disable"></jdbc-type>
+                              </ng-template>
+                          </tis-col>
 
-              <tis-col title="操作">
-                <ng-template let-uu='r'>
-                  <button nz-button nzDanger nzSize="small" nzType="link"
-                          (click)="deleteDocFieldSplitRow(uu,u)">删除
+                          <tis-col title="操作">
+                              <ng-template let-uu='r'>
+                                  <button nz-button nzDanger nzSize="small" nzType="link"
+                                          (click)="deleteDocFieldSplitRow(uu,u)">删除
+                                  </button>
+                              </ng-template>
+                          </tis-col>
+                      </tis-page>
+
+                  </p>
+              </ng-template>
+          </page-row-assist>
+          <page-header>
+              <nz-space>
+                  <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                          nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
+                          (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
+                                                                           nzTheme="outline"></span>sync
                   </button>
-                </ng-template>
-              </tis-col>
-            </tis-page>
+                  <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
+                          nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可恢复，请小心使用"
+                          (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
+                                                                               nzTheme="outline"></span>恢复初始化
+                  </button>
+                  <ng-container *ngIf="enableVirtualColAdd">
+                      <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
+                              nzTooltipTitle="添加一个新的虚拟列，可以在Transformer算子中为其设置值"
+                              (click)="addNewColumn()" nzType="primary">
+                          <span nz-icon nzType="plus" nzTheme="outline"></span>添加列
+                      </button>
+                  </ng-container>
 
-          </p>
-        </ng-template>
-      </page-row-assist>
-      <page-header>
-        <nz-space>
-          <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
-                  nzTooltipTitle="数据表中可能添加了新的字段，或者删除了某列，将以下Schema定义与数据库最新Schema进行同步"
-                  (click)="syncTabSchema()" nzType="primary"><span nz-icon nzType="reload"
-                                                                   nzTheme="outline"></span>sync
-          </button>
-          <button *nzSpaceItem [disabled]="!view!.isContainDBLatestMcols" nz-button nzSize="small" nz-tooltip
-                  nzTooltipTitle="使用服务端解析类型结果将用户自定义内容覆盖，执行后不可恢复，请小心使用"
-                  (click)="restore2InitState()" nzType="primary"><span nz-icon nzType="clear"
-                                                                       nzTheme="outline"></span>恢复初始化
-          </button>
-          <ng-container *ngIf="enableVirtualColAdd">
-            <button *nzSpaceItem nz-button nzSize="small" nz-tooltip
-                    nzTooltipTitle="添加一个新的虚拟列，可以在Transformer算子中为其设置值"
-                    (click)="addNewColumn()" nzType="primary">
-              <span nz-icon nzType="plus" nzTheme="outline"></span>添加列
-            </button>
-          </ng-container>
+              </nz-space>
+          </page-header>
+          <tis-col title="Index" width="15">
+              <ng-template let-u='r'>
+                  <nz-form-control>
+                      {{u.index}}
+                      <ng-container [ngSwitch]="!!u.virtual">
 
-        </nz-space>
-      </page-header>
-      <tis-col title="Index" width="15">
-        <ng-template let-u='r'>
-          <nz-form-control>
-            {{u.index}}
-            <ng-container [ngSwitch]="!!u.virtual">
+                          <nz-switch *ngSwitchCase="false" nzSize="small"
+                                     [(ngModel)]="u.disable"
+                                     [nzCheckedChildren]="checkedTemplate"
+                                     [nzUnCheckedChildren]="unCheckedTemplate"
+                          ></nz-switch>
+                          <ng-template #checkedTemplate><span nz-icon nzType="close"></span></ng-template>
+                          <ng-template #unCheckedTemplate><span nz-icon nzType="check"></span></ng-template>
 
-              <nz-switch *ngSwitchCase="false" nzSize="small"
-                         [(ngModel)]="u.disable"
-                         [nzCheckedChildren]="checkedTemplate"
-                         [nzUnCheckedChildren]="unCheckedTemplate"
-              ></nz-switch>
-              <ng-template #checkedTemplate><span nz-icon nzType="close"></span></ng-template>
-              <ng-template #unCheckedTemplate><span nz-icon nzType="check"></span></ng-template>
+                          <button nz-button nzType="default" nzShape="round"
+                                  nzSize="small" *ngSwitchCase="true" (click)="deleteColMeta(u)" nzDanger><i nz-icon
+                                                                                                             nzType="delete"></i>删除
+                          </button>
+                      </ng-container>
+                  </nz-form-control>
+              </ng-template>
+          </tis-col>
+          <tis-col title="Name" width="40">
+              <ng-template let-u='r'>
+                  <nz-form-item>
 
-              <button nz-button nzType="default" nzShape="round"
-                      nzSize="small" *ngSwitchCase="true" (click)="deleteColMeta(u)" nzDanger><i nz-icon
-                                                                                                 nzType="delete"></i>删除
-              </button>
-            </ng-container>
-          </nz-form-control>
-        </ng-template>
-      </tis-col>
-      <tis-col title="Name" width="40">
-        <ng-template let-u='r'>
-          <nz-form-item>
-
-            <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
-                             [nzHasFeedback]="u.ip.hasFeedback"
-                             [nzErrorTip]="u.ip.error">
-              <ng-container [ngSwitch]="nameEditDisable">
-                <ng-container *ngSwitchCase="true">
+                      <nz-form-control [nzValidateStatus]="u.ip.validateStatus"
+                                       [nzHasFeedback]="u.ip.hasFeedback"
+                                       [nzErrorTip]="u.ip.error">
+                          <ng-container [ngSwitch]="nameEditDisable">
+                              <ng-container *ngSwitchCase="true">
                                     <span nz-input
                                           [ngClass]="{'text-delete':u.disable,'ant-input':true}"> {{u.name}}</span>
-                </ng-container>
-                <ng-container *ngSwitchCase="false">
-                  <input nz-input [(ngModel)]="u.name" (ngModelChange)="nameChange(u)" [disabled]="u.disable"/>
-                </ng-container>
-              </ng-container>
-            </nz-form-control>
-          </nz-form-item>
-        </ng-template>
-      </tis-col>
-      <tis-col *ngIf="view.elementContainKey('mongoFieldType')" title="Mongo Type">
-        <ng-template let-u='r'>
-          {{ u.mongoFieldType}}
-          <nz-switch *ngIf="u.mongoDocType" nzSize="small" [(ngModel)]="u.openAssist"
-          ></nz-switch>
-        </ng-template>
-      </tis-col>
-      <tis-col title="Type">
-        <ng-template let-u='r'>
-          <!--          <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:u}"></ng-container>-->
-          <jdbc-type [type]="u.type" [typeMetas]="this.typeMetas" [disable]="u.disable"></jdbc-type>
-        </ng-template>
-      </tis-col>
-      <tis-col title="主键" *ngIf="!pkSetDisable">
-        <ng-template let-u='r'>
+                              </ng-container>
+                              <ng-container *ngSwitchCase="false">
+                                  <input nz-input [(ngModel)]="u.name" (ngModelChange)="nameChange(u)"
+                                         [disabled]="u.disable"/>
+                              </ng-container>
+                          </ng-container>
+                      </nz-form-control>
+                  </nz-form-item>
+              </ng-template>
+          </tis-col>
+          <tis-col *ngIf="view.elementContainKey('mongoFieldType')" title="Mongo Type">
+              <ng-template let-u='r'>
+                  {{ u.mongoFieldType}}
+                  <nz-switch *ngIf="u.mongoDocType" nzSize="small" [(ngModel)]="u.openAssist"
+                  ></nz-switch>
+              </ng-template>
+          </tis-col>
+          <tis-col title="Type">
+              <ng-template let-u='r'>
+                  <!--          <ng-container *ngTemplateOutlet="jdbcTypeTemplate;context:{u:u}"></ng-container>-->
+                  <jdbc-type [type]="u.type" [typeMetas]="this.typeMetas" [disable]="u.disable"></jdbc-type>
+              </ng-template>
+          </tis-col>
+          <tis-col title="主键" *ngIf="!pkSetDisable">
+              <ng-template let-u='r'>
+                      <nz-switch [disabled]="u.disable || u.type.disabled" nzSize="small"
+                                 [(ngModel)]="u.pk"
+                                 [nzCheckedChildren]="checkedTemplate"
+                                 [nzUnCheckedChildren]="unCheckedTemplate"
+                      ></nz-switch>
+                      <ng-template #checkedTemplate><span nz-icon nzType="check"></span></ng-template>
+                      <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
 
-          <nz-switch [disabled]="u.disable || u.type.disabled" nzSize="small"
-                     [(ngModel)]="u.pk"
-                     [nzCheckedChildren]="checkedTemplate"
-                     [nzUnCheckedChildren]="unCheckedTemplate"
-          ></nz-switch>
-          <ng-template #checkedTemplate><span nz-icon nzType="check"></span></ng-template>
-          <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
-        </ng-template>
-      </tis-col>
-    </tis-page>
-
+              </ng-template>
+          </tis-col>
+      </tis-page>
   `
   , styles: [
     `

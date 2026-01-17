@@ -31,7 +31,7 @@ import {NzModalService} from "ng-zorro-antd/modal";
       <tis-page-header title="操作日志" [showBreadcrumb]="showBreadcrumb">
       </tis-page-header>
 
-      <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
+      <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)" [enable-rows-manage]="true">
           <tis-col title="操作者" width="14" field="usrName"></tis-col>
           <tis-col title="操作对象" width="30">
               <ng-template let-l='r'>{{l.tabName}}#{{l.opType}}</ng-template>

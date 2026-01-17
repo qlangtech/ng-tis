@@ -5,7 +5,6 @@ import {
   DataTypeDesc,
   DataTypeMeta,
   Descriptor,
-  EXTRA_PARAM_DATAX_NAME,
   HeteroList,
   Item,
   ItemPropVal,
@@ -21,6 +20,7 @@ import {TransformerRulesComponent} from "./transformer.rules.component";
 import {ISubDetailTransferMeta, processSubFormHeteroList} from "../ds.utils";
 
 
+
 export interface JdbcTypeProp extends ReaderColMeta {
 
   /**
@@ -30,6 +30,8 @@ export interface JdbcTypeProp extends ReaderColMeta {
   nameError: string;
   nameDescLiteria: Array<UdfDesc>;
 }
+
+
 
 export class JdbcTypePropsProperty implements TuplesProperty {
 
@@ -384,7 +386,7 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
       {
         name: "target-column",
         require: true,
-        extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : createExtraDataXParam(this.tisService.currentApp.name,this.tisService.test),
+        extraParam: this.tisService.selectedTab ? this.tisService.selectedTab.dataXReaderTargetName : createExtraDataXParam(this.tisService.currentApp.name, this.tisService.test),
         descFilter:
           {
             localDescFilter: (desc: Descriptor) => true

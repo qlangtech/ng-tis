@@ -29,7 +29,7 @@ import {NzUploadChangeParam} from "ng-zorro-antd/upload";
 import {PluginsComponent, SelectionInputAssistComponent} from "../plugins.component";
 import {CreatorRouter, RouterAssistType, TargetPlugin} from "./type.utils";
 import {createDrawer} from "../ds.quick.manager.component";
-import {AbstractControl, NgModel} from "@angular/forms";
+import {HttpParams} from "@angular/common/http";
 
 @Component({
     selector: 'item-prop-val',
@@ -116,16 +116,19 @@ import {AbstractControl, NgModel} from "@angular/forms";
                   <ng-container *ngSwitchCase="6">
                     <!--select-->
 
-                      <nz-select [attr.data-testid]="_pp.key" [disabled]="disabled" [nzMode]="_pp.enumMode" [(ngModel)]="_pp.primary"
+                      <nz-select [attr.data-testid]="_pp.key" [disabled]="disabled" [nzMode]="_pp.enumMode"
+                                 [(ngModel)]="_pp.primary"
                                  [name]="_pp.key" [nzCustomTemplate]="selOptsTpl"
                                  (ngModelChange)="inputValChange(_pp,$event)" nzAllowClear>
                            <nz-option nzCustomContent *ngFor="let e of _pp.options" [nzLabel]="e.name"
-                                      [nzValue]="e.name" [nzDisabled]="false" [nzTitle]="e.endType?e.endType:null" >
+                                      [nzValue]="e.name" [nzDisabled]="false" [nzTitle]="e.endType?e.endType:null">
                              {{e.name}}
                            </nz-option>
                        </nz-select>
 
-                       <ng-template #selOptsTpl let-opt> <span nz-icon style="font-size: 18px" *ngIf="opt.nzTitle" [nzType]="opt.nzTitle" nzTheme="fill" ></span> {{ opt.nzLabel}}</ng-template>
+                       <ng-template #selOptsTpl let-opt> <span nz-icon style="font-size: 18px" *ngIf="opt.nzTitle"
+                                                               [nzType]="opt.nzTitle"
+                                                               nzTheme="fill"></span> {{ opt.nzLabel}}</ng-template>
                   </ng-container>
                   <ng-container *ngSwitchCase="7">
                       <!--PASSWORD-->
@@ -156,12 +159,18 @@ import {AbstractControl, NgModel} from "@angular/forms";
                          <jdbc-type-props [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums"
                                           [error]="_pp.error"></jdbc-type-props>
                       </ng-container>
+                       <ng-container *ngSwitchCase="'tableJoinMatchCondition'">
+<!--                         <jdbc-type-props [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums"-->
+<!--                                          [error]="_pp.error"></jdbc-type-props>-->
+
+                           <table-join-match-condition [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums" [error]="_pp.error" />
+                      </ng-container>
                       <ng-container *ngSwitchDefault>
                          <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']"
                                 (ngModelChange)="updateAllChecked(_pp)"
                                 [nzIndeterminate]="_pp._eprops['indeterminate']">全选</label> <br/>
-                         <nz-checkbox-group [attr.data-testid]="_pp.key" [ngModel]="_pp.getEProp('enum')"
-                                            (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
+                          <nz-checkbox-group [attr.data-testid]="_pp.key" [ngModel]="_pp.getEProp('enum')"
+                                             (ngModelChange)="updateSingleChecked(_pp)"></nz-checkbox-group>
                       </ng-container>
                    </ng-container>
 
@@ -216,10 +225,10 @@ import {AbstractControl, NgModel} from "@angular/forms";
                             </nz-dropdown-menu>
                         </ng-container>
 
-                       <!-- extendInfo-->
-                       <ng-container *ngIf="extendInfo">
-                           <ng-container *ngTemplateOutlet="extendInfo"></ng-container>
-                       </ng-container>
+                        <!-- extendInfo-->
+                        <ng-container *ngIf="extendInfo">
+                            <ng-container *ngTemplateOutlet="extendInfo"></ng-container>
+                        </ng-container>
 
                     </ng-container>
                     <ng-container *ngSwitchCase="false">
@@ -347,7 +356,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     labelSpan = 5;
 
     @Input()
-    extendInfo:  TemplateRef<any>;
+    extendInfo: TemplateRef<any>;
 
     @Input()
     set disabled(val: boolean) {
@@ -480,7 +489,19 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
         , targetPlugin: TargetPlugin): Promise<Map<string /* impl */, Descriptor>> {
         let descName = targetPlugin.descName;
         let url = "/coredefine/corenodemanage.ajax";
-        return cpt.httpPost(url, "action=plugin_action&emethod=get_descriptor&name=" + descName + "&hetero=" + targetPlugin.hetero)
+
+
+        let postParams = new HttpParams();
+        if (targetPlugin.pluginInitialParams) {
+            postParams = new HttpParams({fromString: targetPlugin.pluginInitialParams.toString()});
+        }
+        postParams = postParams.appendAll({
+            "action": "plugin_action",
+            "emethod": "get_descriptor",
+            "name": descName,
+            "hetero": targetPlugin.hetero
+        });
+        return cpt.httpPost(url, postParams.toString())
             .then((r) => {
                 if (!r.success) {
                     if (r.bizresult.notFoundExtension) {

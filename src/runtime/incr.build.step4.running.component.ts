@@ -41,7 +41,7 @@ import {EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE, TisResponseResult} from "../comm
 import {ControlPanelComponent} from "../common/control.panel.component";
 import {ChartOptions} from "chart.js";
 import {ChartDataset} from 'chart.js';
-import {openParamsCfg} from "src/common/plugins.component";
+import {openParamsCfg, TargetPluginCfg} from "src/common/plugins.component";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -466,7 +466,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   editLocalJob() {
 
-    let targetDesc = 'IncrRateController';
+    let targetDesc = new TargetPluginCfg( 'IncrRateController');
 
    //
 
@@ -475,7 +475,7 @@ export class IncrBuildStep4RunningComponent extends AppFormComponent implements 
 
   editRateConfig() {
 
-    let targetDesc = 'IndexCollectionConfig';
+    let targetDesc =  new TargetPluginCfg('IndexCollectionConfig');
  //targetPipelineNameAware_true
     openParamsCfg(targetDesc,EXTRA_PARAM_TARGET_PIPELINE_NAME_AWARE ,null, this, "设置采集参数").finally(()=>{
      // this.cd.detectChanges();

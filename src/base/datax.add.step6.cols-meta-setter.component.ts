@@ -44,7 +44,8 @@ import {ISubDetailTransferMeta, processSubFormHeteroList} from "../common/ds.uti
     <tis-steps *ngIf="!shallNotInitialTabView" [type]="stepType" [step]="offsetStep(3)"></tis-steps>
 
     <nz-spin [nzSpinning]="this.formDisabled">
-      <tis-steps-tools-bar [result]="result" [title]="'Writer 目标表元数据'" [goCancelBtnShow]="!shallNotInitialTabView" (cancel)="cancel()" (goBack)="goback()"
+      <tis-steps-tools-bar [result]="result" [title]="'Writer 目标表元数据'"
+                           [goCancelBtnShow]="!shallNotInitialTabView" (cancel)="cancel()" (goBack)="goback()"
                            [goBackBtnShow]="!shallNotInitialTabView && _offsetStep>0" (goOn)="createStepNext()"></tis-steps-tools-bar>
       <tis-form [spinning]="formDisabled" [fieldsErr]="errorItem">
         <tis-ipt #targetTableName title="Writer目标表" name="writerTargetTabName" require="true">

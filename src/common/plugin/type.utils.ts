@@ -8,6 +8,7 @@ import {
     TuplesPropertyType
 } from "../tis.plugin";
 import {BasicFormComponent} from "../basic.form.component";
+import {HttpParams} from "@angular/common/http";
 
 export const KEY_subform_DetailIdValue = "subformDetailIdValue";
 
@@ -114,6 +115,8 @@ export interface TargetPlugin {
     extraParam?: string;
     descName?: string;
     endType?: string;
+    //页面初始化显示Descriptor时传输的参数= new HttpParams();
+    pluginInitialParams?: HttpParams;
 }
 
 export interface OpenPluginDialogOptions {

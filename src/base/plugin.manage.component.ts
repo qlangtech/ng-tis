@@ -28,7 +28,7 @@ import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {Descriptor, IFieldError, PARAM_END_TYPE, PluginType} from "../common/tis.plugin";
 import {TargetPlugin} from "../common/plugin/type.utils";
 import {ItemPropValComponent} from "../common/plugin/item-prop-val.component";
-import {openParamsCfg, PluginsComponent} from "../common/plugins.component";
+import {openParamsCfg, PluginsComponent, TargetPluginCfg} from "../common/plugins.component";
 import {LicenseValidateResult, TISBaseProfile} from "../common/navigate.bar.component";
 
 enum PluginTab {
@@ -468,7 +468,7 @@ export class PluginManageComponent extends BasicFormComponent implements OnInit 
   }
 
   private installLicense(userProfile: TISBaseProfile) {
-    openParamsCfg("License",'' , null, this)
+    openParamsCfg(new TargetPluginCfg("License"),'' , null, this)
       .then((resp) => {
         let vresult: Array<LicenseValidateResult> = resp.biz();
         for (let v of vresult) {

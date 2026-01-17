@@ -104,10 +104,11 @@ export abstract class BasicTuplesViewComponent extends BasicFormComponent {
 
   @Input()
   public set tabletView(view: TuplesProperty) {
-    // console.log(view);
+    //
     this.colsMeta = view.mcols;
     this.typeMetas = BasicTuplesViewComponent.type2Map(view.typeMetas);
     this._view = view;
+   // console.log([ this.typeMetas, view.typeMetas]);
     //
   }
 

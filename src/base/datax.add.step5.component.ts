@@ -35,7 +35,7 @@ import {DataxDTO} from "./datax.add.component";
 import {BasicDataXAddComponent} from "./datax.add.base";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {DataxAddStep7Component} from "./datax.add.step7.confirm.component";
-import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
+// import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep6ColsMetaSetterComponent} from "./datax.add.step6.cols-meta-setter.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -180,7 +180,8 @@ export class DataxAddStep5Component extends BasicDataXAddComponent implements On
         // 流程图： https://www.processon.com/view/link/60a1d0bc7d9c083024412ec0
         if (pmeta.readerRDBMS) {
           if (pmeta.writerRDBMS) {
-            n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+           // n = {'dto': this.dto, 'cpt': DataxAddStep6Component};
+            n = {'dto': this.dto, 'cpt': DataxAddStep7Component};
           } else {
             // 直接确认
             n = {'dto': this.dto, 'cpt': DataxAddStep7Component};

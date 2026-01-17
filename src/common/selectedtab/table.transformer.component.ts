@@ -1,11 +1,11 @@
 import {Component, EventEmitter, OnInit} from "@angular/core";
 import {
-    DATAX_PREFIX_DB,
-    Descriptor,
-    EXTRA_PARAM_DATAX_NAME,
-    HeteroList,
-    PluginMeta,
-    PluginSaveResponse
+  DATAX_PREFIX_DB,
+  Descriptor,
+  EXTRA_PARAM_DATAX_NAME,
+  HeteroList,
+  PluginMeta,
+  PluginSaveResponse, SavePluginEvent
 } from "../../common/tis.plugin";
 import {PluginsComponent} from "../../common/plugins.component";
 import {TISService} from "../../common/tis.service";
@@ -39,7 +39,7 @@ import {processSubFormHeteroList} from "../ds.utils";
 })
 export class TableTransformerComponent extends BasicSelectedTabManagerComponent implements OnInit {
   transformerPluginMeta: PluginMeta[] = [];
-  transformerSavePlugin = new EventEmitter<{ verifyConfig: boolean }>();
+  transformerSavePlugin = new EventEmitter<SavePluginEvent>();
   transformerHetero: HeteroList[] = [];
 
   readonly :boolean = false;
@@ -100,7 +100,7 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
   }
 
   createStepNext() {
-    this.transformerSavePlugin.emit({verifyConfig: false});
+    this.transformerSavePlugin.emit(new SavePluginEvent());
   }
 
   goBack() {

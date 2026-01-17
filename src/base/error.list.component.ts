@@ -30,11 +30,14 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 @Component({
   template: `
 
-    <tis-page-header title="系统异常" [showBreadcrumb]="showBreadcrumb">
+    <tis-page-header title="系统异常" [showBreadcrumb]="showBreadcrumb" >
     </tis-page-header>
-    <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)">
+    <tis-page [spinning]="formDisabled" [pager]="pager" [rows]="logs" (go-page)="goPage($event)"
+              [enable-rows-manage]="{'enable':true,'idFieldName':'logFileName','targetResType':'SystemErrorRecord'}">
       <tis-col title="异常摘要" width="30">
-        <ng-template let-l='r'>{{l.abstractInfo}}</ng-template>
+        <ng-template let-l='r'>
+          {{l.logFileName}}<br/>
+          {{l.abstractInfo}}</ng-template>
       </tis-col>
       <tis-col title="创建时间">
         <ng-template let-l='r'>{{l.createTime | date : "yyyy/MM/dd HH:mm:ss"}}</ng-template>
@@ -105,5 +108,9 @@ export class ErrorListComponent extends BasicFormComponent implements OnInit {
   logViewClose() {
     this.logVisible = false;
     this.detailLog = null;
+  }
+
+  refeshErrList($event: any) {
+
   }
 }

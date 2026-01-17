@@ -217,7 +217,7 @@ export function dataXReaderSubFormPluginMeta(readerDescName: string, readerDescI
  */
 export function processSubFormHeteroList(baseCpt: BasicFormComponent, pluginMeta: PluginType
   , meta: ISubDetailTransferMeta, subForm: Array<Item>): Promise<HeteroList[]> {
-  console.log(new Error("processSubFormHeteroList"));
+ // console.log(new Error("processSubFormHeteroList"));
   let metaParam = PluginsComponent.getPluginMetaParams([pluginMeta]);
   return baseCpt.httpPost('/coredefine/corenodemanage.ajax'
     , 'action=plugin_action&emethod=subform_detailed_click&plugin=' + metaParam + "&id=" + meta.id)
