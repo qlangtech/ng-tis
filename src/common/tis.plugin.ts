@@ -27,7 +27,9 @@ import {KEY_subform_DetailIdValue, TuplesProperty} from "./plugin/type.utils";
 import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
 import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
 import * as ls from 'lodash';
-import {MatchConditionList} from "./multi-selected/table.join.match.condition.component";
+import {MatchCondition, MatchConditionList} from "./multi-selected/table.join.match.condition.component";
+import {PluginsComponent} from "./plugins.component";
+import {KEY_MULTI_STEPS_SAVED_ITEMS, PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
@@ -391,18 +393,28 @@ export class Descriptor {
              */
             if (stepsCfg = rawDesc["multiStepsCfg"]) {
                 let stepsDesc: Array<any> = stepsCfg["multiSteps"];
-                let rawFirstStepDesc: Map<string, Descriptor> = stepsCfg["firstStepDesc"];
+                let firstStepDesc: Map<string, Descriptor> = stepsCfg["firstStepDesc"];
+                //  let allStepsDescList: Array<Descriptor> = [];
+                // for (let stepDesc of allStepsDesc) {
+                let firstDesc: Descriptor = null;
+                let desc = Descriptor.wrapDescriptors(firstStepDesc);
+                for (let [key, d] of desc) {
+                    firstDesc = d;
+                    break;
+                }
+                //}
 
+                if (!firstDesc) {
+                    throw new Error("firstDesc length can not null");
+                }
 
                 let stepDesc: MultiStepsDescriptor  //
                     = Object.assign(new MultiStepsDescriptor(
-                        stepsDesc.map((step) => new StepConfig(step.stepName, step.stepDescription)) //
+                    stepsDesc.map((step) => new StepConfig(step.stepName, step.stepDescription)) //
+                    , firstDesc
                     , stepsCfg["context"]), rawDesc);
                 //  console.log(stepDesc);
-                let firstStepDesc = Descriptor.wrapDescriptors(rawFirstStepDesc);
-                for (let [key, firstDesc] of firstStepDesc) {
-                    stepDesc.firstStep = firstDesc;
-                }
+
                 d = stepDesc;
             } else {
                 d = Object.assign(new Descriptor(), rawDesc);
@@ -442,6 +454,14 @@ export class Descriptor {
     public get endTypeDesc(): string {
         return this.extractProps['endTypeDesc'];
     }
+
+
+    public wrapItemVals(savePlugin: Item): Item {
+        let savedItem = Object.assign(new Item(this), savePlugin);
+        savedItem.wrapItemVals();
+        return savedItem;
+    }
+
 
     public static createNewItem(des: Descriptor, updateModel: boolean
         , itemPropSetter?: (key: string, propVal: ItemPropVal) => ItemPropVal): Item {
@@ -536,18 +556,85 @@ export class StepConfig {
     }
 }
 
+export class HistorySavedStep {
+    /**
+     * @param hlist 历史保存的插件信息
+     * @param finalStep 是否是最后一步
+     */
+    constructor(public hlist: HeteroList[], public finalStep: boolean) {
+
+    }
+
+    /**
+     * 是否是未被包装过的状态
+     */
+    public get isUnWrapperPhase(): boolean {
+        for (let hl of this.hlist) {
+            return hl.descriptors.size < 1;
+        }
+        throw new Error("this.hlist can not be empty");
+    }
+
+    get savedItem(): Item {
+        for (let hlist of this.hlist) {
+            for (let item of hlist.items) {
+                return item;
+            }
+        }
+        throw new Error("can not find item");
+    }
+
+    wrapper(nextPluingDesc: Map<string, Descriptor>) {
+       console.log(nextPluingDesc);
+        for (let hlist of this.hlist) {
+            hlist.updateDescriptor(nextPluingDesc);
+            aa: for (let [key, desc] of nextPluingDesc) {
+                hlist.extensionPoint = desc.extendPoint;
+                for (let item of hlist.items) {
+                    hlist.items = [desc.wrapItemVals(item)];
+                    break aa;
+                }
+
+            }
+
+        }
+    }
+}
+
 /**
  * 实现多步配置plugin的
  */
 export class MultiStepsDescriptor extends Descriptor {
     public steps: Array<StepConfig> = [];
+    private _firstStepDesc: Descriptor;
+
+    public static createFirstStepPluginHlist(stepPluginCategory: PluginType, desc: MultiStepsDescriptor, firstStepItem?: Item): HeteroList[] {
 
 
-    firstStep: Descriptor;
+        // console.log(["hostDesc", desc]);
+        // let stepPluginCategory: PluginType = h.pluginCategory;
+        let hlist: HeteroList[] = PluginsComponent.pluginDesc(desc.firstStep, stepPluginCategory);
+        if (firstStepItem) {
+            for (let h of hlist) {
+                h.items = [desc.firstStep.wrapItemVals(firstStepItem)];
+            }
+        }
 
-    constructor(steps: Array<StepConfig>, public stepExecContext: { [key: string]: any }) {
+        // console.log([desc, stepPluginCategory]);
+        return hlist;
+
+    }
+
+    public get firstStep(): Descriptor {
+        return this._firstStepDesc;
+    }
+
+    constructor(steps: Array<StepConfig>
+        , public firstDesc: Descriptor
+        , public stepExecContext: { [key: string]: any }) { //
         super();
         this.steps = steps;
+        this._firstStepDesc = firstDesc;
     }
 }
 
@@ -771,6 +858,7 @@ export class Item {
                 continue;
             } else if (Array.isArray(itPropVal)) {
                 // 保存整体表单的操作
+                console.log(itPropVal);
                 let its = new Array<Item>();
                 for (let i of itPropVal) {
                     its.push(i.project());
@@ -976,8 +1064,18 @@ export class Item {
                     let targetTabCols: Array<CMeta> = enumVal["targetTabCols"];
                     let sourceTabCols: Array<CMeta> = enumVal["multiStepSourceTabCols"];
                     // throw new Error(TuplesPropertyType.TableJoinMatchCondition);
-                    // console.log(at);
-                    newVal.setTableView(new MatchConditionList(sourceTabCols, targetTabCols));
+                    //  console.log([at.key, enumVal, val, new Error()]);
+                    let matchConditionList: Array<MatchCondition> = [];
+                    for (let condition of val) {
+
+                        // {dimensionMatchColName: 'id', name: '', primaryTableMatchColName: 'order_id'}
+                        // 对应服务端pojo：com.qlangtech.tis.plugin.table.join.TableJoinMatchCondition{primaryTableMatchColName,dimensionMatchColName}
+                        matchConditionList.push( //
+                            new MatchCondition(MatchConditionList.createMatchField(condition["primaryTableMatchColName"]) //
+                                , MatchConditionList.createMatchField(condition["dimensionMatchColName"])));
+                    }
+
+                    newVal.setTableView(new MatchConditionList(sourceTabCols, targetTabCols, matchConditionList));
                     break;
                 }
                 default:
@@ -1051,15 +1149,33 @@ export class Item {
         //  console.log([this.dspt.impl, this.vals]);
         let newVal: ItemPropVal;
         // console.log(this.dspt.attrs);
-        this.dspt.attrs.forEach((at) => {
-            let v = ovals[at.key];
-            // console.log([at.key, v, at]);
-            newVal = Item.wrapItemPropVal(v, at);
-            // console.log([at.key, newVal]);
-            if (newVal) {
-                newVals[at.key] = (newVal);
+
+        if (this.dspt instanceof MultiStepsDescriptor) {
+            // @see KEY_MULTI_STEPS_SAVED_ITEMS
+            if (!ovals[KEY_MULTI_STEPS_SAVED_ITEMS]) {
+                throw new Error("must contain key:" + KEY_MULTI_STEPS_SAVED_ITEMS);
             }
-        });
+            // PluginsMultiStepsComponent.wrapStepItemVals(desc, savePlugin)
+            let stepItems = ovals[KEY_MULTI_STEPS_SAVED_ITEMS];
+            if (!Array.isArray(stepItems)) {
+                throw new Error("stepItems must be a array,but now is " + (typeof stepItems));
+            }
+            // for (let stepPlugin of stepItems) {
+            //     this.dspt.firstStep
+            // }
+            newVals[KEY_MULTI_STEPS_SAVED_ITEMS] = stepItems;
+            // newVals[KEY_MULTI_STEPS_SAVED_ITEMS ] = (newVal);
+        } else {
+            this.dspt.attrs.forEach((at) => {
+                let v = ovals[at.key];
+                // console.log([at.key, v, at]);
+                newVal = Item.wrapItemPropVal(v, at);
+                // console.log([at.key, newVal]);
+                if (newVal) {
+                    newVals[at.key] = (newVal);
+                }
+            });
+        }
         this.vals = newVals;
     }
 

@@ -34,10 +34,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {
     Descriptor,
     FLAG_DELETE_PROCESS, getPluginMetaParam, getPluginTypeName,
-    HeteroList,
+    HeteroList, HistorySavedStep,
     IFieldError,
     Item,
-    ItemPropVal,
+    ItemPropVal, MultiStepsDescriptor,
     PARAM_END_TYPE, PluginManipulateMeta,
     PluginMeta,
     PluginName,
@@ -60,6 +60,7 @@ import {
 } from "./plugin/type.utils";
 import {ItemPropValComponent} from "./plugin/item-prop-val.component";
 import {HttpParams} from "@angular/common/http";
+import {KEY_MULTI_STEPS_SAVED_ITEMS, PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 
 export class TargetPluginCfg {
 
@@ -381,52 +382,102 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
 
     public static openPluginDialog(opts: OpenPluginDialogOptions, b: TISCoreService
         , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void): NzModalRef<any> {
-        let modalRef = b.openDialog(PluginsComponent, {nzTitle: title});
-        let pluginCpt: PluginsComponent = modalRef.getContentComponent();
-        if (opts.saveBtnLabel) {
-            pluginCpt.saveBtnLabel = opts.saveBtnLabel;
-        }
-        pluginCpt.enableDeleteProcess = opts.enableDeleteProcess
-        pluginCpt.errorsPageShow = true;
-        pluginCpt.getCurrentAppCache = true;
-        pluginCpt.formControlSpan = 19;
-        pluginCpt.disableManipulate = true;
-        pluginCpt.shallInitializePluginItems = false;
-        if (opts.shallLoadSavedItems) {
-            if (opts.item) {
-                throw new Error("contain item property,'shallLoadSavedItems' shall be false");
-            }
-            pluginCpt.setPlugins([pluginTp], opts.opt);
-        } else {
-            try {
-                let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
+        let modalRef: NzModalRef<any> = null;
+        if (pluginDesc instanceof MultiStepsDescriptor) {
+            console.log(opts.item);
+            modalRef = b.openDialog( //
+                PluginsMultiStepsComponent //
+                , {nzTitle: title, nzWidth: 1100});
+            let pluginCpt: PluginsMultiStepsComponent = modalRef.getContentComponent();
+            //[hlist]="hlist" [hostDesc]="stepDesc"
+            pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc);
+            pluginCpt.hostDesc = pluginDesc;
+            let stepSavedPlugin: Map<number, HistorySavedStep> = new Map;
 
-                if (opts.item) {
-                    for (let i = 0; i < hlist.length; i++) {
-                        hlist[i].items = [opts.item];
+            // 添加空值检查，避免空指针异常
+            if (opts.item && opts.item.vals && opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS]) {
+                let savedItems: Item[] = opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS] as Item[];
+                for (let idx = 0; idx < savedItems.length; idx++) {
+                    let item = savedItems[idx];
+                    if (idx === 0) {
+                        pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc, item);
                     }
+                    let hl = new HeteroList();
+                    hl.items = [item];
+                    stepSavedPlugin.set(idx, new HistorySavedStep([hl], (idx + 1) === savedItems.length));
                 }
-                //   console.log(hlist);
-                pluginCpt._heteroList = hlist;
-            } catch (e) {
-                console.log(e);
             }
-            pluginCpt.setPluginMeta([pluginTp])
-        }
-        if (opts.savePluginEventCreator) {
-            pluginCpt.savePluginEventCreator = opts.savePluginEventCreator;
+            // console.log(stepSavedPlugin);
+            pluginCpt.stepSavedPlugin = stepSavedPlugin;
+            pluginCpt.afterSuccessSubmitFinalForm.subscribe((r) => {
+                console.log([r, r.saveSuccess, r.hasBiz()]);
+                if (r && r.saveSuccess && r.hasBiz()) {
+                    modalRef.close();
+                    let multStepHost = r.biz();
+                    onSuccess(r, multStepHost);
+                }
+            });
+          // console.log( pluginCpt.afterSuccessSubmitFinalForm.observers.length);
+            // pluginCpt.afterSave.subscribe((r: PluginSaveResponse) => {
+            //     console.log(r);
+            //     if (r && r.saveSuccess && r.hasBiz()) {
+            //         modalRef.close();
+            //         let db = r.biz();
+            //         onSuccess(r, db);
+            //     }
+            // });
+        } else {
+            modalRef = b.openDialog( //
+                PluginsComponent //
+                , {nzTitle: title});
+            let pluginCpt: PluginsComponent = modalRef.getContentComponent();
+            if (opts.saveBtnLabel) {
+                pluginCpt.saveBtnLabel = opts.saveBtnLabel;
+            }
+            pluginCpt.enableDeleteProcess = opts.enableDeleteProcess
+            pluginCpt.errorsPageShow = true;
+            pluginCpt.getCurrentAppCache = true;
+            pluginCpt.formControlSpan = 19;
+            pluginCpt.disableManipulate = true;
+            pluginCpt.shallInitializePluginItems = false;
+            if (opts.shallLoadSavedItems) {
+                if (opts.item) {
+                    throw new Error("contain item property,'shallLoadSavedItems' shall be false");
+                }
+                pluginCpt.setPlugins([pluginTp], opts.opt);
+            } else {
+                try {
+                    let hlist: HeteroList[] = PluginsComponent.pluginDesc(pluginDesc, pluginTp);
+
+                    if (opts.item) {
+                        for (let i = 0; i < hlist.length; i++) {
+                            hlist[i].items = [opts.item];
+                        }
+                    }
+                    //   console.log(hlist);
+                    pluginCpt._heteroList = hlist;
+                } catch (e) {
+                    console.log(e);
+                }
+                pluginCpt.setPluginMeta([pluginTp])
+            }
+            if (opts.savePluginEventCreator) {
+                pluginCpt.savePluginEventCreator = opts.savePluginEventCreator;
+            }
+
+            pluginCpt.showSaveButton = true;
+
+            pluginCpt.afterSave.subscribe((r: PluginSaveResponse) => {
+                console.log(r);
+                if (r && r.saveSuccess && r.hasBiz()) {
+                    modalRef.close();
+                    let db = r.biz();
+                    onSuccess(r, db);
+                }
+            });
         }
 
-        pluginCpt.showSaveButton = true;
 
-        pluginCpt.afterSave.subscribe((r: PluginSaveResponse) => {
-            console.log(r);
-            if (r && r.saveSuccess && r.hasBiz()) {
-                modalRef.close();
-                let db = r.biz();
-                onSuccess(r, db);
-            }
-        });
         return modalRef;
     }
 
@@ -527,7 +578,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         if (m.require && (h.items.length < 1)) {
             // 增加一个默认值
             h.descriptors.forEach((desc, key) => {
-                //  console.log([m.descFilter,m.descFilter.localDescFilter(desc)]);
+                console.log([m.descFilter, m.descFilter.localDescFilter(desc)]);
                 if (m.descFilter && m.descFilter.localDescFilter(desc)) {
                     Descriptor.addNewItem(h, desc, false, (_, propVal) => {
                         return propVal;
@@ -591,8 +642,9 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         heteroList.forEach((h) => {
             //
             let its: Item[] = [];
-            // console.log(h.items);
+
             for (let item of h.items) {
+                console.log(["item", item]);
                 its.push(item.project());
             }
             items.push(its);
@@ -609,7 +661,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         if (savePluginEvent.postPayload) {
             postData = Object.assign(postData, savePluginEvent.postPayload);
         }
-         console.log([postData]);
+        // console.log([postData]);
 
         return basicModule.jsonPost(url, postData, savePluginEvent).then((r) => {
             processCallback(r);
@@ -867,7 +919,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
                     let items: Item[] = h.items;
                     if (pluginErrorFields) {
                         let errorFields = pluginErrorFields[index++];
-                        //  console.log(errorFields);
+                        console.log(errorFields);
                         Item.processErrorField(<Array<Array<IFieldError>>>errorFields, items);
                     }
                 });

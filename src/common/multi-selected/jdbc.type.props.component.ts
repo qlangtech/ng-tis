@@ -434,7 +434,7 @@ export class JdbcTypePropsComponent extends BasicTuplesViewComponent implements 
   @Input()
   public set tabletView(view: TuplesProperty) {
     super.tabletView = (view);
-    //console.log(view);
+    console.log(view);
     this._jdbcTypeProps = <JdbcTypePropsProperty>view;
     // this.sourceTabCols = transformerRules.sourceTabCols;
     // console.log(this.sourceTabCols);
