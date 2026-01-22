@@ -119,22 +119,6 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
 
 
     ngOnInit() {
-        // this._savePluginEventCreator = () => {
-        //   let evt = new SavePluginEvent();
-        //   evt.overwriteHttpHeaderOfAppName(this.dto.dataxPipeName);
-        //   return evt;
-        // };
-        //  let eprops: PluginExtraProps = this.dto.writerDescriptor.eprops;
-        //   let extraParam = createExtraDataXParam(this.dto.dataxPipeName) ;
-        //   extraParam += (',' + DataxDTO.KEY_PROCESS_MODEL + '_' + this.dto.processModel);
-        //   this.pluginCategory = {
-        //     name: 'dataxWriter', require: true, extraParam: extraParam
-        //     , descFilter: {
-        //     //  endType: () => eprops.endType,
-        //       localDescFilter: (_) => true
-        //     }
-        //   };
-
         super.ngOnInit();
     }
 
@@ -147,116 +131,197 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
     ngAfterViewInit(): void {
     }
 
+    /**
+     * 创建并提交下一步的保存事件
+     * 将Map结构的历史步骤数据转换为数组格式，以便HTTP传输
+     */
     createStepNext() {
-        let evt: SavePluginEvent = new SavePluginEvent();
-        let postStepSavedPlugin: Array<any> = [];
-        // 因为Map数据结构无法http上传
-        for (let [index, hlist] of this.stepSavedPlugin) {
-            if (!hlist.isUnWrapperPhase) {
-                postStepSavedPlugin.push(index);
-                aa: for (let h of hlist.hlist) {
-                    for (let item of h.items) {
-                        postStepSavedPlugin.push(item);
-                        break aa;
-                    }
-                }
-            }
+        const evt: SavePluginEvent = new SavePluginEvent();
+        const postStepSavedPlugin = this.convertStepSavedPluginToArray();
 
+        evt.postPayload = {
+            stepSavedPlugin: postStepSavedPlugin,
+            ...this.hostDesc.stepExecContext
+        };
 
-        }
-        evt.postPayload = Object.assign({"stepSavedPlugin": postStepSavedPlugin}, this.hostDesc.stepExecContext);
-
-
-        //console.log([evt,this.stepSavedPlugin,postStepSavedPlugin]);
         this.savePlugin.emit(evt);
     }
 
+    /**
+     * 将Map结构的步骤数据转换为数组
+     * 数组格式：[index1, item1, index2, item2, ...]
+     * 只转换已经完成的步骤（非UnWrapperPhase）
+     */
+    private convertStepSavedPluginToArray(): Array<any> {
+        const result: Array<any> = [];
 
+        for (const [index, hlist] of this.stepSavedPlugin) {
+            if (hlist.isUnWrapperPhase) {
+                continue;
+            }
+
+            result.push(index);
+
+            const firstItem = this.getFirstItemFromHlist(hlist.hlist);
+            if (firstItem) {
+                result.push(firstItem);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 从HeteroList数组中获取第一个Item
+     */
+    private getFirstItemFromHlist(hlist: HeteroList[]): Item | null {
+        for (const h of hlist) {
+            for (const item of h.items) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 处理步骤保存后的回调
+     * 该方法会在每个步骤保存成功后被调用，负责：
+     * 1. 保存当前步骤到历史记录
+     * 2. 准备下一步的UI和数据
+     * 3. 如果是最后一步，执行最终提交
+     */
     afterSave($event: PluginSaveResponse) {
-        // console.log($event);
         try {
             if (!$event.saveSuccess) {
                 return;
             }
-            try {
-                this.cd.detach();
-                // 以下biz内参数均在OneStepOfMultiSteps.manipuldateProcess() 方法内设置
-                let biz = $event.biz();
 
-
-                // 已经保存下来的第一步插件内容
-                let savePlugin: Item = biz.currentSaved;
-
-                let currentStepIndex: number = biz["currentStepIndex"];
-                let nextStepIndex: number = biz["nextStepPluginIndex"];
-                for (let h of this._hlist) {
-                    for (let [impl, desc] of h.descriptors) {
-                        // let savedItem = Object.assign(new Item(desc), savePlugin);
-                        // savedItem.wrapItemVals();
-                        // h.items = [savedItem];
-                        h.items = [desc.wrapItemVals(savePlugin)];
-                        // console.log(savedItem);
-                        this.stepSavedPlugin.set(currentStepIndex, new HistorySavedStep(this._hlist, this.isFinalPhase));
-                    }
-                    break;
-                }
-
-                if (nextStepIndex) {
-
-                    let nextPluingDesc: Map<string, Descriptor> = Descriptor.wrapDescriptors(biz["nextStepPluginDesc"]);
-                    console.log(nextPluingDesc);
-                    let finalStep: boolean = biz["finalStep"];
-                    this.isFinalPhase = finalStep;
-                    // 如果还有下一步的话，尝试初始化
-                    let nxt = this.stepSavedPlugin.get(nextStepIndex);
-                    if (nxt) {
-                        if (nxt.isUnWrapperPhase) {
-                            nxt.wrapper(nextPluingDesc);
-                        }
-                        this._hlist = nxt.hlist;
-                    } else {
-                        // console.log(this.stepSavedPlugin);
-                        let nextHlist = new HeteroList();
-                        nextHlist.updateDescriptor(nextPluingDesc);
-
-                        let h: HeteroList = PluginsComponent.wrapperHeteroList(nextHlist, this.hostPluginCategory);
-                        for (let [key, desc] of h.descriptors) {
-                            h.extensionPoint = desc.extendPoint;
-                            break;
-                        }
-                        PluginsComponent.addDefaultItem(this.hostPluginCategory as PluginMeta, h);
-                        // console.log(h);
-                        this._hlist = [h];
-                    }
-                    this.currentStep = nextStepIndex;
-                    // console.log(this._hlist);
-                    //  this.hlist = PluginsComponent.pluginDesc(desc.firstStep, stepPluginCategory);
-                } else {
-                    this.isFinalPhase = true;
-                }
-
-
-            } finally {
-                this.cd.reattach();
-            }
+            this.updateStepState($event);
 
             // 检查是否需要执行最终提交
             if (this.pendingFinalSubmit) {
-                this.pendingFinalSubmit = false;
-                this.submitFinalForm();
+                this.executeFinalSubmit();
             }
         } finally {
             this.formDisabled = false;
         }
     }
 
+    /**
+     * 更新步骤状态
+     * 使用detach/reattach来优化变更检测性能
+     */
+    private updateStepState($event: PluginSaveResponse) {
+        this.cd.detach();
+        try {
+            // 以下biz内参数均在OneStepOfMultiSteps.manipuldateProcess() 方法内设置
+            const biz = $event.biz();
+
+            this.saveCurrentStepToHistory(biz);
+            this.prepareNextStep(biz);
+        } finally {
+            this.cd.reattach();
+        }
+    }
+
+    /**
+     * 保存当前步骤到历史记录
+     */
+    private saveCurrentStepToHistory(biz: any) {
+        const savePlugin: Item = biz.currentSaved;
+        const currentStepIndex: number = biz["currentStepIndex"];
+
+        for (let h of this._hlist) {
+            for (let [impl, desc] of h.descriptors) {
+                h.items = [desc.wrapItemVals(savePlugin)];
+                this.stepSavedPlugin.set(currentStepIndex, new HistorySavedStep(this._hlist, this.isFinalPhase));
+            }
+            break;
+        }
+    }
+
+    /**
+     * 准备下一步
+     * 如果有下一步，初始化下一步的UI；否则标记为最终阶段
+     */
+    private prepareNextStep(biz: any) {
+        const nextStepIndex: number = biz["nextStepPluginIndex"];
+
+        if (!nextStepIndex) {
+            this.isFinalPhase = true;
+            return;
+        }
+
+        const nextPluginDesc: Map<string, Descriptor> = Descriptor.wrapDescriptors(biz["nextStepPluginDesc"]);
+        console.log(nextPluginDesc);
+
+        const finalStep: boolean = biz["finalStep"];
+        this.isFinalPhase = finalStep;
+
+        this.initializeNextStep(nextStepIndex, nextPluginDesc);
+        this.currentStep = nextStepIndex;
+    }
+
+    /**
+     * 初始化下一步的UI
+     * 如果该步骤之前已经访问过，则恢复历史状态；否则创建新的HeteroList
+     */
+    private initializeNextStep(nextStepIndex: number, nextPluginDesc: Map<string, Descriptor>) {
+        const nxt = this.stepSavedPlugin.get(nextStepIndex);
+
+        if (nxt) {
+            // 恢复历史步骤
+            if (nxt.isUnWrapperPhase) {
+                nxt.wrapper(nextPluginDesc);
+            }
+            this._hlist = nxt.hlist;
+        } else {
+            // 创建新步骤
+            this._hlist = this.createNewStepHlist(nextPluginDesc);
+        }
+    }
+
+    /**
+     * 创建新步骤的HeteroList
+     */
+    private createNewStepHlist(nextPluginDesc: Map<string, Descriptor>): HeteroList[] {
+        const nextHlist = new HeteroList();
+        nextHlist.updateDescriptor(nextPluginDesc);
+
+        const h: HeteroList = PluginsComponent.wrapperHeteroList(nextHlist, this.hostPluginCategory);
+        for (let [key, desc] of h.descriptors) {
+            h.extensionPoint = desc.extendPoint;
+            break;
+        }
+        PluginsComponent.addDefaultItem(this.hostPluginCategory as PluginMeta, h);
+
+        return [h];
+    }
+
+    /**
+     * 执行最终提交
+     */
+    private executeFinalSubmit() {
+        this.pendingFinalSubmit = false;
+        this.submitFinalForm();
+    }
+
+    /**
+     * 后退到上一步
+     * 从历史记录中恢复上一步的状态
+     */
     goBack() {
-        let preHlist = this.stepSavedPlugin.get(--this.currentStep);
+        const preHlist = this.stepSavedPlugin.get(--this.currentStep);
         console.log(preHlist);
         this._hlist = preHlist.hlist;
         this.isFinalPhase = preHlist.finalStep;
     }
 
+    /**
+     * 保存表单（最后一步的提交按钮）
+     * 设置标志位，先保存当前步骤，然后在afterSave中执行最终提交
+     */
     saveForm($event: MouseEvent) {
         // 设置标志位，表示这次保存后需要执行最终提交
         this.pendingFinalSubmit = true;
@@ -264,41 +329,58 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
         this.createStepNext();
     }
 
+    /**
+     * 提交最终表单
+     * 将所有步骤的配置组装成宿主插件实例并提交到后端
+     */
     private submitFinalForm() {
-        // 最后一步需要向主host plugin提交记录
-        let hostHetero: HeteroList[] = [];
-        let oneH = new HeteroList();
+        // 创建宿主插件的HeteroList
+        const hostHetero: HeteroList[] = [];
+        const oneH = new HeteroList();
         hostHetero.push(oneH);
 
-        let maxIdx = -1;
-        for (let [idx, _] of this.stepSavedPlugin) {
-            console.log(["idx:", idx]);
-            if (idx >= maxIdx) {
-                maxIdx = idx;
-            }
-        }
-        let savedItems: Item[] = new Array(maxIdx + 1);
-        for (let [idx, historyStored] of this.stepSavedPlugin) {
-            savedItems[idx] = historyStored.savedItem;
-        }
-        let hostItem = new Item(this.hostDesc);
+        // 收集所有步骤的Item
+        const savedItems: Item[] = this.collectAllStepItems();
+
+        // 创建宿主插件Item，将所有步骤Item设置到multiStepsSavedItems属性中
+        const hostItem = new Item(this.hostDesc);
         hostItem.vals[KEY_MULTI_STEPS_SAVED_ITEMS] = savedItems;
         oneH.items = [hostItem];
-        //savedItems;
 
-        let savEvt = new SavePluginEvent(true);
+        // 创建保存事件并提交
+        const savEvt = new SavePluginEvent(true);
 
         PluginsComponent.postHeteroList(this, this.pluginCategory, hostHetero, savEvt, false
             , (r) => {
-
-                // 覆盖掉
+                // 覆盖返回结果中的multiStepsSavedItems，保持完整的步骤数据
                 r.bizresult[KEY_MULTI_STEPS_SAVED_ITEMS] = savedItems;
-                let response = new PluginSaveResponse(r.success, false, savEvt, r.bizresult);
+                const response = new PluginSaveResponse(r.success, false, savEvt, r.bizresult);
 
                 this.afterSuccessSubmitFinalForm.emit(response);
                 console.log(this.afterSuccessSubmitFinalForm.observers.length);
             }).then((result) => {
 
         });
+    }
+
+    /**
+     * 收集所有步骤的Item
+     * 按步骤索引顺序组装成数组
+     */
+    private collectAllStepItems(): Item[] {
+        let maxIdx = -1;
+        for (const [idx, _] of this.stepSavedPlugin) {
+            console.log(["idx:", idx]);
+            if (idx >= maxIdx) {
+                maxIdx = idx;
+            }
+        }
+
+        const savedItems: Item[] = new Array(maxIdx + 1);
+        for (const [idx, historyStored] of this.stepSavedPlugin) {
+            savedItems[idx] = historyStored.savedItem;
+        }
+
+        return savedItems;
     }
 }

@@ -345,10 +345,14 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         this.cd.detectChanges();
     }
 
+    /**
+     * 打开编辑transformer对话框
+     * @param rtransformer
+     */
     updateTransformerRule(rtransformer: RecordTransformer) {
 
         let udfItem = rtransformer.udf;
-        console.log([udfItem]);
+       // console.log([udfItem]);
         if (!udfItem) {
             return;
         }
@@ -376,7 +380,11 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 
     }
 
-
+    /**
+     * 打开添加Transformer对话框
+     * @param rtransformer
+     * @param desc
+     */
     tarnsformerSet(rtransformer: RecordTransformer, desc: Descriptor) {
         console.log([rtransformer, desc]);
         TransformerRulesComponent.openTransformerRuleDialog(this, desc).then((biz) => {
