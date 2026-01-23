@@ -68,6 +68,7 @@ interface ErrorVal {
 }
 
 export interface TISCoreService {
+     jsonPost(url: string, body: any, e?: SavePluginEvent): Promise<TisResponseResult>;
     httpPost(url: string, body: string, e?: SavePluginEvent): Promise<TisResponseResult>;
 
     openDialog(component: any, options: ModalOptions<any>): NzModalRef<any>

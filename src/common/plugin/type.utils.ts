@@ -133,6 +133,12 @@ export interface OpenPluginDialogOptions {
      * 是否要覆写创建SavePluginEvent的行为
      */
     savePluginEventCreator?: () => SavePluginEvent;
+    /**
+     * 是否为编辑模式(用于多步骤插件)
+     * true: 编辑已有插件
+     * false: 添加新插件
+     */
+    editMode?: boolean;
 }
 
 /**

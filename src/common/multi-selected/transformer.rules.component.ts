@@ -351,7 +351,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
      */
     updateTransformerRule(rtransformer: RecordTransformer) {
 
-        let udfItem = rtransformer.udf;
+        let udfItem:Item = rtransformer.udf;
        // console.log([udfItem]);
         if (!udfItem) {
             return;
@@ -360,7 +360,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
         //console.log(udfItem);
 
 
-        TransformerRulesComponent.openTransformerRuleDialog(this, udfItem.dspt, udfItem) //
+        TransformerRulesComponent.openTransformerRuleDialog(this, udfItem.dspt, udfItem, true) //
             .then((biz) => {
 
             rtransformer.udf = biz.item;
@@ -387,7 +387,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
      */
     tarnsformerSet(rtransformer: RecordTransformer, desc: Descriptor) {
         console.log([rtransformer, desc]);
-        TransformerRulesComponent.openTransformerRuleDialog(this, desc).then((biz) => {
+        TransformerRulesComponent.openTransformerRuleDialog(this, desc, undefined, false).then((biz) => {
             // console.log(biz);
             rtransformer.udf = biz.item;
             rtransformer.udfError = null;
@@ -396,7 +396,7 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
 
     }
 
-    static openTransformerRuleDialog(basicCpt: BasicFormComponent, desc: Descriptor, item?: Item)
+    static openTransformerRuleDialog(basicCpt: BasicFormComponent, desc: Descriptor, item?: Item, editMode: boolean = false)
         : Promise<{ item: Item, descLiteria: Array<UdfDesc> }> {
         let opt = new SavePluginEvent();
         // opt.serverForward = "coredefine:datax_action:trigger_fullbuild_task";
@@ -409,7 +409,9 @@ export class TransformerRulesComponent extends BasicTuplesViewComponent implemen
                 PluginsComponent.openPluginDialog({
                         // saveBtnLabel: '触发构建',
                         item: item,
-                        shallLoadSavedItems: false, savePluginEventCreator: () => {
+                        shallLoadSavedItems: false,
+                        editMode: editMode, // 传递编辑模式标志
+                        savePluginEventCreator: () => {
                             return opt;
                         }
                     }

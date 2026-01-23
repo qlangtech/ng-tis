@@ -94,7 +94,7 @@ export class TableTransformerComponent extends BasicSelectedTabManagerComponent 
       hlist.forEach((h) => {
         PluginsComponent.addDefaultItem(m, h);
       })
-
+ console.log(hlist);
       this.transformerHetero = hlist;
     });
   }

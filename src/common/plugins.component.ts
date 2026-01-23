@@ -380,54 +380,20 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         PluginsComponent.openPluginDialog({shallLoadSavedItems: false}, b, pluginDesc, pluginTp, title, onSuccess);
     }
 
-    public static openPluginDialog(opts: OpenPluginDialogOptions, b: TISCoreService
+    public static openPluginDialog(opts: OpenPluginDialogOptions, coreService: TISCoreService
         , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void): NzModalRef<any> {
         let modalRef: NzModalRef<any> = null;
         if (pluginDesc instanceof MultiStepsDescriptor) {
             console.log(opts.item);
-            modalRef = b.openDialog( //
-                PluginsMultiStepsComponent //
-                , {nzTitle: title, nzWidth: 1100});
-            let pluginCpt: PluginsMultiStepsComponent = modalRef.getContentComponent();
-            //[hlist]="hlist" [hostDesc]="stepDesc"
-            pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc);
-            pluginCpt.hostDesc = pluginDesc;
-            let stepSavedPlugin: Map<number, HistorySavedStep> = new Map;
-
-            // 添加空值检查，避免空指针异常
-            if (opts.item && opts.item.vals && opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS]) {
-                let savedItems: Item[] = opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS] as Item[];
-                for (let idx = 0; idx < savedItems.length; idx++) {
-                    let item = savedItems[idx];
-                    if (idx === 0) {
-                        pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc, item);
-                    }
-                    let hl = new HeteroList();
-                    hl.items = [item];
-                    stepSavedPlugin.set(idx, new HistorySavedStep([hl], (idx + 1) === savedItems.length));
-                }
+            if (!!opts.editMode) {
+                // 编辑模式下需要将host plugin 内的所有子plugin 的desc列表都取得到
+                let stepSavedPlugin = this.rebuildStepSavedPlugin(opts, pluginTp);
+                modalRef = this.openMultiStepsComponent(coreService, stepSavedPlugin, title, pluginTp, pluginDesc, opts, onSuccess);
+            } else {
+                modalRef = this.openMultiStepsComponent(coreService, new Map(), title, pluginTp, pluginDesc, opts, onSuccess);
             }
-            // console.log(stepSavedPlugin);
-            pluginCpt.stepSavedPlugin = stepSavedPlugin;
-            pluginCpt.afterSuccessSubmitFinalForm.subscribe((r) => {
-                console.log([r, r.saveSuccess, r.hasBiz()]);
-                if (r && r.saveSuccess && r.hasBiz()) {
-                    modalRef.close();
-                    let multStepHost = r.biz();
-                    onSuccess(r, multStepHost);
-                }
-            });
-          // console.log( pluginCpt.afterSuccessSubmitFinalForm.observers.length);
-            // pluginCpt.afterSave.subscribe((r: PluginSaveResponse) => {
-            //     console.log(r);
-            //     if (r && r.saveSuccess && r.hasBiz()) {
-            //         modalRef.close();
-            //         let db = r.biz();
-            //         onSuccess(r, db);
-            //     }
-            // });
         } else {
-            modalRef = b.openDialog( //
+            modalRef = coreService.openDialog( //
                 PluginsComponent //
                 , {nzTitle: title});
             let pluginCpt: PluginsComponent = modalRef.getContentComponent();
@@ -481,6 +447,90 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         return modalRef;
     }
 
+    /**
+     * 重建步骤保存的插件Map(用于编辑模式)
+     *
+     * 该方法将已保存的多步骤插件数据重新构建为 stepSavedPlugin Map,
+     * 每个步骤都会创建对应的 HistorySavedStep 实例,并包装其 descriptor
+     *
+     * @param opts 插件对话框选项,包含已保存的插件数据
+     * @param pluginTp 插件类型
+     * @returns 重建后的步骤Map
+     */
+    private static rebuildStepSavedPlugin(opts: OpenPluginDialogOptions, pluginTp: PluginType): Map<number, HistorySavedStep> {
+        let stepSavedPlugin: Map<number, HistorySavedStep> = new Map();
+
+        // 添加空值检查,避免空指针异常
+        if (opts.item && opts.item.vals && opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS]) {
+            let savedItems: Item[] = opts.item.vals[KEY_MULTI_STEPS_SAVED_ITEMS] as Item[];
+
+            for (let idx = 0; idx < savedItems.length; idx++) {
+                let item = savedItems[idx];
+
+                // 创建 HeteroList 并设置插件类别和 items
+                let hl = new HeteroList();
+                hl.pluginCategory = pluginTp;
+                hl.items = [item];
+
+                // 创建历史步骤,判断是否为最后一步
+                let historyStep = new HistorySavedStep([hl], (idx + 1) === savedItems.length);
+
+                // 包装 descriptor,使其可以正确显示
+                let d = new Map();
+                d.set(item.impl, item.dspt);
+                historyStep.wrapper(d);
+
+                stepSavedPlugin.set(idx, historyStep);
+            }
+        }
+
+        return stepSavedPlugin;
+    }
+
+
+    private static openMultiStepsComponent(
+        b: TISCoreService, stepSavedPlugin: Map<number, HistorySavedStep>, title: string, pluginTp: PluginType
+        , pluginDesc: MultiStepsDescriptor, opts: OpenPluginDialogOptions, onSuccess: (r: PluginSaveResponse, biz) => void) {
+        let modalRef: NzModalRef<any> = b.openDialog( //
+            PluginsMultiStepsComponent //
+            , {nzTitle: title, nzWidth: 1100});
+        let pluginCpt: PluginsMultiStepsComponent = modalRef.getContentComponent();
+        //[hlist]="hlist" [hostDesc]="stepDesc"
+        pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc);
+        for (let [index, savedPlugin] of stepSavedPlugin) {
+
+            if (index === 0) {
+                console.log([index, pluginCpt._hlist]);
+                // try{
+                if (savedPlugin.isUnWrapperPhase) {
+                    let d = new Map();
+                    d.set(pluginDesc.impl, pluginDesc);
+                    savedPlugin.wrapper(d);
+                }
+                // }catch (e){
+                //     console.log(e);
+                // }
+                console.log([index, pluginCpt._hlist]);
+                pluginCpt.hlist = savedPlugin.hlist;
+
+            }
+        }
+
+        pluginCpt.hostDesc = pluginDesc;
+        pluginCpt.editMode = !!opts.editMode; // 设置编辑模式标志
+
+        // console.log(stepSavedPlugin);
+        pluginCpt.stepSavedPlugin = stepSavedPlugin;
+        pluginCpt.afterSuccessSubmitFinalForm.subscribe((r) => {
+            console.log([r, r.saveSuccess, r.hasBiz()]);
+            if (r && r.saveSuccess && r.hasBiz()) {
+                modalRef.close();
+                let multStepHost = r.biz();
+                onSuccess(r, multStepHost);
+            }
+        });
+        return modalRef;
+    }
 
     public static getPluginMetaParams(pluginMeta: PluginType[]): string {
         return pluginMeta.map((p) => {
@@ -507,7 +557,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     public static wrapperHeteroList(he: HeteroList, pm: PluginType): HeteroList {
         let h: HeteroList = Object.assign(new HeteroList(), he, {"pluginCategory": pm});
         let descMap = Descriptor.wrapDescriptors(h.descriptors);
-        // console.log(descMap);
+        //  console.log([descMap,h.descriptors]);
         h.descriptors = descMap;
         // 遍历item
         let items: Item[] = [];

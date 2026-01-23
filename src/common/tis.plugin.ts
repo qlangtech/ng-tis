@@ -383,6 +383,9 @@ export class Descriptor {
         if (!descriptors) {
             throw new Error("param descriptors can not be null");
         }
+        // if(descriptors instanceof Map){
+        //     throw new Error("param descriptors can not be null");
+        // }
         let descMap: Map<string /* impl */, Descriptor> = new Map();
         let d: Descriptor = null;
         for (let impl in descriptors) {
@@ -585,7 +588,7 @@ export class HistorySavedStep {
     }
 
     wrapper(nextPluingDesc: Map<string, Descriptor>) {
-       console.log(nextPluingDesc);
+        console.log(nextPluingDesc);
         for (let hlist of this.hlist) {
             hlist.updateDescriptor(nextPluingDesc);
             aa: for (let [key, desc] of nextPluingDesc) {
@@ -607,6 +610,10 @@ export class HistorySavedStep {
 export class MultiStepsDescriptor extends Descriptor {
     public steps: Array<StepConfig> = [];
     private _firstStepDesc: Descriptor;
+    // /**
+    //  * 当更新流程下才会设置
+    //  */
+    // _allStepDesc: Map<string /* impl */, Descriptor>;
 
     public static createFirstStepPluginHlist(stepPluginCategory: PluginType, desc: MultiStepsDescriptor, firstStepItem?: Item): HeteroList[] {
 
@@ -624,6 +631,10 @@ export class MultiStepsDescriptor extends Descriptor {
         return hlist;
 
     }
+
+    // public set allStepDesc(descs: Map<string /* impl */, Descriptor>) {
+    //     this._allStepDesc = descs;
+    // }
 
     public get firstStep(): Descriptor {
         return this._firstStepDesc;
@@ -1156,14 +1167,29 @@ export class Item {
                 throw new Error("must contain key:" + KEY_MULTI_STEPS_SAVED_ITEMS);
             }
             // PluginsMultiStepsComponent.wrapStepItemVals(desc, savePlugin)
-            let stepItems = ovals[KEY_MULTI_STEPS_SAVED_ITEMS];
+            let stepItems: Item[] = ovals[KEY_MULTI_STEPS_SAVED_ITEMS];
             if (!Array.isArray(stepItems)) {
                 throw new Error("stepItems must be a array,but now is " + (typeof stepItems));
             }
-            // for (let stepPlugin of stepItems) {
-            //     this.dspt.firstStep
-            // }
+            let allStepDesc: Map<string /* impl */, Descriptor> = ovals["allStepDesc"];
             newVals[KEY_MULTI_STEPS_SAVED_ITEMS] = stepItems;
+            if(allStepDesc){
+                // 在更新流程中服务端会向客户端发送一个key为"allStepDesc"的descriptor map
+                allStepDesc = Descriptor.wrapDescriptors(allStepDesc);
+                let wrappedStepItems: Item[] = [];
+                for (let item of stepItems) {
+                    let d = allStepDesc.get(item.impl);
+                    if (!d) {
+                        throw new Error("impl:" + item.impl + " relevant Descriptor can not be null")
+                    }
+                    wrappedStepItems.push(d.wrapItemVals(item));
+                }
+                newVals[KEY_MULTI_STEPS_SAVED_ITEMS] = wrappedStepItems;
+            }
+
+
+            // }
+
             // newVals[KEY_MULTI_STEPS_SAVED_ITEMS ] = (newVal);
         } else {
             this.dspt.attrs.forEach((at) => {

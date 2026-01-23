@@ -96,6 +96,15 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
 
     @Input()
     stepSavedPlugin: Map<number, HistorySavedStep> = new Map;
+
+    /**
+     * 是否为编辑模式
+     * true: 编辑已有插件
+     * false: 添加新插件(默认)
+     */
+    @Input()
+    editMode: boolean = false;
+
     // 当前是否是最后一步
     isFinalPhase: boolean = false;
     // 是否等待执行最终提交
@@ -120,6 +129,20 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
 
     ngOnInit() {
         super.ngOnInit();
+        if (this.editMode) {
+            let newCurrent: number = (this.hostDesc.steps.length - 1);
+            let historyStep: HistorySavedStep = this.stepSavedPlugin.get(newCurrent);
+
+            // 添加空值检查,确保历史步骤存在
+            if (!historyStep) {
+                console.error(`History step not found for index ${newCurrent}`);
+                return;
+            }
+
+            this.hlist = historyStep.hlist;
+            this.currentStep = newCurrent;
+            this.isFinalPhase = historyStep.finalStep;
+        }
     }
 
     protected initialize(app: CurrentCollection): void {
@@ -275,10 +298,12 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
             if (nxt.isUnWrapperPhase) {
                 nxt.wrapper(nextPluginDesc);
             }
+            console.log(["nxt", nxt.hlist])
             this._hlist = nxt.hlist;
         } else {
             // 创建新步骤
             this._hlist = this.createNewStepHlist(nextPluginDesc);
+            console.log(["nxt not exist", this._hlist, nextPluginDesc])
         }
     }
 
@@ -286,10 +311,13 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
      * 创建新步骤的HeteroList
      */
     private createNewStepHlist(nextPluginDesc: Map<string, Descriptor>): HeteroList[] {
-        const nextHlist = new HeteroList();
-        nextHlist.updateDescriptor(nextPluginDesc);
+        // const nextHlist = new HeteroList();
+        // nextHlist.updateDescriptor(nextPluginDesc);
 
-        const h: HeteroList = PluginsComponent.wrapperHeteroList(nextHlist, this.hostPluginCategory);
+        const h: HeteroList = new HeteroList();// PluginsComponent.wrapperHeteroList(nextHlist, this.hostPluginCategory);
+        h.updateDescriptor(nextPluginDesc);
+        h.pluginCategory = this.hostPluginCategory;
+        //console.log([h,nextPluginDesc,this.hostPluginCategory]);
         for (let [key, desc] of h.descriptors) {
             h.extensionPoint = desc.extendPoint;
             break;
