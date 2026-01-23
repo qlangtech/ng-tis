@@ -36,16 +36,41 @@ import {HttpParams} from "@angular/common/http";
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <!-- [formControlName]="_pp.key" 需要添加到 nz-form-item 元素上用于playweright截图-->
-        <nz-form-item [attr.data-testid]="_pp.key+'_item'" [hidden]="hide">
-            <nz-form-label [ngClass]="{'form-label-verical':!horizontal,'tis-form-item-label':true}"
+        <nz-form-item [attr.data-testid]="_pp.key+'_item'" [hidden]="hide"
+                      [ngClass]="{'compact-form-item': compactVerticalLayout}">
+            <nz-form-label [ngClass]="{'form-label-vertical-compact': compactVerticalLayout, 'form-label-verical':!horizontal && !compactVerticalLayout,'tis-form-item-label':true}"
                            [nzSpan]="horizontal? labelSpan: null"
-                           [nzRequired]="_pp.required">{{_pp.label}}<i class="field-help"
-                                                                       *ngIf="descContent || asyncHelp"
-                                                                       nz-icon nzType="question-circle"
-                                                                       nzTheme="twotone"
-                                                                       (click)="toggleDescContentShow()"></i>
+                           [nzRequired]="_pp.required">
+                {{_pp.label}}
+
+                <!-- 根据布局模式切换help显示方式 -->
+                <ng-container [ngSwitch]="compactVerticalLayout">
+                    <!-- 紧凑布局模式 -->
+                    <ng-container *ngSwitchCase="true">
+                        <!-- 情况1: 同步help或异步help已加载 - 显示内联文本 -->
+                        <ng-container *ngIf="descContent">
+                            <span class="inline-help-text" [title]="descContent">{{truncatedHelpText}}</span>
+                            <i class="inline-help-expand" *ngIf="descContent.length > 50"
+                               nz-icon nzType="ellipsis" nzTheme="outline"
+                               (click)="toggleDescContentShow()"></i>
+                        </ng-container>
+
+                        <!-- 情况2: 异步help未加载 - 显示问号图标 -->
+                        <i class="field-help" *ngIf="!descContent && asyncHelp"
+                           nz-icon nzType="question-circle" nzTheme="twotone"
+                           (click)="toggleDescContentShow()"></i>
+                    </ng-container>
+
+                    <!-- 非紧凑布局模式：保持原有的问号图标 -->
+                    <ng-container *ngSwitchCase="false">
+                        <i class="field-help" *ngIf="descContent || asyncHelp"
+                           nz-icon nzType="question-circle" nzTheme="twotone"
+                           (click)="toggleDescContentShow()"></i>
+                    </ng-container>
+                </ng-container>
             </nz-form-label>
-            <nz-form-control [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
+            <nz-form-control [ngClass]="{'compact-form-control': compactVerticalLayout}"
+                             [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
                              [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
                 <ng-container [ngSwitch]="_pp.primaryVal">
                     <ng-container *ngSwitchCase="true">
@@ -271,7 +296,7 @@ import {HttpParams} from "@angular/common/http";
                                            [ngModelOptions]="{standalone: true}"></nz-switch>
                             </div>
                             <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
-                                           [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [pp]="pp"
+                                           [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [compactVerticalLayout]="compactVerticalLayout" [pp]="pp"
                                            *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
                         </form>
                     </ng-container>
@@ -291,6 +316,51 @@ import {HttpParams} from "@angular/common/http";
 
             .form-label-verical {
                 margin-top: 8px;
+            }
+
+            .form-label-vertical-compact {
+                margin-top: 0px;
+                margin-bottom: 6px;
+                text-align: left !important;
+                font-size: 14px;
+                color: rgba(0, 0, 0, 0.85);
+                padding: 4px 8px;
+                background-color: #fafafa;
+                border-radius: 2px;
+                display: block;
+            }
+
+            .compact-form-item {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .compact-form-item:last-child {
+                border-bottom: none;
+            }
+
+            .compact-form-control {
+                padding-left: 16px;
+            }
+
+            .inline-help-text {
+                margin-left: 8px;
+                font-size: 12px;
+                color: rgba(0, 0, 0, 0.45);
+                font-weight: normal;
+                font-style: italic;
+            }
+
+            .inline-help-expand {
+                margin-left: 4px;
+                font-size: 12px;
+                color: #1890ff;
+                cursor: pointer;
+            }
+
+            .inline-help-expand:hover {
+                color: #40a9ff;
             }
 
             .field-help {
@@ -354,6 +424,9 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
 
     @Input()
     labelSpan = 5;
+
+    @Input()
+    compactVerticalLayout = false;
 
     @Input()
     extendInfo: TemplateRef<any>;
@@ -424,11 +497,26 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
 
     get horizontal(): boolean {
+        // 如果启用紧凑垂直布局,强制使用垂直布局(优先级最高)
+        if (this.compactVerticalLayout) {
+            return false;
+        }
+        // 否则根据 formLevel 判断(原有逻辑)
         return this.formLevel < CONST_FORM_LAYOUT_VERTICAL;
     }
 
     get childHorizontal(): boolean {
         return (this.formLevel + 1) < CONST_FORM_LAYOUT_VERTICAL;
+    }
+
+    get truncatedHelpText(): string {
+        if (!this.descContent) {
+            return '';
+        }
+        // 移除markdown标记，只保留纯文本
+        const plainText = this.descContent.replace(/[#*`\[\]]/g, '').trim();
+        // 截断到50个字符
+        return plainText.length > 50 ? plainText.substring(0, 50) + '...' : plainText;
     }
 
     get disabled(): boolean {

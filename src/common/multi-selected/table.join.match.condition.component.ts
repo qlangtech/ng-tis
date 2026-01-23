@@ -9,13 +9,7 @@ import {JdbcTypeProp} from "./jdbc.type.props.component";
   selector: "table-join-match-condition",
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div>
-      <button nz-button nzSize="small" nz-tooltip
-              nzTooltipTitle="添加一条新的拥有类型的新字段"
-              nzType="default" (click)="addMatchCondition()"><span nz-icon nzType="appstore-add"
-                                                                   nzTheme="outline"></span>添加
-      </button>
-    </div>
+
     <ul class="match-condition-list">
       <li *ngFor="let u of matchConditionList; let i = index" class="match-condition-item">
         <div class="form-row">
@@ -60,6 +54,13 @@ import {JdbcTypeProp} from "./jdbc.type.props.component";
         </div>
       </li>
     </ul>
+    <div>
+      <button nz-button nzSize="small" nz-tooltip
+              nzTooltipTitle="添加一条新的拥有类型的新字段"
+              nzType="default" (click)="addMatchCondition()"><span nz-icon nzType="appstore-add"
+                                                                   nzTheme="outline"></span>添加
+      </button>
+    </div>
   `
   , styles: [
     `

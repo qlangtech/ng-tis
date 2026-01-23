@@ -225,11 +225,11 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
                     <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1"
                                    [pluginMeta]="plugins[index]"
                                    [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
-                                   [formControlSpan]="formControlSpan" [pp]="pp"
+                                   [formControlSpan]="formControlSpan" [compactVerticalLayout]="compactVerticalLayout" [pp]="pp"
                                    *ngFor="let pp of item.propVals | itemPropFilter : true"></item-prop-val>
                 </div>
             </ng-template>
-            <form nz-form [ngSwitch]="shallInitializePluginItems || useCollapsePanel">
+            <form nz-form [nzLayout]="compactVerticalLayout ? 'vertical' : 'horizontal'" [ngSwitch]="shallInitializePluginItems || useCollapsePanel">
                 <nz-collapse *ngSwitchCase="true" [nzBordered]="false">
                     <nz-collapse-panel [id]="h.captionId" *ngFor="let h of _heteroList;let i = index"
                                        [nzHeader]="h.caption"
@@ -326,6 +326,12 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     @Output() afterInit: EventEmitter<HeteroList[]> = new EventEmitter<HeteroList[]>();
     @Input() formControlSpan = 13;
 
+    /**
+     * 表单布局方式
+     * true: 紧凑垂直布局(label在上,control在下,间距最小化)
+     * false: 根据formLevel自动判断(默认)
+     */
+    @Input() compactVerticalLayout = false;
 
     @Input() saveBtnLabel = '保存';
     /**

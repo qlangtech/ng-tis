@@ -50,6 +50,7 @@ export const KEY_MULTI_STEPS_SAVED_ITEMS = "multiStepsSavedItems";
                 <tis-plugins [savePluginEventCreator]="_savePluginEventCreator" (afterSave)="afterSave($event)"
                              [pluginMeta]="pluginCategory"
                              [savePlugin]="savePlugin" [showSaveButton]="false" [shallInitializePluginItems]="false"
+                             [compactVerticalLayout]="true"
                              [_heteroList]="_hlist" #pluginComponent></tis-plugins>
 
 
