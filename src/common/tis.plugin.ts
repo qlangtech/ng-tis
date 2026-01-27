@@ -28,6 +28,7 @@ import {MongoColsTabletView} from "./multi-selected/schema.edit.component";
 import {JdbcTypeProp, JdbcTypePropsProperty} from "./multi-selected/jdbc.type.props.component";
 import * as ls from 'lodash';
 import {MatchCondition, MatchConditionList} from "./multi-selected/table.join.match.condition.component";
+import {FilterCondition, FilterConditionList} from "./multi-selected/table.join.filter.condition.component";
 import {PluginsComponent} from "./plugins.component";
 import {KEY_MULTI_STEPS_SAVED_ITEMS, PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 
@@ -739,6 +740,7 @@ export enum TuplesPropertyType {
     JdbcTypeProps = ("jdbcTypeProps"),
     TransformerRules = ('transformerRules'),
     TableJoinMatchCondition = ('tableJoinMatchCondition'),
+    TableJoinFilterCondition = ('tableJoinFilterCondition'),
     SimpleCols = ('simpleCols')
 }
 
@@ -1087,6 +1089,30 @@ export class Item {
                     }
 
                     newVal.setTableView(new MatchConditionList(sourceTabCols, targetTabCols, matchConditionList));
+                    break;
+                }
+                case TuplesPropertyType.TableJoinFilterCondition: {
+
+                    let targetTabCols: Array<CMeta> = enumVal["targetTabCols"];
+                    let sourceTabCols: Array<CMeta> = enumVal["multiStepSourceTabCols"];
+                    let tableTypes: Array<{ label: string, val: string }> = enumVal["tableTypes"];
+                    let operators: Array<{ label: string, val: string }> = enumVal["operators"];
+                    let valueTypes: Array<{ label: string, val: string }> = enumVal["valueTypes"];
+console.log([targetTabCols,sourceTabCols,tableTypes,operators,valueTypes]);
+                    let filterConditionList: Array<FilterCondition> = [];
+                    for (let condition of val) {
+                        // 对应服务端pojo：com.qlangtech.tis.plugin.table.join.TableJoinFilterCondition
+                        // {tableType, columnName, operator, valueType, value}
+                        let fc = new FilterCondition();
+                        fc.tableType.name = condition["tableType"];
+                        fc.columnName.name = condition["columnName"];
+                        fc.operator.name = condition["operator"];
+                        fc.valueType.name = condition["valueType"];
+                        fc.value.name = condition["value"];
+                        filterConditionList.push(fc);
+                    }
+
+                    newVal.setTableView(new FilterConditionList(sourceTabCols, targetTabCols, filterConditionList, tableTypes, operators, valueTypes));
                     break;
                 }
                 default:

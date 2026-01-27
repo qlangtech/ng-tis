@@ -38,20 +38,21 @@ import {HttpParams} from "@angular/common/http";
         <!-- [formControlName]="_pp.key" 需要添加到 nz-form-item 元素上用于playweright截图-->
         <nz-form-item [attr.data-testid]="_pp.key+'_item'" [hidden]="hide"
                       [ngClass]="{'compact-form-item': compactVerticalLayout}">
-            <nz-form-label [ngClass]="{'form-label-vertical-compact': compactVerticalLayout, 'form-label-verical':!horizontal && !compactVerticalLayout,'tis-form-item-label':true}"
-                           [nzSpan]="horizontal? labelSpan: null"
-                           [nzRequired]="_pp.required">
+            <nz-form-label
+                    [ngClass]="{'form-label-vertical-compact': compactVerticalLayout, 'form-label-verical':!horizontal && !compactVerticalLayout,'tis-form-item-label':true}"
+                    [nzSpan]="horizontal? labelSpan: null"
+                    [nzRequired]="_pp.required">
                 {{_pp.label}}
 
                 <!-- 根据布局模式切换help显示方式 -->
-                <ng-container [ngSwitch]="compactVerticalLayout">
+                <ng-container [ngSwitch]="compactVerticalLayout && !asyncHelp">
                     <!-- 紧凑布局模式 -->
                     <ng-container *ngSwitchCase="true">
                         <!-- 情况1: 同步help或异步help已加载 - 显示内联文本 -->
                         <ng-container *ngIf="descContent">
-                            <span class="inline-help-text" [title]="descContent">{{truncatedHelpText}}</span>
-                            <i class="inline-help-expand" *ngIf="descContent.length > 50"
-                               nz-icon nzType="ellipsis" nzTheme="outline"
+                            <span class="inline-help-text" [title]="!descContentShow ? descContent : ''">{{truncatedHelpText}}</span>
+                            <i class="inline-help-expand" *ngIf="descContent.length > HELP_TEXT_MAX_LENGTH"
+                               nz-icon [nzType]="descContentShow ? 'up-circle' : 'down-circle'" nzTheme="outline"
                                (click)="toggleDescContentShow()"></i>
                         </ng-container>
 
@@ -73,7 +74,7 @@ import {HttpParams} from "@angular/common/http";
                              [nzSpan]="horizontal ? valSpan: null" [nzValidateStatus]="_pp.validateStatus"
                              [nzHasFeedback]="_pp.hasFeedback" [nzErrorTip]="_pp.error">
                 <ng-container [ngSwitch]="_pp.primaryVal">
-                    <ng-container *ngSwitchCase="true">
+<ng-container *ngSwitchCase="true">
               <span [ngClass]="{'has-help-url': !this.disabled && (helpUrl !== null || createRouter !== null)}"
                     [ngSwitch]="_pp.type">
                   <ng-container *ngSwitchCase="1">
@@ -185,10 +186,12 @@ import {HttpParams} from "@angular/common/http";
                                           [error]="_pp.error"></jdbc-type-props>
                       </ng-container>
                        <ng-container *ngSwitchCase="'tableJoinMatchCondition'">
-<!--                         <jdbc-type-props [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums"-->
-<!--                                          [error]="_pp.error"></jdbc-type-props>-->
-
-                           <table-join-match-condition [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums" [error]="_pp.error" />
+                           <table-join-match-condition [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums"
+                                                       [error]="_pp.error"/>
+                      </ng-container>
+                   <ng-container *ngSwitchCase="'tableJoinFilterCondition'">
+                           <table-join-filter-condition [attr.data-testid]="_pp.key" [tabletView]="_pp.mcolsEnums"
+                                                       [error]="_pp.error"/>
                       </ng-container>
                       <ng-container *ngSwitchDefault>
                          <label nz-checkbox [(ngModel)]="_pp._eprops['allChecked']"
@@ -284,7 +287,6 @@ import {HttpParams} from "@angular/common/http";
                                 </button>
                             </div>
                         </ng-template>
-
                         <form [ngClass]="{'desc-prop-descs' : _pp.descVal.extensible,'sub-prop' :true}" nz-form
                               [nzLayout]=" childHorizontal ? 'horizontal':'vertical' "
                               *ngIf=" _pp.descVal.propVals.length >0">
@@ -296,7 +298,8 @@ import {HttpParams} from "@angular/common/http";
                                            [ngModelOptions]="{standalone: true}"></nz-switch>
                             </div>
                             <item-prop-val [hide]=" pp.advance && !_pp.descVal.showAllField " [formLevel]="formLevel+1"
-                                           [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl" [compactVerticalLayout]="compactVerticalLayout" [pp]="pp"
+                                           [disabled]="disabled" [pluginImpl]="_pp.descVal.dspt.impl"
+                                           [compactVerticalLayout]="compactVerticalLayout" [pp]="pp"
                                            *ngFor="let pp of _pp.descVal.propVals | itemPropFilter : true"></item-prop-val>
                         </form>
                     </ng-container>
@@ -331,8 +334,8 @@ import {HttpParams} from "@angular/common/http";
             }
 
             .compact-form-item {
-                margin-bottom: 16px;
-                padding-bottom: 12px;
+                margin-bottom: 5px;
+                padding-bottom: 4px;
                 border-bottom: 1px solid #f0f0f0;
             }
 
@@ -350,17 +353,21 @@ import {HttpParams} from "@angular/common/http";
                 color: rgba(0, 0, 0, 0.45);
                 font-weight: normal;
                 font-style: italic;
+                white-space: pre-wrap;
+                word-break: break-word;
             }
 
             .inline-help-expand {
                 margin-left: 4px;
-                font-size: 12px;
+                font-size: 16px;
                 color: #1890ff;
                 cursor: pointer;
+                transition: all 0.3s;
             }
 
             .inline-help-expand:hover {
                 color: #40a9ff;
+                transform: scale(1.1);
             }
 
             .field-help {
@@ -409,6 +416,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     descContent: string = null;
     descContentShow = false;
     asyncHelp = false;
+    private readonly HELP_TEXT_MAX_LENGTH = 60;
     @Input()
     formLevel: number;
 
@@ -506,17 +514,21 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
 
     get childHorizontal(): boolean {
-        return (this.formLevel + 1) < CONST_FORM_LAYOUT_VERTICAL;
+        return !this.compactVerticalLayout && ((this.formLevel + 1) < CONST_FORM_LAYOUT_VERTICAL);
     }
 
     get truncatedHelpText(): string {
         if (!this.descContent) {
             return '';
         }
+        // 如果已展开，返回完整内容
+        if (this.descContentShow) {
+            return this.descContent;
+        }
         // 移除markdown标记，只保留纯文本
         const plainText = this.descContent.replace(/[#*`\[\]]/g, '').trim();
-        // 截断到50个字符
-        return plainText.length > 50 ? plainText.substring(0, 50) + '...' : plainText;
+        // 截断到指定字符数
+        return plainText.length > this.HELP_TEXT_MAX_LENGTH ? plainText.substring(0, this.HELP_TEXT_MAX_LENGTH) + '...' : plainText;
     }
 
     get disabled(): boolean {
@@ -671,6 +683,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
     }
 
     toggleDescContentShow() {
+           // console.log("toggleDescContentShow");
         if (this.asyncHelp) {
 
             if (!this.descContent && !this.descContentShow) {
@@ -681,7 +694,8 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                     metas = [this.pluginMeta];
                 }
 
-                this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams(metas)}`).then((r) => {
+                this.httpPost(url, `action=plugin_action&emethod=get_plugin_field_help&impl=${this._pluginImpl}&field=${this._pp.key}&plugin=${PluginsComponent.getPluginMetaParams(metas)}`) //
+                    .then((r) => {
                     this.descContent = r.bizresult;
                     this.descContentShow = true;
                     this.cdr.detectChanges();

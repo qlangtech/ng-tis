@@ -150,6 +150,7 @@ import {DatasourceQuickManagerComponent} from "./ds.quick.manager.component";
 import {FreshmanReadmeComponent} from "./freshman.readme.component";
 import {PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 import {TableJoinMatchConditionComponent} from "./multi-selected/table.join.match.condition.component";
+import {TableJoinFilterConditionComponent} from "./multi-selected/table.join.filter.condition.component";
 
 // 新增的导航组件和服务
 
@@ -175,7 +176,7 @@ import {TableJoinMatchConditionComponent} from "./multi-selected/table.join.matc
         NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
         FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule,
     ],
-    declarations: [TableJoinMatchConditionComponent,SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent, PreviewComponent, DatasourceQuickManagerComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
+    declarations: [TableJoinMatchConditionComponent,TableJoinFilterConditionComponent,SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent, PreviewComponent, DatasourceQuickManagerComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
         ControlPanelComponent, SchemaEditComponent,
         TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
         PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
