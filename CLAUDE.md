@@ -6,6 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 这是一个基于Angular 12的TIS(数据集成平台)前端控制台项目，主要用于数据同步、ETL处理和集群管理的Web界面。
 
+
 ## 开发环境设置
 
 ### 依赖安装
