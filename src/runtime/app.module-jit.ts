@@ -47,7 +47,7 @@ registerLocaleData(zh);
 export function markedOptionsFactory(): MarkedOptions {
     const renderer = new Renderer();
 
-    renderer.link = ({href, text}: {href?: string | null; text?: string}) => {
+    renderer.link = (href: string, title: string, text: string) => {
         return `<a href="${href}" target="_blank">${text}</a>`;
     };
     return {
