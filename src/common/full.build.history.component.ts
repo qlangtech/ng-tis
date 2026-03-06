@@ -72,17 +72,21 @@ class ProcessStrategy {
     <tis-page-header title="构建历史" [showBreadcrumb]="this.showBreadcrumb" [breadcrumb]="breadcrumb"
                      [result]="result" (refesh)="refesh()">
       <tis-page-header-left *ngIf="dataxProcess && dataXWorkerStatus">
+        <!--
+        <nz-tag nzColor="processing">
+          <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list">
+            <i nz-icon
+               nzType="link"
+               nzTheme="outline"></i>分布式执行</a>
+        </nz-tag>
+        -->
+<!--        <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button-->
+<!--                nzType="default"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑-->
+<!--        </button>-->
+
         <ng-container [ngSwitch]="dataXWorkerStatus.k8sReplicationControllerCreated">
           <ng-container *ngSwitchCase="true">
-            <nz-tag nzColor="processing">
-              <a target="_blank" [routerLink]="'/base/datax-worker'" fragment="wf-list">
-                <i nz-icon
-                   nzType="link"
-                   nzTheme="outline"></i>分布式执行</a>
-            </nz-tag>
-            <button (click)="editDistributeJob()" [disabled]="formDisabled" nzSize="small" nz-button
-                    nzType="default"><span nz-icon nzType="edit" nzTheme="outline"></span>编辑
-            </button>
+
           </ng-container>
           <ng-container *ngSwitchCase="false">
             <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
@@ -100,6 +104,10 @@ class ProcessStrategy {
         <button (click)="editLocalJob()" [disabled]="formDisabled" nzSize="small" nz-button
                 nzType="default"><span nz-icon nzType="setting" nzTheme="outline"></span>执行参数
         </button>
+      </tis-page-header-left>
+
+      <tis-page-header-left >
+        <a target="_blank" [routerLink]="'/base/akka-monitor'" class="link-btn"><i nz-icon nzType="link" nzTheme="outline" ></i>执行集群</a>
       </tis-page-header-left>
 
       <tis-plugin-add-btn [disabled]="formDisabled" *ngIf="showTriggerBtn" [btnSize]="'default'"
@@ -148,6 +156,9 @@ class ProcessStrategy {
   `,
   styles: [
     `
+      .link-btn {
+        font-size: 12px;display: inline-block;margin-left: 10px;
+      }
       nz-alert {
         margin-top: 5px;
       }
@@ -358,7 +369,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     openParamsCfg(targetDesc,'' ,this.drawerService, this, "设置任务触发参数");
   }
 
-  editDistributeJob() {
+  //editDistributeJob() {
     // this.openDialog(DistPowerJobTemplateOverwriteComponent,{});
 
     // this.httpPost('/coredefine/corenodemanage.ajax'
@@ -369,7 +380,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     //       console.log(rList);
     //     }});
 
-    DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this);
+   // DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this);
 
     // DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, this)
     //     .then((rList) => {
@@ -396,7 +407,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
     //     });
 
 
-  }
+ // }
 
   /**
    * 预览数据

@@ -151,6 +151,13 @@ import {FreshmanReadmeComponent} from "./freshman.readme.component";
 import {PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 import {TableJoinMatchConditionComponent} from "./multi-selected/table.join.match.condition.component";
 import {TableJoinFilterConditionComponent} from "./multi-selected/table.join.filter.condition.component";
+import {CronExpressionInputComponent} from "./cron-expression-input.component";
+import {CronExpressionPreviewComponent} from "./cron-expression-preview.component";
+import {DAGGraphViewerComponent} from "./dag-graph-viewer.component";
+import {NodeExecutionDetailComponent} from "./node-execution-detail.component";
+import {WaitingQueueViewerComponent} from "./waiting-queue-viewer.component";
+import {RunningQueueViewerComponent} from "./running-queue-viewer.component";
+import {WorkflowHistoryListComponent} from "./workflow-history-list.component";
 
 // 新增的导航组件和服务
 
@@ -166,6 +173,7 @@ import {TableJoinFilterConditionComponent} from "./multi-selected/table.join.fil
     imports: [
         MarkdownModule.forChild(),
         // NzIconModule.forChild([MySQLOutline]),
+      NzCardModule,
         NzIconModule,
         NzProgressModule, NzSpaceModule, NzTabsModule, NzCascaderModule, NzTransferModule, NzSwitchModule, NzSkeletonModule,
         // NgxTisCommonLibModule ,
@@ -176,7 +184,7 @@ import {TableJoinFilterConditionComponent} from "./multi-selected/table.join.fil
         NzSpinModule, NzCollapseModule, NzDropDownModule, NzFormModule, NzInputModule, NzButtonModule, NzBreadCrumbModule, NzStepsModule, NzAffixModule, NzInputNumberModule,
         FormsModule, CommonModule, HttpClientModule, HttpClientJsonpModule, RouterModule, NzSelectModule, NzNotificationModule, NzTableModule, NzCheckboxModule, NzAlertModule, ReactiveFormsModule, NzListModule,
     ],
-    declarations: [TableJoinMatchConditionComponent,TableJoinFilterConditionComponent,SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent, PreviewComponent, DatasourceQuickManagerComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
+    declarations: [CronExpressionInputComponent, CronExpressionPreviewComponent, DAGGraphViewerComponent, NodeExecutionDetailComponent, WaitingQueueViewerComponent, RunningQueueViewerComponent, WorkflowHistoryListComponent, TableJoinMatchConditionComponent,TableJoinFilterConditionComponent,SkeletonLoaderComponent, LoadingStateComponent, FreshmanReadmeComponent, PreviewComponent, DatasourceQuickManagerComponent, JdbcTypePropsComponent, UdfDescLiteria, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, TransformerRulesComponent, JdbcTypeComponent,
         ControlPanelComponent, SchemaEditComponent,
         TerminalComponent, ErrorDetailComponent, PluginManageComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, TableSelectComponent, SideBarToolBar, K8SReplicsSpecComponent,
         PageHeaderLeftComponent, ProgressTitleComponent, ProgressComponent, ConsumeTimePipe, SnapshotLinkComponent, SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,
@@ -189,7 +197,7 @@ import {TableJoinFilterConditionComponent} from "./multi-selected/table.join.fil
         , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
 
     ],
-    exports: [SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
+    exports: [CronExpressionInputComponent, CronExpressionPreviewComponent, DAGGraphViewerComponent, NodeExecutionDetailComponent, WaitingQueueViewerComponent, RunningQueueViewerComponent, WorkflowHistoryListComponent, SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent
         , NzSpaceModule, NzDropDownModule, PageHeaderLeftComponent, NzProgressModule, NzResultModule, NzPageHeaderModule
         , NzAlertModule, NzDrawerModule, NzDividerModule, NzStatisticModule, ConsumeTimePipe, SnapshotLinkComponent, NzInputModule
         , SchemaXmlEditComponent, SchemaEditVisualizingModelComponent,

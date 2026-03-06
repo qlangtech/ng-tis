@@ -103,6 +103,7 @@ export class BasicWFComponent extends BasicFormComponent {
             <ul nz-menu>
               <li nz-menu-item (click)="editProfile(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>基本信息</li>
               <li nz-menu-item (click)="editTopology(df)"><i nz-icon nzType="edit" nzTheme="outline"></i>执行逻辑</li>
+              <li nz-menu-item (click)="scheduleConfig(df)"><i nz-icon nzType="clock-circle" nzTheme="outline"></i>调度配置</li>
               <li nz-menu-item (click)="executeWorkflow(df)"><i nz-icon nzType="play-circle" nzTheme="outline"></i>构建
               </li>
               <li nz-menu-item (click)="buildHistory(df)"><i nz-icon nzType="snippets" nzTheme="outline"></i>构建历史
@@ -232,6 +233,10 @@ export class WorkflowComponent extends BasicWFComponent implements OnInit {
 
   editProfile(workflow: Dataflow) {
     this.router.navigate([`/offline/wf_profile/${workflow.name}/config`]);
+  }
+
+  scheduleConfig(workflow: Dataflow) {
+    this.router.navigate([`/offline/wf_profile/${workflow.name}/schedule`]);
   }
 
   gotoPage(page: number) {

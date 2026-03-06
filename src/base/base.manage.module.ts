@@ -47,11 +47,13 @@ import {DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent} from ".
 import {MarkdownModule} from "ngx-markdown";
 import {ErrorListComponent} from "./error.list.component";
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
-import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+//import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {NgTerminalModule} from "ng-terminal";
 import {FlinkClusterListComponent} from "./flink.cluster.list.component";
 import {EndCptListComponent, MulitStepsTestComponent} from "./end.cpt.list.component";
 import {UserProfileComponent} from "./user.profile.component";
+import {AkkaClusterMonitorComponent} from "./akka.cluster.monitor.component";
+import {DagSchedulerDetailComponent} from "./dag.scheduler.detail.component";
 
 
 @NgModule({
@@ -63,9 +65,11 @@ import {UserProfileComponent} from "./user.profile.component";
     , BaseConfigComponent, DepartmentListComponent
     , AddAppFormComponent, AddAppStepFlowComponent, AddAppFlowDirective, AddAppConfirmComponent, AddappSelectNodesComponent
     , DataxWorkerComponent, DataxWorkerAddStep1Component, DataxWorkerAddStep0Component, DataxWorkerAddStep2Component
-    , DataxWorkerAddExistPowerjobClusterComponent
+    //, DataxWorkerAddExistPowerjobClusterComponent
     , DataxWorkerAddStep22Component, DataxWorkerAddStep3Component
     , DataxWorkerRunningComponent, PodsListComponent, RCSpecComponent,UserProfileComponent
+    , AkkaClusterMonitorComponent
+    , DagSchedulerDetailComponent
   ],
   // providers: [TISService,ScriptService]
   exports: [AddAppFlowDirective]

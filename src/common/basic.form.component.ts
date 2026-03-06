@@ -41,7 +41,12 @@ import {TISBaseProfile} from "./navigate.bar.component";
  */
 declare var jQuery: any;
 const KEY_show_Bread_crumb = "showBreadcrumb";
-export const KEY_INCR_CONTROL_WEBSOCKET_PATH = "/tis-assemble/incr-control-websocket";
+
+export const KEY_ASSEMBLE_CONTEXT_PATH = "/tis-assemble";
+
+export const KEY_INCR_CONTROL_WEBSOCKET_PATH = KEY_ASSEMBLE_CONTEXT_PATH + "/incr-control-websocket";
+
+export const KEY_DAG_WORKFLOW_PATH =  "/dag";
 
 // declare var NProgress: any;
 export class BasicFormComponent extends BaseComponent implements TISCoreService {
@@ -474,7 +479,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
             // appTisService.currentApp = null;
           }
         }
-       // console.log(appTisService.currentApp);
+        // console.log(appTisService.currentApp);
         this.initialize(appTisService.currentApp);
       });
   }
@@ -485,7 +490,7 @@ export abstract class AppFormComponent extends BasicFormComponent implements OnI
 }
 
 export class CurrentCollection {
-  constructor(private id: number, public name: string, public appTyp?: AppType ) {
+  constructor(private id: number, public name: string, public appTyp?: AppType) {
   }
 
   public get appid() {

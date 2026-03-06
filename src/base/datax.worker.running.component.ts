@@ -558,22 +558,22 @@ export class DataxWorkerRunningComponent extends AppFormComponent implements Aft
   }
 
   startPowerJobTplAppOverwrite(u: PowerJobWorkflow) {
-    if (!u.wfName) {
-      throw new Error("property wfName can not be null");
-    }
-    DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this, [{
-      key: KEY_APPNAME,
-      val: u.wfName
-    }]).subscribe((plugin: PowerJobWorkflow) => {
-      // console.log(plugin);
-      // this.workflowSelect();
-
-      let idxOf = this.workflows.findIndex((wf) => wf.id === plugin.id);
-      if (idxOf > -1) {
-        this.workflows[idxOf] = plugin;
-        this.workflows = [...this.workflows];
-      }
-    });
+    // if (!u.wfName) {
+    //   throw new Error("property wfName can not be null");
+    // }
+    // DataxWorkerAddStep0Component.startPowerJobTplAppOverwrite(this, [{
+    //   key: KEY_APPNAME,
+    //   val: u.wfName
+    // }]).subscribe((plugin: PowerJobWorkflow) => {
+    //   // console.log(plugin);
+    //   // this.workflowSelect();
+    //
+    //   let idxOf = this.workflows.findIndex((wf) => wf.id === plugin.id);
+    //   if (idxOf > -1) {
+    //     this.workflows[idxOf] = plugin;
+    //     this.workflows = [...this.workflows];
+    //   }
+    // });
   }
 
 

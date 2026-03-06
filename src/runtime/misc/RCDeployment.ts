@@ -311,13 +311,13 @@ export class DataxWorkerDTO {
 
 
   powderJobServerHetero: HeteroList[] = [];
-  powderJobUseExistClusterHetero: HeteroList[] = [];
-  powderJobWorkerHetero: HeteroList[] = [];
-  powderjobJobTplHetero: HeteroList[] = [];
+  // powderJobUseExistClusterHetero: HeteroList[] = [];
+  // powderJobWorkerHetero: HeteroList[] = [];
+  // powderjobJobTplHetero: HeteroList[] = [];
 
   hasSetHetero = false;
 
-  usingPowderJobUseExistCluster = false;
+ // usingPowderJobUseExistCluster = false;
 
 
   flinkClusterHetero: HeteroList[] = [];
@@ -328,7 +328,7 @@ export class DataxWorkerDTO {
 
 
   public get containPowerJob(): boolean {
-    return this.powderJobServerHetero.length > 0 && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;
+    return this.powderJobServerHetero.length > 0;// && this.powderJobWorkerHetero.length > 0 && this.powderjobJobTplHetero.length > 0;
   }
 }
 

@@ -35,7 +35,7 @@ import {NzTableModule} from 'ng-zorro-antd/table';
 import {TisCommonModule} from "../common/common.module";
 import {NzButtonModule} from 'ng-zorro-antd/button';
 import {NzCascaderModule} from 'ng-zorro-antd/cascader';
-import {NzFormModule} from 'ng-zorro-antd/form';
+
 
 import {WorkflowAddDbtableSetterComponent} from "./workflow.add.dbtable.setter.component";
 import {BasiManageModule} from "../base/base.manage.module";
@@ -51,12 +51,27 @@ import {NzNotificationModule} from 'ng-zorro-antd/notification';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 
 import {NzCollapseModule} from 'ng-zorro-antd/collapse';
+import {NzSwitchModule} from 'ng-zorro-antd/switch';
+import {NzAlertModule} from 'ng-zorro-antd/alert';
+import {NzListModule} from 'ng-zorro-antd/list';
+import {NzSpaceModule} from 'ng-zorro-antd/space';
+import {NzToolTipModule} from 'ng-zorro-antd/tooltip';
+import {NzTypographyModule} from 'ng-zorro-antd/typography';
+import {NzPageHeaderModule} from 'ng-zorro-antd/page-header';
+import {NzSpinModule} from 'ng-zorro-antd/spin';
+import {NzIconModule} from 'ng-zorro-antd/icon';
+import {NzDrawerModule} from 'ng-zorro-antd/drawer';
+import {NzCardModule} from 'ng-zorro-antd/card';
+import {NzTagModule} from 'ng-zorro-antd/tag';
+import {NzPopconfirmModule} from 'ng-zorro-antd/popconfirm';
 import {WorkflowERComponent} from "./workflow.er.component";
 import {WorkflowAddErCardinalityComponent} from "./workflow.add.er.cardinality.component";
 import {WorkflowAddErMetaComponent} from "./workflow.add.er.meta.component";
 import {WFControllerComponent} from "./workflow.controller.component";
 import {WorkflowOfflineEngineSelectComponent} from "./workflow.offline.engine.select.component";
 import {TableColsMetaComponent} from "./table.cols.meta.component";
+import {WorkflowScheduleConfigComponent} from "./workflow.schedule.config.component";
+import {WorkflowDAGMonitorComponent} from "./workflow.dag.monitor.component";
 
 
 
@@ -69,8 +84,10 @@ import {TableColsMetaComponent} from "./table.cols.meta.component";
     FormsModule, BasiManageModule, NzTreeModule, NzLayoutModule, NzDescriptionsModule
     , OfflineRoutingModule, // TreeModule,
     TisCommonModule, NzButtonModule, NzCascaderModule
-    , CommonModule, NzFormModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule
-    , NzDividerModule, NzGridModule
+    , CommonModule, NzSelectModule, ReactiveFormsModule, NzNotificationModule
+    , NzDividerModule, NzGridModule, NzSwitchModule, NzAlertModule, NzListModule, NzSpaceModule
+    , NzToolTipModule, NzTypographyModule, NzPageHeaderModule, NzSpinModule, NzIconModule
+    , NzDrawerModule, NzCardModule, NzTagModule, NzPopconfirmModule
   ],
   providers: [
   ],
@@ -80,7 +97,7 @@ import {TableColsMetaComponent} from "./table.cols.meta.component";
     WorkflowAddComponent,
     WorkflowAddDbtableSetterComponent, WorkflowAddJoinComponent, WorkflowAddUnionComponent
     // tslint:disable-next-line:whitespace
-    , WorkflowAddNestComponent, WorkflowERComponent, WorkflowAddErCardinalityComponent
+    , WorkflowAddNestComponent, WorkflowERComponent, WorkflowAddErCardinalityComponent, WorkflowScheduleConfigComponent, WorkflowDAGMonitorComponent
   ]
 })
 export class OfflineModule {

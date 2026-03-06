@@ -41,12 +41,12 @@ import {PowerjobCptType} from "./base.manage-routing.module";
     </tis-page-header>
     <nz-spin [nzSpinning]="this.formDisabled">
       <div class="item-block">
-        <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"
-                     [savePluginEventCreator]="_savePluginEventCreator"
-                     [savePlugin]="savePlugin" [showSaveButton]="false"
-                     (afterSave)="afterSaveReader($event)"
-                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderjobJobTplHetero"
-                     #pluginComponent></tis-plugins>
+<!--        <tis-plugins [formControlSpan]="20" [pluginMeta]="[pluginCategory]"-->
+<!--                     [savePluginEventCreator]="_savePluginEventCreator"-->
+<!--                     [savePlugin]="savePlugin" [showSaveButton]="false"-->
+<!--                     (afterSave)="afterSaveReader($event)"-->
+<!--                     [shallInitializePluginItems]="false" [_heteroList]="dto.powderjobJobTplHetero"-->
+<!--                     #pluginComponent></tis-plugins>-->
       </div>
     </nz-spin>
 
@@ -58,11 +58,11 @@ export class DataxWorkerAddStep22Component extends AppFormComponent implements A
   @Output() nextStep = new EventEmitter<any>();
   @Output() preStep = new EventEmitter<any>();
   @Input() dto: DataxWorkerDTO;
-  pluginCategory: PluginType = {
-    name: 'datax-worker',
-    require: true,
-    extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.JobTpl
-  };
+  // pluginCategory: PluginType = {
+  //   name: 'datax-worker',
+  //   require: true,
+  //   extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.JobTpl
+  // };
   errorItem: Item;
   _savePluginEventCreator: () => SavePluginEvent;
 

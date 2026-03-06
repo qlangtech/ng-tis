@@ -48,17 +48,19 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {EndCptListComponent, MulitStepsTestComponent} from "./end.cpt.list.component";
 import {UserProfileComponent} from "./user.profile.component";
+import {AkkaClusterMonitorComponent} from "./akka.cluster.monitor.component";
+import {DagSchedulerDetailComponent} from "./dag.scheduler.detail.component";
 
 const get_job_worker_meta = "get_job_worker_meta";
 
 
 export enum PowerjobCptType {
-  Server = ("powerjob-server"),
-  Worker = ("powerjob-worker"),
-  JobTpl = ("powerjob-job-tpl"),
-  UsingExistCluster = ("powerjob-use-exist-cluster"),
+  DataXWorker = ("dataX-worker"),
+  // Worker = ("powerjob-worker"),
+  // JobTpl = ("powerjob-job-tpl"),
+  //UsingExistCluster = ("powerjob-use-exist-cluster"),
   // applicationAware
-  JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite"),
+  //JobTplAppOverwrite = ("powerjob-job-tpl-app-overwrite"),
   FlinkCluster = ("flink-cluster"),
   FlinkKubernetesApplicationCfg = ("flink-kubernetes-application-cfg")
 }
@@ -76,7 +78,7 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     step1PluginType: {
       name: 'datax-worker',
       require: true,
-      extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.Server
+      extraParam: EXTRA_PARAM_DATAX_NAME + PowerjobCptType.DataXWorker
     },
     afterSuccessDelete: (cpt: DataxWorkerRunningComponent) => {
       cpt.nextStep.emit(Object.assign(new DataxWorkerDTO(), {processMeta: cpt.dto.processMeta}));
@@ -110,30 +112,31 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
     relaunchClusterMethod: "relaunch_datax_worker",
     launchClusterMethod: "launch_datax_worker",
     targetName: dataXWorkerCfgTargetName
-    , pageHeader: "PowerJob分布式执行器"
-    , notCreateTips: "还未创建PowerJob执行器，创建之后可以将DataX构建任务提交到K8S PowerJob集群，高效并行执行分布式数据同步任务"
+    , pageHeader: "DataX分布式执行器"
+    , notCreateTips: "还未创建DataX执行器，创建之后可以将DataX构建任务提交到K8S集群，高效并行执行分布式数据同步任务"
     //, createButtonLabel: "创建PowerJob执行器"
     , stepsType: StepType.CreateWorkderOfDataX
-    , supportK8SReplicsSpecSetter: true,
+    , supportK8SReplicsSpecSetter: false,
     step1Buttons: [
       {
-        label: '创建PowerJob执行器', click: (step1) => {
+        label: '创建DataX分布式执行器' //
+        , click: (step1) => {
           if (!step1.dto.hasSetHetero) {
-            step1.openPowerJobRelevantPlugin();
+            step1.openDataXRelevantPlugin();
             return;
           }
           step1.onClick();
         }
       },
-      {
-        label: '接入已有PowerJob集群', click: (step1) => {
-          if (!step1.dto.hasSetHetero) {
-            step1.openPowerJobRelevantPlugin();
-            return;
-          }
-          step1.onClickAddExistPowerjobCluster();
-        }
-      }
+      // {
+      //   label: '接入已有PowerJob集群', click: (step1) => {
+      //     if (!step1.dto.hasSetHetero) {
+      //       step1.openPowerJobRelevantPlugin();
+      //       return;
+      //     }
+      //     step1.onClickAddExistPowerjobCluster();
+      //   }
+      // }
     ]
     , step0InitDescriptorProcess: (cpt: DataxWorkerAddStep0Component, desc: Array<Descriptor>) => {
       // console.log(desc);
@@ -149,42 +152,42 @@ export const dataXWorkerCfg: { processMeta: ProcessMeta }
           return {
             name: dataXWorkerCfgTargetName,
             require: true,
-            extraParam: createExtraDataXParam(PowerjobCptType.Server)
+            extraParam: createExtraDataXParam(PowerjobCptType.DataXWorker)
           }
         },
-        cptType: PowerjobCptType.Server,
+        cptType: PowerjobCptType.DataXWorker,
         cptShow: (dto: DataxWorkerDTO) => true,
         cpuMemorySpecGetter: (dto: DataxWorkerDTO) => {
-          if (dto.usingPowderJobUseExistCluster) {
-            return null;
-          }
+          // if (dto.usingPowderJobUseExistCluster) {
+          //   return null;
+          // }
           return dto.powderJobWorkerRCSpec;
         }
       }
-      , {
-        heteroPluginTypeGetter: (dto) => {
-          return {
-            name: dataXWorkerCfgTargetName,
-            require: true,
-            extraParam: createExtraDataXParam(PowerjobCptType.Worker)
-          }
-        },
-        cptType: PowerjobCptType.Worker,
-        cptShow: (dto: DataxWorkerDTO) => !dto.usingPowderJobUseExistCluster,
-        cpuMemorySpecGetter: (dto: DataxWorkerDTO) => dto.powderJobWorkerRCSpec
-      }
-      , {
-        heteroPluginTypeGetter: (dto) => {
-          return {
-            name: dataXWorkerCfgTargetName,
-            require: true,
-            extraParam: createExtraDataXParam(PowerjobCptType.JobTpl)
-          }
-        },
-        cptType: PowerjobCptType.JobTpl,
-        cptShow: (dto: DataxWorkerDTO) => true,
-        cpuMemorySpecGetter: (dto: DataxWorkerDTO) => null
-      }
+      // , {
+      //   heteroPluginTypeGetter: (dto) => {
+      //     return {
+      //       name: dataXWorkerCfgTargetName,
+      //       require: true,
+      //       extraParam: createExtraDataXParam(PowerjobCptType.Worker)
+      //     }
+      //   },
+      //   cptType: PowerjobCptType.Worker,
+      //   cptShow: (dto: DataxWorkerDTO) => !dto.usingPowderJobUseExistCluster,
+      //   cpuMemorySpecGetter: (dto: DataxWorkerDTO) => dto.powderJobWorkerRCSpec
+      // }
+      // , {
+      //   heteroPluginTypeGetter: (dto) => {
+      //     return {
+      //       name: dataXWorkerCfgTargetName,
+      //       require: true,
+      //       extraParam: createExtraDataXParam(PowerjobCptType.JobTpl)
+      //     }
+      //   },
+      //   cptType: PowerjobCptType.JobTpl,
+      //   cptShow: (dto: DataxWorkerDTO) => true,
+      //   cpuMemorySpecGetter: (dto: DataxWorkerDTO) => null
+      // }
     ]
   }
 };
@@ -493,6 +496,14 @@ const basemanageRoutes: Routes = [
             path: flinkClusterCfg.processMeta.targetName + "-list",
             component: FlinkClusterListComponent,
             data: flinkClusterCfg
+          },
+          {
+            path: 'akka-monitor/dag-scheduler',
+            component: DagSchedulerDetailComponent
+          },
+          {
+            path: 'akka-monitor',
+            component: AkkaClusterMonitorComponent
           },
           {
             path: "flink-session-detail/:targetName/:targetTab",

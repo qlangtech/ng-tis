@@ -28,6 +28,8 @@ import {Subject} from "rxjs";
 import {map} from 'rxjs/operators';
 import {TerminalComponent} from "./terminal.component";
 import {KEY_DATAFLOW_PARSER} from "../base/common/datax.common";
+import {DAGGraphViewerComponent} from "./dag-graph-viewer.component";
+import {DAGMonitorService, DAGNode, DAGTopology, NodeExecution} from "../service/dag.monitor.service";
 
 
 @Component({
@@ -97,16 +99,20 @@ export class ProgressTitleComponent {
   template: `
       <tis-page-header title="构建状态" [breadcrumb]="this.breadcrumb" [showBreadcrumb]="showBreadcrumb">
           <button nz-button (click)="openReltimeLog()">执行日志</button>&nbsp;
-          <button nzType="primary" nzDanger [disabled]="isSpinning || !progressStat.running || formDisabled" nz-button (click)="cancelJob()">
-            <i nz-icon nzType="stop" nzTheme="outline"></i>终止</button>
+          <button nzType="primary" nzDanger [disabled]="isSpinning || !progressStat.running || formDisabled" nz-button
+                  (click)="cancelJob()">
+              <i nz-icon nzType="stop" nzTheme="outline"></i>终止
+          </button>
       </tis-page-header>
       <nz-spin [nzSpinning]="isSpinning" [nzDelay]="1000" nzSize="large">
           <div class="stat-header">
               <nz-descriptions nzBordered [nzSize]="'small'">
                   <nz-descriptions-item nzTitle="状态">
-                      <i nz-icon [nzType]="progressStat.stateClass" [nzSpin]="progressStat.stateClass === 'loading'" [ngStyle]="{'color':progressStat.stateColor}" aria-hidden="true"></i>
+                      <i nz-icon [nzType]="progressStat.stateClass" [nzSpin]="progressStat.stateClass === 'loading'"
+                         [ngStyle]="{'color':progressStat.stateColor}" aria-hidden="true"></i>
                       <button nz-button nzType="link" (click)="openReltimeLog()">{{progressStat.literalState}}</button>
-                      <span style="color: #000088;"><i style="color: #bbb8db">耗时:</i>{{consuming | timeconsume }}</span>
+                      <span style="color: #000088;"><i
+                              style="color: #bbb8db">耗时:</i>{{consuming | timeconsume }}</span>
                   </nz-descriptions-item>
                   <nz-descriptions-item nzTitle="开始时间">
                       {{progressStat.startTime | date:'yyyy/MM/dd HH:mm:ss'}}
@@ -121,62 +127,105 @@ export class ProgressTitleComponent {
                   </nz-descriptions-item>
               </nz-descriptions>
           </div>
-          <nz-collapse [nzBordered]="false">
-              <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
-                  <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
-                      <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
-                          <dt>{{t.name}} <span  *ngIf="!t.waiting && t.processed> 0 " class='percent-status'>({{t.processed| number: '1.0-0'}} <span  *ngIf="t.all>0">/{{t.all| number: '1.0-0'}}</span>)</span></dt>
-                          <tis-progress [val]="t"></tis-progress>
-                      </li>
-                  </ul>
-                  <div style="clear: both"></div>
-              </nz-collapse-panel>
-              <ng-template #dumpTpl>
-                  <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
-              </ng-template>
+          <nz-tabset>
+              <nz-tab nzTitle="普通视图">
+                  <nz-collapse [nzBordered]="false">
+                      <nz-collapse-panel *ngIf="this.buildTask.inRange(1)" [nzHeader]="dumpTpl" [nzActive]="true">
+                          <ul class='child-block' *ngIf="liveExecLog.dumpPhase">
+                              <li *ngFor="let t of liveExecLog.dumpPhase.processStatus.details;">
+                                  <dt>{{t.name}} <span *ngIf="!t.waiting && t.processed> 0 "
+                                                       class='percent-status'>({{t.processed| number: '1.0-0'}}
+                                      <span *ngIf="t.all>0">/{{t.all| number: '1.0-0'}}</span>)</span></dt>
+                                  <tis-progress [val]="t"></tis-progress>
+                              </li>
+                          </ul>
+                          <div style="clear: both"></div>
+                      </nz-collapse-panel>
+                      <ng-template #dumpTpl>
+                          <tis-progress-title [val]="liveExecLog.dumpPhase">数据导入</tis-progress-title>
+                      </ng-template>
 
-              <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
-                  <ul class='child-block' *ngIf="liveExecLog.joinPhase">
-                      <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
-                          <dt>{{t.name}}<span *ngIf="!t.waiting && t.processed> 0" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
-                          <tis-progress [val]="t"></tis-progress>
-                      </li>
-                  </ul>
-                  <div style="clear: both"></div>
-              </nz-collapse-panel>
-              <ng-template #joinTpl>
-                  <tis-progress-title [val]="liveExecLog.joinPhase">宽表构建</tis-progress-title>
-              </ng-template>
-
-
-              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
-              <!--                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">-->
-              <!--                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">-->
-              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-              <!--                          <tis-progress [val]="t"></tis-progress>-->
-              <!--                      </li>-->
-              <!--                  </ul>-->
-              <!--                  <div style="clear: both"></div>-->
-              <!--              </nz-collapse-panel>-->
-              <!--              <ng-template #indexBuildTpl>-->
-              <!--                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>-->
-              <!--              </ng-template>-->
+                      <nz-collapse-panel *ngIf="this.buildTask.inRange(2)" [nzHeader]="joinTpl" [nzActive]="true">
+                          <ul class='child-block' *ngIf="liveExecLog.joinPhase">
+                              <li *ngFor="let t of liveExecLog.joinPhase.processStatus.details;">
+                                  <dt>{{t.name}}<span *ngIf="!t.waiting && t.processed> 0"
+                                                      class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>
+                                  <tis-progress [val]="t"></tis-progress>
+                              </li>
+                          </ul>
+                          <div style="clear: both"></div>
+                      </nz-collapse-panel>
+                      <ng-template #joinTpl>
+                          <tis-progress-title [val]="liveExecLog.joinPhase">数据处理</tis-progress-title>
+                      </ng-template>
 
 
-              <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">-->
-              <!--                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">-->
-              <!--                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">-->
-              <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
-              <!--                          <tis-progress [val]="t"></tis-progress>-->
-              <!--                      </li>-->
-              <!--                  </ul>-->
-              <!--                  <div style="clear: both"></div>-->
-              <!--              </nz-collapse-panel>-->
-              <!--              <ng-template #indexBackFlow>-->
-              <!--                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>-->
-              <!--              </ng-template>-->
+                      <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(3)" [nzHeader]="indexBuildTpl" [nzActive]="true">-->
+                      <!--                  <ul class='child-block' *ngIf="liveExecLog.buildPhase">-->
+                      <!--                      <li *ngFor="let t of liveExecLog.buildPhase.processStatus.details;">-->
+                      <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+                      <!--                          <tis-progress [val]="t"></tis-progress>-->
+                      <!--                      </li>-->
+                      <!--                  </ul>-->
+                      <!--                  <div style="clear: both"></div>-->
+                      <!--              </nz-collapse-panel>-->
+                      <!--              <ng-template #indexBuildTpl>-->
+                      <!--                  <tis-progress-title [val]="liveExecLog.buildPhase">倒排索引构建</tis-progress-title>-->
+                      <!--              </ng-template>-->
 
-          </nz-collapse>
+
+                      <!--              <nz-collapse-panel *ngIf="this.buildTask.inRange(4)" [nzHeader]="indexBackFlow" [nzActive]="true">-->
+                      <!--                  <ul class='child-block' *ngIf="liveExecLog.indexBackFlowPhaseStatus">-->
+                      <!--                      <li *ngFor="let t of liveExecLog.indexBackFlowPhaseStatus.processStatus.details;">-->
+                      <!--                          <dt>{{t.name}}<span *ngIf="!t.waiting" class='percent-status'>({{t.processed}}/{{t.all}})</span></dt>-->
+                      <!--                          <tis-progress [val]="t"></tis-progress>-->
+                      <!--                      </li>-->
+                      <!--                  </ul>-->
+                      <!--                  <div style="clear: both"></div>-->
+                      <!--              </nz-collapse-panel>-->
+                      <!--              <ng-template #indexBackFlow>-->
+                      <!--                  <tis-progress-title [val]="liveExecLog.indexBackFlowPhaseStatus">索引回流</tis-progress-title>-->
+                      <!--              </ng-template>-->
+
+                  </nz-collapse>
+              </nz-tab>
+              <nz-tab nzTitle="拓扑视图" (nzSelect)="onTopologyTabSelect()">
+                  <ng-template nz-tab>
+                      <nz-card nzTitle="DAG 拓扑图" style="margin-bottom: 16px;" [nzExtra]="topologyExtraTemplate">
+                          <dag-graph-viewer
+                                  [topology]="dagTopology"
+                                  (nodeClick)="onNodeClick($event)"
+                          ></dag-graph-viewer>
+                      </nz-card>
+                      <ng-template #topologyExtraTemplate>
+                          <nz-space>
+                              <button *nzSpaceItem nz-button nzType="default" (click)="dagGraphViewer?.fitView()">
+                                  <span nz-icon nzType="fullscreen"></span>
+                                  适应画布
+                              </button>
+                              <button *nzSpaceItem nz-button nzType="default" (click)="dagGraphViewer?.zoomIn()">
+                                  <span nz-icon nzType="zoom-in"></span>
+                                  放大
+                              </button>
+                              <button *nzSpaceItem nz-button nzType="default" (click)="dagGraphViewer?.zoomOut()">
+                                  <span nz-icon nzType="zoom-out"></span>
+                                  缩小
+                              </button>
+                              <button *nzSpaceItem nz-button nzType="default" (click)="dagGraphViewer?.resetZoom()">
+                                  <span nz-icon nzType="redo"></span>
+                                  重置
+                              </button>
+                              <button *nzSpaceItem nz-button nzType="default" (click)="switchLayout()">
+                                  <span nz-icon nzType="layout"></span>
+                                  {{currentLayoutName}}
+                              </button>
+                          </nz-space>
+                      </ng-template>
+
+
+                  </ng-template>
+              </nz-tab>
+          </nz-tabset>
       </nz-spin>
       <!--      {{this.buildTask|json}}-->
       <!--      {{liveExecLog.joinPhase|json}}-->
@@ -197,7 +246,9 @@ export class ProgressTitleComponent {
       <ng-template #drawerTitle>
           执行日志
           <!--          <button nz-button [nzType]="'link'" (click)="downloadLogFile()"><i nz-icon nzType="download" nzTheme="outline"></i></button>-->
-          <a target="_blank" [href]="'/tjs/coredefine/corenodemanage.ajax?resulthandler=exec_null&event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i nz-icon nzType="download" nzTheme="outline"></i></a>
+          <a target="_blank"
+             [href]="'/tjs/coredefine/corenodemanage.ajax?resulthandler=exec_null&event_submit_do_download_task_log=y&action=core_action&taskid=' + this.taskid"><i
+                  nz-icon nzType="download" nzTheme="outline"></i></a>
       </ng-template>
   `,
   styles: [
@@ -233,6 +284,7 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   consuming = 0;
   consumingTimer: any;
   @ViewChild('drawerTitle', {static: false}) drawerTitle: TemplateRef<any>;
+  @ViewChild(DAGGraphViewerComponent) dagGraphViewer: DAGGraphViewerComponent;
   breadcrumb: string[] = [];
   // @ViewChild('term', {static: true}) terminal: NgTerminal;
   buildTask = new BuildTask();
@@ -240,6 +292,11 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   showBreadcrumb = false;
   private msgSubject: Subject<WSMessage>;
   taskid: number;
+  dagTopology: DAGTopology | null = null;
+  selectedNode: DAGNode | null = null;
+  selectedNodeExecution: NodeExecution = null;
+  currentLayoutName: string = '水平居中';
+  private topologyLoaded: boolean = false;
 
 // http://localhost:8080/coredefine/corenodemanage.ajax?action=core_action&emethod=get_view_data
 //   app: any;
@@ -288,7 +345,8 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
 
   // private count: number = 1;
   constructor(tisService: TISService, modalService: NzModalService, notification: NzNotificationService
-    , route: ActivatedRoute, private cd: ChangeDetectorRef, private drawerService: NzDrawerService) {
+    , route: ActivatedRoute, private cd: ChangeDetectorRef, private drawerService: NzDrawerService
+    , private monitorService: DAGMonitorService) {
     super(tisService, route, modalService, notification);
     // ng-terminal说明文档
     // https://ng.ant.design/docs/introduce/zh
@@ -513,6 +571,56 @@ export class BuildProgressComponent extends AppFormComponent implements AfterVie
   }
 
   downloadLogFile() {
+  }
+
+  onTopologyTabSelect(): void {
+    if (!this.topologyLoaded) {
+      this.topologyLoaded = true;
+      this.loadDagTopology();
+    }
+  }
+
+  private loadDagTopology(): void {
+    this.monitorService.queryWorkflowStatus(this.taskid)
+      .then((result) => {
+       // console.log(result);
+        if (result.success) {
+          const runtimeStatus = result.bizresult;
+          const dagNodes = (runtimeStatus.nodes || []).map((n: any) => ({
+            id: String(n.nodeId),
+            name: n.nodeName,
+            status: n.status || 'WAITING',
+            workerAddress: n.workerAddress
+          }));
+          this.dagTopology = {
+            nodes: dagNodes,
+            edges: (runtimeStatus.edges || []).map((e: any) => ({
+              source: String(e.from),
+              target: String(e.to)
+            }))
+          };
+          this.cd.detectChanges();
+        }
+      });
+  }
+
+  onNodeClick(node: DAGNode): void {
+    this.selectedNode = node;
+    this.monitorService.getNodeExecutionDetail(this.taskid, node.id)
+      .then((result) => {
+        this.selectedNodeExecution = result;
+        this.cd.detectChanges();
+      });
+  }
+
+  closeNodeDetail(): void {
+    this.selectedNode = null;
+    this.selectedNodeExecution = null;
+    this.cd.detectChanges();
+  }
+
+  switchLayout(): void {
+    this.currentLayoutName = this.dagGraphViewer?.switchLayout();
   }
 
 

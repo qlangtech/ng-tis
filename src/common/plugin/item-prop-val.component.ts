@@ -575,6 +575,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                 if (HeteroList.isDescFilterDefined(pluginMeta)) {
                     endType = pluginMeta.descFilter.endType();
                 }
+               // console.log(endType);
                 const drawerRef = PluginManageComponent.openPluginManage(drawerService, notFoundExtension, endType, [], checkedAllAvailable);
                 if (afterClosePluginInstall) {
                     drawerRef.afterClose.subscribe(afterClosePluginInstall);

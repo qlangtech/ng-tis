@@ -31,7 +31,7 @@ import {DataxWorkerAddStep3Component} from "./datax.worker.add.step3.component";
 import {DataxWorkerRunningComponent} from "./datax.worker.running.component";
 import {Breadcrumb, DataXJobWorkerStatus, DataxWorkerDTO, ProcessMeta} from "../runtime/misc/RCDeployment";
 import {DataxWorkerAddStep22Component} from "./datax.worker.add.step2-2.component";
-import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+//import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 
 @Component({
   template: `
@@ -78,10 +78,10 @@ export class DataxWorkerComponent extends AppFormComponent implements AfterViewI
     // 配置步骤前后跳转状态机
     let configFST: Map<any, { next: any, pre: any }> = new Map();
     configFST.set(DataxWorkerAddStep0Component, {next: DataxWorkerAddStep1Component, pre: null});
-    configFST.set(DataxWorkerAddExistPowerjobClusterComponent, {
-      next: DataxWorkerAddStep22Component,
-      pre: DataxWorkerAddStep0Component
-    });
+    // configFST.set(DataxWorkerAddExistPowerjobClusterComponent, {
+    //   next: DataxWorkerAddStep22Component,
+    //   pre: DataxWorkerAddStep0Component
+    // });
     if (this.processMeta.supportK8SReplicsSpecSetter) {
       configFST.set(DataxWorkerAddStep1Component, {
         next: DataxWorkerAddStep2Component,

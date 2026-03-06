@@ -49,6 +49,7 @@
     "chartjs-adapter-date-fns": "^2.0.0",
     "codemirror": "^5.65.16",
     "core-js": "^3.36.0",
+    "cron-parser": "^5.5.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.1",
     "marked": "^16.3.0",

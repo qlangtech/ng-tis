@@ -22,7 +22,7 @@ import {BasicFormComponent, CurrentCollection} from "../common/basic.form.compon
 import {NzModalService} from "ng-zorro-antd/modal";
 
 import {DataxWorkerDTO} from "../runtime/misc/RCDeployment";
-import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
+//import {DataxWorkerAddExistPowerjobClusterComponent} from "./datax.worker.add.exist.powerjob.cluster.component";
 import {IntendDirect} from "../common/MultiViewDAG";
 import {PluginsComponent} from "../common/plugins.component";
 import {Descriptor, PluginType, SavePluginEvent} from "../common/tis.plugin";
@@ -51,7 +51,7 @@ import {KEY_APPNAME} from "../common/plugin/type.utils";
                   <span>{{this.dto.processMeta.notCreateTips}}</span>
                 <ng-container *ngIf="this.dto.containPowerJob">
                   <br/>
-                  <blibli videoId="BV16M4m1r7yj">TIS与PowerJob整合案例演示</blibli> &nbsp;
+<!--                  <blibli videoId="BV16M4m1r7yj">TIS与DataX整合案例演示</blibli> &nbsp;-->
                   <a target="_blank" href="https://tis.pub/docs/install/powerjob/k8s"><span nz-icon nzType="file-text" nzTheme="outline"></span>操作说明</a>
                 </ng-container>
 
@@ -92,52 +92,52 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
   ngAfterViewInit() {
   }
 
-  public static startPowerJobTplAppOverwrite(module: BasicFormComponent, appendParams?: Array<{ key: string, val: string }>): Observable<any> {
-    // let promise =    Promise.resolve();
-    let success$ = new Subject<any>();
-
-    let opt: SavePluginEvent = null;
-
-    if (appendParams) {
-      let p = appendParams.find((param) => param.key === KEY_APPNAME);
-      if (p) {
-        opt = new SavePluginEvent();
-        opt.overwriteHttpHeaderOfAppName(p.val);
-      }
-    }
-
-    DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, true, module, opt)
-      .then((dto) => {
-        let rList = dto.workDesc;
-        let desc = Array.from(rList.values());
-        let pluginDesc = desc.find((dec) => PowerjobCptType.JobTplAppOverwrite.toString() === dec.displayName);
-        let pluginCategory: PluginType = {
-          name: PowerjobCptType.JobTplAppOverwrite,
-          require: true,
-          appendParams: appendParams
-        };
-
-        let containTplRewriterPlugin = dto.typedPluginCount[PowerjobCptType.JobTplAppOverwrite];
-        let modelRef = PluginsComponent.openPluginDialog({
-            opt: opt,
-            shallLoadSavedItems: containTplRewriterPlugin > 0,
-            savePluginEventCreator: () => {
-              let evnet = new SavePluginEvent();
-              evnet.serverForward = "coredefine:datax_action:update_power_job"
-              return evnet;
-            }
-          }, module, pluginDesc
-          , pluginCategory
-          , `更新PowerJob任务配置`
-          , (plugin) => {
-            success$.next(plugin);
-            module.successNotify("更新PowerJob任务配置成功");
-            modelRef.close();
-          });
-
-      });
-    return success$.asObservable();
-  }
+  // public static startPowerJobTplAppOverwrite(module: BasicFormComponent, appendParams?: Array<{ key: string, val: string }>): Observable<any> {
+  //   // let promise =    Promise.resolve();
+  //   let success$ = new Subject<any>();
+  //
+  //   let opt: SavePluginEvent = null;
+  //
+  //   if (appendParams) {
+  //     let p = appendParams.find((param) => param.key === KEY_APPNAME);
+  //     if (p) {
+  //       opt = new SavePluginEvent();
+  //       opt.overwriteHttpHeaderOfAppName(p.val);
+  //     }
+  //   }
+  //
+  //   DataxWorkerAddStep0Component.getWorkDescs(dataXWorkerCfg.processMeta.targetName, true, module, opt)
+  //     .then((dto) => {
+  //       let rList = dto.workDesc;
+  //       let desc = Array.from(rList.values());
+  //       let pluginDesc = desc.find((dec) => PowerjobCptType.JobTplAppOverwrite.toString() === dec.displayName);
+  //       let pluginCategory: PluginType = {
+  //         name: PowerjobCptType.JobTplAppOverwrite,
+  //         require: true,
+  //         appendParams: appendParams
+  //       };
+  //
+  //       let containTplRewriterPlugin = dto.typedPluginCount[PowerjobCptType.JobTplAppOverwrite];
+  //       let modelRef = PluginsComponent.openPluginDialog({
+  //           opt: opt,
+  //           shallLoadSavedItems: containTplRewriterPlugin > 0,
+  //           savePluginEventCreator: () => {
+  //             let evnet = new SavePluginEvent();
+  //             evnet.serverForward = "coredefine:datax_action:update_power_job"
+  //             return evnet;
+  //           }
+  //         }, module, pluginDesc
+  //         , pluginCategory
+  //         , `更新PowerJob任务配置`
+  //         , (plugin) => {
+  //           success$.next(plugin);
+  //           module.successNotify("更新PowerJob任务配置成功");
+  //           modelRef.close();
+  //         });
+  //
+  //     });
+  //   return success$.asObservable();
+  // }
 
   public static getWorkDescs(targetName: string, addJobTplOverwritePlugin: boolean, module: BasicFormComponent, e?: SavePluginEvent): Promise<WorkerDTO> {
     return module.httpPost('/coredefine/corenodemanage.ajax'
@@ -191,28 +191,29 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
 
   public initPowerJobRelevantProperties(desc: Array<Descriptor>): void {
     // console.log(desc);
-    let powerjobServer = desc.find((dec) => PowerjobCptType.Server.toString() === dec.displayName);
-    let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
-    let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
-    let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
+    let powerjobServer = desc.find((dec) => PowerjobCptType.DataXWorker.toString() === dec.displayName);
+    // let powerjobUseExistCluster = desc.find((dec) => PowerjobCptType.UsingExistCluster.toString() === dec.displayName);
+    // let powerjobWorker = desc.find((dec) => PowerjobCptType.Worker.toString() === dec.displayName);
+    // let jobTpl = desc.find((dec) => PowerjobCptType.JobTpl.toString() == dec.displayName);
 
 
-    if (!powerjobServer || !powerjobUseExistCluster || !powerjobWorker || !jobTpl) {
+    if (!powerjobServer //|| !powerjobUseExistCluster || !powerjobWorker || !jobTpl
+    ) {
 
-      this.openPowerJobRelevantPlugin();
+      this.openDataXRelevantPlugin();
       return;
     }
 
     this.dto.powderJobServerHetero = PluginsComponent.pluginDesc(powerjobServer, this.powerJobPluginCategory);
-    this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.powerJobPluginCategory);
-    this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, this.powerJobPluginCategory);
-    this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, this.powerJobPluginCategory);
+    // this.dto.powderJobUseExistClusterHetero = PluginsComponent.pluginDesc(powerjobUseExistCluster, this.powerJobPluginCategory);
+    // this.dto.powderJobWorkerHetero = PluginsComponent.pluginDesc(powerjobWorker, this.powerJobPluginCategory);
+    // this.dto.powderjobJobTplHetero = PluginsComponent.pluginDesc(jobTpl, this.powerJobPluginCategory);
     this.dto.hasSetHetero = true;
   }
 
-  public openPowerJobRelevantPlugin() {
+  public openDataXRelevantPlugin() {
     ItemPropValComponent.openPluginInstall(
-      this.drawerService, this, 'PowerJob'
+      this.drawerService, this, 'dataX-worker'
       , 'com.qlangtech.tis.datax.job.DataXJobWorker'
       , this.powerJobPluginCategory, true, (aftInstallPluginClose) => {
         // console.log(aftInstallPluginClose);
@@ -240,17 +241,17 @@ export class DataxWorkerAddStep0Component extends BasicFormComponent implements 
     this.nextStep.emit(this.dto);
   }
 
-  onClickAddExistPowerjobCluster() {
-
-    // if (!this.dto.hasSetHetero) {
-    //   this.openPowerJobRelevantPlugin();
-    //   return;
-    // }
-
-    this.dto.usingPowderJobUseExistCluster = true;
-    let direct: IntendDirect = {dto: this.dto, cpt: DataxWorkerAddExistPowerjobClusterComponent};
-    this.nextStep.emit(direct)
-  }
+  // onClickAddExistPowerjobCluster() {
+  //
+  //   // if (!this.dto.hasSetHetero) {
+  //   //   this.openPowerJobRelevantPlugin();
+  //   //   return;
+  //   // }
+  //
+  //   this.dto.usingPowderJobUseExistCluster = true;
+  //   let direct: IntendDirect = {dto: this.dto, cpt: DataxWorkerAddExistPowerjobClusterComponent};
+  //   this.nextStep.emit(direct)
+  // }
 
 
 }

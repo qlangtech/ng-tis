@@ -30,6 +30,8 @@ import {
   Routes, UrlTree
 } from '@angular/router';
 import {WorkflowAddComponent} from "./workflow.add.component";
+import {WorkflowScheduleConfigComponent} from "./workflow.schedule.config.component";
+import {WorkflowDAGMonitorComponent} from "./workflow.dag.monitor.component";
 import {BuildProgressComponent} from "../common/core.build.progress.component";
 import {FullBuildHistoryComponent} from "../common/full.build.history.component";
 // import {WorkspaceGuard} from "@zeppelin/pages/workspace/workspace.guard";
@@ -92,6 +94,11 @@ const coreNodeRoutes: Routes = [
             component: WorkflowComponent
           },
           {
+            path: 'wf_monitor/:instanceId',
+            component: WorkflowDAGMonitorComponent,
+            data: {showBreadcrumb: true}
+          },
+          {
             path: 'wf/build_history/:wfid/:taskid',
             component: BuildProgressComponent,
             data: {showBreadcrumb: true}
@@ -124,6 +131,11 @@ const coreNodeRoutes: Routes = [
                 data: {stepType: StepType.CreateWorkflow}
                 // component: WFControllerComponent,
                 // data: {updateProfile: true}
+              },
+              {
+                path: 'wf_profile/:name/schedule',
+                component: WorkflowScheduleConfigComponent,
+                data: {showBreadcrumb: true}
               },
               {
                 path: 'wf_update/:name/build_history/:wfid/:taskid',
