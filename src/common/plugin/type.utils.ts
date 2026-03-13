@@ -72,7 +72,8 @@ export function convertReducePluginType2PluginTypes(reducePluginType: Map<Plugin
             localDescFilter: (desc) => true
         };
         let tp: TargetPlugin = {hetero: key};
-        if (val.length > 0) {
+        //if (val.length > 0) {
+        if (val.length === 1) {
             tp = val[0];
             let targetDescDisplayName = (tp.targetItemDesc || tp.descName);
             if (targetDescDisplayName) {

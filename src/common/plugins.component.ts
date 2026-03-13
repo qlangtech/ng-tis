@@ -637,7 +637,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     if (m.require && (h.items.length < 1)) {
       // 增加一个默认值
       h.descriptors.forEach((desc, key) => {
-        console.log([m.descFilter, m.descFilter.localDescFilter(desc)]);
+       // console.log([m.descFilter, m.descFilter.localDescFilter(desc)]);
         if (m.descFilter && m.descFilter.localDescFilter(desc)) {
           Descriptor.addNewItem(h, desc, false, (_, propVal) => {
             return propVal;

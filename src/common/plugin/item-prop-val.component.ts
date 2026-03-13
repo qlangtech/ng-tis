@@ -232,6 +232,7 @@ import {HttpParams} from "@angular/common/http";
                                                nzTheme="outline"></i>{{createRouter.plugin.length > 1 ? p.descName : '添加'}}
                                         </a>
                                     </li>
+
                                     <li nz-menu-item [ngSwitch]="createRouter.assistType">
                                         <a [attr.data-testid]="_pp.key+'_create_router_manage'"
                                            *ngSwitchCase="'hyperlink'"
@@ -787,6 +788,7 @@ export class ItemPropValComponent extends BasicFormComponent implements AfterCon
                 break;
             }
             case RouterAssistType.paramCfg: {
+              console.log(createRouter);
                 drawerRef = this.drawerService.create<SelectionInputAssistComponent, {}, {}>({
                     nzWidth: "60%",
                     nzPlacement: "right",
