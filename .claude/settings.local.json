@@ -5,7 +5,8 @@
       "Bash(find:*)",
       "Bash(npm install:*)",
       "Bash(npx ng build:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm run build)"
     ],
     "deny": [],
     "ask": []

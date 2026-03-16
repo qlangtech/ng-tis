@@ -55,10 +55,10 @@ class ProcessStrategy {
         当前DataX任务执行默认为本地模式（<strong>单机版</strong>），DataX任务只能串型执行，适合非生产环境中使用。如若要在生产环境中使用可启用以下方案：
         <ul style="padding-left: 1em;">
           <li><a target="_blank" [routerLink]="'/base/datax-worker'">K8S DataX执行器</a></li>
-          <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank"
-                                                      href="https://tis.pub/docs/install/integer-dolphinscheduler/">详细</a>
-            <nz-tag [nzColor]="'pink'">推荐</nz-tag>
-          </li>
+<!--          <li>TIS 整合Apache DolphinScheduler 方案 <a target="_blank"-->
+<!--                                                      href="https://tis.pub/docs/install/integer-dolphinscheduler/">详细</a>-->
+<!--            <nz-tag [nzColor]="'pink'">推荐</nz-tag>-->
+<!--          </li>-->
         </ul>
       </ng-template>
       <nz-alert *ngIf="dataXWorkerStatus.installLocal" nzType="error" nzMessage="警告"
@@ -118,7 +118,8 @@ class ProcessStrategy {
       </tis-plugin-add-btn>
 
     </tis-page-header>
-    <tis-page [rows]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)" [enable-rows-manage]="{'enable':true,'idFieldName':'id','targetResType':'BuildHistoricalRecord'}" >
+
+    <tis-page [(rows)]="buildHistory" [pager]="pager" (go-page)="gotoPage($event)" [enable-rows-manage]="{'enable':true,'idFieldName':'id','targetResType':'BuildHistoricalRecord'}" >
       <tis-col title="ID" width="10">
         <ng-template let-rr="r">
           <a [routerLink]="['./', rr.id]">#{{rr.id}}</a>
@@ -346,6 +347,7 @@ export class FullBuildHistoryComponent extends BasicFormComponent implements OnI
       this.httpPost("/coredefine/coredefine.ajax", `action=core_action&emethod=get_workflow_build_history&taskid=${taskid}`)
         .then((rr) => {
           this.processResultWithTimeout({'success': true, 'msg': msg}, 10000);
+          console.log(this.buildHistory);
           this.buildHistory = [rr.bizresult].concat(this.buildHistory); // .concat()
         });
     }, (r: TisResponseResult) => {

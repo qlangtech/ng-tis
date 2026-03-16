@@ -515,6 +515,7 @@ export class PaginationComponent implements AfterContentInit, OnInit {
 
 
     @Input('rows') rows: any[] = [];
+    @Output('rowsChange') rowsChange = new EventEmitter<any[]>();
     @Input() showPagination = true;
     @Input('spinning') isSpinning = false;
     @Input() bordered = false;
@@ -671,6 +672,7 @@ export class PaginationComponent implements AfterContentInit, OnInit {
         }
         pluginInitialParams = pluginInitialParams.append("targetResType", this._enableRowsManage.targetResType);
         targetDesc.pluginInitialParams = pluginInitialParams;
+
         openParamsCfg(targetDesc, '', this.drawerService, this.tisService, "批量删除").then((result) => {
             if (result.saveSuccess) {
                 let deleteIds: Array<string> = result.biz();
@@ -681,29 +683,31 @@ export class PaginationComponent implements AfterContentInit, OnInit {
 
                 // 将deleteIds统一转为字符串Set，用于快速查找和类型安全比较
                 const deleteIdSet = new Set(deleteIds);
-                console.log(deleteIdSet);
+               // console.log(deleteIdSet);
                 // 第一步：标记要删除的记录，触发动画
                 const rowsToDelete = this.rows.filter(row => {
                     const rowId = String(row[this._enableRowsManage.idFieldName]);
                     const include = deleteIdSet.has(rowId);
-                    console.log([include, this._enableRowsManage.idFieldName, rowId]);
+                  //  console.log([include, this._enableRowsManage.idFieldName, rowId]);
                     return include;
                 });
 
                 rowsToDelete.forEach(row => {
                     row._deleted = true;
                 });
-                console.log(rowsToDelete);
+               // console.log(rowsToDelete);
                 // 触发变更检测，启动删除动画
                 this.cdr.markForCheck();
 
                 // 第二步：等待动画完成后从数组中移除记录
                 setTimeout(() => {
+                 // console.log("dddd");
                     // 从rows数组中移除已删除的记录
                     this.rows = this.rows.filter(row => {
                         const rowId = String(row[this._enableRowsManage.idFieldName]);
                         return !deleteIdSet.has(rowId);
                     });
+                    this.rowsChange.emit(this.rows);
 
                     // 更新分页统计信息
                     if (this.pager.totalCount) {

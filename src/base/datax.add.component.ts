@@ -33,11 +33,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MultiViewDAG} from "../common/MultiViewDAG";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {DataxAddStep1Component} from "./datax.add.step1.component";
-import {DataxAddStep2Component, DataXReaderWriterEnum} from "./datax.add.step2.component";
+import {DataxAddStep2Component} from "./datax.add.step2.component";
 import {DataxAddStep3Component} from "./datax.add.step3.component";
 import {DataxAddStep4Component} from "./datax.add.step4.component";
 import {DataxAddStep5Component} from "./datax.add.step5.component";
-//import {DataxAddStep6Component} from "./datax.add.step6.maptable.component";
 import {DataxAddStep7Component, ExecModel} from "./datax.add.step7.confirm.component";
 import {
   DataxAddStep6ColsMetaSetterComponent,
@@ -50,7 +49,6 @@ import {NzSafeAny} from "ng-zorro-antd/core/types";
 import {TablePojo} from "../offline/table.add.component";
 import {Subject} from "rxjs";
 import {AddStep2ComponentCfg, DataXCreateProcessMeta, DataxProfile, ISelectedTabMeta} from "./common/datax.common";
-import {TableTransformerComponent} from "../common/selectedtab/table.transformer.component";
 
 
 @Component({
