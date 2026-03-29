@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.10",
-    "@angular/cli": "^17.3.10",
+    "@angular/cli": "^21.2.1",
     "@angular/compiler-cli": "^17.3.12",
     "@angular/language-service": "^17.3.12",
     "@rollup/plugin-commonjs": "^28.0.1",
