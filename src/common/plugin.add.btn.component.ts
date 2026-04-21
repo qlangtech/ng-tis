@@ -34,9 +34,8 @@ import {NzDrawerService} from "ng-zorro-antd/drawer";
 import {PluginManageComponent} from "../base/plugin.manage.component";
 import {NzButtonSize} from "ng-zorro-antd/button";
 import {PluginsComponent} from "./plugins.component";
-import {NzModalService} from "ng-zorro-antd/modal";
 import {NzNotificationService} from "ng-zorro-antd/notification";
-import {TisColumn} from "./pagination.component";
+
 
 
 @Directive({
@@ -66,7 +65,6 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
   selector: 'tis-plugin-add-btn',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-
     <ng-container
       [ngSwitch]="this.hasPrimaryBtnClickObservers|| lazyInitDescriptors || this.descriptors.length> 0 || extractLiItems.length> 0  ">
       <ng-container *ngSwitchCase="true">
@@ -76,7 +74,7 @@ export class TisPluginAddBtnExtractLiItem implements AfterContentInit, AfterView
                   [nzType]="this.hasPrimaryBtnClickObservers? 'primary':'default'"
 
                   (mouseenter)="lazyInitialize()"
-                  (click)="this.primaryBtnClick.emit()" [nzSize]="btnSize"
+                  (click)="this.primaryBtnClick.emit(descriptors )" [nzSize]="btnSize"
                   [disabled]="this.disabled || this.formDisabled">
             <ng-content></ng-content>
           </button>
@@ -171,7 +169,7 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
   addPlugin = new EventEmitter<Descriptor>();
 
   @Output()
-  primaryBtnClick = new EventEmitter<void>();
+  primaryBtnClick = new EventEmitter<Array<Descriptor>>();
 
   @Output()
   afterPluginAddClose = new EventEmitter<Descriptor>();
@@ -208,6 +206,7 @@ export class PluginAddBtnComponent extends BasicFormComponent implements OnInit 
       if (forceInit || (this.descriptors.length < 1 && this.initDescriptors)) {
         if (shallExec) {
           let event = new SavePluginEvent();
+         // console.log(this.appname);
           if (this.appname) {
             event.overwriteHttpHeaderOfAppName(this.appname);
           }

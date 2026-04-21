@@ -158,6 +158,7 @@ import {NodeExecutionDetailComponent} from "./node-execution-detail.component";
 import {WaitingQueueViewerComponent} from "./waiting-queue-viewer.component";
 import {RunningQueueViewerComponent} from "./running-queue-viewer.component";
 import {WorkflowHistoryListComponent} from "./workflow-history-list.component";
+import {MultiSelectSingleValComponent} from "./multi-selected/multi.select.single.val.component";
 
 // 新增的导航组件和服务
 
@@ -195,6 +196,7 @@ import {WorkflowHistoryListComponent} from "./workflow-history-list.component";
         TisPageHeader, TisPageRowAssist, TisColumn, PaginationComponent, TdContentDirective, ThDirective, NavigateBarComponent, InitSystemComponent, OperationLogComponent, DataxAddStep7Component
         , DataxAddStep4Component, SelectedTabsComponent, DataxAddComponent, DataxAddStep1Component, DataxAddStep2Component, ViewGenerateCfgComponent, DataxAddStep5Component, DataxAddStep3Component
         , PageHeaderComponent, TisMsgComponent, TisHeaderTool, TisHeaderToolContent, FormComponent, TisInputTool, InputContentDirective, TisInputProp, TisStepsToolbarComponent, IncrPodLogsStatusComponent,
+      MultiSelectSingleValComponent
 
     ],
     exports: [CronExpressionInputComponent, CronExpressionPreviewComponent, DAGGraphViewerComponent, NodeExecutionDetailComponent, WaitingQueueViewerComponent, RunningQueueViewerComponent, WorkflowHistoryListComponent, SkeletonLoaderComponent, LoadingStateComponent, BliBliComponent, LaunchK8SClusterWaittingProcessComponent, SchemaEditComponent, ControlPanelComponent, PluginUpdateCenterComponent, SelectedTabsComponent, ErrorDetailComponent, SchemaExpertAppCreateEditComponent, AddAppDefSchemaComponent, K8SReplicsSpecComponent, SideBarToolBar, TableSelectComponent

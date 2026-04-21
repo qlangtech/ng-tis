@@ -293,7 +293,7 @@ export class PluginsMultiStepsComponent extends AppFormComponent implements Afte
      */
     private initializeNextStep(nextStepIndex: number, nextPluginDesc: Map<string, Descriptor>) {
         const nxt = this.stepSavedPlugin.get(nextStepIndex);
-
+      console.log([nextStepIndex, nxt,nextPluginDesc])
         if (nxt) {
             // 恢复历史步骤
             if (nxt.isUnWrapperPhase) {

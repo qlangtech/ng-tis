@@ -107,7 +107,7 @@ export const KEY_DB_ID = "dbId";
                         <nz-tabset [(nzSelectedIndex)]="selectedDbIndex" (nzSelectedIndexChange)="selectedIndexChange()"
                                    [nzTabBarExtraContent]="extraTemplate">
                             <nz-tab nzTitle="明细">
-                                <tis-plugins (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)"
+                                <tis-plugins [appname]="selectedDb.dbName"   (afterSave)="afterSave($event)" (afterInit)="afterPluginInit($event)"
                                              [errorsPageShow]="false"
                                              [formControlSpan]="formControlSpan" [shallInitializePluginItems]="false"
                                              [showSaveButton]="updateMode" [disabled]="!updateMode"
@@ -366,7 +366,7 @@ export class DatasourceComponent extends BasicFormComponent implements OnInit {
             , {name: 'datasource', require: true, extraParam: "type_" + db_model_detailed + ",update_false"}
             , `添加${pluginDesc.displayName}数据库`
             , (_, db) => {
-                console.log(db);
+                //console.log(db);
                 // let origin = {'key': `${db.dbId}`, 'title': db.name, 'children': []};
                 // origin[KEY_DB_ID] = `${db.dbId}`;
                 // // KEY_DB_ID

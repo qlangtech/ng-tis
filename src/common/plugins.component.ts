@@ -141,7 +141,7 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
             <nz-anchor *ngIf="showSaveButton" (nzScroll)="startScroll($event)">
               <div style="float: right;">
                 <button nz-button nzType="primary" [disabled]="this.formDisabled"
-                        (click)="_savePlugin($event)">{{saveBtnLabel}}
+                        (click)="_savePlugin($event)">{{ saveBtnLabel }}
                 </button>
               </div>
               <div *ngIf=" this.itemChangeable && _heteroList.length>1 " class="plugins-nav">
@@ -159,7 +159,7 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
                 </button>
               </ng-container>
               <button *nzSpaceItem nz-button nzType="primary" [disabled]="this.formDisabled"
-                      (click)="_savePlugin($event)">{{saveBtnLabel}}
+                      (click)="_savePlugin($event)">{{ saveBtnLabel }}
               </button>
             </nz-space>
           </ng-container>
@@ -170,7 +170,7 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
       <ng-template #pluginForm let-h="h" let-index="index" let-pluginMeta="pluginMeta">
         <div class="extension-point" [id]="h.identity">
           <nz-tag *ngIf="showExtensionPoint.open"><i nz-icon nzType="api" nzTheme="outline"></i>
-            <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{h.extensionPoint}}</a>
+            <a class="plugin-link" target="_blank" [href]="h.extensionPointUrl">{{ h.extensionPoint }}</a>
           </nz-tag>
         </div>
         <div *ngFor=" let item of h.items " style="position: relative"
@@ -191,7 +191,7 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
                   <a [href]="item.implUrl" class="plugin-link"
                      target="_blank"><i nz-icon nzType="link"
                                         nzTheme="outline"></i>
-                    {{item.impl}}
+                    {{ item.impl }}
                   </a></nz-tag>
               </ng-container>
               <ng-container *ngIf="shallInitializePluginItems && itemChangeable">
@@ -204,7 +204,9 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
             </nz-space>
           </div>
           <div>
+
             <tis-manipulate-plugin
+              [appname]="this.appname"
               [item]="item"
               [heteroList]="h"
               [pluginMeta]="pluginMeta"
@@ -224,7 +226,9 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
                        [(ngModel)]="item.showAllField"
                        [ngModelOptions]="{standalone: true}"></nz-switch>
           </div>
+          <!-- (valChange)="itemPropValChange($event)" -->
           <item-prop-val [hide]=" pp.advance && !item.showAllField " [formLevel]="1"
+
                          [pluginMeta]="plugins[index]"
                          [pluginImpl]="item.impl" [disabled]="disabled || pp.disabled"
                          [formControlSpan]="formControlSpan" [compactVerticalLayout]="compactVerticalLayout" [pp]="pp"
@@ -299,7 +303,8 @@ export function openParamsCfg(targetDesc: TargetPluginCfg, appendExtraParam = ''
   ]
 })
 export class PluginsComponent extends AppFormComponent implements AfterContentInit, AfterViewInit, OnDestroy {
-
+  @Input()
+  appname: string = null;
 
   @Input()
   disableManipulate = false;
@@ -393,7 +398,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     , pluginDesc: Descriptor, pluginTp: PluginType, title: string, onSuccess: (r: PluginSaveResponse, biz) => void): NzModalRef<any> {
     let modalRef: NzModalRef<any> = null;
     if (pluginDesc instanceof MultiStepsDescriptor) {
-      console.log(opts.item);
+     // console.log(opts.item);
       if (!!opts.editMode) {
         // 编辑模式下需要将host plugin 内的所有子plugin 的desc列表都取得到
         let stepSavedPlugin = this.rebuildStepSavedPlugin(opts, pluginTp);
@@ -506,10 +511,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
     let pluginCpt: PluginsMultiStepsComponent = modalRef.getContentComponent();
     //[hlist]="hlist" [hostDesc]="stepDesc"
     pluginCpt.hlist = MultiStepsDescriptor.createFirstStepPluginHlist(pluginTp, pluginDesc);
+    //console.log(new Error());
     for (let [index, savedPlugin] of stepSavedPlugin) {
 
       if (index === 0) {
-        console.log([index, pluginCpt._hlist]);
+      //  console.log([index, pluginCpt._hlist]);
         // try{
         if (savedPlugin.isUnWrapperPhase) {
           let d = new Map();
@@ -519,7 +525,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
         // }catch (e){
         //     console.log(e);
         // }
-        console.log([index, pluginCpt._hlist]);
+       // console.log([index, pluginCpt._hlist]);
         pluginCpt.hlist = savedPlugin.hlist;
 
       }
@@ -634,10 +640,11 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   }
 
   public static addDefaultItem(m: PluginMeta, h: HeteroList) {
+   // console.log([m.require,h.items.length,m.descFilter]);
     if (m.require && (h.items.length < 1)) {
       // 增加一个默认值
       h.descriptors.forEach((desc, key) => {
-       // console.log([m.descFilter, m.descFilter.localDescFilter(desc)]);
+        // console.log([m.descFilter, m.descFilter.localDescFilter(desc)]);
         if (m.descFilter && m.descFilter.localDescFilter(desc)) {
           Descriptor.addNewItem(h, desc, false, (_, propVal) => {
             return propVal;
@@ -1111,7 +1118,7 @@ export class PluginsComponent extends AppFormComponent implements AfterContentIn
   public pluginManipulate(pluginMeta: PluginType, item: Item, pluginDesc: Descriptor): void {
     //console.log(item.dspt.manipulate);
 
-    PluginsComponent.addManipulate(this, pluginMeta, pluginDesc)
+    PluginsComponent.addManipulate(this, pluginMeta, pluginDesc,this.appname )
       .then((result) => {
         if (pluginDesc.manipulateStorable) {
           // {descMeta: pluginDesc, identityName: result.biz()}

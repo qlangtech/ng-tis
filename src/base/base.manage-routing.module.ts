@@ -50,6 +50,11 @@ import {EndCptListComponent, MulitStepsTestComponent} from "./end.cpt.list.compo
 import {UserProfileComponent} from "./user.profile.component";
 import {AkkaClusterMonitorComponent} from "./akka.cluster.monitor.component";
 import {DagSchedulerDetailComponent} from "./dag.scheduler.detail.component";
+import {OntologyListComponent} from "./ontology.list.component";
+import {OntologyDetailComponent} from "./ontology.detail.component";
+import {OntologyObjectTypeDetailComponent} from "./ontology.object-type.detail.component";
+
+export const KEY_OBJECT_TYPE = 'objectType';
 
 const get_job_worker_meta = "get_job_worker_meta";
 
@@ -68,7 +73,7 @@ export enum PowerjobCptType {
 const flinkClusterCfgTargetName = () => PowerjobCptType.FlinkCluster.toString();// "flink-cluster";
 const dataXWorkerCfgTargetName = "datax-worker";
 
-const KEY_TARGET_NAME = 'targetName';
+export const KEY_TARGET_NAME = 'targetName';
 
 export const dataXWorkerCfg: { processMeta: ProcessMeta }
   = {
@@ -524,6 +529,16 @@ const basemanageRoutes: Routes = [
             path: dataXWorkerCfg.processMeta.targetName + '/:targetTab',
             component: DataxWorkerComponent,
             data: dataXWorkerCfg
+          },
+          {
+            path: "ontology",
+            component: OntologyListComponent
+          }, {
+            path: "ontology/:" + KEY_TARGET_NAME,
+            component: OntologyDetailComponent
+          }, {
+            path: "ontology/:" + KEY_TARGET_NAME + "/:" + KEY_OBJECT_TYPE,
+            component: OntologyObjectTypeDetailComponent
           }
         ]
       },

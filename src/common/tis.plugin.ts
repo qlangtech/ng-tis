@@ -32,6 +32,7 @@ import {FilterCondition, FilterConditionList} from "./multi-selected/table.join.
 import {PluginsComponent} from "./plugins.component";
 import {KEY_MULTI_STEPS_SAVED_ITEMS, PluginsMultiStepsComponent} from "./plugins.multi.steps.component";
 import {KEY_ASSEMBLE_CONTEXT_PATH} from "./basic.form.component";
+import {MultiSingleValue} from "../base/common/ontology.common";
 
 
 export const CONST_FORM_LAYOUT_VERTICAL = 3;
@@ -737,12 +738,16 @@ export interface TisResponseResult extends TisErorsResult {
   msg?: Array<any>;
 }
 
+/**
+ * 对应服务端枚举类 com.qlangtech.tis.plugin.ds.ViewContent
+ */
 export enum TuplesPropertyType {
   MongoCols = ('mongoCols'),
   JdbcTypeProps = ("jdbcTypeProps"),
   TransformerRules = ('transformerRules'),
   TableJoinMatchCondition = ('tableJoinMatchCondition'),
   TableJoinFilterCondition = ('tableJoinFilterCondition'),
+  MultiSelectSingleVal = ("multiSelectSingleVal"),
   SimpleCols = ('simpleCols')
 }
 
@@ -1100,7 +1105,7 @@ export class Item {
           let tableTypes: Array<{ label: string, val: string }> = enumVal["tableTypes"];
           let operators: Array<{ label: string, val: string }> = enumVal["operators"];
           let valueTypes: Array<{ label: string, val: string }> = enumVal["valueTypes"];
-          console.log([targetTabCols, sourceTabCols, tableTypes, operators, valueTypes]);
+          // console.log([targetTabCols, sourceTabCols, tableTypes, operators, valueTypes]);
           let filterConditionList: Array<FilterCondition> = [];
           for (let condition of val) {
             // 对应服务端pojo：com.qlangtech.tis.plugin.table.join.TableJoinFilterCondition
@@ -1115,6 +1120,13 @@ export class Item {
           }
 
           newVal.setTableView(new FilterConditionList(sourceTabCols, targetTabCols, filterConditionList, tableTypes, operators, valueTypes));
+          break;
+        }
+        case TuplesPropertyType.MultiSelectSingleVal: {
+          let enumVals: Array<{ enumVal: string }> = Array.isArray(val)
+            ? val.map((v: any) => ({enumVal: v.enumVal || ''}))
+            : [];
+          newVal.setTableView(new MultiSingleValue(enumVals));
           break;
         }
         default:
@@ -1140,7 +1152,7 @@ export class Item {
         cols = selectableCol.map((c) => {
           return {"name": c.label, "value": c.val, "checked": !!c.checked}
         });
-        console.log(val);
+       // console.log(val);
         newVal.setPropValEnums(cols, (sval) => {
           return !!val.find((optVal) => optVal === sval);
         });
@@ -1503,11 +1515,13 @@ export class SavePluginEvent {
   public serverForward;
   public postPayload: { [key: string]: any };
   public overwriteHttpHeader: Map<string, string>;
-  public static  createAssembleContext() {
+
+  public static createAssembleContext() {
     let e = new SavePluginEvent();
     e.serverContext = KEY_ASSEMBLE_CONTEXT_PATH;
     return e;
   }
+
   constructor(public notShowBizMsg = false) {
   }
 

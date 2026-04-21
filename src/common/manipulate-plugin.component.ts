@@ -62,6 +62,7 @@ import {TisPluginAddBtnExtractLiItem} from "./plugin.add.btn.component";
 
             <!-- 操作区域 -->
             <ng-container *ngIf="!disableManipulate && manipulatePluginExtendPoint">
+
                 <tis-plugin-add-btn *nzSpaceItem [btnSize]="'small'"
                                     [appname]="appname"
                                     [extendPoint]="manipulatePluginExtendPoint"
@@ -190,7 +191,7 @@ export class ManipulatePluginComponent extends BasicFormComponent implements OnI
         } else {
             opt = SavePluginEvent.createPostPayload(this.pluginMeta, true);
         }
-
+//console.log(opt);
         this.httpPost('/coredefine/corenodemanage.ajax',
             "event_submit_do_get_manipuldate_plugin=y&action=plugin_action&impl=" + this.hostPluginImpl + "&identityName=" + manipuldateMeta.identityName, opt)
             .then((result) => {

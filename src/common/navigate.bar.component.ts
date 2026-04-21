@@ -81,6 +81,7 @@ import {openParamsCfg, TargetPluginCfg} from "./plugins.component";
                 <li nz-menu-item><a routerLink="/base/departmentlist">业务线</a></li>
                 <li nz-menu-item><a routerLink="/base/user-profile">会员</a></li>
                 <li nz-menu-item><a routerLink="/base/datax-worker">DataX执行器</a></li>
+                <li nz-menu-item><a routerLink="/base/ontology">Ontology</a></li>
                 <li nz-menu-item><a routerLink="/base/flink-cluster-list">Flink Cluster</a></li>
                 <li nz-menu-item><a routerLink="/base/akka-monitor">Akka集群监控</a></li>
                 <li nz-menu-item><a routerLink="/base/basecfg">插件配置</a></li>
